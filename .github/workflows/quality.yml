@@ -139,8 +139,8 @@ jobs:
         with:
           fetch-depth: 0
           persist-credentials: false
-      # HEAD limits the scan to commits this pull request would bring into main, so a
-      # finding on another branch cannot fail unrelated pull requests.
+      # HEAD scans all reachable ancestry, including this PR's commits and main,
+      # without scanning unrelated branch refs.
       - name: Scan this branch history with gitleaks
         run: >-
           docker run --rm --user "$(id -u):$(id -g)" -v "$PWD:/repo" -w /repo

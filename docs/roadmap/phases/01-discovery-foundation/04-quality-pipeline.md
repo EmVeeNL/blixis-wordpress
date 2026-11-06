@@ -25,7 +25,7 @@ blocked_by: []
 
 ## Description
 
-Add CI jobs for implemented PHP and TypeScript lint, type checking, tests, build, dependency and secret scans; keep workflow permissions minimal. This is planned work; no implementation or PR is claimed.
+Add CI jobs for implemented PHP and TypeScript lint, type checking, tests, build, dependency and secret scans; keep workflow permissions minimal. PR #12 contains the reviewed jobs and failure-path evidence. Branch protection changes follow its merge.
 
 ## Technical requirements
 
@@ -37,7 +37,7 @@ Add CI jobs for implemented PHP and TypeScript lint, type checking, tests, build
 
 ## Acceptance criteria
 
-- [ ] Every implemented code path has relevant reproducible CI checks; no job advertises an absent test suite.
+- [x] Every implemented code path has relevant reproducible CI checks; no job advertises an absent test suite.
 - [x] Deliberate syntax, documentation, lint, and test failures cause the intended PR checks to fail, then pass when fixed.
 - [ ] Workflow permissions and dependency versions are reviewed, and branch protection requires the agreed checks.
 - [ ] The reviewed PR is merged with CI run links and task metadata.
@@ -54,7 +54,7 @@ Use temporary test branches or a safe fixture to trigger each check's failure pa
 - **Commit references:** `a9905e1788381e62b4700ac8ff75b0b2da7d9212`
 - **PR number and URL:** [#12](https://github.com/EmVeeNL/blixis-wordpress/pull/12)
 - **Started / completed / closed:** Started 2026-11-06; not completed or closed.
-- **Evidence:** [CI checks](../../../development/CI.md) lists jobs, failure runs, and the branch protection command. Only `syntax` is required until this workflow reaches `main`.
+- **Evidence:** [CI checks](../../../development/CI.md) lists jobs, failure runs, and the branch protection command. Only `syntax` is required until this workflow reaches `main`. Owner-delegated review accepts `wordpress-integration` as required despite upstream downloads; dependency review awaits GitHub dependency graph support and `dependency-audit` remains advisory.
 - **Status:** In Review. Follow [status workflow](../../../development/STATUS_WORKFLOW.md).
 
 ## Status history
@@ -65,3 +65,4 @@ Use temporary test branches or a safe fixture to trigger each check's failure pa
 | 2026-11-06 | Backlog → Ready | Dependency `01-03` was completed in PR [#10](https://github.com/EmVeeNL/blixis-wordpress/pull/10), merged as `fad5c11819fce9bc92990d2266d91caec85bea2c`; owner and acceptance criteria are recorded. |
 | 2026-11-06 | Ready → Busy | Branch `ci/01-04-quality-pipeline` created from `6662c6b`; CI jobs started |
 | 2026-11-06 | Busy → In Review | PR [#12](https://github.com/EmVeeNL/blixis-wordpress/pull/12), commit `a9905e1`; 16 deliberate faults failed their intended checks and the fixed run passed, recorded in [CI checks](../../../development/CI.md). Branch protection update waits for merge; owner review pending |
+| 2026-11-06 | In Review, decisions resolved | Owner-delegated review confirms the 12 planned required checks after merge, including `wordpress-integration`; dependency graph and dependency review are later work, with advisory audits active now. Gitleaks `HEAD` scans reachable ancestry and excludes unrelated refs. |
