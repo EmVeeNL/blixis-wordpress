@@ -1,3 +1,3 @@
-# Phase 01 — Repository foundation
+# Repository foundation record
 
-Establish a source-only repository while preserving the working WordPress installation and MariaDB volume. Current task: [01-03](03-restructure-repository.md).
+[**R-01 — Restructure repository**](03-restructure-repository.md) is a verified, merged migration record. It is separate from the 46 planned roadmap tasks.

@@ -1,0 +1,97 @@
+{
+  "specVersion": 1,
+  "type": "blixis/paragraph",
+  "version": 1,
+  "displayName": "Paragraph",
+  "category": "typography",
+  "icon": "tabler:text-size",
+  "tier": "free",
+  "status": "planned",
+  "description": "Planned version 1 specification for the paragraph element; implementation and tests belong to phase 05.",
+  "defaultProps": {
+    "text": "Schrijf je tekst…"
+  },
+  "allowedParents": [
+    "blixis/section",
+    "blixis/container",
+    "blixis/column",
+    "blixis/card",
+    "blixis/cta"
+  ],
+  "allowedChildren": [],
+  "supports": {
+    "responsive": [
+      "fontSize",
+      "lineHeight",
+      "align",
+      "color",
+      "margin"
+    ],
+    "visibility": true,
+    "duplicate": true,
+    "lock": true
+  },
+  "inspector": {
+    "mainTab": "Element",
+    "tabs": [
+      "Content",
+      "Style",
+      "Responsive",
+      "Advanced"
+    ],
+    "pageTabAlwaysAvailable": true
+  },
+  "themeTokens": {
+    "colors": [
+      "primary",
+      "surface",
+      "foreground",
+      "muted",
+      "accent"
+    ],
+    "fonts": [
+      "body",
+      "heading"
+    ],
+    "spacing": [
+      "xs",
+      "sm",
+      "md",
+      "lg",
+      "xl"
+    ],
+    "radius": [
+      "sm",
+      "md",
+      "lg"
+    ]
+  },
+  "validation": {
+    "unknownProps": "reject",
+    "urls": "safe-protocols-only",
+    "html": "sanitize",
+    "maxDepth": "server-policy"
+  },
+  "rendering": {
+    "server": "required",
+    "editorPreview": "required",
+    "semanticHtml": "required"
+  },
+  "accessibility": {
+    "keyboard": "required",
+    "focusVisible": "required",
+    "altOrDecorative": false
+  },
+  "migrations": {
+    "fromVersions": [],
+    "unknownVersion": "safe-fallback"
+  },
+  "tests": [
+    "schema",
+    "renderer",
+    "responsive",
+    "permissions",
+    "a11y",
+    "regression"
+  ]
+}

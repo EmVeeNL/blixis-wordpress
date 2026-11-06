@@ -1,0 +1,97 @@
+{
+  "specVersion": 1,
+  "type": "blixis/tabs",
+  "version": 1,
+  "displayName": "Tabs",
+  "category": "interactive",
+  "icon": "tabler:layout-navbar",
+  "tier": "free",
+  "status": "planned",
+  "description": "Planned version 1 specification for the tabs element; implementation and tests belong to phase 05.",
+  "defaultProps": {
+    "items": [
+      {
+        "label": "Tab 1",
+        "body": "Inhoud"
+      }
+    ]
+  },
+  "allowedParents": [
+    "blixis/section",
+    "blixis/container",
+    "blixis/column"
+  ],
+  "allowedChildren": [],
+  "supports": {
+    "responsive": [
+      "variant",
+      "orientation"
+    ],
+    "visibility": true,
+    "duplicate": true,
+    "lock": true
+  },
+  "inspector": {
+    "mainTab": "Element",
+    "tabs": [
+      "Content",
+      "Style",
+      "Responsive",
+      "Advanced"
+    ],
+    "pageTabAlwaysAvailable": true
+  },
+  "themeTokens": {
+    "colors": [
+      "primary",
+      "surface",
+      "foreground",
+      "muted",
+      "accent"
+    ],
+    "fonts": [
+      "body",
+      "heading"
+    ],
+    "spacing": [
+      "xs",
+      "sm",
+      "md",
+      "lg",
+      "xl"
+    ],
+    "radius": [
+      "sm",
+      "md",
+      "lg"
+    ]
+  },
+  "validation": {
+    "unknownProps": "reject",
+    "urls": "safe-protocols-only",
+    "html": "sanitize",
+    "maxDepth": "server-policy"
+  },
+  "rendering": {
+    "server": "required",
+    "editorPreview": "required",
+    "semanticHtml": "required"
+  },
+  "accessibility": {
+    "keyboard": "required",
+    "focusVisible": "required",
+    "altOrDecorative": false
+  },
+  "migrations": {
+    "fromVersions": [],
+    "unknownVersion": "safe-fallback"
+  },
+  "tests": [
+    "schema",
+    "renderer",
+    "responsive",
+    "permissions",
+    "a11y",
+    "regression"
+  ]
+}

@@ -1,21 +1,45 @@
 # Architecture
 
-The repository owns source and automation; `~/Sites/blixis` owns the WordPress runtime. Its `wp-content/themes/blixis-base` and `wp-content/plugins/blixis-blocks` paths point to this checkout. Core, uploads, and `wp-config.php` remain in the runtime installation. MariaDB data remains in Docker volume `blixis_mariadb_data`.
+## Status and system boundary
 
-## Theme decision
+**Implemented:** this repository contains a minimal `blixis-base` block theme, a `blixis-blocks` plugin entry point, a link script, and a MariaDB Compose definition. The active site is `~/Sites/blixis`; its Core, uploads, configuration, and database remain outside this source checkout. The Blixis theme and plugin are linked into that site but are inactive. No editor, token generator, content renderer, or Content API exists yet.
 
-Blixis Base is a versioned block parent theme using `theme.json` and WordPress templates. This gives WordPress native global styles, editor controls, and child-theme inheritance. Custom site themes can be child themes with their own `theme.json` and templates. A shared PHP framework would add a second inheritance mechanism before one is needed.
+**Planned architecture:** Blixis Base is a versioned parent theme. Site branding belongs in a child theme. Blixis Blocks owns the editor, element registry, versioned document, persistence, and rendering. A separately deployable Content API module exposes deliberately published content. WordPress owns posts, permissions, revisions, and publication state.
 
-WordPress global styles are the canonical runtime design tokens. Future tooling should derive Tailwind CSS v4 theme variables and editor token types from a single token source, then generate `theme.json`; do not maintain separate hand-edited copies. WordPress font library and font-face declarations will supply fonts. Define responsive breakpoints once in that token source when Tailwind is introduced. Use core semantic blocks and accessible markup.
+```mermaid
+flowchart LR
+  Editor[Blixis Blocks editor] --> REST[Authenticated WordPress REST routes]
+  REST --> Posts[(Posts and protected document meta)]
+  Posts --> Renderer[Allowlisted PHP renderer]
+  Registry[Versioned element registry] --> Editor
+  Registry --> Renderer
+  Tokens[Validated design tokens] --> Theme[Base and child theme]
+  Renderer --> Theme
+  Posts --> API[Read-only Content API]
+```
 
-The current theme is intentionally minimal and is not activated by setup. Child-theme behavior, generated tokens, Tailwind integration, and Blocks integration are roadmap work.
+## Ownership and dependency rules
 
-## Plugin boundaries
+- `themes/blixis-base` owns neutral templates, semantic structure, and theme contracts. The UI must never edit parent source.
+- A future child theme owns site branding and approved overrides. The proposed Wilde Groei site belongs there, not in Base.
+- `plugins/blixis-blocks` owns editor and document routes. Keep the editor JavaScript out of public pages.
+- The future API has its own permission and key boundary. Do not expose protected post meta through a generic route.
+- Introduce shared packages when implemented: schema/element contracts independent of React, tokens independent of UI, editor depending on contracts, and PHP renderer validating against the same versioned contract. Do not create empty packages.
 
-`blixis-blocks` is an independently versioned plugin. Its future editor UI uses React, TypeScript, Tailwind CSS v4, shadcn/ui, and dnd-kit. Keep element definitions and unique icons in an extensible registry; separate content schema, editor state, server rendering, and persistence. Store versioned portable content; migrate it explicitly. REST endpoints must use WordPress authentication, nonces where appropriate, and capability checks. Draft preview, autosave, undo/redo, review workflows, and premium elements require real implementations before UI is exposed.
+## Document and rendering contract (planned)
 
-The Content API will use its own plugin or module after the access model and schema are defined. It must not expose draft or private content without authorization.
+Store a versioned node graph in protected `_blixis_document` post meta. WordPress post fields remain authoritative for title, slug, status, author, and publication date. Each node has a stable ID, `type`, element `version`, props, responsive overrides, and child references. Server validation must reject unknown props, missing references, cycles, invalid nesting, and excessive size/depth. Explicitly configure and test post-meta revision support; do not assume it is automatic.
 
-## Packages
+Public HTML is server rendered from an allowlist with contextual escaping, semantic markup, and asset loading. React runs in admin. Preview must match renderer semantics; use contract fixtures and visual regression tests. Unknown versions must preserve stored content and fail safely. Schema migrations need pure transformations, golden fixtures, and a rollback/export path.
 
-Do not create empty workspace packages. Introduce `design-tokens` when token generation is built, `block-schema` when schema validation is used on both client and server, and `shared-ui` only after components are reused. `shared-ui` may depend on `design-tokens` and `block-schema`; neither foundational package may depend on `shared-ui`.
+## Tokens and responsive model (planned)
+
+A validated `BlixisThemeConfig` is the intended canonical site configuration. Generate `theme.json` mappings and CSS from it; do not hand-edit divergent copies. Tailwind CSS v4 uses CSS-first `@import "tailwindcss"` and `@theme` for utilities known at build time. Safe runtime CSS custom properties may change colors and spacing without recompilation; new utility names and breakpoint variants require a build. MVP uses fixed breakpoint presets. Resolve node overrides mobile-first and write to a breakpoint only when the editor explicitly enters that editing context. Device width presets are preview controls.
+
+## Editor and publication (planned)
+
+Use WordPress cookie authentication plus a REST nonce and post-specific capabilities for editor requests. Local immutable tree state needs undo/redo, dirty state, and conflict detection against a revision or ETag. Autosave must never publish. A draft preview is authenticated in MVP; external review links remain proposed in [ADR-005](decisions/ADR-005-review-security.md). The page ownership policy relative to Gutenberg remains proposed in [ADR-006](decisions/ADR-006-editor-and-gutenberg.md).
+
+## Cross-cutting contracts
+
+See [security and performance](../security/SECURITY_AND_PERFORMANCE.md), [API plan](API.md), [element registry](ELEMENTS.md), [token configuration](../development/CONFIGURATION.md), and [decisions](DECISIONS.md). The exact WordPress/PHP/Node support matrix is open until the compatibility spike.

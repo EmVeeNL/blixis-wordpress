@@ -1,0 +1,14 @@
+/* Illustrative; only known utilities are generated at build time. */
+@import "tailwindcss";
+@theme {
+  --color-primary: var(--blixis-color-primary);
+  --color-surface: var(--blixis-color-surface);
+  --font-body: var(--blixis-font-body);
+  --radius-card: var(--blixis-radius-lg);
+}
+:root {
+  --blixis-color-primary: #155dfc;
+  --blixis-color-surface: #ffffff;
+  --blixis-font-body: "Local Sans", system-ui, sans-serif;
+  --blixis-radius-lg: 1.25rem;
+}

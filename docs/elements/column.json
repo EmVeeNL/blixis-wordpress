@@ -1,0 +1,107 @@
+{
+  "specVersion": 1,
+  "type": "blixis/column",
+  "version": 1,
+  "displayName": "Column",
+  "category": "layout",
+  "icon": "tabler:layout-column",
+  "tier": "free",
+  "status": "planned",
+  "description": "Planned version 1 specification for the column element; implementation and tests belong to phase 05.",
+  "defaultProps": {
+    "basis": "equal"
+  },
+  "allowedParents": [
+    "blixis/columns"
+  ],
+  "allowedChildren": [
+    "blixis/heading",
+    "blixis/paragraph",
+    "blixis/image",
+    "blixis/button",
+    "blixis/spacer",
+    "blixis/divider",
+    "blixis/icon",
+    "blixis/list",
+    "blixis/quote",
+    "blixis/video",
+    "blixis/accordion",
+    "blixis/tabs",
+    "blixis/card",
+    "blixis/cta",
+    "blixis/form-embed"
+  ],
+  "supports": {
+    "responsive": [
+      "basis",
+      "padding",
+      "align"
+    ],
+    "visibility": true,
+    "duplicate": true,
+    "lock": true
+  },
+  "inspector": {
+    "mainTab": "Element",
+    "tabs": [
+      "Content",
+      "Style",
+      "Responsive",
+      "Advanced"
+    ],
+    "pageTabAlwaysAvailable": true
+  },
+  "themeTokens": {
+    "colors": [
+      "primary",
+      "surface",
+      "foreground",
+      "muted",
+      "accent"
+    ],
+    "fonts": [
+      "body",
+      "heading"
+    ],
+    "spacing": [
+      "xs",
+      "sm",
+      "md",
+      "lg",
+      "xl"
+    ],
+    "radius": [
+      "sm",
+      "md",
+      "lg"
+    ]
+  },
+  "validation": {
+    "unknownProps": "reject",
+    "urls": "safe-protocols-only",
+    "html": "sanitize",
+    "maxDepth": "server-policy"
+  },
+  "rendering": {
+    "server": "required",
+    "editorPreview": "required",
+    "semanticHtml": "required"
+  },
+  "accessibility": {
+    "keyboard": "required",
+    "focusVisible": "required",
+    "altOrDecorative": false
+  },
+  "migrations": {
+    "fromVersions": [],
+    "unknownVersion": "safe-fallback"
+  },
+  "tests": [
+    "schema",
+    "renderer",
+    "responsive",
+    "permissions",
+    "a11y",
+    "regression"
+  ]
+}

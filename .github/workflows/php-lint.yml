@@ -9,6 +9,12 @@ permissions:
   contents: read
 
 jobs:
+  docs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - name: Check documentation links and roadmap metadata
+        run: python3 scripts/check-docs.py
   syntax:
     runs-on: ubuntu-latest
     steps:

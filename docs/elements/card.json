@@ -1,0 +1,101 @@
+{
+  "specVersion": 1,
+  "type": "blixis/card",
+  "version": 1,
+  "displayName": "Card",
+  "category": "layout",
+  "icon": "tabler:article",
+  "tier": "free",
+  "status": "planned",
+  "description": "Planned version 1 specification for the card element; implementation and tests belong to phase 05.",
+  "defaultProps": {
+    "variant": "default"
+  },
+  "allowedParents": [
+    "blixis/section",
+    "blixis/container",
+    "blixis/column"
+  ],
+  "allowedChildren": [
+    "blixis/heading",
+    "blixis/paragraph",
+    "blixis/image",
+    "blixis/button",
+    "blixis/icon",
+    "blixis/list"
+  ],
+  "supports": {
+    "responsive": [
+      "padding",
+      "radius",
+      "background",
+      "shadow"
+    ],
+    "visibility": true,
+    "duplicate": true,
+    "lock": true
+  },
+  "inspector": {
+    "mainTab": "Element",
+    "tabs": [
+      "Content",
+      "Style",
+      "Responsive",
+      "Advanced"
+    ],
+    "pageTabAlwaysAvailable": true
+  },
+  "themeTokens": {
+    "colors": [
+      "primary",
+      "surface",
+      "foreground",
+      "muted",
+      "accent"
+    ],
+    "fonts": [
+      "body",
+      "heading"
+    ],
+    "spacing": [
+      "xs",
+      "sm",
+      "md",
+      "lg",
+      "xl"
+    ],
+    "radius": [
+      "sm",
+      "md",
+      "lg"
+    ]
+  },
+  "validation": {
+    "unknownProps": "reject",
+    "urls": "safe-protocols-only",
+    "html": "sanitize",
+    "maxDepth": "server-policy"
+  },
+  "rendering": {
+    "server": "required",
+    "editorPreview": "required",
+    "semanticHtml": "required"
+  },
+  "accessibility": {
+    "keyboard": "required",
+    "focusVisible": "required",
+    "altOrDecorative": false
+  },
+  "migrations": {
+    "fromVersions": [],
+    "unknownVersion": "safe-fallback"
+  },
+  "tests": [
+    "schema",
+    "renderer",
+    "responsive",
+    "permissions",
+    "a11y",
+    "regression"
+  ]
+}

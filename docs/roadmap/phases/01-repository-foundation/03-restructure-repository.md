@@ -1,7 +1,30 @@
-# 01-03 — Restructure repository
+---
+id: "R-01"
+title: "Restructure repository and separate runtime"
+phase: "repository-foundation"
+status: Done
+priority: P0
+owner: null
+created_at: "2026-11-06"
+updated_at: "2026-11-06"
+depends_on: []
+branch: "chore/01-03-restructure-monorepo"
+pr_number: 2
+pr_url: "https://github.com/EmVeeNL/blixis-wordpress/pull/2"
+commit_sha: "1006a5a"
+merged_at: "2026-11-06"
+merge_commit_sha: "1006a5a"
+started_at: null
+completed_at: "2026-11-06"
+closed_at: null
+blocked_reason: null
+blocked_by: []
+---
+
+# R-01 — Restructure repository
 
 - **Status:** Done
-- **Priority:** High
+- **Priority:** P0
 - **Dependencies:** Existing WordPress installation and database backup
 - **Branch:** `chore/01-03-restructure-monorepo`
 - **Commit references:** `1006a5a` (squash merge)
@@ -14,7 +37,7 @@ Separate Blixis source from WordPress Core and runtime data. Preserve Git histor
 
 ## Implementation details
 
-Clone remote `main` into `~/Sites/blixis-wordpress`. Keep the existing site at `~/Sites/blixis`. Add a stable Compose project name, source components, and an idempotent link script. Remove third-party tracked files from the source repository only after explicit review of the file list and consequences.
+Clone remote `main` into the separate source checkout (originally `~/Sites/blixis-wordpress`; now `~/Developer/WordPress/blixis-wordpress`). Keep the existing site at `~/Sites/blixis`. Add a stable Compose project name, source components, and an idempotent link script. Remove third-party tracked files from the source repository only after explicit review of the file list and consequences.
 
 ## Acceptance criteria
 
@@ -23,7 +46,7 @@ Clone remote `main` into `~/Sites/blixis-wordpress`. Keep the existing site at `
 - Theme and plugin links resolve and WordPress discovers both.
 - CI checks correspond to implemented tooling.
 - Git history remains intact and no secrets are staged.
-- Documentation matches actual paths and commands.
+- Documentation matched the migration at merge; subsequent location changes are recorded in this documentation branch.
 
 ## Tests and documentation
 

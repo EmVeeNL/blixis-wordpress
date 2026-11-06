@@ -1,13 +1,22 @@
 # Architecture decisions
 
-## ADR 001 — Separate source from the runtime
+## Implemented repository decisions
 
-Source is cloned from remote `main` into `~/Sites/blixis-wordpress`; the working installation stays at `~/Sites/blixis`. Links join local theme/plugin source to WordPress. This avoids moving Core, uploads, configuration, or the database. The old site's Git checkout is preserved until its removal can be reviewed separately.
+- **R-001 — Separate source and runtime:** source is now at `~/Developer/WordPress/blixis-wordpress`; WordPress remains at `~/Sites/blixis`, linked only for the Blixis theme/plugin. Core, uploads, configuration, and database were not moved.
+- **R-002 — Stable Compose identity:** `name: blixis` preserves the existing MariaDB volume identity across checkout locations.
+- **R-003 — Block parent theme:** Base uses WordPress block-theme structures. Token generation and child-theme behavior remain planned.
 
-## ADR 002 — Stable Compose identity
+These replace the location-specific wording in the earlier repository notes. The downloaded ADRs below are **proposals or working assumptions**; `Accepted (provisional)` is not owner approval.
 
-The existing Compose project is `blixis` and its named volume is `blixis_mariadb_data`. `name: blixis` in the repository Compose file prevents a change in project/volume identity when commands run from the new directory. Do not run both Compose definitions to recreate the service; verify configuration first.
+| ADR | Status | Decision under review |
+|---|---|---|
+| [001](decisions/ADR-001-modular-wordpress-architecture.md) | Accepted (provisional) | Separate Base, child theme, Blocks, and API |
+| [002](decisions/ADR-002-tailwind-token-model.md) | Accepted (provisional) | Tailwind v4 build tokens and validated runtime values |
+| [003](decisions/ADR-003-versioned-content-schema.md) | Accepted (provisional) | Versioned JSON in protected post meta |
+| [004](decisions/ADR-004-server-rendering.md) | Accepted (provisional) | PHP public rendering; React admin editor |
+| [005](decisions/ADR-005-review-security.md) | Proposed | Authenticated preview first |
+| [006](decisions/ADR-006-editor-and-gutenberg.md) | Proposed | One editor owner per page |
+| [007](decisions/ADR-007-api-authentication.md) | Proposed | Hashed scoped API keys |
+| [008](decisions/ADR-008-repository-visibility.md) | Proposed | Repository visibility policy |
 
-## ADR 003 — Block parent theme
-
-Use a WordPress block theme and child themes for site variants. Theme JSON and WordPress native styles provide standard inheritance; token generation and Tailwind come when implemented.
+Accept, amend, supersede, or reject each after owner review and implementation evidence. Track unresolved product questions in [Open questions](OPEN_QUESTIONS.md).

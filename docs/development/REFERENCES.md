@@ -1,0 +1,3 @@
+# Technical references
+
+Consult current official documentation and pin versions during implementation. The downloaded pack identified [Tailwind theme variables](https://tailwindcss.com/docs/theme), [Tailwind directives](https://tailwindcss.com/docs/functions-and-directives), [WordPress theme.json](https://developer.wordpress.org/block-editor/reference-guides/theme-json-reference/), [WordPress global styles](https://developer.wordpress.org/themes/core-concepts/global-settings-and-styles/), [WordPress revisions](https://wordpress.org/documentation/article/revisions/), and [dnd-kit React](https://dndkit.com/react/quickstart/) as design references. These links do not establish compatibility or license rights.

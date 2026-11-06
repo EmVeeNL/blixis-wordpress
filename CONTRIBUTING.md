@@ -1,5 +1,5 @@
 # Contributing
 
-Read [architecture](docs/architecture/ARCHITECTURE.md) and the [roadmap](docs/roadmap/ROADMAP.md). Use a task branch from current `main`, make focused Conventional Commits, and open a PR with scope, tests run, and any manual WordPress checks. Keep the existing runtime and database intact. Do not commit secrets or bundled WordPress files.
+Read [AGENTS.md](AGENTS.md), the [architecture](docs/architecture/ARCHITECTURE.md), [Git workflow](docs/development/GIT.md), and the relevant [task](docs/roadmap/ROADMAP.md). Use a focused branch and Conventional Commits. A PR should cite the task, explain impact and rollback, and report exact test results. Keep the runtime and database intact. Do not commit secrets, customer data, unlicensed fonts/assets, or bundled WordPress files.
 
-For local development, follow [README](README.md). Run `php -l` on changed PHP files, validate JSON with a parser, and check WordPress recognition through WP-CLI when changing linked components. Add focused automated tests with the feature they verify.
+Review permission checks, schema compatibility, semantic HTML, responsive and keyboard behavior, performance, tests, and documentation. Add automated checks when a real feature needs them. Run `php -l` on changed PHP, parse changed JSON, and verify WordPress recognition when component links change. Update an ADR for contract changes.
