@@ -2,16 +2,16 @@
 id: "01-01"
 title: "Confirm requirements, personas, and MVP scope"
 phase: "01"
-status: Busy
+status: In Review
 priority: P0
 owner: "EmVeeNL"
 created_at: "2026-11-06"
 updated_at: "2026-11-06"
 depends_on: []
 branch: "docs/01-01-requirements"
-pr_number: null
-pr_url: null
-commit_sha: null
+pr_number: 6
+pr_url: "https://github.com/EmVeeNL/blixis-wordpress/pull/6"
+commit_sha: "2c97face93364d0f4ced0ec8b25ad837dbd456da"
 merged_at: null
 merge_commit_sha: null
 started_at: "2026-11-06"
@@ -50,11 +50,11 @@ Run `python3 scripts/check-docs.py`; manually check requirement-to-milestone tra
 - **Priority:** P0
 - **Dependencies:** None
 - **Branch:** `docs/01-01-requirements`
-- **Commit references:** None.
-- **PR number and URL:** None.
+- **Commit references:** `2c97face93364d0f4ced0ec8b25ad837dbd456da`
+- **PR number and URL:** [#6](https://github.com/EmVeeNL/blixis-wordpress/pull/6)
 - **Started / completed / closed:** Started 2026-11-06; not completed or closed.
 - **Proposal:** [Scope traceability](../../../architecture/SCOPE_TRACEABILITY.md). Owner approval is pending, so the acceptance criteria stay unchecked.
-- **Status:** Busy. Update frontmatter and history on every transition; follow [status workflow](../../../development/STATUS_WORKFLOW.md).
+- **Status:** In Review. Update frontmatter and history on every transition; follow [status workflow](../../../development/STATUS_WORKFLOW.md).
 
 ## Status history
 
@@ -64,3 +64,4 @@ Run `python3 scripts/check-docs.py`; manually check requirement-to-milestone tra
 | 2026-11-06 | Ready → Backlog | Phase audit: owner unassigned and no scope approval recorded |
 | 2026-11-06 | Backlog → Ready | Owner EmVeeNL assigned; no dependencies; criteria defined. Owner instruction: scope approval is an acceptance criterion, not a Ready prerequisite |
 | 2026-11-06 | Ready → Busy | Branch `docs/01-01-requirements` created; scope proposal started |
+| 2026-11-06 | Busy → In Review | PR [#6](https://github.com/EmVeeNL/blixis-wordpress/pull/6), commit `2c97fac`; `python3 scripts/check-docs.py` passed. Owner approval and stakeholder walkthrough pending |
