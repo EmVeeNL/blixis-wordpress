@@ -2,16 +2,16 @@
 id: "01-03"
 title: "Build the monorepo scaffold"
 phase: "01"
-status: Busy
+status: In Review
 priority: P0
 owner: "EmVeeNL"
 created_at: "2026-11-06"
 updated_at: "2026-11-06"
 depends_on: ["01-02"]
 branch: "chore/01-03-workspace-scaffold"
-pr_number: null
-pr_url: null
-commit_sha: null
+pr_number: 10
+pr_url: "https://github.com/EmVeeNL/blixis-wordpress/pull/10"
+commit_sha: "ac365609e1afb1e8381eafb7eee07694bfdb852a"
 merged_at: null
 merge_commit_sha: null
 started_at: "2026-11-06"
@@ -50,10 +50,10 @@ Use a clean checkout for install/build and script smoke tests. Verify `bash -n s
 - **Priority:** P0
 - **Dependencies:** `01-02`
 - **Branch:** `chore/01-03-workspace-scaffold`
-- **Commit references:** None.
-- **PR number and URL:** None.
+- **Commit references:** `ac365609e1afb1e8381eafb7eee07694bfdb852a`
+- **PR number and URL:** [#10](https://github.com/EmVeeNL/blixis-wordpress/pull/10)
 - **Started / completed / closed:** Started 2026-11-06; not completed or closed.
-- **Status:** Busy. Follow [status workflow](../../../development/STATUS_WORKFLOW.md).
+- **Status:** In Review. Follow [status workflow](../../../development/STATUS_WORKFLOW.md).
 
 ## Status history
 
@@ -62,3 +62,4 @@ Use a clean checkout for install/build and script smoke tests. Verify `bash -n s
 | 2026-11-06 | Initial planning → Backlog | Downloaded project plan; no implementation evidence |
 | 2026-11-06 | Backlog → Ready | Dependency `01-02` was completed in PR [#8](https://github.com/EmVeeNL/blixis-wordpress/pull/8), merged as `d155e91987e6ace6d57380796ed0ac66890c5573`; owner and acceptance criteria are recorded. Package manager choice Q02 is part of this task's implementation planning. |
 | 2026-11-06 | Ready → Busy | Branch `chore/01-03-workspace-scaffold` created; workspace and PHP tooling started |
+| 2026-11-06 | Busy → In Review | PR [#10](https://github.com/EmVeeNL/blixis-wordpress/pull/10), commit `ac36560`; fresh-clone install and build, link script tests, Compose, and WordPress recognition passed. Owner decisions pending |
