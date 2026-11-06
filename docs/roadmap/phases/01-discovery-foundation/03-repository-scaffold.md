@@ -2,7 +2,7 @@
 id: "01-03"
 title: "Build the monorepo scaffold"
 phase: "01"
-status: Backlog
+status: Ready
 priority: P0
 owner: "EmVeeNL"
 created_at: "2026-11-06"
@@ -53,10 +53,11 @@ Use a clean checkout for install/build and script smoke tests. Verify `bash -n s
 - **Commit references:** None.
 - **PR number and URL:** None.
 - **Started / completed / closed:** Not recorded.
-- **Status:** Backlog. Update frontmatter and history on every transition; follow [status workflow](../../../development/STATUS_WORKFLOW.md).
+- **Status:** Ready. Dependency `01-02` is Done; owner and criteria are recorded. Follow [status workflow](../../../development/STATUS_WORKFLOW.md).
 
 ## Status history
 
 | Date | Transition | Evidence |
 |---|---|---|
 | 2026-11-06 | Initial planning → Backlog | Downloaded project plan; no implementation evidence |
+| 2026-11-06 | Backlog → Ready | Dependency `01-02` was completed in PR [#8](https://github.com/EmVeeNL/blixis-wordpress/pull/8), merged as `d155e91987e6ace6d57380796ed0ac66890c5573`; owner and acceptance criteria are recorded. Package manager choice Q02 is part of this task's implementation planning. |
