@@ -2,16 +2,16 @@
 id: "01-02"
 title: "Verify WordPress and toolchain compatibility"
 phase: "01"
-status: Busy
+status: In Review
 priority: P0
 owner: "EmVeeNL"
 created_at: "2026-11-06"
 updated_at: "2026-11-06"
 depends_on: ["01-01"]
 branch: "docs/01-02-compatibility-spike"
-pr_number: null
-pr_url: null
-commit_sha: null
+pr_number: 8
+pr_url: "https://github.com/EmVeeNL/blixis-wordpress/pull/8"
+commit_sha: "f451544f5b41cffcb47d9b0bf794d3c592572661"
 merged_at: null
 merge_commit_sha: null
 started_at: "2026-11-06"
@@ -50,11 +50,11 @@ Run smoke tests for WordPress REST meta and revisions, PHP versions, Node build,
 - **Priority:** P0
 - **Dependencies:** `01-01`
 - **Branch:** `docs/01-02-compatibility-spike`
-- **Commit references:** None.
-- **PR number and URL:** None.
+- **Commit references:** `f451544f5b41cffcb47d9b0bf794d3c592572661`
+- **PR number and URL:** [#8](https://github.com/EmVeeNL/blixis-wordpress/pull/8)
 - **Started / completed / closed:** Started 2026-11-06; not completed or closed.
 - **Evidence:** [Support matrix](../../../development/SUPPORT_MATRIX.md) and [spike](../../../../spikes/01-02-compatibility/README.md).
-- **Status:** Busy. Follow the [status workflow](../../../development/STATUS_WORKFLOW.md).
+- **Status:** In Review. Follow the [status workflow](../../../development/STATUS_WORKFLOW.md).
 
 ## Status history
 
@@ -63,3 +63,4 @@ Run smoke tests for WordPress REST meta and revisions, PHP versions, Node build,
 | 2026-11-06 | Initial planning → Backlog | Downloaded project plan; no implementation evidence |
 | 2026-11-06 | Backlog → Ready | Task `01-01` approved and merged in PR [#6](https://github.com/EmVeeNL/blixis-wordpress/pull/6) as `1c51d1b`; owner EmVeeNL and acceptance criteria are defined. |
 | 2026-11-06 | Ready → Busy | Branch `docs/01-02-compatibility-spike` created; compatibility spike started |
+| 2026-11-06 | Busy → In Review | PR [#8](https://github.com/EmVeeNL/blixis-wordpress/pull/8), commit `f451544`; WordPress matrix, Node matrix, and browser tests recorded in the spike results. Owner decisions pending; real Safari and Edge not run |
