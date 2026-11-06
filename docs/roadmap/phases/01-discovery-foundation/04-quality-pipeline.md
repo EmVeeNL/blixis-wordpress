@@ -33,6 +33,7 @@ Add CI jobs for implemented PHP and TypeScript lint, type checking, tests, build
 - Use pinned actions, least-privilege workflow permissions, deterministic dependencies, and appropriately scoped CI matrices.
 - Make required checks correspond to jobs that actually exist; document branch-protection requirements and review policy.
 - Give each check a failure mode and clear diagnostic output so PR authors can repair it.
+- Use Oxlint with `oxlint-tsgolint` for TypeScript 7 linting and Oxfmt for formatting. Pin versions, run type-aware lint plus type checking, and test both failure paths before making CI checks required. The 01-02 spike is feasibility evidence, not CI coverage.
 
 ## Acceptance criteria
 

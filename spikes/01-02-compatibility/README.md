@@ -19,6 +19,8 @@ python3 spikes/01-02-compatibility/results/show.py
 cd spikes/01-02-compatibility/frontend
 npm ci --ignore-scripts
 npm run build              # tsc, Tailwind build, Tailwind assertions, Vite build
+npm run lint               # Oxlint, type-aware rules, TypeScript diagnostics
+npm run format:check       # Oxfmt formatting check
 npm run licenses
 PLAYWRIGHT_BROWSERS_PATH="$(mktemp -d)" npx playwright install chromium firefox webkit
 PLAYWRIGHT_BROWSERS_PATH="<same directory>" npx playwright test --repeat-each=3

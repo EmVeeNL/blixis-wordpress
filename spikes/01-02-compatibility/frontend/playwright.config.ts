@@ -7,7 +7,11 @@ export default defineConfig({
   workers: 1,
   reporter: [["list"], ["json", { outputFile: "test-results/playwright.json" }]],
   use: { baseURL: "http://127.0.0.1:4173", trace: "off" },
-  webServer: { command: "npx vite preview --host 127.0.0.1 --port 4173 --strictPort", url: "http://127.0.0.1:4173", reuseExistingServer: false },
+  webServer: {
+    command: "npx vite preview --host 127.0.0.1 --port 4173 --strictPort",
+    url: "http://127.0.0.1:4173",
+    reuseExistingServer: false,
+  },
   projects: [
     { name: "chrome-installed", use: { ...devices["Desktop Chrome"], channel: "chrome" } },
     { name: "chromium-playwright", use: { ...devices["Desktop Chrome"] } },

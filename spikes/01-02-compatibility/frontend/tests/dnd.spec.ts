@@ -27,11 +27,13 @@ const test = base.extend<{ guarded: void }>({
   ],
 });
 
-
-const state = async (page: Page): Promise<Tree> => JSON.parse((await page.getByTestId("state").textContent()) ?? "[]");
-const items = (tree: Tree, id: string): string[] | undefined => tree.find((s) => s.id === id)?.items;
+const state = async (page: Page): Promise<Tree> =>
+  JSON.parse((await page.getByTestId("state").textContent()) ?? "[]");
+const items = (tree: Tree, id: string): string[] | undefined =>
+  tree.find((s) => s.id === id)?.items;
 const order = (tree: Tree): string[] => tree.map((s) => s.id);
-const announced = (page: Page): Promise<string[]> => page.evaluate(() => (window as unknown as { announced: string[] }).announced);
+const announced = (page: Page): Promise<string[]> =>
+  page.evaluate(() => (window as unknown as { announced: string[] }).announced);
 
 // KeyboardSensor attaches its keydown listener in a setTimeout after pick-up, so a
 // key sent in the same tick is lost. Waiting for the announcement matches real use.

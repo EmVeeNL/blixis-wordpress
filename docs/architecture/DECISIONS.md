@@ -5,6 +5,7 @@
 - **R-001 — Separate source and runtime:** source is now at `~/Developer/WordPress/blixis-wordpress`; WordPress remains at `~/Sites/blixis`, linked only for the Blixis theme/plugin. Core, uploads, configuration, and database were not moved.
 - **R-002 — Stable Compose identity:** `name: blixis` preserves the existing MariaDB volume identity across checkout locations.
 - **R-003 — Block parent theme:** Base uses WordPress block-theme structures. Token generation and child-theme behavior remain planned.
+- **R-004 — Compatibility baseline:** [ADR-009](decisions/ADR-009-compatibility-and-tooling.md) records approved target floors and the TypeScript 7, Oxlint, and Oxfmt choice. Header and CI enforcement remain scheduled work.
 
 These replace the location-specific wording in the earlier repository notes. The downloaded ADRs below are **proposals or working assumptions**; `Accepted (provisional)` is not owner approval.
 
