@@ -1,7 +1,3 @@
-
-> blixis-compat-spike-frontend@0.0.0 licenses
-> node tests/check-licenses.ts
-
 Direct:
   @dnd-kit/core@6.3.1: MIT
   @playwright/test@1.65.0: Apache-2.0

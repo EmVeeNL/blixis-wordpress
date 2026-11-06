@@ -1,6 +1,6 @@
 # 01-02 compatibility spike
 
-Throwaway proof for [task 01-02](../../docs/roadmap/phases/01-discovery-foundation/02-compatibility-spike.md). It is not product code, not a workspace, and not run by CI. The conclusions are in the [support matrix](../../docs/development/SUPPORT_MATRIX.md); raw results are in [`results/`](results/).
+Throwaway proof for [task 01-02](../../docs/roadmap/phases/01-discovery-foundation/02-compatibility-spike.md). It is not product code and not run by CI. Since task 01-03 its frontend is the first pnpm workspace package, because it is the only TypeScript source so far. The conclusions are in the [support matrix](../../docs/development/SUPPORT_MATRIX.md); raw results are in [`results/`](results/).
 
 ## Safety
 
@@ -15,19 +15,17 @@ Environment used: macOS 27.0.1 on arm64, Docker Desktop, Node 26.13.0, on 2026-1
 spikes/01-02-compatibility/wordpress/run-matrix.sh
 python3 spikes/01-02-compatibility/results/show.py
 
-# Frontend
+# Frontend, from the repository root
+pnpm install --frozen-lockfile
 cd spikes/01-02-compatibility/frontend
-npm ci --ignore-scripts
-npm run build              # tsc, Tailwind build, Tailwind assertions, Vite build
-npm run lint               # Oxlint, type-aware rules, TypeScript diagnostics
-npm run format:check       # Oxfmt formatting check
-npm run licenses
-PLAYWRIGHT_BROWSERS_PATH="$(mktemp -d)" npx playwright install chromium firefox webkit
-PLAYWRIGHT_BROWSERS_PATH="<same directory>" npx playwright test --repeat-each=3
+pnpm run build             # tsc, Tailwind build, Tailwind assertions, Vite build
+pnpm run licenses
+PLAYWRIGHT_BROWSERS_PATH="$(mktemp -d)" pnpm exec playwright install chromium firefox webkit
+PLAYWRIGHT_BROWSERS_PATH="<same directory>" pnpm exec playwright test --repeat-each=3
 ./run-node-matrix.sh
 ```
 
-The browser run needs Google Chrome installed for the `chrome-installed` project. npm was used here because the package manager decision (Q02) belongs to task 01-03.
+The browser run needs Google Chrome installed for the `chrome-installed` project. The 01-02 results were first produced with npm; task 01-03 reran the frontend build, licenses, one browser pass, and the Node matrix with pnpm.
 
 ## What the WordPress smoke test covers
 

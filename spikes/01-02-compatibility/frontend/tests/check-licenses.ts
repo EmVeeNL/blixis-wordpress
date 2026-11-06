@@ -41,6 +41,14 @@ function walk(dir: string): void {
   }
 }
 walk("node_modules");
+// pnpm keeps transitive packages in the workspace root's virtual store.
+const store = join("..", "..", "..", "node_modules", ".pnpm");
+if (existsSync(store)) {
+  for (const entry of readdirSync(store)) {
+    const modules = join(store, entry, "node_modules");
+    if (existsSync(modules)) walk(modules);
+  }
+}
 const counts: Record<string, number> = {};
 for (const license of seen.values()) counts[license] = (counts[license] ?? 0) + 1;
 console.log("Direct:");

@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<ruleset name="Blixis">
+  <description>WordPress security and correctness rules for Blixis PHP.</description>
+  <file>plugins</file>
+  <file>themes</file>
+  <arg name="extensions" value="php"/>
+  <arg value="ps"/>
+  <rule ref="WordPress-Extra">
+    <!-- .editorconfig sets 4-space PHP indentation, so spacing style is not enforced here. -->
+    <exclude name="Generic.WhiteSpace.DisallowSpaceIndent"/>
+    <exclude name="WordPress.WhiteSpace.ControlStructureSpacing"/>
+    <exclude name="WordPress.WhiteSpace.OperatorSpacing"/>
+    <exclude name="PEAR.Functions.FunctionCallSignature"/>
+  </rule>
+  <config name="minimum_wp_version" value="7.0"/>
+  <config name="testVersion" value="8.3-"/>
+</ruleset>

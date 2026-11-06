@@ -24,6 +24,8 @@ upgrade/
 
 # Dependencies & build outputs
 node_modules/
+/vendor/
+.pnpm-store/
 coverage/
 .DS_Store
 
