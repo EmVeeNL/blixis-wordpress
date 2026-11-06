@@ -10,7 +10,7 @@
     "build": "pnpm run typecheck && pnpm run build:css && pnpm run check:css && vite build",
     "test:browsers": "playwright test",
     "licenses": "node tests/check-licenses.ts",
-    "lint": "oxlint --type-aware --type-check src tests playwright.config.ts vite.config.ts",
+    "lint": "oxlint --deny-warnings --type-aware --type-check src tests playwright.config.ts vite.config.ts",
     "format:check": "oxfmt --check src tests playwright.config.ts vite.config.ts package.json tsconfig.json",
     "typecheck": "tsc --noEmit"
   },

@@ -1,13 +1,18 @@
 #!/usr/bin/env python3
-"""Summarize results/wordpress-matrix.jsonl. Exits 1 when an expectation failed."""
-import json, pathlib
+"""Summarize a matrix result file. Exits 1 when an expectation failed or there are no results."""
+import json, pathlib, sys
 bad = 0
-for line in (pathlib.Path(__file__).parent / "wordpress-matrix.jsonl").read_text().splitlines():
+source = pathlib.Path(sys.argv[1]) if len(sys.argv) > 1 else pathlib.Path(__file__).parent / "wordpress-matrix.jsonl"
+lines = source.read_text().splitlines()
+if not lines:
+    print("NO RESULTS"); bad += 1
+for line in lines:
     d = json.loads(line); m = d.get("meta", {})
     if not str(m.get("php", "")).startswith(str(m.get("requested_php", "?"))):
         print(f'WRONG RUNTIME: requested PHP {m.get("requested_php")}, ran {m.get("php")}'); bad += 1
     if m.get("expect") == "reject":
-        ok = m["plugin_rc"] != 0 or m["theme_rc"] != 0
+        needle = "does not meet minimum requirements"
+        ok = m["plugin_rc"] != 0 and m["theme_rc"] != 0 and needle in m["plugin_out"] and needle in m["theme_out"]
         print(f'WP {m["wp"]} PHP {m["php"]}: rejected={ok} plugin_rc={m["plugin_rc"]} theme_rc={m["theme_rc"]} | {m["plugin_out"][:110]} | {m["theme_out"][:110]}')
         bad += not ok
         continue

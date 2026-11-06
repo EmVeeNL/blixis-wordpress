@@ -7,7 +7,7 @@ name: blixis-compat-spike
 
 services:
   db:
-    image: mariadb:11.4.13
+    image: mariadb:11.4.13@sha256:d1891ede5a559f1086f55053bb8cc1569b0298338c4d72d71725a7f74f6ba620
     environment:
       MARIADB_ROOT_PASSWORD: "${SPIKE_DB_ROOT_PASSWORD:?run through run-matrix.sh}"
     tmpfs:
@@ -19,7 +19,7 @@ services:
       retries: 30
 
   runner:
-    image: "wordpress:cli-2.12.0-php${SPIKE_PHP:-8.4}"
+    image: "${SPIKE_CLI_IMAGE:?run through run-matrix.sh}"
     profiles: ["run"]
     depends_on:
       db:

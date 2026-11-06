@@ -3,7 +3,7 @@
 # Files are piped in as a tar stream, so nothing is written back to the checkout.
 # The workspace pins Node 26; engine checks are off here to measure other versions.
 set -uo pipefail
-cd "$(dirname "$0")"
+cd "$(dirname "$0")" || exit 1
 OUT="../results/node-matrix.txt"
 SPIKE=spikes/01-02-compatibility/frontend
 : > "$OUT"
