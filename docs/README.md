@@ -16,4 +16,3 @@
 - [Examples](examples/) are conceptual contracts; [assets](assets/) are concept visuals
 
 **Status labels matter:** `Implemented` describes code verified in this repository; `Planned` is in the roadmap; `Proposed` needs an architectural or product decision. No future feature is complete by virtue of being documented here.
-[broken](missing-file.md)
