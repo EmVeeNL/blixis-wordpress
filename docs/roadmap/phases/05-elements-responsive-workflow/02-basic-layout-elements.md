@@ -32,6 +32,7 @@ Build Container, Section, Columns, Column, Heading, Paragraph, Spacer, and Divid
 - Use the module boundaries and contracts in [Architecture](../../../architecture/ARCHITECTURE.md).
 - Validate server-side data and permissions where applicable; document schema or ADR changes.
 - Preserve existing content and provide a migration or rollback plan for contract changes.
+- Before implementing the element set, review a preliminary Wilde Groei page inventory and element needs with the owner. Keep the 20-element baseline; record any additions as an explicit scope change. Full client discovery remains task `07-01`.
 
 ## Acceptance criteria
 
@@ -39,6 +40,7 @@ Build Container, Section, Columns, Column, Heading, Paragraph, Spacer, and Divid
 - [ ] Relevant security, accessibility, and performance requirements are verified.
 - [ ] Tests and documentation are included with the implementation.
 - [ ] A reviewed PR is merged, with evidence and metadata recorded here.
+- [ ] The preliminary Wilde Groei inventory was reviewed before implementation, and any element gaps have a documented decision.
 
 ## Testing requirements
 

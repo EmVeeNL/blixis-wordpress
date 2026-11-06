@@ -10,7 +10,7 @@
 
 ## Delivery and development
 
-- [Roadmap](roadmap/ROADMAP.md) with nine phases and 46 planned tasks; [task status workflow](development/STATUS_WORKFLOW.md)
+- [Roadmap](roadmap/ROADMAP.md) with nine phases and 47 planned tasks; [task status workflow](development/STATUS_WORKFLOW.md)
 - [Local configuration and tokens](development/CONFIGURATION.md), [support matrix](development/SUPPORT_MATRIX.md), [migration record](development/MIGRATION.md)
 - [Git and CI](development/GIT.md), [contributing](../CONTRIBUTING.md), [agent instructions](../AGENTS.md), and [prompts](development/PROMPTS.md)
 - [Examples](examples/) are conceptual contracts; [assets](assets/) are concept visuals

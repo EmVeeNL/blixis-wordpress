@@ -22,6 +22,7 @@ Blixis aims to make WordPress page building predictable, fast, and maintainable 
 | FR-12 | First Wilde Groei website | 07 |
 | FR-13 | Controlled read-only Content API | 08 |
 | FR-14–16 | Frontend editing, premium marketplace, live collaboration | 09, proposed |
+| FR-17 | WordPress Multisite support, planned for v1.1 | 09 |
 
 The [MVP plan](../roadmap/MVP.md) and [roadmap](../roadmap/ROADMAP.md) define delivery order. Individual requirement definitions, priorities, and testable outcomes are proposed in [scope traceability](SCOPE_TRACEABILITY.md). Phase numbers describe plans, not implementation claims.
 
@@ -29,4 +30,4 @@ The [MVP plan](../roadmap/MVP.md) and [roadmap](../roadmap/ROADMAP.md) define de
 
 All REST actions require capability checks, input validation, output escaping, and protected draft boundaries. Public pages should avoid editor JavaScript and target WCAG 2.2 AA. Recoverable migrations, backup/rollback, and revision integrity are release requirements. Performance targets are in the [security and performance guide](../security/SECURITY_AND_PERFORMANCE.md); they are targets, not measured results. Supported runtime versions must be established by task `01-02`.
 
-First-client success (MVP-2) is an approved Wilde Groei site built with a child theme and Blixis Blocks, editable without code, with accessible public HTML; it does not require the API. Product success (MVP-3) adds an API limited to allowed published content. The proposed 15-minute first-page goal requires user validation. Marketplace, billing, live co-editing, arbitrary scripts/CSS, and multisite orchestration are outside initial scope.
+First-client success (MVP-2) is an approved Wilde Groei site built with a child theme and Blixis Blocks, editable without code, with accessible public HTML; it does not require the API. Product success (MVP-3) adds an API limited to allowed published content. The first release line is v1.0.x and targets single-site WordPress; Multisite support is planned for v1.1. The proposed 15-minute first-page goal requires user validation. Marketplace, billing, live co-editing, and arbitrary scripts/CSS remain outside initial scope.

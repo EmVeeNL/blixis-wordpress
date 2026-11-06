@@ -8,6 +8,8 @@
 
 **Blixis** is a planned WordPress theme and visual content platform. Its architecture combines a neutral **Blixis Base** parent theme, site-specific child themes, the **Blixis Blocks** editor, and a controlled Content API. The first client implementation is planned for **Wilde Groei**.
 
+The first release line is planned as **v1.0.x for single-site WordPress**. WordPress Multisite support is planned for **v1.1**; see [task 09-06](docs/roadmap/phases/09-future-extensions/06-multisite-support.md).
+
 > **Current state:** This repository contains a minimal WordPress block theme, a plugin entry point, local integration scripts, and project documentation. The child-theme wizard, visual editor, element renderer, and Content API are planned; the preview below is a concept image, not a screenshot of working software.
 
 ![Concept preview of Blixis Base, showing a proposed website and editor](docs/assets/blixis-base-preview.png)
