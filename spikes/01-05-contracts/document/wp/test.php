@@ -667,4 +667,51 @@ new WP_Query(['post__in' => $ids, 'posts_per_page' => 20, 'update_post_term_cach
 $observe('same_query_without_meta_cache_ms_and_MiB', [round((microtime(true) - $t0) * 1000, 1), round((memory_get_usage() - $m0) / 1048576, 1)]);
 $observe('revisions_to_keep_default', wp_revisions_to_keep(get_post($ids[0])));
 
+// ---- Cross-review seam: user text in the projection against core's shortcode pass.
+$probe_runs = 0;
+add_shortcode('blixis_probe', static function () use (&$probe_runs): string {
+    $probe_runs++;
+    return 'SHORTCODE-RAN';
+});
+$content_of = static function (int $id) use ($admin): string {
+    global $post;
+    wp_set_current_user($admin);
+    $post = get_post($id);
+    setup_postdata($post);
+    $out = (string) apply_filters('the_content', get_post($id)->post_content);
+    wp_reset_postdata();
+    return $out;
+};
+$text_doc = json_encode(['schemaVersion' => 1, 'documentId' => 'seam', 'root' => ['s'], 'nodes' => [
+    's' => ['id' => 's', 'type' => 'blixis/section', 'version' => 1, 'props' => new stdClass(), 'children' => ['h']],
+    'h' => ['id' => 'h', 'type' => 'blixis/heading', 'version' => 1, 'props' => ['text' => '[blixis_probe] AT&amp;T', 'level' => 2], 'children' => []],
+], 'themeRef' => ['theme' => 'blixis-base', 'tokensVersion' => 1]]);
+$seam = $new_post($admin, 'publish', 'Seam');
+update_post_meta($seam, BDC_META, wp_slash($text_doc));
+
+$raw_text = "<!-- wp:html -->\n<section><h2>[blixis_probe]</h2></section>\n<!-- /wp:html -->";
+wp_update_post(['ID' => $seam, 'post_content' => wp_slash($raw_text)]);
+$probe_runs = 0;
+$seam_out = $content_of($seam);
+$observe('unescaped_projection_runs_shortcode_before_late_renderer', $probe_runs > 0);
+$check('finding: an unescaped projection runs shortcodes although the late renderer discards the result', $probe_runs > 0);
+$check('late renderer output carries no shortcode result', !str_contains($seam_out, 'SHORTCODE-RAN'), $seam_out);
+
+$projection = bdc_project_content(json_decode($text_doc), 'html-block');
+wp_update_post(['ID' => $seam, 'post_content' => wp_slash($projection)]);
+$probe_runs = 0;
+$seam_out = $content_of($seam);
+$check('escaped projection: no shortcode runs with the renderer active', $probe_runs === 0, (string) $probe_runs);
+$check('renderer: entity in user text stays literal', str_contains($seam_out, 'AT&amp;amp;T'), $seam_out);
+$check('renderer: shortcode text reaches the page literally', str_contains($seam_out, '[blixis_probe]'), $seam_out);
+
+delete_post_meta($seam, BDC_META);
+$probe_runs = 0;
+$fallback = $content_of($seam);
+$check('escaped projection: no shortcode runs in fallback without a document', $probe_runs === 0, (string) $probe_runs);
+$check('fallback: text decodes to the literal shortcode', str_contains(html_entity_decode($fallback, ENT_QUOTES), '[blixis_probe]'), $fallback);
+$kses_projection = wp_kses_post($projection);
+$observe('kses_projection', $kses_projection);
+$check('escaped projection stays inert after kses, for authors without unfiltered_html', !str_contains($kses_projection, '[blixis_probe]') && str_contains(html_entity_decode($kses_projection, ENT_QUOTES), '[blixis_probe]'), $kses_projection);
+
 echo "CONTRACT_RESULT pass=$pass fail=$fail\n";

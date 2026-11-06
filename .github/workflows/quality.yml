@@ -131,6 +131,39 @@ jobs:
         if: ${{ !cancelled() }}
         run: python3 spikes/01-02-compatibility/results/show.py "$RUNNER_TEMP/wordpress-matrix.jsonl"
 
+  contracts:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/setup-pnpm
+      - uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # 2.40.0
+        with:
+          php-version: "8.4"
+          coverage: none
+      - name: Run contract fixtures in TypeScript and PHP, and fail on any skipped test
+        run: |
+          pnpm --filter blixis-contract-spike run test 2>&1 | tee "$RUNNER_TEMP/contracts.txt"
+          grep -q '^.* skipped 0$' "$RUNNER_TEMP/contracts.txt"
+
+  contracts-wordpress:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        area: [document, tokens, api]
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Run contract proofs on the newest supported stack
+        run: spikes/01-05-contracts/wordpress/run.sh "${{ matrix.area }}" 7.1.4 8.4
+      - name: Run contract proofs on the oldest supported WordPress with the newest PHP
+        run: spikes/01-05-contracts/wordpress/run.sh "${{ matrix.area }}" 7.0.8 8.5
+
   secrets:
     runs-on: ubuntu-24.04
     timeout-minutes: 15

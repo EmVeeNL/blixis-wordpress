@@ -26,6 +26,7 @@ trap 'compose --profile run down --remove-orphans >/dev/null 2>&1 || true' EXIT
 
 compose up -d --wait db >/dev/null
 OUTPUT="$(mktemp)"
+# shellcheck disable=SC2016 # "$0" expands in the container shell.
 COPYFILE_DISABLE=1 tar -cf - runner.sh -C "../$AREA" wp \
   | compose --profile run run --rm --no-deps -T runner \
     sh -c 'mkdir -p /tmp/contract && tar -xf - -C /tmp/contract && exec sh /tmp/contract/runner.sh "$0"' "$WP_VERSION" \

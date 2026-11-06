@@ -2,7 +2,7 @@
 /**
  * Allowlist element renderer. Throwaway proof for task 01-05.
  * resolve functions are pure and also load outside WordPress. blixis_render_node() needs
- * the real esc_html, esc_attr, esc_url, and wp_kses, so it only runs inside WordPress.
+ * the real esc_html, esc_attr, and esc_url, so it only runs inside WordPress.
  */
 
 declare(strict_types=1);
@@ -139,7 +139,6 @@ function blixis_resolve_node( array $node ): array {
 		$ok    = false;
 		switch ( $spec['kind'] ) {
 			case 'text':
-			case 'inlineHtml':
 			case 'url':
 				$ok = is_string( $value );
 				break;
@@ -245,21 +244,6 @@ function blixis_esc_text_attr( string $text ): string {
 }
 
 /**
- * Inline HTML allowlist for the only rich field.
- *
- * @return array<string, array<string, bool>>
- */
-function blixis_kses_inline(): array {
-	return array(
-		'a'      => array( 'href' => true ),
-		'strong' => array(),
-		'em'     => array(),
-		'br'     => array(),
-		'code'   => array(),
-	);
-}
-
-/**
  * Renders one node. Diagnostics go to the out-parameter and never into the HTML, because
  * the HTML is cacheable and public.
  *
@@ -284,11 +268,7 @@ function blixis_render_node( array $node, callable $media, array &$diagnostics )
 		};
 		if ( 'blixis/heading' === $type || 'blixis/paragraph' === $type ) {
 			$tag  = 'blixis/heading' === $type ? 'h' . (int) $values['level'] : 'p';
-			$rich = 'blixis/paragraph' === $type ? $values['html'] : '';
-			if ( '' !== $rich ) {
-				$body = wp_kses( $rich, blixis_kses_inline(), blixis_registry()['urlProtocols'] );
-				$html = '<' . $tag . ' class="' . $class . '">' . $body . '</' . $tag . '>';
-			} elseif ( '' === $values['text'] ) {
+			if ( '' === $values['text'] ) {
 				$add( 'render.empty_content', '/props/text' );
 			} else {
 				$html = '<' . $tag . ' class="' . $class . '">' . blixis_esc_text( $values['text'] ) . '</' . $tag . '>';

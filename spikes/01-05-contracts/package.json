@@ -5,9 +5,9 @@
   "description": "Throwaway contract proofs for task 01-05. Not product code; no runtime dependencies.",
   "type": "module",
   "scripts": {
-    "test": "node --test \"document/**/*.test.ts\" \"tokens/**/*.test.ts\" \"api/**/*.test.ts\"",
-    "lint": "oxlint --deny-warnings --type-aware --type-check document tokens api",
-    "format:check": "oxfmt --check document tokens api package.json tsconfig.json",
+    "test": "node --test \"document/**/*.test.ts\" \"tokens/**/*.test.ts\" \"api/**/*.test.ts\" \"integration/**/*.test.ts\"",
+    "lint": "oxlint --deny-warnings --type-aware --type-check document tokens api integration",
+    "format:check": "oxfmt --check document tokens api integration package.json tsconfig.json",
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {

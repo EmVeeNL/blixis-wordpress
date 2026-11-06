@@ -690,10 +690,6 @@
       "name": "section-tag-script.json"
     },
     {
-      "b64": "ewogICJzY2hlbWFWZXJzaW9uIjogMSwKICAiZG9jdW1lbnRJZCI6ICJleGFtcGxlLWRvY3VtZW50IiwKICAicm9vdCI6IFsKICAgICJub2RlLTEiCiAgXSwKICAibm9kZXMiOiB7CiAgICAibm9kZS0xIjogewogICAgICAiaWQiOiAibm9kZS0xIiwKICAgICAgInR5cGUiOiAiYmxpeGlzL2hlYWRpbmciLAogICAgICAidmVyc2lvbiI6IDEsCiAgICAgICJwcm9wcyI6IHsKICAgICAgICAidGV4dCI6ICJXZWxjb21lIHRvIEJsaXhpcyIsCiAgICAgICAgImxldmVsIjogMQogICAgICB9LAogICAgICAicmVzcG9uc2l2ZSI6IHsKICAgICAgICAibWQiOiB7CiAgICAgICAgICAiYWxpZ24iOiAiY2VudGVyIgogICAgICAgIH0KICAgICAgfSwKICAgICAgImNoaWxkcmVuIjogW10KICAgIH0KICB9LAogICJ0aGVtZVJlZiI6IHsKICAgICJ0aGVtZSI6ICJibGl4aXMtc3RhcnRlciIsCiAgICAidG9rZW5zVmVyc2lvbiI6IDEKICB9Cn0K",
-      "name": "shipped-sample-root-heading.json"
-    },
-    {
       "b64": "ewogICJzY2hlbWFWZXJzaW9uIjogMSwKICAiZG9jdW1lbnRJZCI6ICJmaXh0dXJlIiwKICAicm9vdCI6IFsKICAgICJhIiwKICAgICJiIgogIF0sCiAgIm5vZGVzIjogewogICAgImEiOiB7CiAgICAgICJpZCI6ICJhIiwKICAgICAgInR5cGUiOiAiYmxpeGlzL3NlY3Rpb24iLAogICAgICAidmVyc2lvbiI6IDEsCiAgICAgICJwcm9wcyI6IHsKICAgICAgICAidGFnIjogInNlY3Rpb24iLAogICAgICAgICJwYWRkaW5nIjogImxnIgogICAgICB9LAogICAgICAiY2hpbGRyZW4iOiBbCiAgICAgICAgImgiCiAgICAgIF0KICAgIH0sCiAgICAiYiI6IHsKICAgICAgImlkIjogImIiLAogICAgICAidHlwZSI6ICJibGl4aXMvc2VjdGlvbiIsCiAgICAgICJ2ZXJzaW9uIjogMSwKICAgICAgInByb3BzIjogewogICAgICAgICJ0YWciOiAic2VjdGlvbiIsCiAgICAgICAgInBhZGRpbmciOiAibGciCiAgICAgIH0sCiAgICAgICJjaGlsZHJlbiI6IFsKICAgICAgICAiaCIKICAgICAgXQogICAgfSwKICAgICJoIjogewogICAgICAiaWQiOiAiaCIsCiAgICAgICJ0eXBlIjogImJsaXhpcy9oZWFkaW5nIiwKICAgICAgInZlcnNpb24iOiAxLAogICAgICAicHJvcHMiOiB7CiAgICAgICAgInRleHQiOiAiSGVsbG8iLAogICAgICAgICJsZXZlbCI6IDIKICAgICAgfSwKICAgICAgImNoaWxkcmVuIjogW10KICAgIH0KICB9LAogICJ0aGVtZVJlZiI6IHsKICAgICJ0aGVtZSI6ICJibGl4aXMtYmFzZSIsCiAgICAidG9rZW5zVmVyc2lvbiI6IDEKICB9Cn0K",
       "name": "two-parents.json"
     },
@@ -759,12 +755,6 @@
     }
   ],
   "invalidCases": [
-    {
-      "file": "shipped-sample-root-heading.json",
-      "status": "rejected",
-      "codes": ["invalid_nesting"],
-      "why": "Byte copy of docs/examples/content-document.json: heading at root violates its own allowedParents."
-    },
     {
       "file": "unknown-prop.json",
       "status": "rejected",

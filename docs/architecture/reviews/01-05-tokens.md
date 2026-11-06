@@ -1,5 +1,7 @@
 # 01-05 review: design tokens and rendering
 
+**Integrated later:** this note records the review as it ran. Where the [integration note](01-05-integration.md) differs, the integration note wins.
+
 **Date:** 2026-11-06. **Reviewer:** independent review agent for task 01-05. **Status:** recommendations only; no owner approval is claimed. Contract: [`docs/contracts/tokens`](../../contracts/tokens/README.md). Proof: [`spikes/01-05-contracts/tokens`](../../../spikes/01-05-contracts/tokens/), throwaway code.
 
 ## Scope

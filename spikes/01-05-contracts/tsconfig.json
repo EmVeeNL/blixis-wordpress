@@ -16,5 +16,5 @@
     "noEmit": true,
     "types": ["node"]
   },
-  "include": ["document", "tokens", "api"]
+  "include": ["document", "tokens", "api", "integration"]
 }

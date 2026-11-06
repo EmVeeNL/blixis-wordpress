@@ -1,5 +1,7 @@
 # 01-05 review: document schema and migrations
 
+**Integrated later:** this note records the review as it ran. Where the [integration note](01-05-integration.md) differs, the integration note wins.
+
 **Status: independent review, not owner approval.** Every ADR status and shared-document edit below is a recommendation. The contract it proposes is in [`docs/contracts/document`](../../contracts/document/README.md); the proofs are in [`spikes/01-05-contracts/document`](../../../spikes/01-05-contracts/document/).
 
 ## Scope

@@ -77,16 +77,10 @@ void test("raw byte cases agree in both languages", () => {
   });
 });
 
-void test("existing docs/examples/theme-config.json fails v1, recorded as a finding", () => {
+void test("the shipped docs/examples/theme-config.json is valid in both validators", () => {
   const bytes = readFileSync(join(CONTRACT, "../../../examples/theme-config.json"));
-  const want = [
-    { code: "field.required", path: "/layout/wideWidth" },
-    { code: "field.required", path: "/motion" },
-    { code: "field.required", path: "/shadows" },
-    { code: "field.required", path: "/typeScale" },
-  ];
-  assert.deepEqual(validateBytes(bytes).errors, want);
-  assert.deepEqual(runPhp<PhpRow[]>("validate", [bytes.toString("base64")])[0]?.errors, want);
+  assert.deepEqual(validateBytes(bytes).errors, []);
+  assert.deepEqual(runPhp<PhpRow[]>("validate", [bytes.toString("base64")])[0]?.errors, []);
 });
 
 // A tiny evaluator for the keywords the schema uses. Repository has no JSON Schema

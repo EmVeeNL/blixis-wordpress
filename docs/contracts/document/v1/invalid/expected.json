@@ -2,14 +2,6 @@
   "$comment": "codes is the exact sorted set of error codes for the fixture. Generated cases are built by the same generators in TypeScript and PHP.",
   "cases": [
     {
-      "file": "shipped-sample-root-heading.json",
-      "status": "rejected",
-      "codes": [
-        "invalid_nesting"
-      ],
-      "why": "Byte copy of docs/examples/content-document.json: heading at root violates its own allowedParents."
-    },
-    {
       "file": "unknown-prop.json",
       "status": "rejected",
       "codes": [

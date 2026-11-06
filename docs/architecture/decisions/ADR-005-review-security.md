@@ -19,3 +19,10 @@ Unlimited public draft URLs.
 ## Consequences and validation
 
 External review adds threat and operational work; do not ship until tested. Validate with a proof of concept, relevant unit/integration tests, and owner/security review before changing the status to Accepted.
+
+## Review evidence, task 01-05
+
+- **Recommendation:** Accept with amendments. Owner decision pending; the status above does not change until then.
+- **Amendments:** Authenticated preview only for MVP; `no-store` and `noindex` on non-public views; draft edits of a live page in per-user autosave revisions, promoted by a publish requiring `edit_post` and `publish_pages`.
+- **Remaining consequences:** Reviewers need accounts that can edit the page, because WordPress has no view-only draft capability. Link requirements are recorded for a later decision.
+- **Evidence:** [API](../reviews/01-05-api.md#external-review-links-evaluated-not-built); [integration note](../reviews/01-05-integration.md).

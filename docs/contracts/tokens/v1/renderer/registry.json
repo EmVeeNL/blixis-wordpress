@@ -46,8 +46,7 @@
       "version": 1,
       "baseClass": "blixis-paragraph",
       "props": {
-        "text": { "kind": "text", "default": "" },
-        "html": { "kind": "inlineHtml", "default": "" }
+        "text": { "kind": "text", "default": "" }
       },
       "responsive": ["fontSize", "align", "color", "margin"]
     },

@@ -277,7 +277,8 @@ foreach (['post', 'page'] as $bdc_type) {
     }, 10, 2);
 }
 
-// Before do_blocks (9) and wpautop (10). Priority and those filters are a renderer question for 04.
+// After every core filter, as the token and renderer contract requires. An earlier hook lets core run
+// shortcodes in user text.
 add_filter('the_content', static function ($content) {
     $post = get_post();
     if (!$post instanceof WP_Post || !bdc_has_document((int) $post->ID)) {
@@ -291,7 +292,7 @@ add_filter('the_content', static function ($content) {
         return $content;
     }
     return '<div data-blixis-rendered="1">' . bdc_render($loaded['doc']) . '</div>';
-}, 8);
+}, PHP_INT_MAX);
 
 add_action('rest_api_init', static function (): void {
     $can_edit = static fn (WP_REST_Request $r): bool => current_user_can('edit_post', (int) $r['id']);

@@ -32,6 +32,7 @@ Implement rate limits, CORS allowlist, ETag/TTL, invalidation, and request IDs. 
 - Use the module boundaries and contracts in [Architecture](../../../architecture/ARCHITECTURE.md).
 - Validate server-side data and permissions where applicable; document schema or ADR changes.
 - Preserve existing content and provide a migration or rollback plan for contract changes.
+- Use an atomic counter, because transients overshot a limit of 10 by up to 11 in review 01-05, and put volumetric limits at the edge.
 
 ## Acceptance criteria
 

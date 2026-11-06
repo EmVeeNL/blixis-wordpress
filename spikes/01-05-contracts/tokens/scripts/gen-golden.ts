@@ -25,7 +25,7 @@ names.forEach((name, index) => {
 writeFileSync(join(CONTRACT, "golden", "tailwind.css"), tailwindThemeCss());
 const base = {
   postId: 7,
-  documentRevision: 12,
+  documentHash: "0a1b2c3d4e5f6071",
   rendererVersion: 1,
   registryHash: "a1b2c3d4",
   status: "publish",
@@ -34,7 +34,7 @@ const base = {
 };
 const inputs: Record<string, typeof base> = {
   published: base,
-  "document-revision-changed": { ...base, documentRevision: 13 },
+  "document-changed": { ...base, documentHash: "1b2c3d4e5f607182" },
   "renderer-version-changed": { ...base, rendererVersion: 2 },
   "registry-changed": { ...base, registryHash: "e5f6a7b8" },
   "config-changed": { ...base, configHash: (rows[1] as Row).hash },

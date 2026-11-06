@@ -218,7 +218,7 @@ function blixis_fragment_cache_key( array $input ): ?string {
 	if ( 'publish' !== $input['status'] || $input['hasPassword'] ) {
 		return null;
 	}
-	return 'blixis:html:p' . $input['postId'] . ':r' . $input['documentRevision'] . ':v' . $input['rendererVersion'] . ':' . $input['registryHash'];
+	return 'blixis:html:p' . $input['postId'] . ':d' . $input['documentHash'] . ':v' . $input['rendererVersion'] . ':' . $input['registryHash'];
 }
 
 /**

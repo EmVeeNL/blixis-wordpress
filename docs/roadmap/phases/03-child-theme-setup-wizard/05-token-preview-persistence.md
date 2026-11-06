@@ -32,6 +32,7 @@ Update responsive previews from validated tokens; persist versions, invalidate a
 - Use the module boundaries and contracts in [Architecture](../../../architecture/ARCHITECTURE.md).
 - Validate server-side data and permissions where applicable; document schema or ADR changes.
 - Preserve existing content and provide a migration or rollback plan for contract changes.
+- Follow the [token contract](../../../contracts/tokens/README.md): compare-and-swap on the stored row, revalidate on read, clear the theme.json cache, and resolve the Site Editor divergence policy.
 
 ## Acceptance criteria
 

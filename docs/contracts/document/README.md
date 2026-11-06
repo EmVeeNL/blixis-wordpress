@@ -20,7 +20,7 @@
 | `_blixis_document` post meta | Blixis Blocks | Raw JSON bytes. Protected, revisioned, `show_in_rest: false`, `auth_callback` false, written only by the guarded route |
 | `post_content` | Blixis Blocks, derived | A non-authoritative projection. See below |
 | `_blixis_content_hash` post meta | Blixis Blocks | SHA-256 of the stored `post_content`, revisioned, used to detect edits made outside Blixis |
-| `themeRef` | Document, as a record | Records the theme and token contract version the page was authored against. It does not select the theme; WordPress does |
+| `themeRef` | Document, as a record | Records the theme and the `BlixisThemeConfig` `schemaVersion` the page was authored against. It does not select the theme, and neither rendering nor caching reads it |
 | `documentId` | Document, as a record | Opaque. It is never used for lookup or authorization, because a duplicated page repeats it. The post ID is the identity |
 
 ### `post_content`
@@ -32,6 +32,8 @@ Each save writes the document's text and semantic HTML into `post_content` as a 
 <section><h2>Heading</h2><p>Text</p></section>
 <!-- /wp:html -->
 ```
+
+Write `[` and `]` in the block as `&#91;` and `&#93;`. Core runs `do_shortcode` over `post_content` before any later filter, so user text would otherwise execute shortcodes even when the renderer discards the result.
 
 The document stays authoritative. With the plugin active, public pages render from the document. With the plugin off, or when the document cannot be read, WordPress serves this projection. Hidden nodes and unknown nodes stay out of it. It is written in the same transaction as the document, so each revision holds a matching pair.
 
@@ -152,12 +154,13 @@ The token is `"sha256:<hex>"` over the stored document bytes, sent as `ETag` and
 
 A token check alone is not enough. The write opens a transaction, locks the post row with `SELECT ... FOR UPDATE`, re-reads the meta rows, compares, writes the document, projection, and hash, and commits. Comparing `meta_value` by `=` is also not enough, because the column collation ignores case.
 
-Autosave writes only to the user's autosave revision row. It validates, and it never changes the post, its status, or the live document.
+Autosave writes only to the user's autosave revision row. It validates, and it never changes the post, its status, or the live document. On a live page, a direct save returns `409` and goes there as well; an explicit publish promotes it through the write above. See the [integration note](../../architecture/reviews/01-05-integration.md).
 
 ## Renderer obligations found by this review
 
 - Validate on every read. Restoring a revision does not go through the write path.
-- Honor `post_password_required()` before replacing `the_content`. Without that check the document text reaches anonymous readers.
+- Hook `the_content` after every core filter, and honor `post_password_required()` before replacing it. Without that check the document text reaches anonymous readers.
+- Use the same text escaping as the [renderer contract](../tokens/README.md#renderer).
 - Refuse any `tag` value outside the element's enum, even after validation.
 
 ## Reproduce

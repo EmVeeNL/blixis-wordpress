@@ -9,6 +9,12 @@ function bdc_strategy(): string
     return (string) get_option('bdc_strategy', 'html-block');
 }
 
+// Plain text, as in the renderer contract: encode & first, or esc_html keeps existing entities.
+function bdc_esc_text($text): string
+{
+    return esc_html(str_replace('&', '&amp;', (string) $text));
+}
+
 function bdc_render_node(stdClass $doc, string $id, int $depth = 0): string
 {
     $node = $doc->nodes->{$id} ?? null;
@@ -40,29 +46,29 @@ function bdc_render_node(stdClass $doc, string $id, int $depth = 0): string
             return "<div>$kids</div>";
         case 'blixis/heading':
             $level = (int) ($p->level ?? 2);
-            return "<h$level>" . esc_html($p->text ?? '') . "</h$level>";
+            return "<h$level>" . bdc_esc_text($p->text ?? '') . "</h$level>";
         case 'blixis/paragraph':
-            return '<p>' . esc_html($p->text ?? '') . '</p>';
+            return '<p>' . bdc_esc_text($p->text ?? '') . '</p>';
         case 'blixis/button':
-            return '<p><a href="' . esc_url($p->url ?? '') . '">' . esc_html($p->label ?? '') . '</a></p>';
+            return '<p><a href="' . esc_url($p->url ?? '') . '">' . bdc_esc_text($p->label ?? '') . '</a></p>';
         case 'blixis/list':
             $tag = ($p->ordered ?? false) ? 'ol' : 'ul';
             $items = '';
             foreach ($p->items ?? [] as $item) {
-                $items .= '<li>' . esc_html($item) . '</li>';
+                $items .= '<li>' . bdc_esc_text($item) . '</li>';
             }
             return "<$tag>$items</$tag>";
         case 'blixis/quote':
-            return '<blockquote><p>' . esc_html($p->quote ?? '') . '</p><cite>' . esc_html($p->attribution ?? '') . '</cite></blockquote>';
+            return '<blockquote><p>' . bdc_esc_text($p->quote ?? '') . '</p><cite>' . bdc_esc_text($p->attribution ?? '') . '</cite></blockquote>';
         case 'blixis/accordion':
         case 'blixis/tabs':
             $out = '';
             foreach ($p->items ?? [] as $item) {
-                $out .= '<h3>' . esc_html($item->title ?? $item->label ?? '') . '</h3><p>' . esc_html($item->body ?? '') . '</p>';
+                $out .= '<h3>' . bdc_esc_text($item->title ?? $item->label ?? '') . '</h3><p>' . bdc_esc_text($item->body ?? '') . '</p>';
             }
             return $out;
         case 'blixis/video':
-            return '<p><a href="' . esc_url($p->url ?? '') . '">' . esc_html($p->title ?? '') . '</a></p>';
+            return '<p><a href="' . esc_url($p->url ?? '') . '">' . bdc_esc_text($p->title ?? '') . '</a></p>';
         case 'blixis/divider':
             return '<hr>';
         default:
@@ -93,6 +99,9 @@ function bdc_project_content(stdClass $doc, string $strategy): string
         case 'custom-block':
             return "<!-- wp:blixis/document -->\n$html\n<!-- /wp:blixis/document -->";
         case 'html-block':
+            // Core runs do_shortcode over post_content before any later filter, even when that
+            // filter discards the result. Numeric entities keep the text and stop the shortcode.
+            $html = str_replace(['[', ']'], ['&#91;', '&#93;'], $html);
             return "<!-- wp:html -->\n$html\n<!-- /wp:html -->";
     }
     throw new InvalidArgumentException('Unknown strategy');

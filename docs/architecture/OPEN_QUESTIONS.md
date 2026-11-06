@@ -4,13 +4,13 @@ These are decisions to confirm before the owning phase. Current defaults are ass
 
 | ID | Decision needed | Working assumption | Owner | Decision point |
 |---|---|---|---|---|
-| Q04 | Token configuration persistence | WordPress option plus export | Michael | 03-05: before persistence is built |
-| Q05 | Gutenberg coexistence | One owner per page | Michael | 04-01: before the editor is mounted |
-| Q06 | External review | Authenticated preview first | Michael | 05-05: before preview is built |
+| Q04 | Token configuration persistence | WordPress option plus export. 01-05 recommends one JSON option with compare-and-swap, plus export | Michael | 03-05: before persistence is built |
+| Q05 | Gutenberg coexistence | One owner per page. 01-05 recommends ownership by document presence | Michael | 04-01: before the editor is mounted |
+| Q06 | External review | Authenticated preview first. 01-05 recommends authenticated-only for MVP | Michael | 05-05: before preview is built |
 | Q08 | SEO adapter | Plugin-neutral fields | Michael | 07-04: before SEO is configured |
 | Q09 | Client assets and content | Client approval needed | Michael | 07-01: client discovery |
-| Q10 | API write access | Read-only | Michael | 08-01: API contract |
-| Q11 | API public access | Authenticated by default | Michael | 08-01: API contract |
+| Q10 | API write access | Read-only. 01-05 recommends read-only | Michael | 08-01: API contract |
+| Q11 | API public access | Authenticated by default. 01-05 recommends authenticated by default | Michael | 08-01: API contract |
 | Q12 | Other-theme support | Base-certified v1 | Michael | 04-01: before the editor is mounted |
 | Q13 | Local fonts | Local installed fonts | Michael | 03-04: before font management is built |
 | Q14 | Multilingual pages | Locale support, no multilingual content in MVP | Michael | 07-01: client discovery |
@@ -18,7 +18,7 @@ These are decisions to confirm before the owning phase. Current defaults are ass
 | Q16 | Hosting SLA | Not fixed in the product plan | Michael | 07-05: launch and handover |
 | Q17 | Validation of the 15-minute first-page goal | Not a release gate until validated with users | Michael | 06-04: integration regression |
 
-Record confirmed choices in an ADR and update affected tasks and tests.
+Task 01-05 added recommendations, not approvals; see its [integration note](reviews/01-05-integration.md) for further owner decisions. Record confirmed choices in an ADR and update affected tasks and tests.
 
 ## Confirmed planning decisions
 

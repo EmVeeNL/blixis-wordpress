@@ -127,7 +127,7 @@ export function cssCacheKey(config: Config, map: TokenMap = tokenMap): string {
 
 export type RenderKeyInput = {
   postId: number;
-  documentRevision: number;
+  documentHash: string;
   rendererVersion: number;
   registryHash: string;
   status: string;
@@ -137,7 +137,7 @@ export type RenderKeyInput = {
 
 export function fragmentCacheKey(input: RenderKeyInput): string | null {
   if (input.status !== "publish" || input.hasPassword) return null;
-  return `blixis:html:p${input.postId}:r${input.documentRevision}:v${input.rendererVersion}:${input.registryHash}`;
+  return `blixis:html:p${input.postId}:d${input.documentHash}:v${input.rendererVersion}:${input.registryHash}`;
 }
 
 export function pageCacheKey(input: RenderKeyInput): string | null {

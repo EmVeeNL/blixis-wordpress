@@ -537,7 +537,7 @@ $draft_id = (int) wp_insert_post( array( 'post_type' => 'page', 'post_status' =>
 update_post_meta( $draft_id, BLIXIS_PROOF_META, wp_slash( (string) wp_json_encode( array( array( 'id' => 'd', 'type' => 'blixis/heading', 'version' => 1, 'props' => array( 'text' => 'SECRET_DRAFT_TEXT' ) ) ) ) ) );
 $draft_response = wp_remote_get( home_url( '/?page_id=' . $draft_id ), array( 'timeout' => 30 ) );
 blixis_check( 'draft is not public', ! str_contains( (string) wp_remote_retrieve_body( $draft_response ), 'SECRET_DRAFT_TEXT' ), (string) wp_remote_retrieve_response_code( $draft_response ) );
-$key_input = array( 'postId' => $draft_id, 'documentRevision' => 1, 'rendererVersion' => 1, 'registryHash' => 'x', 'status' => get_post_status( $draft_id ), 'hasPassword' => false, 'configHash' => 'x' );
+$key_input = array( 'postId' => $draft_id, 'documentHash' => 'x', 'rendererVersion' => 1, 'registryHash' => 'x', 'status' => get_post_status( $draft_id ), 'hasPassword' => false, 'configHash' => 'x' );
 blixis_check( 'draft has no cache key', null === blixis_fragment_cache_key( $key_input ) && null === blixis_page_cache_key( $key_input ) );
 $locked_id = (int) wp_insert_post( array( 'post_type' => 'page', 'post_status' => 'publish', 'post_title' => 'Locked', 'post_content' => 'x', 'post_password' => 'pw', 'post_author' => $admin_id ) );
 update_post_meta( $locked_id, BLIXIS_PROOF_META, wp_slash( (string) wp_json_encode( array( array( 'id' => 'l', 'type' => 'blixis/heading', 'version' => 1, 'props' => array( 'text' => 'SECRET_LOCKED_TEXT' ) ) ) ) ) );

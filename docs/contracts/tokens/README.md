@@ -52,14 +52,14 @@ Store one autoloaded option, `blixis_theme_config`, holding JSON: `revision`, `h
 | Key | Form | Invalidated by |
 |---|---|---|
 | CSS | `blixis:css:c{contract}:g{generator}:{configHash}` | Config value, generator, contract |
-| HTML fragment | `blixis:html:p{post}:r{documentRevision}:v{renderer}:{registryHash}` | Document revision, renderer, registry |
+| HTML fragment | `blixis:html:p{post}:d{documentHash}:v{renderer}:{registryHash}` | Stored document bytes, renderer, registry |
 | Full page | fragment key plus `:{configHash}` | All of the above |
 
 Element HTML holds class names only, so a token value change leaves it byte-identical; a test proves it. Pages embed the CSS and must be purged, through the `blixis_tokens_changed` action. Drafts, private, pending, future, and password-protected posts have no key: the functions return null.
 
 ## Renderer
 
-Output comes from the registry only. Classes come from tables, never from input. Text is plain text: escape with `esc_html( str_replace( '&', '&amp;', $text ) )`, because `esc_html` and `esc_attr` otherwise keep existing entities and the page would differ from the React preview. URLs must match `urlPattern` first, then pass `esc_url( $url, $protocols )`; `esc_url` alone admits `//evil.test` and `ftp:`. The only rich field, `paragraph.html`, goes through `wp_kses` with an inline allowlist and is previewed from the server result.
+Output comes from the registry only. Classes come from tables, never from input. Text is plain text: escape with `esc_html( str_replace( '&', '&amp;', $text ) )`, because `esc_html` and `esc_attr` otherwise keep existing entities and the page would differ from the React preview. URLs must match `urlPattern` first, then pass `esc_url( $url, $protocols )`; `esc_url` alone admits `//evil.test` and `ftp:`. Version 1 has no rich-text field: a `paragraph.html` prop is `render.unknown_prop` here and `forbidden_prop` in the [document contract](../document/README.md). Inline formatting later arrives as structured marks through an element version bump.
 
 An unknown type or version renders nothing and leaves stored data untouched. Diagnostics are returned out of band and require `edit_post`; they never enter HTML, because HTML is cacheable and public.
 

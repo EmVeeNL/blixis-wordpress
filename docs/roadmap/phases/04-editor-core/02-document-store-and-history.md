@@ -32,6 +32,7 @@ Manage immutable node tree, selection, dirty state, undo/redo, stable IDs, and s
 - Use the module boundaries and contracts in [Architecture](../../../architecture/ARCHITECTURE.md).
 - Validate server-side data and permissions where applicable; document schema or ADR changes.
 - Preserve existing content and provide a migration or rollback plan for contract changes.
+- Follow the [document contract](../../../contracts/document/README.md): post-row lock on write, per-user autosave revisions for live pages, publish that promotes through the same write, and the core `/autosaves` gap. Review 01-05 proved these separately, not as one path.
 
 ## Acceptance criteria
 

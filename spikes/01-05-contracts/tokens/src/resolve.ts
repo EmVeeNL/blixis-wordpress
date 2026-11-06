@@ -3,7 +3,7 @@ import { Buffer } from "node:buffer";
 import { readContractJson } from "./contract.ts";
 
 type PropSpec = {
-  kind: "text" | "int" | "url" | "enum" | "inlineHtml";
+  kind: "text" | "int" | "url" | "enum";
   default: unknown;
   min?: number;
   max?: number;
@@ -109,7 +109,7 @@ export function resolveNode(node: Node): { resolved: Resolved; diagnostics: Diag
     if (!Object.hasOwn(props, name)) continue;
     const value = props[name];
     let ok = false;
-    if (spec.kind === "text" || spec.kind === "inlineHtml") ok = typeof value === "string";
+    if (spec.kind === "text") ok = typeof value === "string";
     else if (spec.kind === "url") ok = typeof value === "string";
     else if (spec.kind === "enum")
       ok = typeof value === "string" && (spec.values ?? []).includes(value);

@@ -166,13 +166,8 @@ void describe("hostile input", () => {
 
 void describe("shipped examples and specs", () => {
   const sample = readFileSync(join(repoRoot, "docs", "examples", "content-document.json"));
-  void it("the sample document either equals the known-bad fixture or validates once it is fixed", () => {
-    const fixture = readFileSync(join(invalidDir, "shipped-sample-root-heading.json"));
-    if (sample.equals(fixture)) {
-      assert.deepEqual(validate(sample, registry).codes, ["invalid_nesting"]);
-    } else {
-      assert.equal(validate(sample, registry).status, "valid");
-    }
+  void it("the sample document validates", () => {
+    assert.equal(validate(sample, registry).status, "valid");
   });
   void it("specs define all 20 types with unique icons", () => {
     const specs = elementSpecs() as unknown as { icon: string }[];
