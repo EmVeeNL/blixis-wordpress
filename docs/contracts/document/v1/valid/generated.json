@@ -1,0 +1,44 @@
+{
+  "$comment": "Boundary documents too large to commit. Both validators build them with the same generators.",
+  "cases": [
+    {
+      "name": "generated-max-nodes",
+      "generated": "flat-nodes",
+      "count": 2000
+    },
+    {
+      "name": "generated-max-bytes",
+      "generated": "pad-to-bytes",
+      "bytes": 1048576
+    },
+    {
+      "name": "generated-max-string",
+      "generated": "long-string",
+      "bytes": 65536
+    },
+    {
+      "name": "generated-regex-worst-open-tags",
+      "generated": "text-repeat",
+      "unit": "<a ",
+      "count": 21000
+    },
+    {
+      "name": "generated-regex-worst-angle",
+      "generated": "text-repeat",
+      "unit": "<",
+      "count": 65000
+    },
+    {
+      "name": "generated-regex-worst-comment",
+      "generated": "text-repeat",
+      "unit": "<!x",
+      "count": 21000
+    },
+    {
+      "name": "generated-regex-worst-spaces",
+      "generated": "text-repeat",
+      "unit": " ",
+      "count": 65000
+    }
+  ]
+}

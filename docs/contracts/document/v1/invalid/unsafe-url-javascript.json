@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "documentId": "fixture",
+  "root": [
+    "s"
+  ],
+  "nodes": {
+    "s": {
+      "id": "s",
+      "type": "blixis/section",
+      "version": 1,
+      "props": {
+        "tag": "section",
+        "padding": "lg"
+      },
+      "children": [
+        "b"
+      ]
+    },
+    "b": {
+      "id": "b",
+      "type": "blixis/button",
+      "version": 1,
+      "props": {
+        "label": "Go",
+        "url": "javascript:alert(1)",
+        "variant": "primary"
+      },
+      "children": []
+    }
+  },
+  "themeRef": {
+    "theme": "blixis-base",
+    "tokensVersion": 1
+  }
+}

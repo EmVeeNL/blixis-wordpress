@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "documentId": "example-document",
+  "root": [
+    "node-1"
+  ],
+  "nodes": {
+    "node-1": {
+      "id": "node-1",
+      "type": "blixis/heading",
+      "version": 1,
+      "props": {
+        "text": "Welcome to Blixis",
+        "level": 1
+      },
+      "responsive": {
+        "md": {
+          "align": "center"
+        }
+      },
+      "children": []
+    }
+  },
+  "themeRef": {
+    "theme": "blixis-starter",
+    "tokensVersion": 1
+  }
+}

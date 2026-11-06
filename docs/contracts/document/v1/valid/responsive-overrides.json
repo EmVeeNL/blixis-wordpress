@@ -1,0 +1,60 @@
+{
+  "schemaVersion": 1,
+  "documentId": "fixture",
+  "root": [
+    "s"
+  ],
+  "nodes": {
+    "s": {
+      "id": "s",
+      "type": "blixis/section",
+      "version": 1,
+      "props": {
+        "tag": "section",
+        "padding": "lg"
+      },
+      "children": [
+        "c"
+      ]
+    },
+    "c": {
+      "id": "c",
+      "type": "blixis/columns",
+      "version": 1,
+      "props": {
+        "columns": 2,
+        "gap": "md"
+      },
+      "children": [
+        "c1"
+      ],
+      "responsive": {
+        "sm": {
+          "columns": 1,
+          "stackAt": "md"
+        },
+        "xl": {
+          "gap": "xl"
+        }
+      }
+    },
+    "c1": {
+      "id": "c1",
+      "type": "blixis/column",
+      "version": 1,
+      "props": {
+        "basis": "equal"
+      },
+      "children": [],
+      "responsive": {
+        "lg": {
+          "align": "center"
+        }
+      }
+    }
+  },
+  "themeRef": {
+    "theme": "blixis-base",
+    "tokensVersion": 1
+  }
+}

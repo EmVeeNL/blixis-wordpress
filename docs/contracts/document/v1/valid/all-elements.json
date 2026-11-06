@@ -1,0 +1,277 @@
+{
+  "schemaVersion": 1,
+  "documentId": "fixture",
+  "root": [
+    "s",
+    "k"
+  ],
+  "nodes": {
+    "s": {
+      "id": "s",
+      "type": "blixis/section",
+      "version": 1,
+      "props": {
+        "tag": "section",
+        "padding": "lg"
+      },
+      "children": [
+        "h",
+        "p",
+        "img",
+        "b",
+        "sp",
+        "dv",
+        "ic",
+        "ls",
+        "q",
+        "v",
+        "acc",
+        "tb",
+        "card",
+        "cta",
+        "nav",
+        "form",
+        "cols"
+      ]
+    },
+    "k": {
+      "id": "k",
+      "type": "blixis/container",
+      "version": 1,
+      "props": {
+        "maxWidth": "content"
+      },
+      "children": []
+    },
+    "h": {
+      "id": "h",
+      "type": "blixis/heading",
+      "version": 1,
+      "props": {
+        "text": "Hello",
+        "level": 2
+      },
+      "children": []
+    },
+    "p": {
+      "id": "p",
+      "type": "blixis/paragraph",
+      "version": 1,
+      "props": {
+        "text": "Text"
+      },
+      "children": []
+    },
+    "img": {
+      "id": "img",
+      "type": "blixis/image",
+      "version": 1,
+      "props": {
+        "mediaId": 12,
+        "alt": "Alt",
+        "loading": "lazy"
+      },
+      "children": []
+    },
+    "b": {
+      "id": "b",
+      "type": "blixis/button",
+      "version": 1,
+      "props": {
+        "label": "Go",
+        "url": "https://example.test/",
+        "variant": "primary"
+      },
+      "children": []
+    },
+    "sp": {
+      "id": "sp",
+      "type": "blixis/spacer",
+      "version": 1,
+      "props": {
+        "height": "md"
+      },
+      "children": []
+    },
+    "dv": {
+      "id": "dv",
+      "type": "blixis/divider",
+      "version": 1,
+      "props": {
+        "style": "solid"
+      },
+      "children": []
+    },
+    "ic": {
+      "id": "ic",
+      "type": "blixis/icon",
+      "version": 1,
+      "props": {
+        "iconId": "tabler:star",
+        "decorative": true
+      },
+      "children": []
+    },
+    "ls": {
+      "id": "ls",
+      "type": "blixis/list",
+      "version": 1,
+      "props": {
+        "items": [
+          "One",
+          "Two"
+        ],
+        "ordered": false
+      },
+      "children": []
+    },
+    "q": {
+      "id": "q",
+      "type": "blixis/quote",
+      "version": 1,
+      "props": {
+        "quote": "Said",
+        "attribution": "Someone"
+      },
+      "children": []
+    },
+    "v": {
+      "id": "v",
+      "type": "blixis/video",
+      "version": 1,
+      "props": {
+        "url": "https://example.test/v",
+        "title": "Video"
+      },
+      "children": []
+    },
+    "acc": {
+      "id": "acc",
+      "type": "blixis/accordion",
+      "version": 1,
+      "props": {
+        "items": [
+          {
+            "title": "Q",
+            "body": "A"
+          }
+        ],
+        "allowMultiple": false
+      },
+      "children": []
+    },
+    "tb": {
+      "id": "tb",
+      "type": "blixis/tabs",
+      "version": 1,
+      "props": {
+        "items": [
+          {
+            "label": "T",
+            "body": "B"
+          }
+        ]
+      },
+      "children": []
+    },
+    "card": {
+      "id": "card",
+      "type": "blixis/card",
+      "version": 1,
+      "props": {
+        "variant": "default"
+      },
+      "children": [
+        "cardh"
+      ]
+    },
+    "cardh": {
+      "id": "cardh",
+      "type": "blixis/heading",
+      "version": 1,
+      "props": {
+        "text": "Hello",
+        "level": 2
+      },
+      "children": []
+    },
+    "cta": {
+      "id": "cta",
+      "type": "blixis/cta",
+      "version": 1,
+      "props": {
+        "variant": "highlight"
+      },
+      "children": [
+        "ctab"
+      ]
+    },
+    "ctab": {
+      "id": "ctab",
+      "type": "blixis/button",
+      "version": 1,
+      "props": {
+        "label": "Go",
+        "url": "/go",
+        "variant": "primary"
+      },
+      "children": []
+    },
+    "nav": {
+      "id": "nav",
+      "type": "blixis/navigation",
+      "version": 1,
+      "props": {
+        "menuId": 3
+      },
+      "children": []
+    },
+    "form": {
+      "id": "form",
+      "type": "blixis/form-embed",
+      "version": 1,
+      "props": {
+        "provider": "wordpress",
+        "formId": null
+      },
+      "children": []
+    },
+    "cols": {
+      "id": "cols",
+      "type": "blixis/columns",
+      "version": 1,
+      "props": {
+        "columns": 2,
+        "gap": "md"
+      },
+      "children": [
+        "col"
+      ]
+    },
+    "col": {
+      "id": "col",
+      "type": "blixis/column",
+      "version": 1,
+      "props": {
+        "basis": "equal"
+      },
+      "children": [
+        "colh"
+      ]
+    },
+    "colh": {
+      "id": "colh",
+      "type": "blixis/heading",
+      "version": 1,
+      "props": {
+        "text": "Hello",
+        "level": 2
+      },
+      "children": []
+    }
+  },
+  "themeRef": {
+    "theme": "blixis-base",
+    "tokensVersion": 1
+  }
+}
