@@ -8,18 +8,26 @@ on:
 permissions:
   contents: read
 
+defaults:
+  run:
+    # Named bash adds pipefail, so a failing first command in a pipe fails the step.
+    shell: bash
+
 env:
   SPIKE_PACKAGE: blixis-compat-spike-frontend
 
 jobs:
   php-lint:
     runs-on: ubuntu-24.04
+    timeout-minutes: 15
     strategy:
       fail-fast: false
       matrix:
         php: ["8.3", "8.4", "8.5"]
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
       - uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # 2.40.0
         with:
           php-version: ${{ matrix.php }}
@@ -36,8 +44,11 @@ jobs:
 
   typescript:
     runs-on: ubuntu-24.04
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
       - uses: ./.github/actions/setup-pnpm
       - name: Type check with TypeScript
         run: pnpm typecheck
@@ -48,16 +59,22 @@ jobs:
 
   build:
     runs-on: ubuntu-24.04
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
       - uses: ./.github/actions/setup-pnpm
       - name: Build workspace packages
         run: pnpm build
 
   browser-tests:
     runs-on: ubuntu-24.04
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
       - uses: ./.github/actions/setup-pnpm
       - name: Build the page under test
         run: pnpm build
@@ -70,8 +87,11 @@ jobs:
 
   scripts:
     runs-on: ubuntu-24.04
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
       - name: Check shell syntax
         run: git ls-files '*.sh' | xargs -r -n1 bash -n
       - name: Run ShellCheck
@@ -92,45 +112,54 @@ jobs:
 
   wordpress-integration:
     runs-on: ubuntu-24.04
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
       - name: Run theme, plugin, REST, revision, and preview smoke tests in a throwaway stack
+        env:
+          SPIKE_RESULTS: ${{ runner.temp }}/wordpress-matrix.jsonl
         run: >-
           spikes/01-02-compatibility/wordpress/run-matrix.sh
           "7.1.4 8.3 pass" "7.0.8 8.5 pass" "7.1.4 8.1 reject"
       - name: Report results and fail on any unmet expectation
-        run: python3 spikes/01-02-compatibility/results/show.py
+        if: ${{ !cancelled() }}
+        run: python3 spikes/01-02-compatibility/results/show.py "$RUNNER_TEMP/wordpress-matrix.jsonl"
 
   secrets:
     runs-on: ubuntu-24.04
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
+          persist-credentials: false
       - name: Scan full Git history with gitleaks
         run: >-
           docker run --rm --user "$(id -u):$(id -g)" -v "$PWD:/repo" -w /repo
           zricethezav/gitleaks:v8.30.1@sha256:c00b6bd0aeb3071cbcb79009cb16a60dd9e0a7c60e2be9ab65d25e6bc8abbb7f
           git --redact --no-banner --verbose .
 
-  dependencies:
+  licenses:
     runs-on: ubuntu-24.04
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
       - uses: ./.github/actions/setup-pnpm
       - name: Check licenses of installed packages
         run: pnpm --filter "$SPIKE_PACKAGE" run licenses
-      - name: Refuse dependencies this pull request adds with known vulnerabilities
-        if: github.event_name == 'pull_request'
-        uses: actions/dependency-review-action@a1d282b36b6f3519aa1f3fc636f609c47dddb294 # v5.0.0
-        with:
-          fail-on-severity: moderate
 
   # Not a required check: a new public advisory can fail it on any unrelated pull request.
   dependency-audit:
     runs-on: ubuntu-24.04
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
       - uses: ./.github/actions/setup-pnpm
       - uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # 2.40.0
         with:

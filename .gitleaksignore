@@ -1,3 +1,4 @@
 # False positive: a label in WordPress core's Twenty Twenty-Five CV pattern, committed before
 # Core moved out of this repository (R-01). It contains text, not a credential.
 5f02e210f97ddfc350ab6c09d296e89bf8f0262f:wp-content/themes/twentytwentyfive/patterns/page-cv-bio.php:linkedin-client-secret:47
+c6c31c5b5d40abe698ac661a082fd84f40fd0089:wp-content/themes/twentytwentyfive/patterns/page-cv-bio.php:linkedin-client-secret:47
