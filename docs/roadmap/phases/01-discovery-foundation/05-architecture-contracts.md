@@ -2,7 +2,7 @@
 id: "01-05"
 title: "Validate architecture contracts and ADRs"
 phase: "01"
-status: Backlog
+status: Ready
 priority: P0
 owner: "EmVeeNL"
 created_at: "2026-11-06"
@@ -53,10 +53,11 @@ Run contract fixtures for valid/invalid document graphs, token values, migration
 - **Commit references:** None.
 - **PR number and URL:** None.
 - **Started / completed / closed:** Not recorded.
-- **Status:** Backlog. Update frontmatter and history on every transition; follow [status workflow](../../../development/STATUS_WORKFLOW.md).
+- **Status:** Ready. Dependency `01-04` is Done; owner and criteria are recorded. Follow [status workflow](../../../development/STATUS_WORKFLOW.md).
 
 ## Status history
 
 | Date | Transition | Evidence |
 |---|---|---|
 | 2026-11-06 | Initial planning → Backlog | Downloaded project plan; no implementation evidence |
+| 2026-11-06 | Backlog → Ready | Dependency `01-04` was completed in PR [#12](https://github.com/EmVeeNL/blixis-wordpress/pull/12), merged as `4fa55e6668d01bc9e447f66e783dbf327dd34a97`; owner and acceptance criteria are recorded. |

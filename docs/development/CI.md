@@ -4,10 +4,10 @@ CI covers the code that exists today: the theme, the plugin, shell scripts, docu
 
 ## Checks
 
-| Check | Workflow | What it runs | To fix a failure | Required after merge |
+| Check | Workflow | What it runs | To fix a failure | Required on `main` |
 |---|---|---|---|---|
 | `docs` | PHP lint | `python3 scripts/check-docs.py` | Repair the reported link or task field | Yes |
-| `syntax` | PHP lint | `php -l` on theme and plugin PHP with the runner's PHP | Fix the reported parse error | Yes (already required) |
+| `syntax` | PHP lint | `php -l` on theme and plugin PHP with the runner's PHP | Fix the reported parse error | Yes |
 | `php-lint (8.3)`, `(8.4)`, `(8.5)` | Quality | `composer validate`, `php -l` on all tracked PHP, `composer lint` | Follow the PHP_CodeSniffer report; `vendor/bin/phpcbf` fixes marked issues | Yes |
 | `typescript` | Quality | `pnpm typecheck`, `pnpm lint` (Oxlint, `oxlint-tsgolint`, warnings fail), `pnpm format:check` (Oxfmt) | The failed step names the tool; run the same command locally | Yes |
 | `build` | Quality | `pnpm build`, including Tailwind output assertions | Run `pnpm build` and read the first failure | Yes |
@@ -26,21 +26,16 @@ Actions, the Playwright image, the WordPress and MariaDB test images, ShellCheck
 
 ## Branch protection
 
-Main protection currently requires only `syntax`, plus a pull request, conversation resolution, and up-to-date branches. It applies to admins, blocks force pushes and deletion, and requires zero approving reviews.
+Since PR [#12](https://github.com/EmVeeNL/blixis-wordpress/pull/12) merged on 2026-11-06, `main` protection requires the 12 checks marked Yes above from the GitHub Actions app (app ID `15368`). The checks ran successfully on the merged commit: [Quality](https://github.com/EmVeeNL/blixis-wordpress/actions/runs/42292818868) and [PHP lint](https://github.com/EmVeeNL/blixis-wordpress/actions/runs/42292818870). Protection is strict (branches must be up to date), requires a PR and resolved conversations, applies to admins, and blocks force pushes and deletion. Zero approving reviews are required while Michael is the sole developer.
 
-The other checks cannot be required before this workflow reaches `main`: a required check that an open pull request's base does not define would leave that pull request waiting. After merge, require the agreed list:
+Verify the live configuration with:
 
 ```bash
-gh api --method PATCH repos/EmVeeNL/blixis-wordpress/branches/main/protection/required_status_checks \
-  --field strict=true \
-  --raw-field 'contexts[]=docs' --raw-field 'contexts[]=syntax' \
-  --raw-field 'contexts[]=php-lint (8.3)' --raw-field 'contexts[]=php-lint (8.4)' --raw-field 'contexts[]=php-lint (8.5)' \
-  --raw-field 'contexts[]=typescript' --raw-field 'contexts[]=build' --raw-field 'contexts[]=browser-tests' \
-  --raw-field 'contexts[]=scripts' --raw-field 'contexts[]=wordpress-integration' \
-  --raw-field 'contexts[]=secrets' --raw-field 'contexts[]=licenses'
+gh api repos/EmVeeNL/blixis-wordpress/branches/main/protection/required_status_checks \
+  --jq '{strict, checks}'
 ```
 
-Review policy is unchanged: one person maintains the repository, so zero approvals are required. Raise the count when a second reviewer is available.
+When checks change, update protection through the GitHub branch-protection API only after the new jobs have reported on `main`. Pin each required check to the GitHub Actions app. Raise the review count when a second reviewer is available.
 
 ## Known gaps
 
