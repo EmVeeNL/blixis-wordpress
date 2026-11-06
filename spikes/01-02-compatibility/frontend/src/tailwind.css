@@ -1,0 +1,8 @@
+@import "tailwindcss" source(none);
+@source "./fixture.html";
+
+@theme {
+  --color-brand: var(--blixis-color-brand, #1f6f43);
+  --spacing-gutter: 1.5rem;
+  --breakpoint-tablet: 48rem;
+}

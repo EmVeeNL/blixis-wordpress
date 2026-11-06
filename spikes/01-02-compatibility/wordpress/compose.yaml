@@ -1,0 +1,29 @@
+# Throwaway test stack for task 01-02. It is not the local site's stack.
+# The database lives in tmpfs, no port is published, and nothing here reads
+# ~/Sites/blixis. The project name keeps it apart from the `blixis` project.
+# run-matrix.sh pipes the test files in as a tar stream, so there are no bind
+# mounts: Docker Desktop served stale, truncated copies of edited files.
+name: blixis-compat-spike
+
+services:
+  db:
+    image: mariadb:11.4.13
+    environment:
+      MARIADB_ROOT_PASSWORD: "${SPIKE_DB_ROOT_PASSWORD:?run through run-matrix.sh}"
+    tmpfs:
+      - /var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 3s
+      timeout: 3s
+      retries: 30
+
+  runner:
+    image: "wordpress:cli-2.12.0-php${SPIKE_PHP:-8.4}"
+    profiles: ["run"]
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      SPIKE_DB_ROOT_PASSWORD: "${SPIKE_DB_ROOT_PASSWORD:?run through run-matrix.sh}"
+      WP_CLI_CACHE_DIR: /tmp/wp-cli-cache

@@ -4,7 +4,7 @@ These are decisions to confirm before the owning phase. Current defaults are ass
 
 | ID | Decision needed | Working assumption | Owner | Decision point |
 |---|---|---|---|---|
-| Q01 | Exact support matrix | Tested stable versions | Michael | 01-02: compatibility results |
+| Q01 | Exact support matrix | [Proposed floors](../development/SUPPORT_MATRIX.md): WordPress 7.0, PHP 8.3, Node 26 LTS | Michael | 01-02: owner review of its PR |
 | Q02 | Package manager | pnpm | Michael | 01-03: before workspaces are added |
 | Q04 | Token configuration persistence | WordPress option plus export | Michael | 03-05: before persistence is built |
 | Q05 | Gutenberg coexistence | One owner per page | Michael | 04-01: before the editor is mounted |

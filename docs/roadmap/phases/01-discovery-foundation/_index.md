@@ -5,7 +5,7 @@
 | ID | Task | Status | Priority |
 |---|---|---|---|
 | [01-01](01-requirements-and-scope.md) | Confirm requirements, personas, and MVP scope | Done | P0 |
-| [01-02](02-compatibility-spike.md) | Verify WordPress and toolchain compatibility | Ready | P0 |
+| [01-02](02-compatibility-spike.md) | Verify WordPress and toolchain compatibility | Busy | P0 |
 | [01-03](03-repository-scaffold.md) | Build the monorepo scaffold | Backlog | P0 |
 | [01-04](04-quality-pipeline.md) | Extend the quality pipeline | Backlog | P0 |
 | [01-05](05-architecture-contracts.md) | Validate architecture contracts and ADRs | Backlog | P0 |
