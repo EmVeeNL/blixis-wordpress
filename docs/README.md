@@ -4,6 +4,7 @@
 
 - [Product requirements](architecture/PRD.md) and [MVP scope](roadmap/MVP.md)
 - [Architecture](architecture/ARCHITECTURE.md), [decisions](architecture/DECISIONS.md), and [open questions](architecture/OPEN_QUESTIONS.md)
+- [Scope traceability](architecture/SCOPE_TRACEABILITY.md): proposed requirement, milestone, and release-gate mapping
 - [Base and child themes](development/TEMPLATE.md), [editor](architecture/EDITOR.md), [element registry](architecture/ELEMENTS.md), and [20 planned element specifications](elements/)
 - [Content API proposal](architecture/API.md) and [security/performance](security/SECURITY_AND_PERFORMANCE.md)
 

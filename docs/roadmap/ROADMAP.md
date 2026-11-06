@@ -6,7 +6,7 @@ The 46 planned tasks from the project pack are organized into nine phases. The s
 
 | Phase | Purpose | Status |
 |---|---|---|
-| [01 — Discovery and foundation](phases/01-discovery-foundation/_index.md) | Requirements, compatibility, tooling, contracts | Backlog |
+| [01 — Discovery and foundation](phases/01-discovery-foundation/_index.md) | Requirements, compatibility, tooling, contracts | Busy |
 | [02 — Base theme](phases/02-blixis-base-theme/_index.md) | Theme foundation and Tailwind build | Backlog |
 | [03 — Child theme and wizard](phases/03-child-theme-setup-wizard/_index.md) | Child theme, tokens, fonts, preview | Backlog |
 | [04 — Editor core](phases/04-editor-core/_index.md) | Shell, state, canvas, inspector | Backlog |
