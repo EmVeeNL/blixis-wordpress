@@ -2,7 +2,7 @@
 id: "01-05"
 title: "Validate architecture contracts and ADRs"
 phase: "01"
-status: In Review
+status: Done
 priority: P0
 owner: "EmVeeNL"
 created_at: "2026-11-06"
@@ -11,11 +11,11 @@ depends_on: ["01-04"]
 branch: "docs/01-05-architecture-contracts"
 pr_number: 16
 pr_url: "https://github.com/EmVeeNL/blixis-wordpress/pull/16"
-commit_sha: "866eec11b51beeb74ba31ab5de4e0c093c8bd688"
-merged_at: null
-merge_commit_sha: null
+commit_sha: "220c3b57409fef61fcd339448ed610c737846b86"
+merged_at: "2026-11-06"
+merge_commit_sha: "06b115701265517ee7070fd5a350f88d749a7468"
 started_at: "2026-11-06"
-completed_at: null
+completed_at: "2026-11-06"
 closed_at: null
 blocked_reason: null
 blocked_by: []
@@ -39,7 +39,7 @@ Review data ownership, schema and token contracts, rendering and API trust bound
 - [x] Module ownership and data flow are unambiguous across architecture, ADRs, examples, and roadmap.
 - [x] Schema, token, renderer, and API boundaries have versioned examples and negative security cases.
 - [x] Relevant ADRs have an evidence-backed status and owner decision; remaining questions have explicit follow-up owners.
-- [ ] The reviewed PR is merged with architecture/security review notes and task metadata.
+- [x] The reviewed PR is merged with architecture/security review notes and task metadata.
 
 ## Testing requirements
 
@@ -68,10 +68,10 @@ Reviewer fault runs are in each [review note](../../../architecture/reviews/01-0
 - **Priority:** P0
 - **Dependencies:** `01-04`
 - **Branch:** `docs/01-05-architecture-contracts`.
-- **Commit references:** `866eec1` is the commit tested below.
+- **Commit references:** `866eec1` is the full-proof commit; `220c3b5` records the accepted decisions; PR #16 was squash merged as `06b1157`.
 - **PR number and URL:** [#16](https://github.com/EmVeeNL/blixis-wordpress/pull/16).
-- **Started / completed / closed:** Started 2026-11-06; not completed.
-- **Status:** In Review. Criteria 1–3 have accepted design evidence; criterion 4 still needs PR merge evidence. Follow [status workflow](../../../development/STATUS_WORKFLOW.md).
+- **Started / completed / closed:** Started and completed 2026-11-06; not closed because no product release or later acceptance is claimed.
+- **Status:** Done. PR #16 merged on 2026-11-06 as `06b1157`; all four acceptance criteria have evidence. Follow [status workflow](../../../development/STATUS_WORKFLOW.md).
 
 ## Status history
 
@@ -82,3 +82,4 @@ Reviewer fault runs are in each [review note](../../../architecture/reviews/01-0
 | 2026-11-06 | Ready → Busy | Branch `docs/01-05-architecture-contracts` created from `a88559c`; three independent reviews started |
 | 2026-11-06 | Busy → In Review | PR [#16](https://github.com/EmVeeNL/blixis-wordpress/pull/16), commit `866eec1`; results above. Owner decisions and review pending |
 | 2026-11-06 | In Review, decisions resolved | Delegated owner review accepted ADR-001–007 as design, left ADR-008 Proposed, resolved Q04–Q06 and Q10–Q11, required an external API-key pepper in production, and retained `documentId` as a non-authoritative v1 record. The 16 outcomes and limits are in the [integration note](../../../architecture/reviews/01-05-integration.md). |
+| 2026-11-06 | In Review → Done | [PR #16](https://github.com/EmVeeNL/blixis-wordpress/pull/16) merged as `06b1157` after [Quality](https://github.com/EmVeeNL/blixis-wordpress/actions/runs/42308016312) and [PHP lint](https://github.com/EmVeeNL/blixis-wordpress/actions/runs/42308016306) passed at `220c3b5`; design accepted, product implementation remains planned. |

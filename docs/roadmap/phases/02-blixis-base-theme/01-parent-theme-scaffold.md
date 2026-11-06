@@ -2,7 +2,7 @@
 id: "02-01"
 title: "Build the Blixis Base parent theme"
 phase: "02"
-status: Backlog
+status: Ready
 priority: P0
 owner: "EmVeeNL"
 created_at: "2026-11-06"
@@ -54,10 +54,11 @@ Activate in a disposable WordPress fixture; run PHP lint and template smoke test
 - **Commit references:** None.
 - **PR number and URL:** None.
 - **Started / completed / closed:** Not recorded.
-- **Status:** Backlog. Update frontmatter and history on every transition; follow [status workflow](../../../development/STATUS_WORKFLOW.md).
+- **Status:** Ready. Dependency `01-05` is Done, the owner and criteria are recorded, and no implementation has started. Follow [status workflow](../../../development/STATUS_WORKFLOW.md).
 
 ## Status history
 
 | Date | Transition | Evidence |
 |---|---|---|
 | 2026-11-06 | Initial planning → Backlog | Downloaded project plan; no implementation evidence |
+| 2026-11-06 | Backlog → Ready | Dependency `01-05` completed in [PR #16](https://github.com/EmVeeNL/blixis-wordpress/pull/16), merged as `06b1157`; owner and acceptance criteria are recorded. |

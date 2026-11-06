@@ -1,10 +1,10 @@
 # 02 Blixis Base Theme
 
-**Status:** Backlog. Tasks are planned unless their individual file records verified completion.
+**Status:** Ready. Task 02-01 is ready; later tasks remain in Backlog.
 
 | ID | Task | Status | Priority |
 |---|---|---|---|
-| [02-01](01-parent-theme-scaffold.md) | Build the Blixis Base parent theme | Backlog | P0 |
+| [02-01](01-parent-theme-scaffold.md) | Build the Blixis Base parent theme | Ready | P0 |
 | [02-02](02-tailwind-build-pipeline.md) | Build the Tailwind CSS v4 pipeline | Backlog | P0 |
 | [02-03](03-theme-json-bridge.md) | Bridge design tokens to theme.json | Backlog | P0 |
 | [02-04](04-semantic-templates.md) | Create semantic WordPress templates | Backlog | P0 |

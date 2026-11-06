@@ -1,6 +1,6 @@
 # 01 Discovery Foundation
 
-**Status:** Busy. Tasks are planned unless their individual file records verified completion.
+**Status:** Done. All five foundation tasks have merged evidence; product implementation and release gates remain in later phases.
 
 | ID | Task | Status | Priority |
 |---|---|---|---|
@@ -8,6 +8,6 @@
 | [01-02](02-compatibility-spike.md) | Verify WordPress and toolchain compatibility | Done | P0 |
 | [01-03](03-repository-scaffold.md) | Build the monorepo scaffold | Done | P0 |
 | [01-04](04-quality-pipeline.md) | Extend the quality pipeline | Done | P0 |
-| [01-05](05-architecture-contracts.md) | Validate architecture contracts and ADRs | In Review | P0 |
+| [01-05](05-architecture-contracts.md) | Validate architecture contracts and ADRs | Done | P0 |
 
-Complete the tasks in dependency order. Update this index only when task evidence warrants a phase status change. Phase exit requires all required work, security and accessibility checks, release evidence, and owner acceptance.
+The foundation phase is complete through [PR #16](https://github.com/EmVeeNL/blixis-wordpress/pull/16), which records architecture and security review and passing contract checks. Accessibility and product release evidence are tracked in their implementation and release phases; this status does not claim a product release.

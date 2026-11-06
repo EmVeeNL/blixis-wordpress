@@ -14,8 +14,8 @@ CI covers the code that exists today: the theme, the plugin, shell scripts, docu
 | `browser-tests` | Quality | Spike drag and drop tests on Playwright's Chromium, Firefox, and WebKit | See the [spike](../../spikes/01-02-compatibility/README.md) for local commands | Yes |
 | `scripts` | Quality | `bash -n`, ShellCheck, `scripts/test-setup-links.sh`, Compose configuration, JSON parsing, actionlint | The failed step names the tool | Yes |
 | `wordpress-integration` | Quality | Theme and plugin activation plus REST, revision, and preview smoke tests in a throwaway stack | Read the report step; failed checks are listed by name | Yes |
-| `contracts` | Quality | The [contract fixtures](../contracts/README.md) in TypeScript and PHP, cross-contract checks, and browser proofs; any skipped test fails | Run `pnpm run test` in `spikes/01-05-contracts`; a changed golden is a contract change | Not yet; add after this merges |
-| `contracts-wordpress (document)`, `(tokens)`, `(api)` | Quality | Contract proofs on WordPress 7.1.4 with PHP 8.4 and WordPress 7.0.8 with PHP 8.5 in a throwaway stack | Run `spikes/01-05-contracts/wordpress/run.sh <area>` and read the `FAIL` lines | Not yet; add after this merges |
+| `contracts` | Quality | The [contract fixtures](../contracts/README.md) in TypeScript and PHP, cross-contract checks, and browser proofs; any skipped test fails | Run `pnpm run test` in `spikes/01-05-contracts`; a changed golden is a contract change | Yes |
+| `contracts-wordpress (document)`, `(tokens)`, `(api)` | Quality | Contract proofs on WordPress 7.1.4 with PHP 8.4 and WordPress 7.0.8 with PHP 8.5 in a throwaway stack | Run `spikes/01-05-contracts/wordpress/run.sh <area>` and read the `FAIL` lines | Yes |
 | `secrets` | Quality | gitleaks on history reachable from `HEAD` | Rotate a real credential, then remove it from the branch. Add a false positive's fingerprint to `.gitleaksignore` with the reason | Yes |
 | `licenses` | Quality | License check of installed npm packages | Review the flagged package before changing the allowed list | Yes |
 | `dependency-audit` | Quality | `pnpm audit`, `composer audit` | Update the affected package | No |
@@ -28,7 +28,7 @@ Actions, the Playwright image, the WordPress and MariaDB test images, ShellCheck
 
 ## Branch protection
 
-Since PR [#12](https://github.com/EmVeeNL/blixis-wordpress/pull/12) merged on 2026-11-06, `main` protection requires the 12 checks marked Yes above from the GitHub Actions app (app ID `15368`). The checks ran successfully on the merged commit: [Quality](https://github.com/EmVeeNL/blixis-wordpress/actions/runs/42292818868) and [PHP lint](https://github.com/EmVeeNL/blixis-wordpress/actions/runs/42292818870). Protection is strict (branches must be up to date), requires a PR and resolved conversations, applies to admins, and blocks force pushes and deletion. Zero approving reviews are required while Michael is the sole developer.
+Since PR [#16](https://github.com/EmVeeNL/blixis-wordpress/pull/16) merged on 2026-11-06, `main` protection requires the 16 checks marked Yes above from the GitHub Actions app (app ID `15368`). The four contract checks reported successfully on the merged commit in [Quality](https://github.com/EmVeeNL/blixis-wordpress/actions/runs/42308604752); [PHP lint](https://github.com/EmVeeNL/blixis-wordpress/actions/runs/42308604816) also passed. Protection is strict (branches must be up to date), requires a PR and resolved conversations, applies to admins, and blocks force pushes and deletion. Zero approving reviews are required while Michael is the sole developer.
 
 Verify the live configuration with:
 

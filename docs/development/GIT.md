@@ -2,7 +2,7 @@
 
 Use GitHub Flow from synchronized `main`: short task branches such as `feat/04-03-editor-canvas`, `fix/05-05-preview-leak`, or `docs/01-01-requirements`; focused Conventional Commits; PR; checks and review; squash merge. Link the roadmap task and record real branch, commit, PR, merge, and completion metadata. `Done` requires verified merge; `Closed` requires release or acceptance. Use version tags and a migration plan for breaking contracts.
 
-[CI checks](CI.md) lists every job, how to repair a failure, what is pinned, and current branch protection. GitHub `main` protection requires a PR and 12 checks, blocks force pushes and deletion, and applies to admins. It requires zero approving reviews; a stronger review count is recommended when reviewers are available. Add each new job with the code it checks and verify that it fails on a deliberate error.
+[CI checks](CI.md) lists every job, how to repair a failure, what is pinned, and current branch protection. GitHub `main` protection requires a PR and 16 checks, blocks force pushes and deletion, and applies to admins. It requires zero approving reviews; a stronger review count is recommended when reviewers are available. Add each new job with the code it checks and verify that it fails on a deliberate error.
 
 A PR should include task ID, scope, tests, security/privacy and performance impact, screenshots for UI work, and migration/rollback notes. Do not commit credentials, WordPress runtime files, dumps, unlicensed assets, or generated dependencies. Review staged names and secret scan results before committing.
 
