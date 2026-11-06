@@ -1,1 +1,30 @@
+
+# WordPress Core
+/wp-admin/
+/wp-includes/
+/wp-*.php
+/index.php
+/xmlrpc.php
+/license.txt
+/readme.html
+
+# Environment & secrets
 .env
+.env.*
+!.env.example
+wp-config.php
+
+# Runtime & uploads
+/wp-content/uploads/
+/wp-content/cache/
+/wp-content/upgrade/
+
+# Dependencies & build outputs
+node_modules/
+vendor/
+dist/
+.DS_Store
+
+# Backups
+*.sql
+*.sql.gz
