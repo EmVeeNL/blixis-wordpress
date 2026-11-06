@@ -1,0 +1,37 @@
+{
+  "contract_version": "1.0",
+  "vary": "Authorization, Origin",
+  "max_shared_staleness_seconds": 60,
+  "classes": {
+    "public_success": {
+      "applies_to": "content routes, anonymous mode, no key presented",
+      "cache_control": "public, max-age=60, must-revalidate",
+      "etag": true
+    },
+    "keyed_success": {
+      "applies_to": "content routes with a valid key, in either mode",
+      "cache_control": "private, max-age=0, must-revalidate",
+      "etag": true
+    },
+    "schema": {
+      "applies_to": "GET /schema",
+      "cache_control": "public, max-age=300",
+      "etag": true
+    },
+    "health": {
+      "applies_to": "GET /health",
+      "cache_control": "no-store",
+      "etag": false
+    },
+    "error": {
+      "applies_to": "every 4xx and 5xx response from the namespace",
+      "cache_control": "no-store",
+      "etag": false
+    }
+  },
+  "preview": {
+    "applies_to": "any front-end response that shows unpublished or autosaved content",
+    "cache_control_contains": "no-store",
+    "x_robots_tag": "noindex, nofollow"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "contract_version": "1.0",
+  "item": {
+    "id": 123,
+    "type": "page",
+    "slug": "about",
+    "title": "About",
+    "link": "https://example.test/about/",
+    "date_gmt": "2026-11-06T12:00:00Z",
+    "modified_gmt": "2026-11-06T12:30:00Z",
+    "html": "<p>Published content.</p>"
+  }
+}

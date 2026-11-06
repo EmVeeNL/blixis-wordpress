@@ -1,0 +1,8 @@
+{
+  "contract_version": "1.0",
+  "code": "NOT_FOUND",
+  "message": "Not found.",
+  "data": {
+    "status": 404
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "contract_version": "1.0",
+  "code": "INVALID_QUERY",
+  "message": "The request has an unsupported or invalid query parameter.",
+  "data": {
+    "status": 400
+  }
+}

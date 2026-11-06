@@ -1,0 +1,8 @@
+{
+  "contract_version": "1.0",
+  "code": "METHOD_NOT_ALLOWED",
+  "message": "This API is read-only.",
+  "data": {
+    "status": 405
+  }
+}
