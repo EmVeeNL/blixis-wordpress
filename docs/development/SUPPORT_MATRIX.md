@@ -30,7 +30,7 @@
 | MariaDB | 11.4 | The only tested database |
 | Node | 26 LTS for builds, pinned to 26.13.0 | Matches the one-line policy and the local toolchain; 24 and 22 also pass |
 | TypeScript | 7.0.x, TSX only | Owner preference; type checking and the isolated editor proof pass |
-| Lint and format | Oxlint with `oxlint-tsgolint`; Oxfmt | Owner choice on 2026-11-06; isolated spike passes. Add production checks in task 01-04 |
+| Lint and format | Oxlint with `oxlint-tsgolint`; Oxfmt | Owner choice on 2026-11-06; run by the `typescript` [CI check](CI.md) with warnings as failures |
 | Package manager | pnpm 12.18.0 | Confirmed in task 01-03; enforced for the workspace |
 | Tailwind CSS, `@dnd-kit/core`, React | 4.3.5, 6.3.1, 18.3.1 | Exact pins from this proof |
 | Browsers | Current Chrome, Firefox, Safari, Edge | Unchanged policy; real Safari and Edge must be run by task 06-04 |
@@ -41,14 +41,14 @@
 |---|---|---|
 | Safari 27.0.1 not run: "You must enable 'Allow remote automation'" | WebKit 27.2 is a Playwright build, not Safari | Run real Safari in task 06-04 |
 | Edge not installed | Not run | Run it in task 06-04; Chromium results are only indirect evidence |
-| `typescript-eslint` 8.72.1 requires `typescript <6.1.0` and npm refuses it with 7.0.2 (ERESOLVE) | ESLint with that parser is unsuitable for the chosen TypeScript version | Use the tested Oxlint and `oxlint-tsgolint` combination; production CI and failure-path checks belong to task 01-04 |
+| `typescript-eslint` 8.72.1 requires `typescript <6.1.0` and npm refuses it with 7.0.2 (ERESOLVE) | ESLint with that parser is unsuitable for the chosen TypeScript version | Use the Oxlint and `oxlint-tsgolint` combination, enforced in CI |
 | `@wordpress/*` packages and `@wordpress/scripts` not tested with TypeScript 7 | Unknown for editor builds | Verify in task 04-01 |
 | Drag/drop proof ran on a standalone page with bundled React | Not proven inside wp-admin or against the `wp-element` script | Verify in task 04-01 |
 | `@dnd-kit/core` 6.3.1 was published on 2024-12-05 | Slow release pace; maintenance risk | Isolate it behind an adapter. `@dnd-kit/react` 0.5.3 is pre-1.0; neither it nor Pragmatic Drag and Drop was tested |
-| Tests used the PHP built-in server through `wp server` | Apache, nginx, and object caches not tested | Cover them in tasks 01-04 and 06-04 |
+| Tests used the PHP built-in server through `wp server` | Apache, nginx, and object caches not tested | Cover them in task 06-04; task 01-04 kept the built-in server |
 | MySQL, Multisite, and WordPress 7.2 beta not tested | Unknown | Multisite is planned for v1.1 in task 09-06; recheck WordPress releases before task 02-01 |
 | WP-CLI 2.12.0 logs one deprecation on PHP 8.5 | From WP-CLI's `Colors` class, not WordPress or Blixis | Track it; no Blixis log lines appeared |
-| CI runs only `php -l` and documentation checks | This matrix is not enforced in CI | Add the jobs in task 01-04 |
+| CI covers PHP 8.3–8.5, Node 26, and WordPress 7.1.4 on PHP 8.3 and 7.0.8 on PHP 8.5 | Other tested combinations are not rerun on each change; Chrome, Safari, and Edge are not in CI | See [CI checks](CI.md); task 06-04 covers real browsers |
 
 ## Findings for the document model
 

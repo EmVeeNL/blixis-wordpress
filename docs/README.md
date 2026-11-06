@@ -12,7 +12,7 @@
 
 - [Roadmap](roadmap/ROADMAP.md) with nine phases and 47 planned tasks; [task status workflow](development/STATUS_WORKFLOW.md)
 - [Local configuration and tokens](development/CONFIGURATION.md), [support matrix](development/SUPPORT_MATRIX.md), [migration record](development/MIGRATION.md)
-- [Git and CI](development/GIT.md), [contributing](../CONTRIBUTING.md), [agent instructions](../AGENTS.md), and [prompts](development/PROMPTS.md)
+- [Git and CI](development/GIT.md), [CI checks](development/CI.md), [contributing](../CONTRIBUTING.md), [agent instructions](../AGENTS.md), and [prompts](development/PROMPTS.md)
 - [Examples](examples/) are conceptual contracts; [assets](assets/) are concept visuals
 
 **Status labels matter:** `Implemented` describes code verified in this repository; `Planned` is in the roadmap; `Proposed` needs an architectural or product decision. No future feature is complete by virtue of being documented here.

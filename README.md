@@ -28,7 +28,7 @@ The first release line is planned as **v1.0.x for single-site WordPress**. WordP
 | Blixis Blocks | Installable plugin entry point; no editor UI | Versioned registry, editor, persistence, and PHP rendering |
 | Child themes | Planned | Generator, validated token setup, and preview |
 | Content API | Proposed, not implemented | Approve access model and build read-only published-content routes |
-| Quality checks | GitHub Actions checks PHP syntax and documentation links/task metadata | Add feature-specific lint, tests, builds, and security checks as code arrives |
+| Quality checks | GitHub Actions runs the [checks listed here](docs/development/CI.md) on existing code: PHP, TypeScript, build, browser and WordPress tests, scripts, secrets, and dependencies | Add jobs as new packages arrive |
 
 See the [PRD](docs/architecture/PRD.md), [MVP scope](docs/roadmap/MVP.md), and [roadmap](docs/roadmap/ROADMAP.md) for the intended product and sequence. A documented plan is not an implementation claim.
 
@@ -88,7 +88,7 @@ bash scripts/test-setup-links.sh    # tests the link script on a temporary fake 
 
 pnpm refuses other Node major versions. Package build scripts stay off unless listed in `pnpm-workspace.yaml`. The 01-02 spike is the only workspace package so far, because it is the only TypeScript source; product packages are added with their first real code.
 
-To undo a local install, delete `node_modules/`, `vendor/`, and those build folders. This does not affect the site, its database, or the links. CI does not run these commands yet; task `01-04` adds them.
+To undo a local install, delete `node_modules/`, `vendor/`, and those build folders. This does not affect the site, its database, or the links. CI runs these commands; see [CI checks](docs/development/CI.md).
 
 For parallel Claude and Codex work, use separate [Git worktrees](docs/development/GIT.md#parallel-agent-worktrees). The primary checkout remains the only source linked into `~/Sites/blixis`; worktrees use disposable WordPress fixtures for integration tests.
 
@@ -100,7 +100,7 @@ plugins/blixis-blocks/    Plugin entry point
 scripts/                  Safe local links, their test, and documentation validation
 spikes/                   Feasibility evidence; not product code
 docs/                     Product, architecture, development, security, and roadmap
-.github/workflows/        Current PHP syntax and documentation checks
+.github/workflows/        CI checks; see docs/development/CI.md
 compose.yaml              MariaDB service with a stable Compose project name
 package.json              pnpm workspace root; pnpm-workspace.yaml lists its packages
 composer.json             PHP quality tooling; phpcs.xml.dist holds its rules

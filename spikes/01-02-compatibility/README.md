@@ -1,6 +1,6 @@
 # 01-02 compatibility spike
 
-Throwaway proof for [task 01-02](../../docs/roadmap/phases/01-discovery-foundation/02-compatibility-spike.md). It is not product code and not run by CI. Since task 01-03 its frontend is the first pnpm workspace package, because it is the only TypeScript source so far. The conclusions are in the [support matrix](../../docs/development/SUPPORT_MATRIX.md); raw results are in [`results/`](results/).
+Throwaway proof for [task 01-02](../../docs/roadmap/phases/01-discovery-foundation/02-compatibility-spike.md). It is not product code. Its checks run in [CI](../../docs/development/CI.md) because it is real TypeScript and test code. Since task 01-03 its frontend is the first pnpm workspace package, because it is the only TypeScript source so far. The conclusions are in the [support matrix](../../docs/development/SUPPORT_MATRIX.md); raw results are in [`results/`](results/).
 
 ## Safety
 
