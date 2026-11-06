@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "documentId": "fixture",
+  "root": [],
+  "nodes": {},
+  "themeRef": {
+    "theme": "blixis-base",
+    "tokensVersion": 1
+  },
+  "slug": "x",
+  "status": "publish",
+  "author": 1,
+  "date": "2026-01-01",
+  "post_status": "publish",
+  "post_content": "x"
+}

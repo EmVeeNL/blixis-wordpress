@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "documentId": "fixture",
+  "root": [
+    "c"
+  ],
+  "nodes": {
+    "c": {
+      "id": "c",
+      "type": "blixis/column",
+      "version": 1,
+      "props": {
+        "basis": "equal"
+      },
+      "children": []
+    }
+  },
+  "themeRef": {
+    "theme": "blixis-base",
+    "tokensVersion": 1
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 1,
+  "documentId": "fixture",
+  "root": [
+    "s"
+  ],
+  "nodes": {
+    "s": {
+      "id": "s",
+      "type": "blixis/section",
+      "version": 1,
+      "props": {
+        "tag": "section",
+        "padding": "lg"
+      },
+      "children": [
+        "h",
+        "x"
+      ]
+    },
+    "h": {
+      "id": "h",
+      "type": "blixis/heading",
+      "version": 99,
+      "props": {
+        "rank": 2,
+        "futureProp": true
+      },
+      "children": []
+    },
+    "x": {
+      "id": "x",
+      "type": "blixis/heading",
+      "version": 99,
+      "props": {
+        "html": "<script>x</script>"
+      },
+      "children": []
+    }
+  },
+  "themeRef": {
+    "theme": "blixis-base",
+    "tokensVersion": 1
+  }
+}

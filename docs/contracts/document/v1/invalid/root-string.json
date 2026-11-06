@@ -1,0 +1,10 @@
+{
+  "schemaVersion": 1,
+  "documentId": "fixture",
+  "root": "x",
+  "nodes": {},
+  "themeRef": {
+    "theme": "blixis-base",
+    "tokensVersion": 1
+  }
+}
