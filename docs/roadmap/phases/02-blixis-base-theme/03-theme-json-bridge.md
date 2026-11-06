@@ -4,7 +4,7 @@ title: "Bridge design tokens to theme.json"
 phase: "02"
 status: Backlog
 priority: P0
-owner: null
+owner: "EmVeeNL"
 created_at: "2026-11-06"
 updated_at: "2026-11-06"
 depends_on: ["02-02"]

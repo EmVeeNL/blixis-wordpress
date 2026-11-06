@@ -4,7 +4,7 @@ title: "Build the nested canvas and drag/drop"
 phase: "04"
 status: Backlog
 priority: P0
-owner: null
+owner: "EmVeeNL"
 created_at: "2026-11-06"
 updated_at: "2026-11-06"
 depends_on: ["04-02"]

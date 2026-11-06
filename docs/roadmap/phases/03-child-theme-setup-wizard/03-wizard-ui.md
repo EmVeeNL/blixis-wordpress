@@ -4,7 +4,7 @@ title: "Build the theme setup wizard"
 phase: "03"
 status: Backlog
 priority: P0
-owner: null
+owner: "EmVeeNL"
 created_at: "2026-11-06"
 updated_at: "2026-11-06"
 depends_on: ["03-02"]

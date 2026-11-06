@@ -4,7 +4,7 @@ title: "Evaluate frontend editing"
 phase: "09"
 status: Backlog
 priority: P2
-owner: null
+owner: "EmVeeNL"
 created_at: "2026-11-06"
 updated_at: "2026-11-06"
 depends_on: ["08-05"]

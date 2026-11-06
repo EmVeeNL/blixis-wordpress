@@ -4,7 +4,7 @@ title: "Implement published-content endpoints"
 phase: "08"
 status: Backlog
 priority: P1
-owner: null
+owner: "EmVeeNL"
 created_at: "2026-11-06"
 updated_at: "2026-11-06"
 depends_on: ["08-02"]

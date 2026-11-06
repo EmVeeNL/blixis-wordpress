@@ -1,5 +1,7 @@
 # Roadmap
 
+**Owner:** Michael ([@EmVeeNL](https://github.com/EmVeeNL)) maintains all roadmap tasks.
+
 The 46 planned tasks from the project pack are organized into nine phases. The separate completed repository migration is recorded as `R-01` to avoid colliding with planned task `01-03`. Task status and completion evidence live in individual files; no feature task was marked complete by this documentation integration. See the [status workflow](../development/STATUS_WORKFLOW.md) and [MVP sequence](MVP.md).
 
 | Phase | Purpose | Status |
