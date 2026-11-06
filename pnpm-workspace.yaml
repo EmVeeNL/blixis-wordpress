@@ -1,7 +1,8 @@
 # List only packages with real source. Add entries with their first consumer.
-# The 01-02 spike is the only TypeScript source so far; remove it when it retires.
+# Both are throwaway spikes; remove each when it retires.
 packages:
   - spikes/01-02-compatibility/frontend
+  - spikes/01-05-contracts
 
 engineStrict: true
 

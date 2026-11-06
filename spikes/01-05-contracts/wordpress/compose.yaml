@@ -1,0 +1,25 @@
+# Throwaway stack for task 01-05. run.sh sets a separate project name per area.
+# The database lives in tmpfs, no port is published, nothing is bind mounted,
+# and nothing here reads ~/Sites/blixis.
+services:
+  db:
+    image: mariadb:11.4.13@sha256:d1891ede5a559f1086f55053bb8cc1569b0298338c4d72d71725a7f74f6ba620
+    environment:
+      MARIADB_ROOT_PASSWORD: "${SPIKE_DB_ROOT_PASSWORD:?run through run.sh}"
+    tmpfs:
+      - /var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 3s
+      timeout: 3s
+      retries: 30
+
+  runner:
+    image: "${SPIKE_CLI_IMAGE:?run through run.sh}"
+    profiles: ["run"]
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      SPIKE_DB_ROOT_PASSWORD: "${SPIKE_DB_ROOT_PASSWORD:?run through run.sh}"
+      WP_CLI_CACHE_DIR: /tmp/wp-cli-cache

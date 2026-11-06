@@ -1,0 +1,20 @@
+{
+  "name": "blixis-contract-spike",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Throwaway contract proofs for task 01-05. Not product code; no runtime dependencies.",
+  "type": "module",
+  "scripts": {
+    "test": "node --test \"document/**/*.test.ts\" \"tokens/**/*.test.ts\" \"api/**/*.test.ts\"",
+    "lint": "oxlint --deny-warnings --type-aware --type-check document tokens api",
+    "format:check": "oxfmt --check document tokens api package.json tsconfig.json",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/node": "26.6.6",
+    "oxfmt": "0.77.0",
+    "oxlint": "1.92.0",
+    "oxlint-tsgolint": "7.0.2006",
+    "typescript": "7.0.2"
+  }
+}
