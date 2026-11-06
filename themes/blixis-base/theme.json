@@ -1,0 +1,19 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/theme.json",
+  "version": 3,
+  "settings": {
+    "appearanceTools": true,
+    "color": { "defaultPalette": false, "palette": [
+      { "slug": "background", "name": "Background", "color": "#ffffff" },
+      { "slug": "foreground", "name": "Foreground", "color": "#171717" },
+      { "slug": "accent", "name": "Accent", "color": "#2563eb" }
+    ] },
+    "layout": { "contentSize": "42rem", "wideSize": "72rem" },
+    "spacing": { "units": ["px", "rem", "%", "vw"] },
+    "typography": { "fluid": true }
+  },
+  "styles": {
+    "color": { "background": "var:preset|color|background", "text": "var:preset|color|foreground" },
+    "typography": { "fontFamily": "system-ui, sans-serif", "lineHeight": "1.5" }
+  }
+}

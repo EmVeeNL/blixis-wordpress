@@ -1,5 +1,5 @@
 
-# WordPress Core
+# WordPress runtime (also protects accidental in-repository installs)
 /wp-admin/
 /wp-includes/
 /wp-*.php
@@ -7,24 +7,27 @@
 /xmlrpc.php
 /license.txt
 /readme.html
+/wp-content/
 
 # Environment & secrets
 .env
 .env.*
 !.env.example
-wp-config.php
+/wp-config.php
+/.idea/
+/.vscode/
 
 # Runtime & uploads
-/wp-content/uploads/
-/wp-content/cache/
-/wp-content/upgrade/
+uploads/
+cache/
+upgrade/
 
 # Dependencies & build outputs
 node_modules/
-vendor/
-dist/
+coverage/
 .DS_Store
 
 # Backups
 *.sql
 *.sql.gz
+*.tar.gz
