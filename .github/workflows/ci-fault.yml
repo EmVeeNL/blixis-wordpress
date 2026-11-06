@@ -1,7 +1,0 @@
-name: Fault
-on: workflow_dispatch
-jobs:
-  a:
-    runs-on: ubuntu-24.04
-    steps:
-      - run: echo ${{ nosuch.value }}
