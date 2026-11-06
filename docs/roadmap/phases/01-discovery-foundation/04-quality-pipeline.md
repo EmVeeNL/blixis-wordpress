@@ -4,7 +4,7 @@ title: "Extend the quality pipeline"
 phase: "01"
 status: Backlog
 priority: P0
-owner: null
+owner: "EmVeeNL"
 created_at: "2026-11-06"
 updated_at: "2026-11-06"
 depends_on: ["01-03"]
@@ -29,20 +29,21 @@ Add CI jobs for implemented PHP and TypeScript lint, type checking, tests, build
 
 ## Technical requirements
 
-- Use the module boundaries and contracts in [Architecture](../../../architecture/ARCHITECTURE.md).
-- Validate server-side data and permissions where applicable; document schema or ADR changes.
-- Preserve existing content and provide a migration or rollback plan for contract changes.
+- Preserve the existing `syntax` and `docs` jobs; add PHP, TypeScript, build, test, dependency, and secret checks only for implemented code and scripts.
+- Use pinned actions, least-privilege workflow permissions, deterministic dependencies, and appropriately scoped CI matrices.
+- Make required checks correspond to jobs that actually exist; document branch-protection requirements and review policy.
+- Give each check a failure mode and clear diagnostic output so PR authors can repair it.
 
 ## Acceptance criteria
 
-- [ ] The described capability works in the intended WordPress and browser environments.
-- [ ] Relevant security, accessibility, and performance requirements are verified.
-- [ ] Tests and documentation are included with the implementation.
-- [ ] A reviewed PR is merged, with evidence and metadata recorded here.
+- [ ] Every implemented code path has relevant reproducible CI checks; no job advertises an absent test suite.
+- [ ] Deliberate syntax, documentation, lint, and test failures cause the intended PR checks to fail, then pass when fixed.
+- [ ] Workflow permissions and dependency versions are reviewed, and branch protection requires the agreed checks.
+- [ ] The reviewed PR is merged with CI run links and task metadata.
 
 ## Testing requirements
 
-Prove PR checks fail for deliberate lint and test failures, then pass after repair. Include negative permission, invalid-input, version, and regression cases where relevant. Record exact commands and results in the PR.
+Use temporary test branches or a safe fixture to trigger each check's failure path, then verify a passing run. Inspect workflow permissions, action pinning, check names, and branch protection. Record run URLs and cleanup.
 
 ## Tracking and completion
 

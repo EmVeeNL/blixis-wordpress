@@ -44,6 +44,20 @@ for task_id, deps in dependencies.items():
     for dep in deps:
         if dep not in ids:
             errors.append(f"{task_id}: unknown dependency {dep}")
+phase_numbers = {}
+for directory in TASK_ROOT.iterdir():
+    if not directory.is_dir():
+        continue
+    match = re.match(r"^(\d{2})-", directory.name)
+    if not match:
+        errors.append(f"phase directory has no two-digit number: {directory.name}")
+        continue
+    number = match.group(1)
+    if number in phase_numbers:
+        errors.append(f"duplicate phase {number}: {directory.name} and {phase_numbers[number]}")
+    phase_numbers[number] = directory.name
+    if not (directory / "_index.md").is_file():
+        errors.append(f"{directory.name}: missing _index.md")
 if errors:
     print("\n".join(errors), file=sys.stderr)
     raise SystemExit(1)

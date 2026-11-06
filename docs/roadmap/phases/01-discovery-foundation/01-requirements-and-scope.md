@@ -2,9 +2,9 @@
 id: "01-01"
 title: "Confirm requirements, personas, and MVP scope"
 phase: "01"
-status: Ready
+status: Backlog
 priority: P0
-owner: null
+owner: "EmVeeNL"
 created_at: "2026-11-06"
 updated_at: "2026-11-06"
 depends_on: []
@@ -29,20 +29,21 @@ Interview editors, site builders, and reviewers; reconcile FR-01–FR-16 with MV
 
 ## Technical requirements
 
-- Use the module boundaries and contracts in [Architecture](../../../architecture/ARCHITECTURE.md).
-- Validate server-side data and permissions where applicable; document schema or ADR changes.
-- Preserve existing content and provide a migration or rollback plan for contract changes.
+- Map each persona and user journey to FR-01–FR-16 in the [PRD](../../../architecture/PRD.md), with priority, owner, and a testable outcome.
+- Reconcile the four [MVP milestones](../../MVP.md) with the nine-phase roadmap; identify what Wilde Groei needs before launch and what can follow.
+- Record conflicting requests and unanswered product choices in [Open questions](../../../architecture/OPEN_QUESTIONS.md); use an ADR for decisions that alter module or data contracts.
+- Obtain explicit product-owner approval of scope and release gates; retain the review evidence in the task and PR.
 
 ## Acceptance criteria
 
-- [ ] The described capability works in the intended WordPress and browser environments.
-- [ ] Relevant security, accessibility, and performance requirements are verified.
-- [ ] Tests and documentation are included with the implementation.
-- [ ] A reviewed PR is merged, with evidence and metadata recorded here.
+- [ ] Personas, journeys, FR-01–FR-16, MVP milestones, and roadmap are traceable without conflicting scope claims.
+- [ ] Open questions have an owner and decision point; accepted decisions are recorded with evidence.
+- [ ] The product owner approves the PRD, MVP scope, and release gates.
+- [ ] Documentation links pass validation; the reviewed PR is merged and task metadata records the evidence.
 
 ## Testing requirements
 
-Stakeholder walkthrough, requirement traceability, and documentation link check. Include negative permission, invalid-input, version, and regression cases where relevant. Record exact commands and results in the PR.
+Run `python3 scripts/check-docs.py`; manually check requirement-to-milestone traceability and contradictory statements. Walk the editor, reviewer, publisher, and API journeys with stakeholders. Record approval, unresolved objections, exact checks, and results in the PR.
 
 ## Tracking and completion
 
@@ -52,10 +53,11 @@ Stakeholder walkthrough, requirement traceability, and documentation link check.
 - **Commit references:** None.
 - **PR number and URL:** None.
 - **Started / completed / closed:** Not recorded.
-- **Status:** Ready. Update frontmatter and history on every transition; follow [status workflow](../../../development/STATUS_WORKFLOW.md).
+- **Status:** Backlog. Update frontmatter and history on every transition; follow [status workflow](../../../development/STATUS_WORKFLOW.md).
 
 ## Status history
 
 | Date | Transition | Evidence |
 |---|---|---|
 | 2026-11-06 | Initial planning → Ready | Downloaded project plan; no implementation evidence |
+| 2026-11-06 | Ready → Backlog | Phase audit: owner unassigned and no scope approval recorded |

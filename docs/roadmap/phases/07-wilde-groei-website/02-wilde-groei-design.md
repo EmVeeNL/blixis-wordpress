@@ -4,7 +4,7 @@ title: "Design Wilde Groei child theme"
 phase: "07"
 status: Backlog
 priority: P1
-owner: null
+owner: "EmVeeNL"
 created_at: "2026-11-06"
 updated_at: "2026-11-06"
 depends_on: ["07-01"]

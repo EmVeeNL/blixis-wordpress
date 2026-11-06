@@ -4,7 +4,7 @@ title: "Build the monorepo scaffold"
 phase: "01"
 status: Backlog
 priority: P0
-owner: null
+owner: "EmVeeNL"
 created_at: "2026-11-06"
 updated_at: "2026-11-06"
 depends_on: ["01-02"]
@@ -29,20 +29,21 @@ Introduce real pnpm workspaces and PHP tooling only with their first consumers; 
 
 ## Technical requirements
 
-- Use the module boundaries and contracts in [Architecture](../../../architecture/ARCHITECTURE.md).
-- Validate server-side data and permissions where applicable; document schema or ADR changes.
-- Preserve existing content and provide a migration or rollback plan for contract changes.
+- Keep WordPress Core, uploads, secrets, and database outside source; use the existing [link script](../../../../scripts/setup-links.sh) and stable Compose project identity.
+- Introduce pnpm workspace packages and PHP tooling only when their first real consumers exist; add a lockfile and documented install/build commands.
+- Ensure `.gitignore`, environment examples, scripts, and module boundaries support a clean checkout without copying local credentials.
+- Document the bootstrap, expected outputs, and safe rollback in the root README and development guides.
 
 ## Acceptance criteria
 
-- [ ] The described capability works in the intended WordPress and browser environments.
-- [ ] Relevant security, accessibility, and performance requirements are verified.
-- [ ] Tests and documentation are included with the implementation.
-- [ ] A reviewed PR is merged, with evidence and metadata recorded here.
+- [ ] A fresh checkout can install and build the implemented packages from documented commands without local secrets.
+- [ ] Workspace and PHP tooling correspond to real source modules; no empty placeholder packages or runtime files are tracked.
+- [ ] The local WordPress integration remains functional and a conflicting symlink is refused safely.
+- [ ] The reviewed PR is merged with reproducible setup evidence and task metadata.
 
 ## Testing requirements
 
-Fresh checkout install and build, plus script and configuration smoke tests. Include negative permission, invalid-input, version, and regression cases where relevant. Record exact commands and results in the PR.
+Use a clean checkout for install/build and script smoke tests. Verify `bash -n scripts/setup-links.sh`, idempotent links, rejection of conflicting links, Compose configuration, WordPress recognition, and ignored secret/runtime paths. Record exact results.
 
 ## Tracking and completion
 

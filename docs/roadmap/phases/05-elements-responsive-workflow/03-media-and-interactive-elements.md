@@ -4,7 +4,7 @@ title: "Implement media and interactive elements"
 phase: "05"
 status: Backlog
 priority: P0
-owner: null
+owner: "EmVeeNL"
 created_at: "2026-11-06"
 updated_at: "2026-11-06"
 depends_on: ["05-02"]

@@ -10,7 +10,7 @@ The clean source checkout on `main` at `2d88d52` was moved to `~/Developer/WordP
 
 The link script now defaults to `~/Sites/blixis`, independent of source location. To roll back this local relocation, first verify the destination and runtime symlink targets, move the checkout back to an empty original path, and retarget only the two Blixis symlinks. No database action belongs in this rollback.
 
-See [configuration](CONFIGURATION.md) for current paths and safe Compose commands. The prior migration task is [R-01](../roadmap/phases/01-repository-foundation/03-restructure-repository.md).
+See [configuration](CONFIGURATION.md) for current paths and safe Compose commands. The completed migration record is [R-01](history/R-01-restructure-repository.md).
 
 ## Earlier validation and unresolved history item
 
