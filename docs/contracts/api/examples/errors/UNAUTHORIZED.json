@@ -1,0 +1,8 @@
+{
+  "contract_version": "1.0",
+  "code": "UNAUTHORIZED",
+  "message": "A valid API key is required.",
+  "data": {
+    "status": 401
+  }
+}

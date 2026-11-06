@@ -1,0 +1,8 @@
+{
+  "contract_version": "1.0",
+  "code": "INTERNAL_ERROR",
+  "message": "The request could not be completed.",
+  "data": {
+    "status": 500
+  }
+}

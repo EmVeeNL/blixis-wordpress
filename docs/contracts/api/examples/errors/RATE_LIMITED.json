@@ -1,0 +1,8 @@
+{
+  "contract_version": "1.0",
+  "code": "RATE_LIMITED",
+  "message": "Too many requests.",
+  "data": {
+    "status": 429
+  }
+}
