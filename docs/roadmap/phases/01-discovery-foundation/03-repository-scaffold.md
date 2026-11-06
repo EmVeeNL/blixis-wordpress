@@ -2,7 +2,7 @@
 id: "01-03"
 title: "Build the monorepo scaffold"
 phase: "01"
-status: In Review
+status: Done
 priority: P0
 owner: "EmVeeNL"
 created_at: "2026-11-06"
@@ -11,11 +11,11 @@ depends_on: ["01-02"]
 branch: "chore/01-03-workspace-scaffold"
 pr_number: 10
 pr_url: "https://github.com/EmVeeNL/blixis-wordpress/pull/10"
-commit_sha: "ac365609e1afb1e8381eafb7eee07694bfdb852a"
-merged_at: null
-merge_commit_sha: null
+commit_sha: "d101ac7d5a651bbf9ed6f7c479feccd046420034"
+merged_at: "2026-11-06T16:20:02Z"
+merge_commit_sha: "fad5c11819fce9bc92990d2266d91caec85bea2c"
 started_at: "2026-11-06"
-completed_at: null
+completed_at: "2026-11-06"
 closed_at: null
 blocked_reason: null
 blocked_by: []
@@ -39,7 +39,7 @@ Introduce real pnpm workspaces and PHP tooling only with their first consumers; 
 - [x] A fresh checkout can install and build the implemented packages from documented commands without local secrets.
 - [x] Workspace and PHP tooling correspond to real source modules; no empty placeholder packages or runtime files are tracked.
 - [x] The local WordPress integration remains functional and a conflicting symlink is refused safely.
-- [ ] The reviewed PR is merged with reproducible setup evidence and task metadata.
+- [x] The reviewed PR is merged with reproducible setup evidence and task metadata.
 
 ## Testing requirements
 
@@ -50,10 +50,10 @@ Use a clean checkout for install/build and script smoke tests. Verify `bash -n s
 - **Priority:** P0
 - **Dependencies:** `01-02`
 - **Branch:** `chore/01-03-workspace-scaffold`
-- **Commit references:** `ac365609e1afb1e8381eafb7eee07694bfdb852a`
+- **Commit references:** `ac365609e1afb1e8381eafb7eee07694bfdb852a` (scaffold), `d101ac7d5a651bbf9ed6f7c479feccd046420034` (decisions and worktree guide), `fad5c11819fce9bc92990d2266d91caec85bea2c` (squash merge).
 - **PR number and URL:** [#10](https://github.com/EmVeeNL/blixis-wordpress/pull/10)
-- **Started / completed / closed:** Started 2026-11-06; not completed or closed.
-- **Status:** In Review. The first three acceptance criteria have local and fresh-clone evidence; merge evidence is still required for Done. Follow [status workflow](../../../development/STATUS_WORKFLOW.md).
+- **Started / completed / closed:** Started and completed 2026-11-06; not closed pending release or acceptance evidence.
+- **Status:** Done. Follow [status workflow](../../../development/STATUS_WORKFLOW.md); Closed requires later release or acceptance evidence.
 
 ## Status history
 
@@ -64,3 +64,4 @@ Use a clean checkout for install/build and script smoke tests. Verify `bash -n s
 | 2026-11-06 | Ready → Busy | Branch `chore/01-03-workspace-scaffold` created; workspace and PHP tooling started |
 | 2026-11-06 | Busy → In Review | PR [#10](https://github.com/EmVeeNL/blixis-wordpress/pull/10), commit `ac36560`; fresh-clone install and build, link script tests, Compose, and WordPress recognition passed. Owner decisions pending |
 | 2026-11-06 | In Review, decisions resolved | Owner-delegated review confirms pnpm 12.18.0, the spike as the only current workspace package, and four-space PHP indentation with WPCS security rules; fresh-clone, link, PHP, and documentation checks reviewed. Parallel agent worktree rules added. |
+| 2026-11-06 | In Review → Done | PR [#10](https://github.com/EmVeeNL/blixis-wordpress/pull/10) passed `docs` and `syntax` checks and was squash-merged as `fad5c11819fce9bc92990d2266d91caec85bea2c` at 16:20:02 UTC. |
