@@ -5,7 +5,8 @@ set -euo pipefail
 cd "$(dirname "$0")"
 OUT="../results/wordpress-matrix.jsonl"
 : > "$OUT"
-export SPIKE_DB_ROOT_PASSWORD="$(openssl rand -hex 24)"
+SPIKE_DB_ROOT_PASSWORD="$(openssl rand -hex 24)"
+export SPIKE_DB_ROOT_PASSWORD
 trap 'docker compose --profile run down --remove-orphans >/dev/null 2>&1 || true' EXIT
 
 # wp_version php_minor expectation

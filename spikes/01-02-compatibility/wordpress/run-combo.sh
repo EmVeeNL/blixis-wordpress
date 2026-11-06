@@ -13,6 +13,7 @@ export PHP_INI_SCAN_DIR=":/tmp/php-ini"
 mkdir -p "$ROOT" /tmp/wp-cli-cache
 cd "$ROOT" || exit 1
 
+# shellcheck disable=SC2016 # The single quotes hold PHP code, not shell.
 php -r '
 $m = new mysqli("db", "root", getenv("SPIKE_DB_ROOT_PASSWORD"));
 $m->query("DROP DATABASE IF EXISTS `" . $argv[1] . "`");
@@ -32,7 +33,8 @@ cp -R /tmp/spike/blixis-blocks wp-content/plugins/blixis-blocks
 PLUGIN_OUT="$(wp plugin activate blixis-blocks 2>&1)"; PLUGIN_RC=$?
 THEME_OUT="$(wp theme activate blixis-base 2>&1)"; THEME_RC=$?
 
-export R_WP="$(wp core version)" R_EXPECT="$EXPECT" R_PLUGIN_RC="$PLUGIN_RC" R_PLUGIN_OUT="$PLUGIN_OUT" R_THEME_RC="$THEME_RC" R_THEME_OUT="$THEME_OUT"
+R_WP="$(wp core version)"
+export R_WP R_EXPECT="$EXPECT" R_PLUGIN_RC="$PLUGIN_RC" R_PLUGIN_OUT="$PLUGIN_OUT" R_THEME_RC="$THEME_RC" R_THEME_OUT="$THEME_OUT"
 
 if [ "$EXPECT" = "reject" ]; then
   php /tmp/spike/report.php
@@ -42,7 +44,8 @@ fi
 wp server --host=127.0.0.1 --port=8080 >/tmp/server.log 2>&1 &
 SERVER=$!
 i=0; until wget -q -O /dev/null http://127.0.0.1:8080/ || [ $i -ge 30 ]; do i=$((i+1)); sleep 1; done
-export R_HOME="$(wget -S -O /tmp/home.html http://127.0.0.1:8080/ 2>&1 | awk '/HTTP\//{print $2; exit}')"
+R_HOME="$(wget -S -O /tmp/home.html http://127.0.0.1:8080/ 2>&1 | awk '/HTTP\//{print $2; exit}')"
+export R_HOME
 
 # The preview test needs a theme that prints post content; Base has no full templates yet.
 export R_THEME=""

@@ -2,19 +2,19 @@
 id: "01-04"
 title: "Extend the quality pipeline"
 phase: "01"
-status: Ready
+status: Busy
 priority: P0
 owner: "EmVeeNL"
 created_at: "2026-11-06"
 updated_at: "2026-11-06"
 depends_on: ["01-03"]
-branch: null
+branch: "ci/01-04-quality-pipeline"
 pr_number: null
 pr_url: null
 commit_sha: null
 merged_at: null
 merge_commit_sha: null
-started_at: null
+started_at: "2026-11-06"
 completed_at: null
 closed_at: null
 blocked_reason: null
@@ -50,11 +50,11 @@ Use temporary test branches or a safe fixture to trigger each check's failure pa
 
 - **Priority:** P0
 - **Dependencies:** `01-03`
-- **Branch:** Not created.
+- **Branch:** `ci/01-04-quality-pipeline`
 - **Commit references:** None.
 - **PR number and URL:** None.
-- **Started / completed / closed:** Not recorded.
-- **Status:** Ready. Dependency `01-03` is Done; owner and criteria are recorded. Follow [status workflow](../../../development/STATUS_WORKFLOW.md).
+- **Started / completed / closed:** Started 2026-11-06; not completed or closed.
+- **Status:** Busy. Follow [status workflow](../../../development/STATUS_WORKFLOW.md).
 
 ## Status history
 
@@ -62,3 +62,4 @@ Use temporary test branches or a safe fixture to trigger each check's failure pa
 |---|---|---|
 | 2026-11-06 | Initial planning → Backlog | Downloaded project plan; no implementation evidence |
 | 2026-11-06 | Backlog → Ready | Dependency `01-03` was completed in PR [#10](https://github.com/EmVeeNL/blixis-wordpress/pull/10), merged as `fad5c11819fce9bc92990d2266d91caec85bea2c`; owner and acceptance criteria are recorded. |
+| 2026-11-06 | Ready → Busy | Branch `ci/01-04-quality-pipeline` created from `6662c6b`; CI jobs started |
