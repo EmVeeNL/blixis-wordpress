@@ -1,2 +1,2 @@
 <?php
-if (
+echo $_GET["x"];
