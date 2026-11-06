@@ -64,4 +64,4 @@ Use temporary test branches or a safe fixture to trigger each check's failure pa
 | 2026-11-06 | Initial planning → Backlog | Downloaded project plan; no implementation evidence |
 | 2026-11-06 | Backlog → Ready | Dependency `01-03` was completed in PR [#10](https://github.com/EmVeeNL/blixis-wordpress/pull/10), merged as `fad5c11819fce9bc92990d2266d91caec85bea2c`; owner and acceptance criteria are recorded. |
 | 2026-11-06 | Ready → Busy | Branch `ci/01-04-quality-pipeline` created from `6662c6b`; CI jobs started |
-| 2026-11-06 | Busy → In Review | PR [#12](https://github.com/EmVeeNL/blixis-wordpress/pull/12), commit `a9905e1`; 17 deliberate faults failed their intended checks and the fixed run passed, recorded in [CI checks](../../../development/CI.md). Branch protection update waits for merge; owner review pending |
+| 2026-11-06 | Busy → In Review | PR [#12](https://github.com/EmVeeNL/blixis-wordpress/pull/12), commit `a9905e1`; 16 deliberate faults failed their intended checks and the fixed run passed, recorded in [CI checks](../../../development/CI.md). Branch protection update waits for merge; owner review pending |
