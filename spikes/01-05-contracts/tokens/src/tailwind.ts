@@ -4,6 +4,7 @@ import { readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { FRONTEND, REPO_ROOT, tokenMap } from "./contract.ts";
 import { registry } from "./resolve.ts";
+import { stripVTControlCharacters } from "node:util";
 
 // Imports utilities only: no preflight and no cascade layer. WordPress global styles are
 // unlayered, and any unlayered rule beats any layered rule whatever its specificity.
@@ -82,7 +83,8 @@ export function compileTailwind(directory: string, css: string, html: string): s
     { cwd: REPO_ROOT, encoding: "utf8" },
   );
   if (result.status !== 0) throw new Error(`tailwindcss failed: ${result.stderr}`);
-  if (!result.stderr.includes("tailwindcss v4.3.5")) {
+  // CI forces colour, so the banner holds ANSI codes.
+  if (!stripVTControlCharacters(result.stderr).includes("tailwindcss v4.3.5")) {
     throw new Error(`unexpected Tailwind version: ${result.stderr}`);
   }
   return readFileSync(join(directory, "output.css"), "utf8");
