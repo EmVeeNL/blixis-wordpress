@@ -25,7 +25,7 @@ blocked_by: []
 
 ## Description
 
-Introduce real pnpm workspaces and PHP tooling only with their first consumers; document install/build scripts, ignore rules, and local WordPress integration. This is planned work; no implementation or PR is claimed.
+Introduce real pnpm workspaces and PHP tooling only with their first consumers; document install/build scripts, ignore rules, and local WordPress integration. PR #10 contains the reviewed scaffold. The compatibility spike is currently the only TypeScript package; the theme and plugin are PHP tooling consumers.
 
 ## Technical requirements
 
@@ -36,9 +36,9 @@ Introduce real pnpm workspaces and PHP tooling only with their first consumers; 
 
 ## Acceptance criteria
 
-- [ ] A fresh checkout can install and build the implemented packages from documented commands without local secrets.
-- [ ] Workspace and PHP tooling correspond to real source modules; no empty placeholder packages or runtime files are tracked.
-- [ ] The local WordPress integration remains functional and a conflicting symlink is refused safely.
+- [x] A fresh checkout can install and build the implemented packages from documented commands without local secrets.
+- [x] Workspace and PHP tooling correspond to real source modules; no empty placeholder packages or runtime files are tracked.
+- [x] The local WordPress integration remains functional and a conflicting symlink is refused safely.
 - [ ] The reviewed PR is merged with reproducible setup evidence and task metadata.
 
 ## Testing requirements
@@ -53,7 +53,7 @@ Use a clean checkout for install/build and script smoke tests. Verify `bash -n s
 - **Commit references:** `ac365609e1afb1e8381eafb7eee07694bfdb852a`
 - **PR number and URL:** [#10](https://github.com/EmVeeNL/blixis-wordpress/pull/10)
 - **Started / completed / closed:** Started 2026-11-06; not completed or closed.
-- **Status:** In Review. Follow [status workflow](../../../development/STATUS_WORKFLOW.md).
+- **Status:** In Review. The first three acceptance criteria have local and fresh-clone evidence; merge evidence is still required for Done. Follow [status workflow](../../../development/STATUS_WORKFLOW.md).
 
 ## Status history
 
@@ -63,3 +63,4 @@ Use a clean checkout for install/build and script smoke tests. Verify `bash -n s
 | 2026-11-06 | Backlog → Ready | Dependency `01-02` was completed in PR [#8](https://github.com/EmVeeNL/blixis-wordpress/pull/8), merged as `d155e91987e6ace6d57380796ed0ac66890c5573`; owner and acceptance criteria are recorded. Package manager choice Q02 is part of this task's implementation planning. |
 | 2026-11-06 | Ready → Busy | Branch `chore/01-03-workspace-scaffold` created; workspace and PHP tooling started |
 | 2026-11-06 | Busy → In Review | PR [#10](https://github.com/EmVeeNL/blixis-wordpress/pull/10), commit `ac36560`; fresh-clone install and build, link script tests, Compose, and WordPress recognition passed. Owner decisions pending |
+| 2026-11-06 | In Review, decisions resolved | Owner-delegated review confirms pnpm 12.18.0, the spike as the only current workspace package, and four-space PHP indentation with WPCS security rules; fresh-clone, link, PHP, and documentation checks reviewed. Parallel agent worktree rules added. |

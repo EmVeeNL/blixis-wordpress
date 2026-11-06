@@ -42,4 +42,4 @@ Use WordPress cookie authentication plus a REST nonce and post-specific capabili
 
 ## Cross-cutting contracts
 
-See [security and performance](../security/SECURITY_AND_PERFORMANCE.md), [API plan](API.md), [element registry](ELEMENTS.md), [token configuration](../development/CONFIGURATION.md), and [decisions](DECISIONS.md). The exact WordPress/PHP/Node support matrix is open until the compatibility spike.
+See [security and performance](../security/SECURITY_AND_PERFORMANCE.md), [API plan](API.md), [element registry](ELEMENTS.md), [token configuration](../development/CONFIGURATION.md), and [decisions](DECISIONS.md). The [approved target support matrix](../development/SUPPORT_MATRIX.md) records compatibility evidence; current theme and plugin headers will be aligned in task 02-01.

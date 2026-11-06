@@ -46,7 +46,7 @@ The existing local site uses the Docker Compose project `blixis` and MariaDB vol
 ### Prerequisites
 
 - A working local WordPress installation and WP-CLI for the verification commands below.
-- PHP 8.2 or newer for the current theme and plugin headers. The full supported-version matrix is still [provisional](docs/development/SUPPORT_MATRIX.md).
+- PHP 8.2 or newer for the current theme and plugin headers. The [approved target support matrix](docs/development/SUPPORT_MATRIX.md) raises the future floor to PHP 8.3 in task 02-01.
 - Docker Compose only if you use the included MariaDB service definition.
 
 ### Link the Blixis components
@@ -89,6 +89,8 @@ bash scripts/test-setup-links.sh    # tests the link script on a temporary fake 
 pnpm refuses other Node major versions. Package build scripts stay off unless listed in `pnpm-workspace.yaml`. The 01-02 spike is the only workspace package so far, because it is the only TypeScript source; product packages are added with their first real code.
 
 To undo a local install, delete `node_modules/`, `vendor/`, and those build folders. This does not affect the site, its database, or the links. CI does not run these commands yet; task `01-04` adds them.
+
+For parallel Claude and Codex work, use separate [Git worktrees](docs/development/GIT.md#parallel-agent-worktrees). The primary checkout remains the only source linked into `~/Sites/blixis`; worktrees use disposable WordPress fixtures for integration tests.
 
 ## Repository map
 

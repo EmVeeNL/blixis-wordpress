@@ -31,7 +31,7 @@
 | Node | 26 LTS for builds, pinned to 26.13.0 | Matches the one-line policy and the local toolchain; 24 and 22 also pass |
 | TypeScript | 7.0.x, TSX only | Owner preference; type checking and the isolated editor proof pass |
 | Lint and format | Oxlint with `oxlint-tsgolint`; Oxfmt | Owner choice on 2026-11-06; isolated spike passes. Add production checks in task 01-04 |
-| Package manager | pnpm 12.18.0, pending owner confirmation of Q02 | Tested in task 01-03 |
+| Package manager | pnpm 12.18.0 | Confirmed in task 01-03; enforced for the workspace |
 | Tailwind CSS, `@dnd-kit/core`, React | 4.3.5, 6.3.1, 18.3.1 | Exact pins from this proof |
 | Browsers | Current Chrome, Firefox, Safari, Edge | Unchanged policy; real Safari and Edge must be run by task 06-04 |
 

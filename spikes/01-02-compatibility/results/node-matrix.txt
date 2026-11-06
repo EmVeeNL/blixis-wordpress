@@ -1,5 +1,5 @@
-node:26.13.0-slim exit=0 | node v26.13.0, output 4856 bytes ✓ built in 267ms 
-node:24.22.2-slim exit=0 | node v24.22.2, output 4856 bytes ✓ built in 418ms 
-node:22.23.4-slim exit=0 | node v22.23.4, output 4856 bytes ✓ built in 291ms 
-node:20.20.0-slim exit=1 |   throw new ERR_UNKNOWN_FILE_EXTENSION(ext, filepath); TypeError [ERR_UNKNOWN_FILE_EXTENSION]: Unknown file extension ".ts" for /w/spikes/01-02-compatibility/frontend/tests/check-tailwind.ts   code: 'ERR_UNKNOWN_FILE_EXTENSION' 
+node:26.13.0-slim exit=0 | node v26.13.0, output 4856 bytes ✓ built in 267ms
+node:24.22.2-slim exit=0 | node v24.22.2, output 4856 bytes ✓ built in 418ms
+node:22.23.4-slim exit=0 | node v22.23.4, output 4856 bytes ✓ built in 291ms
+node:20.20.0-slim exit=1 |   throw new ERR_UNKNOWN_FILE_EXTENSION(ext, filepath); TypeError [ERR_UNKNOWN_FILE_EXTENSION]: Unknown file extension ".ts" for /w/spikes/01-02-compatibility/frontend/tests/check-tailwind.ts   code: 'ERR_UNKNOWN_FILE_EXTENSION'
 node:18.20.8-slim exit=1 | Error: Cannot find native binding. npm has a bug related to optional dependencies (https://github.com/npm/cli/issues/4828). Please try `npm i` again after removing both package-lock.json and node_modules directory.   cause: Error: Cannot find module '@tailwindcss/oxide-linux-arm64-gnu'     cause: Er
