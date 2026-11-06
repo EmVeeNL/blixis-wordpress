@@ -71,6 +71,12 @@ jobs:
   browser-tests:
     runs-on: ubuntu-24.04
     timeout-minutes: 15
+    # The image holds the browsers for this Playwright version and their system packages.
+    container:
+      image: mcr.microsoft.com/playwright:v1.65.0-noble@sha256:6e3fb709361521eb27161606e6da6d2674e5e89fa16516cb37d6fdd91372273d
+    env:
+      # Firefox refuses to start when HOME belongs to another user.
+      HOME: /root
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -78,8 +84,6 @@ jobs:
       - uses: ./.github/actions/setup-pnpm
       - name: Build the page under test
         run: pnpm build
-      - name: Install Playwright browsers
-        run: pnpm --filter "$SPIKE_PACKAGE" exec playwright install --with-deps chromium firefox webkit
       - name: Run drag and drop tests
         run: >-
           pnpm --filter "$SPIKE_PACKAGE" exec playwright test
