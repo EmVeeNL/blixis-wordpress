@@ -1,0 +1,85 @@
+{
+  "$comment": "Schema v2 is hypothetical and exists only to exercise the migration boundary. It is not a planned format.",
+  "migrate": [
+    {
+      "name": "v1-to-v2-golden",
+      "input": "v1-basic.input.json",
+      "target": 2,
+      "golden": "v1-basic.v2.golden.json"
+    },
+    {
+      "name": "already-v2-is-idempotent",
+      "input": "v1-basic.v2.golden.json",
+      "target": 2,
+      "golden": "v1-basic.v2.golden.json"
+    },
+    {
+      "name": "unknown-node-versions-survive",
+      "input": "v1-opaque-nodes.input.json",
+      "target": 2,
+      "golden": "v1-opaque-nodes.v2.golden.json"
+    },
+    {
+      "name": "target-without-step",
+      "input": "v1-basic.input.json",
+      "target": 3,
+      "code": "no_migration_path"
+    },
+    {
+      "name": "future-refused",
+      "input": "future-v3.input.json",
+      "target": 2,
+      "code": "unsupported_schema_version"
+    },
+    {
+      "name": "failing-step",
+      "input": "v1-unmigratable.input.json",
+      "target": 2,
+      "code": "migration_failed"
+    }
+  ],
+  "preserve": [
+    {
+      "name": "unchanged-unknown-node",
+      "stored": "preserve-stored.json",
+      "incoming": "preserve-stored.json",
+      "status": "valid",
+      "codes": [],
+      "preserved": [
+        "h"
+      ]
+    },
+    {
+      "name": "sibling-edit-keeps-unknown-node",
+      "stored": "preserve-stored.json",
+      "incoming": "preserve-incoming-sibling-edit.json",
+      "status": "valid",
+      "codes": [],
+      "preserved": [
+        "h"
+      ]
+    },
+    {
+      "name": "tampered-unknown-node",
+      "stored": "preserve-stored.json",
+      "incoming": "preserve-incoming-tampered.json",
+      "status": "preserve",
+      "codes": [
+        "unsupported_element_version"
+      ],
+      "preserved": []
+    },
+    {
+      "name": "smuggled-new-unknown-node",
+      "stored": "preserve-stored.json",
+      "incoming": "preserve-incoming-smuggled.json",
+      "status": "preserve",
+      "codes": [
+        "unsupported_element_version"
+      ],
+      "preserved": [
+        "h"
+      ]
+    }
+  ]
+}

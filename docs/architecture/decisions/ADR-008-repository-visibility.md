@@ -19,3 +19,7 @@ Relying on future privacy to hide past exposure.
 ## Consequences and validation
 
 Requires owner decision, license review, and continued secret scanning. Validate with a proof of concept, relevant unit/integration tests, and owner/security review before changing the status to Accepted.
+
+## Review evidence, task 01-05
+
+Not an architecture contract, so the 01-05 reviews produced no new evidence. Secret scanning runs in [CI](../../development/CI.md); no license review exists. It stays Proposed, and the owner decides before any visibility change.

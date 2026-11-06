@@ -1,0 +1,96 @@
+{
+  "schemaVersion": 1,
+  "documentId": "fixture",
+  "root": [
+    "s"
+  ],
+  "nodes": {
+    "s": {
+      "id": "s",
+      "type": "blixis/section",
+      "version": 1,
+      "props": {
+        "tag": "section",
+        "padding": "lg"
+      },
+      "children": [
+        "a",
+        "b",
+        "c",
+        "d",
+        "e",
+        "f"
+      ]
+    },
+    "a": {
+      "id": "a",
+      "type": "blixis/button",
+      "version": 1,
+      "props": {
+        "label": "Go",
+        "url": "https://example.test/a?b=c#d",
+        "variant": "primary"
+      },
+      "children": []
+    },
+    "b": {
+      "id": "b",
+      "type": "blixis/button",
+      "version": 1,
+      "props": {
+        "label": "Go",
+        "url": "/relative/path",
+        "variant": "primary"
+      },
+      "children": []
+    },
+    "c": {
+      "id": "c",
+      "type": "blixis/button",
+      "version": 1,
+      "props": {
+        "label": "Go",
+        "url": "#anchor",
+        "variant": "primary"
+      },
+      "children": []
+    },
+    "d": {
+      "id": "d",
+      "type": "blixis/button",
+      "version": 1,
+      "props": {
+        "label": "Go",
+        "url": "mailto:hello@example.test",
+        "variant": "primary"
+      },
+      "children": []
+    },
+    "e": {
+      "id": "e",
+      "type": "blixis/button",
+      "version": 1,
+      "props": {
+        "label": "Go",
+        "url": "tel:+31000000000",
+        "variant": "primary"
+      },
+      "children": []
+    },
+    "f": {
+      "id": "f",
+      "type": "blixis/button",
+      "version": 1,
+      "props": {
+        "label": "Go",
+        "url": "",
+        "variant": "primary"
+      },
+      "children": []
+    }
+  },
+  "themeRef": {
+    "theme": "blixis-base",
+    "tokensVersion": 1
+  }
+}

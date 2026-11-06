@@ -1,0 +1,18 @@
+{
+  "contract_version": "1.0",
+  "scopes": ["read:published"],
+  "limits": {
+    "per_page_max": 50
+  },
+  "item_fields": ["id", "type", "slug", "title", "link", "date_gmt", "modified_gmt", "html"],
+  "error_codes": [
+    "INVALID_QUERY",
+    "UNAUTHORIZED",
+    "FORBIDDEN",
+    "HTTPS_REQUIRED",
+    "NOT_FOUND",
+    "METHOD_NOT_ALLOWED",
+    "RATE_LIMITED",
+    "INTERNAL_ERROR"
+  ]
+}

@@ -32,6 +32,7 @@ Validate unique type and icon IDs, versioned schemas, defaults, allowed nesting,
 - Use the module boundaries and contracts in [Architecture](../../../architecture/ARCHITECTURE.md).
 - Validate server-side data and permissions where applicable; document schema or ADR changes.
 - Preserve existing content and provide a migration or rollback plan for contract changes.
+- Merge the [accepted v1 prop baseline](../../../contracts/document/v1/element-props.json) into the element specifications. Apply the accepted nesting rule: allow `section > container` and card with quote or video, remove `container > section`, and require both parent and child allowlists to agree. Change `validation.html` to `reject` and rename `divider.style`. Cover all 20 elements in the renderer contract; 01-05 covered four.
 
 ## Acceptance criteria
 

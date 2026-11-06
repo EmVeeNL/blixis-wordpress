@@ -1,0 +1,350 @@
+{
+  "blixis/accordion": {
+    "version": 1,
+    "allowedParents": ["blixis/section", "blixis/container", "blixis/column"],
+    "allowedChildren": [],
+    "props": {
+      "items": {
+        "kind": "items",
+        "fields": ["title", "body"]
+      },
+      "allowMultiple": {
+        "kind": "bool"
+      }
+    },
+    "responsive": ["gap", "border", "color"]
+  },
+  "blixis/button": {
+    "version": 1,
+    "allowedParents": [
+      "blixis/section",
+      "blixis/container",
+      "blixis/column",
+      "blixis/card",
+      "blixis/cta"
+    ],
+    "allowedChildren": [],
+    "props": {
+      "label": {
+        "kind": "text"
+      },
+      "url": {
+        "kind": "url"
+      },
+      "variant": {
+        "kind": "token"
+      }
+    },
+    "responsive": ["variant", "size", "width", "align", "visibility"]
+  },
+  "blixis/card": {
+    "version": 1,
+    "allowedParents": ["blixis/section", "blixis/container", "blixis/column"],
+    "allowedChildren": [
+      "blixis/heading",
+      "blixis/paragraph",
+      "blixis/image",
+      "blixis/button",
+      "blixis/icon",
+      "blixis/list"
+    ],
+    "props": {
+      "variant": {
+        "kind": "token"
+      }
+    },
+    "responsive": ["padding", "radius", "background", "shadow"]
+  },
+  "blixis/column": {
+    "version": 1,
+    "allowedParents": ["blixis/columns"],
+    "allowedChildren": [
+      "blixis/heading",
+      "blixis/paragraph",
+      "blixis/image",
+      "blixis/button",
+      "blixis/spacer",
+      "blixis/divider",
+      "blixis/icon",
+      "blixis/list",
+      "blixis/quote",
+      "blixis/video",
+      "blixis/accordion",
+      "blixis/tabs",
+      "blixis/card",
+      "blixis/cta",
+      "blixis/form-embed"
+    ],
+    "props": {
+      "basis": {
+        "kind": "token"
+      }
+    },
+    "responsive": ["basis", "padding", "align"]
+  },
+  "blixis/columns": {
+    "version": 1,
+    "allowedParents": ["blixis/section", "blixis/container"],
+    "allowedChildren": ["blixis/column"],
+    "props": {
+      "columns": {
+        "kind": "int",
+        "min": 1,
+        "max": 12
+      },
+      "gap": {
+        "kind": "token"
+      }
+    },
+    "responsive": ["gap", "columns", "stackAt"]
+  },
+  "blixis/container": {
+    "version": 1,
+    "allowedParents": ["root"],
+    "allowedChildren": [
+      "blixis/section",
+      "blixis/columns",
+      "blixis/heading",
+      "blixis/paragraph",
+      "blixis/image",
+      "blixis/button",
+      "blixis/spacer",
+      "blixis/divider",
+      "blixis/icon",
+      "blixis/list",
+      "blixis/quote",
+      "blixis/video",
+      "blixis/accordion",
+      "blixis/tabs",
+      "blixis/card",
+      "blixis/cta",
+      "blixis/navigation",
+      "blixis/form-embed"
+    ],
+    "props": {
+      "maxWidth": {
+        "kind": "token"
+      }
+    },
+    "responsive": ["maxWidth", "padding", "alignment"]
+  },
+  "blixis/cta": {
+    "version": 1,
+    "allowedParents": ["blixis/section", "blixis/container", "blixis/column"],
+    "allowedChildren": ["blixis/heading", "blixis/paragraph", "blixis/button"],
+    "props": {
+      "variant": {
+        "kind": "token"
+      }
+    },
+    "responsive": ["padding", "background", "alignment"]
+  },
+  "blixis/divider": {
+    "version": 1,
+    "allowedParents": ["blixis/section", "blixis/container", "blixis/column"],
+    "allowedChildren": [],
+    "props": {
+      "style": {
+        "kind": "enum",
+        "values": ["solid", "dashed", "dotted"]
+      }
+    },
+    "responsive": ["color", "thickness", "margin"]
+  },
+  "blixis/form-embed": {
+    "version": 1,
+    "allowedParents": ["blixis/section", "blixis/container", "blixis/column"],
+    "allowedChildren": [],
+    "props": {
+      "provider": {
+        "kind": "enum",
+        "values": ["wordpress"]
+      },
+      "formId": {
+        "kind": "ref"
+      }
+    },
+    "responsive": ["width", "padding"]
+  },
+  "blixis/heading": {
+    "version": 1,
+    "allowedParents": [
+      "blixis/section",
+      "blixis/container",
+      "blixis/column",
+      "blixis/card",
+      "blixis/cta"
+    ],
+    "allowedChildren": [],
+    "props": {
+      "text": {
+        "kind": "text"
+      },
+      "level": {
+        "kind": "int",
+        "min": 1,
+        "max": 6
+      }
+    },
+    "responsive": ["fontSize", "fontWeight", "align", "color", "margin"]
+  },
+  "blixis/icon": {
+    "version": 1,
+    "allowedParents": ["blixis/section", "blixis/container", "blixis/column", "blixis/card"],
+    "allowedChildren": [],
+    "props": {
+      "iconId": {
+        "kind": "iconId"
+      },
+      "decorative": {
+        "kind": "bool"
+      }
+    },
+    "responsive": ["size", "color", "align"]
+  },
+  "blixis/image": {
+    "version": 1,
+    "allowedParents": ["blixis/section", "blixis/container", "blixis/column", "blixis/card"],
+    "allowedChildren": [],
+    "props": {
+      "mediaId": {
+        "kind": "ref"
+      },
+      "alt": {
+        "kind": "text"
+      },
+      "loading": {
+        "kind": "enum",
+        "values": ["lazy", "eager"]
+      }
+    },
+    "responsive": ["width", "aspectRatio", "objectFit", "borderRadius", "visibility"]
+  },
+  "blixis/list": {
+    "version": 1,
+    "allowedParents": ["blixis/section", "blixis/container", "blixis/column", "blixis/card"],
+    "allowedChildren": [],
+    "props": {
+      "items": {
+        "kind": "textList"
+      },
+      "ordered": {
+        "kind": "bool"
+      }
+    },
+    "responsive": ["fontSize", "gap", "marker"]
+  },
+  "blixis/navigation": {
+    "version": 1,
+    "allowedParents": ["blixis/section", "blixis/container"],
+    "allowedChildren": [],
+    "props": {
+      "menuId": {
+        "kind": "ref"
+      }
+    },
+    "responsive": ["gap", "align", "layout", "visibility"]
+  },
+  "blixis/paragraph": {
+    "version": 1,
+    "allowedParents": [
+      "blixis/section",
+      "blixis/container",
+      "blixis/column",
+      "blixis/card",
+      "blixis/cta"
+    ],
+    "allowedChildren": [],
+    "props": {
+      "text": {
+        "kind": "text"
+      }
+    },
+    "responsive": ["fontSize", "lineHeight", "align", "color", "margin"]
+  },
+  "blixis/quote": {
+    "version": 1,
+    "allowedParents": ["blixis/section", "blixis/container", "blixis/column", "blixis/card"],
+    "allowedChildren": [],
+    "props": {
+      "quote": {
+        "kind": "text"
+      },
+      "attribution": {
+        "kind": "text"
+      }
+    },
+    "responsive": ["fontSize", "borderColor", "padding"]
+  },
+  "blixis/section": {
+    "version": 1,
+    "allowedParents": ["root"],
+    "allowedChildren": [
+      "blixis/container",
+      "blixis/columns",
+      "blixis/heading",
+      "blixis/paragraph",
+      "blixis/image",
+      "blixis/button",
+      "blixis/spacer",
+      "blixis/divider",
+      "blixis/icon",
+      "blixis/list",
+      "blixis/quote",
+      "blixis/video",
+      "blixis/accordion",
+      "blixis/tabs",
+      "blixis/card",
+      "blixis/cta",
+      "blixis/navigation",
+      "blixis/form-embed"
+    ],
+    "props": {
+      "tag": {
+        "kind": "enum",
+        "values": ["section", "div", "header", "footer", "main", "article", "aside"]
+      },
+      "padding": {
+        "kind": "token"
+      }
+    },
+    "responsive": ["background", "padding", "margin", "maxWidth", "visibility"]
+  },
+  "blixis/spacer": {
+    "version": 1,
+    "allowedParents": ["blixis/section", "blixis/container", "blixis/column"],
+    "allowedChildren": [],
+    "props": {
+      "height": {
+        "kind": "token"
+      }
+    },
+    "responsive": ["height"]
+  },
+  "blixis/tabs": {
+    "version": 1,
+    "allowedParents": ["blixis/section", "blixis/container", "blixis/column"],
+    "allowedChildren": [],
+    "props": {
+      "items": {
+        "kind": "items",
+        "fields": ["label", "body"]
+      }
+    },
+    "responsive": ["variant", "orientation"]
+  },
+  "blixis/video": {
+    "version": 1,
+    "allowedParents": ["blixis/section", "blixis/container", "blixis/column", "blixis/card"],
+    "allowedChildren": [],
+    "props": {
+      "url": {
+        "kind": "url"
+      },
+      "title": {
+        "kind": "text"
+      }
+    },
+    "responsive": ["aspectRatio", "borderRadius"]
+  }
+}

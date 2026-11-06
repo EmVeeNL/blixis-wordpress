@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://blixis.invalid/contracts/document/v1/document.schema.json",
+  "title": "Blixis document v1 envelope",
+  "description": "Structural shape only. Graph rules, nesting, per-element props, URL safety, byte limits, and duplicate keys need the reference validator; see README.md.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "documentId", "root", "nodes", "themeRef"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "documentId": { "type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9_-]{0,127}$" },
+    "root": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/nodeId" }
+    },
+    "nodes": {
+      "type": "object",
+      "maxProperties": 2000,
+      "propertyNames": { "$ref": "#/$defs/nodeId" },
+      "additionalProperties": { "$ref": "#/$defs/node" }
+    },
+    "themeRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["theme", "tokensVersion"],
+      "properties": {
+        "theme": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{0,63}$" },
+        "tokensVersion": { "type": "integer", "minimum": 1 }
+      }
+    }
+  },
+  "$defs": {
+    "nodeId": { "type": "string", "pattern": "^[A-Za-z][A-Za-z0-9_-]{0,63}$" },
+    "node": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "type", "version", "props", "children"],
+      "properties": {
+        "id": { "$ref": "#/$defs/nodeId" },
+        "type": { "type": "string", "pattern": "^[a-z0-9-]+/[a-z0-9-]+$" },
+        "version": { "type": "integer", "minimum": 1 },
+        "props": { "type": "object" },
+        "responsive": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "sm": { "type": "object" },
+            "md": { "type": "object" },
+            "lg": { "type": "object" },
+            "xl": { "type": "object" }
+          }
+        },
+        "children": { "type": "array", "items": { "$ref": "#/$defs/nodeId" } },
+        "locked": { "type": "boolean" }
+      }
+    }
+  }
+}

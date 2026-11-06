@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 1,
+  "documentId": "fixture",
+  "root": [
+    "s"
+  ],
+  "nodes": {
+    "s": {
+      "id": "s",
+      "type": "blixis/section",
+      "version": 1,
+      "props": {
+        "tag": "section",
+        "padding": "lg"
+      },
+      "children": [
+        "h",
+        "p"
+      ]
+    },
+    "h": {
+      "id": "h",
+      "type": "blixis/heading",
+      "version": 99,
+      "props": {
+        "rank": 2,
+        "futureProp": true
+      },
+      "children": []
+    },
+    "p": {
+      "id": "p",
+      "type": "blixis/paragraph",
+      "version": 1,
+      "props": {
+        "text": "New sibling"
+      },
+      "children": []
+    }
+  },
+  "themeRef": {
+    "theme": "blixis-base",
+    "tokensVersion": 1
+  }
+}

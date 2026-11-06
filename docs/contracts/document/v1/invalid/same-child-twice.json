@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "documentId": "fixture",
+  "root": [
+    "s"
+  ],
+  "nodes": {
+    "s": {
+      "id": "s",
+      "type": "blixis/section",
+      "version": 1,
+      "props": {
+        "tag": "section",
+        "padding": "lg"
+      },
+      "children": [
+        "h",
+        "h"
+      ]
+    },
+    "h": {
+      "id": "h",
+      "type": "blixis/heading",
+      "version": 1,
+      "props": {
+        "text": "Hello",
+        "level": 2
+      },
+      "children": []
+    }
+  },
+  "themeRef": {
+    "theme": "blixis-base",
+    "tokensVersion": 1
+  }
+}

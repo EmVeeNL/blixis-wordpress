@@ -32,6 +32,7 @@ Specify versioned routes, schemas, pagination, filters, error codes, ETags, and 
 - Use the module boundaries and contracts in [Architecture](../../../architecture/ARCHITECTURE.md).
 - Validate server-side data and permissions where applicable; document schema or ADR changes.
 - Preserve existing content and provide a migration or rollback plan for contract changes.
+- Start from the [API contract](../../../contracts/api/README.md). Design API behavior when Blocks is inactive, and check WXR export and `Authorization` handling on Apache and FPM; review 01-05 left these open.
 
 ## Acceptance criteria
 

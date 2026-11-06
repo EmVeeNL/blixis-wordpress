@@ -8,4 +8,4 @@ An element manifest must declare a unique type and icon ID, version, schema/defa
 
 The canvas needs pointer and keyboard move paths, valid nesting checks, focus restoration, Escape cancellation, and undoable destructive actions. Selection in tree and canvas must agree. The mobile-first resolver inherits the nearest defined breakpoint value; changing preview width alone does not alter stored overrides.
 
-Content review states (draft, ready for review, changes requested, approved, published) are distinct from roadmap task statuses. MVP preview uses logged-in WordPress permissions. External review links require a separate decision and security work. Unknown element versions must remain in storage without silent loss.
+Content review states (draft, ready for review, changes requested, approved, published) are distinct from roadmap task statuses. MVP preview uses logged-in WordPress permissions, `no-store`, and `noindex`. External review links require a separate decision and security work. Unknown element versions must remain in storage without silent loss.

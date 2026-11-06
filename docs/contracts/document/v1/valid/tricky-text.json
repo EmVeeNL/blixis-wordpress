@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 1,
+  "documentId": "fixture",
+  "root": [
+    "s"
+  ],
+  "nodes": {
+    "s": {
+      "id": "s",
+      "type": "blixis/section",
+      "version": 1,
+      "props": {
+        "tag": "section",
+        "padding": "lg"
+      },
+      "children": [
+        "a",
+        "b"
+      ]
+    },
+    "a": {
+      "id": "a",
+      "type": "blixis/heading",
+      "version": 1,
+      "props": {
+        "text": "quote \" backslash \\ C:\\new\\table a<b 5 > 3 & é 日本語 🌱   end",
+        "level": 2
+      },
+      "children": []
+    },
+    "b": {
+      "id": "b",
+      "type": "blixis/paragraph",
+      "version": 1,
+      "props": {
+        "text": "line\nbreak\ttab / slash"
+      },
+      "children": []
+    }
+  },
+  "themeRef": {
+    "theme": "blixis-base",
+    "tokensVersion": 1
+  }
+}

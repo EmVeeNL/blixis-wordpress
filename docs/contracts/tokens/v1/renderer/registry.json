@@ -1,0 +1,73 @@
+{
+  "rendererVersion": 1,
+  "breakpoints": ["sm", "md", "lg", "xl"],
+  "urlPattern": "^(?:https?://[!#-&(-;=?-\\[\\]-~]+|mailto:[!#-&(-;=?-\\[\\]-~]+|tel:[+0-9()-]+|/(?!/)[!#-&(-;=?-\\[\\]-~]*|#[!#-&(-;=?-\\[\\]-~]*|\\?[!#-&(-;=?-\\[\\]-~]*)$",
+  "urlProtocols": ["http", "https", "mailto", "tel"],
+  "classes": {
+    "fontSize": {
+      "xs": "text-xs",
+      "sm": "text-sm",
+      "base": "text-base",
+      "lg": "text-lg",
+      "xl": "text-xl",
+      "2xl": "text-2xl",
+      "3xl": "text-3xl"
+    },
+    "align": { "left": "text-left", "center": "text-center", "right": "text-right" },
+    "color": {
+      "primary": "text-primary",
+      "surface": "text-surface",
+      "foreground": "text-foreground",
+      "muted": "text-muted",
+      "accent": "text-accent"
+    },
+    "margin": { "xs": "mb-xs", "sm": "mb-sm", "md": "mb-md", "lg": "mb-lg", "xl": "mb-xl" },
+    "variant": {
+      "primary": "bg-primary text-surface",
+      "secondary": "bg-surface text-primary",
+      "accent": "bg-accent text-foreground"
+    },
+    "size": { "sm": "px-sm py-xs", "md": "px-md py-sm", "lg": "px-lg py-md" },
+    "width": { "auto": "w-auto", "full": "w-full" },
+    "objectFit": { "cover": "object-cover", "contain": "object-contain" },
+    "borderRadius": { "sm": "rounded-sm", "md": "rounded-md", "lg": "rounded-lg" }
+  },
+  "elements": {
+    "blixis/heading": {
+      "version": 1,
+      "baseClass": "blixis-heading",
+      "props": {
+        "text": { "kind": "text", "default": "" },
+        "level": { "kind": "int", "min": 1, "max": 6, "default": 2 }
+      },
+      "responsive": ["fontSize", "align", "color", "margin"]
+    },
+    "blixis/paragraph": {
+      "version": 1,
+      "baseClass": "blixis-paragraph",
+      "props": {
+        "text": { "kind": "text", "default": "" }
+      },
+      "responsive": ["fontSize", "align", "color", "margin"]
+    },
+    "blixis/button": {
+      "version": 1,
+      "baseClass": "blixis-button",
+      "props": {
+        "label": { "kind": "text", "default": "" },
+        "url": { "kind": "url", "default": "" }
+      },
+      "responsive": ["variant", "size", "width", "align"]
+    },
+    "blixis/image": {
+      "version": 1,
+      "baseClass": "blixis-image",
+      "props": {
+        "mediaId": { "kind": "int", "min": 1, "max": 2147483647, "default": null },
+        "alt": { "kind": "text", "default": "" },
+        "loading": { "kind": "enum", "values": ["lazy", "eager"], "default": "lazy" }
+      },
+      "responsive": ["width", "objectFit", "borderRadius"]
+    }
+  }
+}

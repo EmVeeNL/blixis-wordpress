@@ -1,0 +1,1 @@
+{"schemaVersion":1,"documentId":"fixture","root":["s"],"nodes":{"s":{"id":"s","type":"blixis/section","version":1,"props":{},"children":[]},"s":{"id":"s","type":"blixis/section","version":1,"props":{"tag":"main"},"children":[]}},"themeRef":{"theme":"blixis-base","tokensVersion":1}}

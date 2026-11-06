@@ -1,0 +1,786 @@
+{
+  "$comment": "codes is the exact sorted set of error codes for the fixture. Generated cases are built by the same generators in TypeScript and PHP.",
+  "cases": [
+    {
+      "file": "unknown-prop.json",
+      "status": "rejected",
+      "codes": [
+        "unknown_prop"
+      ],
+      "why": "Prop not declared by the element."
+    },
+    {
+      "file": "unknown-nested-prop.json",
+      "status": "rejected",
+      "codes": [
+        "unknown_prop"
+      ],
+      "why": "Undeclared field inside an item."
+    },
+    {
+      "file": "missing-reference-child.json",
+      "status": "rejected",
+      "codes": [
+        "missing_reference"
+      ],
+      "why": "Child id not in nodes."
+    },
+    {
+      "file": "missing-reference-root.json",
+      "status": "rejected",
+      "codes": [
+        "missing_reference"
+      ],
+      "why": "Root id not in nodes."
+    },
+    {
+      "file": "reference-inherited-name.json",
+      "status": "rejected",
+      "codes": [
+        "missing_reference"
+      ],
+      "why": "A naive nodes[id] lookup would find Object.prototype members."
+    },
+    {
+      "file": "cycle-attached.json",
+      "status": "rejected",
+      "codes": [
+        "cycle",
+        "invalid_nesting",
+        "multiple_parents"
+      ],
+      "why": "Reachable cycle; the root also gains a second parent."
+    },
+    {
+      "file": "cycle-detached.json",
+      "status": "rejected",
+      "codes": [
+        "cycle",
+        "invalid_nesting",
+        "orphan_node"
+      ],
+      "why": "A closed loop no root reaches: each node has one parent, so a parent count alone misses it."
+    },
+    {
+      "file": "cycle-self.json",
+      "status": "rejected",
+      "codes": [
+        "cycle",
+        "invalid_nesting",
+        "multiple_parents"
+      ],
+      "why": "Node is its own child."
+    },
+    {
+      "file": "two-parents.json",
+      "status": "rejected",
+      "codes": [
+        "multiple_parents"
+      ],
+      "why": "Node reached twice would render twice."
+    },
+    {
+      "file": "same-child-twice.json",
+      "status": "rejected",
+      "codes": [
+        "multiple_parents"
+      ],
+      "why": "One parent lists a child twice."
+    },
+    {
+      "file": "root-also-child.json",
+      "status": "rejected",
+      "codes": [
+        "invalid_nesting",
+        "multiple_parents"
+      ],
+      "why": "Root entry is also a child."
+    },
+    {
+      "file": "orphan.json",
+      "status": "rejected",
+      "codes": [
+        "orphan_node"
+      ],
+      "why": "Stored but unreachable, so invisible and silently retained."
+    },
+    {
+      "file": "id-key-mismatch.json",
+      "status": "rejected",
+      "codes": [
+        "id_key_mismatch"
+      ],
+      "why": "Map key and node.id disagree."
+    },
+    {
+      "file": "duplicate-root.json",
+      "status": "rejected",
+      "codes": [
+        "duplicate_root"
+      ],
+      "why": "Same id listed twice in root."
+    },
+    {
+      "file": "nesting-child-of-leaf.json",
+      "status": "rejected",
+      "codes": [
+        "invalid_nesting"
+      ],
+      "why": "Heading allows no children."
+    },
+    {
+      "file": "nesting-column-at-root.json",
+      "status": "rejected",
+      "codes": [
+        "invalid_nesting"
+      ],
+      "why": "Column is only legal under columns."
+    },
+    {
+      "file": "nesting-section-container-asymmetry.json",
+      "status": "rejected",
+      "codes": [
+        "invalid_nesting"
+      ],
+      "why": "Section lists container as a child, but container only allows root as parent. Both sides must agree."
+    },
+    {
+      "file": "nesting-card-quote-asymmetry.json",
+      "status": "rejected",
+      "codes": [
+        "invalid_nesting"
+      ],
+      "why": "Quote lists card as a parent, but card does not list quote as a child."
+    },
+    {
+      "file": "proto-key-top-level.json",
+      "status": "rejected",
+      "codes": [
+        "forbidden_key"
+      ],
+      "why": "Prototype key at the top level."
+    },
+    {
+      "file": "proto-key-props.json",
+      "status": "rejected",
+      "codes": [
+        "forbidden_key"
+      ],
+      "why": "Prototype key in props."
+    },
+    {
+      "file": "proto-key-nodes.json",
+      "status": "rejected",
+      "codes": [
+        "forbidden_key"
+      ],
+      "why": "Prototype key as a node id."
+    },
+    {
+      "file": "constructor-key-props.json",
+      "status": "rejected",
+      "codes": [
+        "forbidden_key"
+      ],
+      "why": "constructor key in props."
+    },
+    {
+      "file": "constructor-key-responsive.json",
+      "status": "rejected",
+      "codes": [
+        "forbidden_key"
+      ],
+      "why": "constructor key as a breakpoint."
+    },
+    {
+      "file": "props-array.json",
+      "status": "rejected",
+      "codes": [
+        "non_object_props"
+      ],
+      "why": "An empty array is the classic PHP assoc-decode confusion."
+    },
+    {
+      "file": "props-string.json",
+      "status": "rejected",
+      "codes": [
+        "non_object_props"
+      ],
+      "why": "String props."
+    },
+    {
+      "file": "props-null.json",
+      "status": "rejected",
+      "codes": [
+        "non_object_props"
+      ],
+      "why": "Null props."
+    },
+    {
+      "file": "responsive-array.json",
+      "status": "rejected",
+      "codes": [
+        "invalid_responsive"
+      ],
+      "why": "Array responsive."
+    },
+    {
+      "file": "unsafe-url-javascript.json",
+      "status": "rejected",
+      "codes": [
+        "unsafe_url"
+      ],
+      "why": "Script scheme."
+    },
+    {
+      "file": "unsafe-url-mixed-case.json",
+      "status": "rejected",
+      "codes": [
+        "unsafe_url"
+      ],
+      "why": "Case variation."
+    },
+    {
+      "file": "unsafe-url-data.json",
+      "status": "rejected",
+      "codes": [
+        "unsafe_url"
+      ],
+      "why": "Data scheme."
+    },
+    {
+      "file": "unsafe-url-tab.json",
+      "status": "rejected",
+      "codes": [
+        "unsafe_url"
+      ],
+      "why": "Browsers strip tabs before parsing the scheme."
+    },
+    {
+      "file": "unsafe-url-video.json",
+      "status": "rejected",
+      "codes": [
+        "unsafe_url"
+      ],
+      "why": "URL prop on another element."
+    },
+    {
+      "file": "forbidden-prop-html.json",
+      "status": "rejected",
+      "codes": [
+        "forbidden_prop"
+      ],
+      "why": "Prop named html on an element that does not declare it."
+    },
+    {
+      "file": "forbidden-prop-innerhtml.json",
+      "status": "rejected",
+      "codes": [
+        "forbidden_prop"
+      ],
+      "why": "Prop named innerHTML on an element that does not declare it."
+    },
+    {
+      "file": "forbidden-prop-dangerouslysetinnerhtml.json",
+      "status": "rejected",
+      "codes": [
+        "forbidden_prop"
+      ],
+      "why": "Prop named dangerouslySetInnerHTML on an element that does not declare it."
+    },
+    {
+      "file": "forbidden-prop-script.json",
+      "status": "rejected",
+      "codes": [
+        "forbidden_prop"
+      ],
+      "why": "Prop named script on an element that does not declare it."
+    },
+    {
+      "file": "forbidden-prop-style.json",
+      "status": "rejected",
+      "codes": [
+        "forbidden_prop"
+      ],
+      "why": "Prop named style on an element that does not declare it."
+    },
+    {
+      "file": "forbidden-prop-classname.json",
+      "status": "rejected",
+      "codes": [
+        "forbidden_prop"
+      ],
+      "why": "Prop named className on an element that does not declare it."
+    },
+    {
+      "file": "forbidden-prop-onclick.json",
+      "status": "rejected",
+      "codes": [
+        "forbidden_prop"
+      ],
+      "why": "Prop named onclick on an element that does not declare it."
+    },
+    {
+      "file": "forbidden-prop-responsive.json",
+      "status": "rejected",
+      "codes": [
+        "forbidden_prop"
+      ],
+      "why": "Style override."
+    },
+    {
+      "file": "html-in-text-script.json",
+      "status": "rejected",
+      "codes": [
+        "html_in_text"
+      ],
+      "why": "Text props are plain text."
+    },
+    {
+      "file": "html-in-text-unclosed.json",
+      "status": "rejected",
+      "codes": [
+        "html_in_text"
+      ],
+      "why": "Unterminated script tag."
+    },
+    {
+      "file": "html-in-text-handler.json",
+      "status": "rejected",
+      "codes": [
+        "html_in_text"
+      ],
+      "why": "Event handler markup."
+    },
+    {
+      "file": "html-in-text-comment.json",
+      "status": "rejected",
+      "codes": [
+        "html_in_text"
+      ],
+      "why": "Comment markup."
+    },
+    {
+      "file": "html-in-list-item.json",
+      "status": "rejected",
+      "codes": [
+        "html_in_text"
+      ],
+      "why": "Nested text."
+    },
+    {
+      "file": "section-tag-script.json",
+      "status": "rejected",
+      "codes": [
+        "invalid_prop_value"
+      ],
+      "why": "tag becomes an element name, so it needs an enum the spec does not state."
+    },
+    {
+      "file": "responsive-css-injection.json",
+      "status": "rejected",
+      "codes": [
+        "invalid_prop_value"
+      ],
+      "why": "Token values cannot carry CSS."
+    },
+    {
+      "file": "heading-level-seven.json",
+      "status": "rejected",
+      "codes": [
+        "invalid_prop_value"
+      ],
+      "why": "Out of range."
+    },
+    {
+      "file": "icon-id-path.json",
+      "status": "rejected",
+      "codes": [
+        "invalid_prop_value"
+      ],
+      "why": "Icon ids select a file or symbol."
+    },
+    {
+      "file": "wp-owned-title.json",
+      "status": "rejected",
+      "codes": [
+        "wp_owned_field"
+      ],
+      "why": "WordPress owns the title."
+    },
+    {
+      "file": "wp-owned-many.json",
+      "status": "rejected",
+      "codes": [
+        "wp_owned_field"
+      ],
+      "why": "Status and friends cannot be set through the document."
+    },
+    {
+      "file": "unknown-top-level.json",
+      "status": "rejected",
+      "codes": [
+        "unknown_top_level_field"
+      ],
+      "why": "Closed envelope."
+    },
+    {
+      "file": "unknown-node-field.json",
+      "status": "rejected",
+      "codes": [
+        "unknown_node_field"
+      ],
+      "why": "Closed node envelope."
+    },
+    {
+      "file": "duplicate-node-key.json",
+      "status": "rejected",
+      "codes": [
+        "duplicate_key"
+      ],
+      "why": "Last-wins decoding would silently lose a node."
+    },
+    {
+      "file": "duplicate-escaped-key.json",
+      "status": "rejected",
+      "codes": [
+        "duplicate_key"
+      ],
+      "why": "Repeated top-level key."
+    },
+    {
+      "file": "nul-prefixed-key.json",
+      "status": "rejected",
+      "codes": [
+        "invalid_json"
+      ],
+      "why": "PHP object decoding refuses this key and JSON.parse accepts it; the contract refuses it in both."
+    },
+    {
+      "file": "numeric-node-id.json",
+      "status": "rejected",
+      "codes": [
+        "invalid_node_id"
+      ],
+      "why": "JavaScript reorders integer-like keys and PHP turns them into ints."
+    },
+    {
+      "file": "invalid-node-id-chars.json",
+      "status": "rejected",
+      "codes": [
+        "invalid_node_id",
+        "orphan_node"
+      ],
+      "why": "Id alphabet."
+    },
+    {
+      "file": "node-not-object.json",
+      "status": "rejected",
+      "codes": [
+        "invalid_node"
+      ],
+      "why": "Node must be an object."
+    },
+    {
+      "file": "node-missing-fields.json",
+      "status": "rejected",
+      "codes": [
+        "missing_field"
+      ],
+      "why": "Required node fields."
+    },
+    {
+      "file": "nodes-array.json",
+      "status": "rejected",
+      "codes": [
+        "invalid_nodes"
+      ],
+      "why": "nodes must be an object, even when empty."
+    },
+    {
+      "file": "root-string.json",
+      "status": "rejected",
+      "codes": [
+        "invalid_root"
+      ],
+      "why": "root must be an array."
+    },
+    {
+      "file": "root-entry-number.json",
+      "status": "rejected",
+      "codes": [
+        "invalid_root"
+      ],
+      "why": "Root entries are strings."
+    },
+    {
+      "file": "children-not-array.json",
+      "status": "rejected",
+      "codes": [
+        "invalid_children"
+      ],
+      "why": "children must be an array."
+    },
+    {
+      "file": "children-entry-number.json",
+      "status": "rejected",
+      "codes": [
+        "invalid_children"
+      ],
+      "why": "Child entries are strings."
+    },
+    {
+      "file": "not-object.json",
+      "status": "rejected",
+      "codes": [
+        "not_object"
+      ],
+      "why": "Top level must be an object."
+    },
+    {
+      "file": "schema-version-string.json",
+      "status": "rejected",
+      "codes": [
+        "invalid_schema_version"
+      ],
+      "why": "A string is not a version."
+    },
+    {
+      "file": "schema-version-zero.json",
+      "status": "rejected",
+      "codes": [
+        "invalid_schema_version"
+      ],
+      "why": "Versions start at 1."
+    },
+    {
+      "file": "schema-version-fraction.json",
+      "status": "rejected",
+      "codes": [
+        "invalid_schema_version"
+      ],
+      "why": "Not an integer."
+    },
+    {
+      "file": "schema-version-missing.json",
+      "status": "rejected",
+      "codes": [
+        "missing_field"
+      ],
+      "why": "Required."
+    },
+    {
+      "file": "node-version-string.json",
+      "status": "rejected",
+      "codes": [
+        "invalid_version"
+      ],
+      "why": "A string is not a version."
+    },
+    {
+      "file": "invalid-type-shape.json",
+      "status": "rejected",
+      "codes": [
+        "invalid_type"
+      ],
+      "why": "Type names are vendor/name."
+    },
+    {
+      "file": "invalid-document-id.json",
+      "status": "rejected",
+      "codes": [
+        "invalid_document_id"
+      ],
+      "why": "Opaque id alphabet."
+    },
+    {
+      "file": "invalid-theme-ref.json",
+      "status": "rejected",
+      "codes": [
+        "invalid_theme_ref"
+      ],
+      "why": "tokensVersion is an integer."
+    },
+    {
+      "file": "unknown-breakpoint.json",
+      "status": "rejected",
+      "codes": [
+        "unknown_breakpoint"
+      ],
+      "why": "Fixed breakpoint set."
+    },
+    {
+      "file": "unknown-responsive-prop.json",
+      "status": "rejected",
+      "codes": [
+        "unknown_responsive_prop"
+      ],
+      "why": "Only declared fields may vary per breakpoint."
+    },
+    {
+      "file": "future-schema-version.json",
+      "status": "preserve",
+      "codes": [
+        "unsupported_schema_version"
+      ],
+      "why": "Unknown future shape: keep, do not render through this reader, do not write."
+    },
+    {
+      "file": "unknown-element-version.json",
+      "status": "preserve",
+      "codes": [
+        "unsupported_element_version"
+      ],
+      "why": "Unknown node version: keep, no prop claims."
+    },
+    {
+      "file": "unknown-element-type.json",
+      "status": "preserve",
+      "codes": [
+        "unknown_element_type"
+      ],
+      "why": "Unknown type: keep on read, refuse as new content on write."
+    },
+    {
+      "file": "malformed.txt",
+      "status": "rejected",
+      "codes": [
+        "invalid_json"
+      ],
+      "why": "Truncated JSON. Not a .json file because CI parses those."
+    },
+    {
+      "file": "lone-surrogate.txt",
+      "status": "rejected",
+      "codes": [
+        "invalid_json"
+      ],
+      "why": "JSON.parse accepts and PHP refuses; the contract refuses in both."
+    }
+  ],
+  "generated": [
+    {
+      "name": "generated-too-many-nodes",
+      "generated": "flat-nodes",
+      "count": 2001,
+      "status": "rejected",
+      "codes": [
+        "too_many_nodes"
+      ],
+      "why": "One over the node limit."
+    },
+    {
+      "name": "generated-too-many-bytes",
+      "generated": "pad-to-bytes",
+      "bytes": 1048577,
+      "status": "rejected",
+      "codes": [
+        "document_too_large"
+      ],
+      "why": "One byte over the size limit."
+    },
+    {
+      "name": "generated-string-too-long",
+      "generated": "long-string",
+      "bytes": 65537,
+      "status": "rejected",
+      "codes": [
+        "string_too_long"
+      ],
+      "why": "One byte over the string limit, counted in UTF-8 bytes in both languages."
+    },
+    {
+      "name": "generated-depth-at-limit",
+      "generated": "deep-chain",
+      "depth": 16,
+      "status": "rejected",
+      "codes": [
+        "invalid_nesting"
+      ],
+      "why": "At the depth limit. Only nesting fails, because the specs allow no chain this deep."
+    },
+    {
+      "name": "generated-depth-over-limit",
+      "generated": "deep-chain",
+      "depth": 17,
+      "status": "rejected",
+      "codes": [
+        "depth_exceeded",
+        "invalid_nesting"
+      ],
+      "why": "One over the depth limit."
+    },
+    {
+      "name": "generated-depth-hostile",
+      "generated": "deep-chain",
+      "depth": 1900,
+      "status": "rejected",
+      "codes": [
+        "depth_exceeded",
+        "invalid_nesting"
+      ],
+      "why": "Must not overflow a call stack."
+    },
+    {
+      "name": "generated-json-nesting",
+      "generated": "json-nesting",
+      "depth": 33,
+      "status": "rejected",
+      "codes": [
+        "json_nesting_exceeded"
+      ],
+      "why": "One over the JSON nesting limit, refused before decoding."
+    },
+    {
+      "name": "generated-bom",
+      "generated": "hex",
+      "hex": "efbbbf7b7d",
+      "status": "rejected",
+      "codes": [
+        "invalid_json"
+      ],
+      "why": "A byte order mark: TextDecoder strips it by default and PHP refuses it."
+    },
+    {
+      "name": "generated-bad-utf8",
+      "generated": "hex",
+      "hex": "7b22c0af223a317d",
+      "status": "rejected",
+      "codes": [
+        "invalid_json"
+      ],
+      "why": "Overlong UTF-8."
+    }
+  ],
+  "urlCases": {
+    "safe": [
+      "",
+      "https://example.test/",
+      "HTTP://example.test/",
+      "/a/b",
+      "#x",
+      "?a=1",
+      "page.html",
+      "a/b:c",
+      "mailto:a@example.test",
+      "tel:+310000"
+    ],
+    "unsafe": [
+      "javascript:alert(1)",
+      "JAVASCRIPT:alert(1)",
+      " javascript:alert(1)",
+      "java\tscript:alert(1)",
+      "java\nscript:alert(1)",
+      "\u0001javascript:alert(1)",
+      "data:text/html,x",
+      "vbscript:x",
+      "file:///etc/passwd",
+      "//evil.example",
+      "/\\evil.example",
+      "\\\\evil.example",
+      "&#106;avascript:alert(1)",
+      "blob:https://e.test/x",
+      "ftp://e.test/x"
+    ]
+  }
+}

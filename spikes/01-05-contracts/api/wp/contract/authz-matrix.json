@@ -1,0 +1,2093 @@
+{
+  "contract_version": "1.0",
+  "description": "Negative authorization cases. Each row expands to actors x auths x post_states and is run over real HTTP by spikes/01-05-contracts/api/wp/test.php.",
+  "actors": [
+    "anonymous",
+    "subscriber",
+    "default_author",
+    "page_author_owner",
+    "page_author_other",
+    "page_publisher_other",
+    "editor",
+    "administrator"
+  ],
+  "post_states": [
+    "none",
+    "publish",
+    "publish_owned",
+    "draft",
+    "pending",
+    "future",
+    "private",
+    "trash",
+    "password",
+    "nonexistent",
+    "unpublished",
+    "auto_draft",
+    "revision",
+    "attachment",
+    "nonpublic_cpt",
+    "wp_block",
+    "post_type_post"
+  ],
+  "cases": [
+    {
+      "id": "editor-read-anonymous",
+      "surface": "editor",
+      "actors": ["anonymous"],
+      "auths": ["none"],
+      "post_states": ["draft", "publish_owned", "nonexistent"],
+      "method": "GET",
+      "route": "/blixis-editor/v1/pages/{id}/document",
+      "expect": {
+        "status": 401,
+        "code": "rest_forbidden"
+      }
+    },
+    {
+      "id": "editor-read-low-privilege",
+      "surface": "editor",
+      "actors": ["subscriber", "default_author", "page_author_other"],
+      "auths": ["cookie+nonce"],
+      "post_states": ["draft", "publish_owned", "nonexistent"],
+      "method": "GET",
+      "route": "/blixis-editor/v1/pages/{id}/document",
+      "expect": {
+        "status": 403,
+        "code": "rest_forbidden"
+      }
+    },
+    {
+      "id": "editor-read-cookie-no-nonce",
+      "surface": "editor",
+      "actors": ["page_author_owner", "editor", "administrator"],
+      "auths": ["cookie"],
+      "post_states": ["draft"],
+      "method": "GET",
+      "route": "/blixis-editor/v1/pages/{id}/document",
+      "expect": {
+        "status": 401,
+        "code": "rest_forbidden"
+      },
+      "note": "Without a nonce WordPress treats the cookie as anonymous."
+    },
+    {
+      "id": "editor-read-bad-nonce",
+      "surface": "editor",
+      "actors": ["page_author_owner", "editor", "administrator"],
+      "auths": ["cookie+bad_nonce"],
+      "post_states": ["draft"],
+      "method": "GET",
+      "route": "/blixis-editor/v1/pages/{id}/document",
+      "expect": {
+        "status": 403,
+        "code": "rest_cookie_invalid_nonce"
+      }
+    },
+    {
+      "id": "editor-read-api-key-is-not-a-user",
+      "surface": "editor",
+      "actors": ["anonymous"],
+      "auths": ["bearer:valid"],
+      "post_states": ["draft"],
+      "method": "GET",
+      "route": "/blixis-editor/v1/pages/{id}/document",
+      "expect": {
+        "status": 401,
+        "code": "rest_forbidden"
+      }
+    },
+    {
+      "id": "editor-read-not-editable-state",
+      "surface": "editor",
+      "actors": ["editor"],
+      "auths": ["cookie+nonce"],
+      "post_states": ["trash", "post_type_post", "attachment", "revision", "nonexistent"],
+      "method": "GET",
+      "route": "/blixis-editor/v1/pages/{id}/document",
+      "expect": {
+        "status": 403,
+        "code": "rest_forbidden"
+      },
+      "note": "The route accepts only existing, untrashed pages, even for a user who may edit the object."
+    },
+    {
+      "id": "editor-write-anonymous",
+      "surface": "editor",
+      "actors": ["anonymous"],
+      "auths": ["none"],
+      "post_states": ["draft", "publish_owned", "nonexistent"],
+      "method": "PUT",
+      "route": "/blixis-editor/v1/pages/{id}/document",
+      "body": {
+        "document": "{\"schema\":1,\"denied\":true}"
+      },
+      "expect": {
+        "status": 401,
+        "code": "rest_forbidden"
+      }
+    },
+    {
+      "id": "editor-write-low-privilege",
+      "surface": "editor",
+      "actors": ["subscriber", "default_author", "page_author_other"],
+      "auths": ["cookie+nonce"],
+      "post_states": ["draft", "publish_owned", "nonexistent"],
+      "method": "PUT",
+      "route": "/blixis-editor/v1/pages/{id}/document",
+      "body": {
+        "document": "{\"schema\":1,\"denied\":true}"
+      },
+      "expect": {
+        "status": 403,
+        "code": "rest_forbidden"
+      }
+    },
+    {
+      "id": "editor-write-cookie-no-nonce",
+      "surface": "editor",
+      "actors": ["page_author_owner", "editor", "administrator"],
+      "auths": ["cookie"],
+      "post_states": ["draft"],
+      "method": "PUT",
+      "route": "/blixis-editor/v1/pages/{id}/document",
+      "body": {
+        "document": "{\"schema\":1,\"denied\":true}"
+      },
+      "expect": {
+        "status": 401,
+        "code": "rest_forbidden"
+      },
+      "note": "Without a nonce WordPress treats the cookie as anonymous."
+    },
+    {
+      "id": "editor-write-bad-nonce",
+      "surface": "editor",
+      "actors": ["page_author_owner", "editor", "administrator"],
+      "auths": ["cookie+bad_nonce"],
+      "post_states": ["draft"],
+      "method": "PUT",
+      "route": "/blixis-editor/v1/pages/{id}/document",
+      "body": {
+        "document": "{\"schema\":1,\"denied\":true}"
+      },
+      "expect": {
+        "status": 403,
+        "code": "rest_cookie_invalid_nonce"
+      }
+    },
+    {
+      "id": "editor-write-api-key-is-not-a-user",
+      "surface": "editor",
+      "actors": ["anonymous"],
+      "auths": ["bearer:valid"],
+      "post_states": ["draft"],
+      "method": "PUT",
+      "route": "/blixis-editor/v1/pages/{id}/document",
+      "body": {
+        "document": "{\"schema\":1,\"denied\":true}"
+      },
+      "expect": {
+        "status": 401,
+        "code": "rest_forbidden"
+      }
+    },
+    {
+      "id": "editor-write-not-editable-state",
+      "surface": "editor",
+      "actors": ["editor"],
+      "auths": ["cookie+nonce"],
+      "post_states": ["trash", "post_type_post", "attachment", "revision", "nonexistent"],
+      "method": "PUT",
+      "route": "/blixis-editor/v1/pages/{id}/document",
+      "body": {
+        "document": "{\"schema\":1,\"denied\":true}"
+      },
+      "expect": {
+        "status": 403,
+        "code": "rest_forbidden"
+      },
+      "note": "The route accepts only existing, untrashed pages, even for a user who may edit the object."
+    },
+    {
+      "id": "editor-autosave-anonymous",
+      "surface": "editor",
+      "actors": ["anonymous"],
+      "auths": ["none"],
+      "post_states": ["draft", "publish_owned", "nonexistent"],
+      "method": "POST",
+      "route": "/blixis-editor/v1/pages/{id}/autosave",
+      "body": {
+        "document": "{\"schema\":1,\"denied\":true}"
+      },
+      "expect": {
+        "status": 401,
+        "code": "rest_forbidden"
+      }
+    },
+    {
+      "id": "editor-autosave-low-privilege",
+      "surface": "editor",
+      "actors": ["subscriber", "default_author", "page_author_other"],
+      "auths": ["cookie+nonce"],
+      "post_states": ["draft", "publish_owned", "nonexistent"],
+      "method": "POST",
+      "route": "/blixis-editor/v1/pages/{id}/autosave",
+      "body": {
+        "document": "{\"schema\":1,\"denied\":true}"
+      },
+      "expect": {
+        "status": 403,
+        "code": "rest_forbidden"
+      }
+    },
+    {
+      "id": "editor-autosave-cookie-no-nonce",
+      "surface": "editor",
+      "actors": ["page_author_owner", "editor", "administrator"],
+      "auths": ["cookie"],
+      "post_states": ["draft"],
+      "method": "POST",
+      "route": "/blixis-editor/v1/pages/{id}/autosave",
+      "body": {
+        "document": "{\"schema\":1,\"denied\":true}"
+      },
+      "expect": {
+        "status": 401,
+        "code": "rest_forbidden"
+      },
+      "note": "Without a nonce WordPress treats the cookie as anonymous."
+    },
+    {
+      "id": "editor-autosave-bad-nonce",
+      "surface": "editor",
+      "actors": ["page_author_owner", "editor", "administrator"],
+      "auths": ["cookie+bad_nonce"],
+      "post_states": ["draft"],
+      "method": "POST",
+      "route": "/blixis-editor/v1/pages/{id}/autosave",
+      "body": {
+        "document": "{\"schema\":1,\"denied\":true}"
+      },
+      "expect": {
+        "status": 403,
+        "code": "rest_cookie_invalid_nonce"
+      }
+    },
+    {
+      "id": "editor-autosave-api-key-is-not-a-user",
+      "surface": "editor",
+      "actors": ["anonymous"],
+      "auths": ["bearer:valid"],
+      "post_states": ["draft"],
+      "method": "POST",
+      "route": "/blixis-editor/v1/pages/{id}/autosave",
+      "body": {
+        "document": "{\"schema\":1,\"denied\":true}"
+      },
+      "expect": {
+        "status": 401,
+        "code": "rest_forbidden"
+      }
+    },
+    {
+      "id": "editor-autosave-not-editable-state",
+      "surface": "editor",
+      "actors": ["editor"],
+      "auths": ["cookie+nonce"],
+      "post_states": ["trash", "post_type_post", "attachment", "revision", "nonexistent"],
+      "method": "POST",
+      "route": "/blixis-editor/v1/pages/{id}/autosave",
+      "body": {
+        "document": "{\"schema\":1,\"denied\":true}"
+      },
+      "expect": {
+        "status": 403,
+        "code": "rest_forbidden"
+      },
+      "note": "The route accepts only existing, untrashed pages, even for a user who may edit the object."
+    },
+    {
+      "id": "editor-publish-anonymous",
+      "surface": "editor",
+      "actors": ["anonymous"],
+      "auths": ["none"],
+      "post_states": ["draft", "publish_owned", "nonexistent"],
+      "method": "POST",
+      "route": "/blixis-editor/v1/pages/{id}/publish",
+      "expect": {
+        "status": 401,
+        "code": "rest_forbidden"
+      }
+    },
+    {
+      "id": "editor-publish-low-privilege",
+      "surface": "editor",
+      "actors": ["subscriber", "default_author", "page_author_other"],
+      "auths": ["cookie+nonce"],
+      "post_states": ["draft", "publish_owned", "nonexistent"],
+      "method": "POST",
+      "route": "/blixis-editor/v1/pages/{id}/publish",
+      "expect": {
+        "status": 403,
+        "code": "rest_forbidden"
+      }
+    },
+    {
+      "id": "editor-publish-cookie-no-nonce",
+      "surface": "editor",
+      "actors": ["page_author_owner", "editor", "administrator"],
+      "auths": ["cookie"],
+      "post_states": ["draft"],
+      "method": "POST",
+      "route": "/blixis-editor/v1/pages/{id}/publish",
+      "expect": {
+        "status": 401,
+        "code": "rest_forbidden"
+      },
+      "note": "Without a nonce WordPress treats the cookie as anonymous."
+    },
+    {
+      "id": "editor-publish-bad-nonce",
+      "surface": "editor",
+      "actors": ["page_author_owner", "editor", "administrator"],
+      "auths": ["cookie+bad_nonce"],
+      "post_states": ["draft"],
+      "method": "POST",
+      "route": "/blixis-editor/v1/pages/{id}/publish",
+      "expect": {
+        "status": 403,
+        "code": "rest_cookie_invalid_nonce"
+      }
+    },
+    {
+      "id": "editor-publish-api-key-is-not-a-user",
+      "surface": "editor",
+      "actors": ["anonymous"],
+      "auths": ["bearer:valid"],
+      "post_states": ["draft"],
+      "method": "POST",
+      "route": "/blixis-editor/v1/pages/{id}/publish",
+      "expect": {
+        "status": 401,
+        "code": "rest_forbidden"
+      }
+    },
+    {
+      "id": "editor-publish-not-editable-state",
+      "surface": "editor",
+      "actors": ["editor"],
+      "auths": ["cookie+nonce"],
+      "post_states": ["trash", "post_type_post", "attachment", "revision", "nonexistent"],
+      "method": "POST",
+      "route": "/blixis-editor/v1/pages/{id}/publish",
+      "expect": {
+        "status": 403,
+        "code": "rest_forbidden"
+      },
+      "note": "The route accepts only existing, untrashed pages, even for a user who may edit the object."
+    },
+    {
+      "id": "editor-publish-needs-publish-pages",
+      "surface": "editor",
+      "actors": ["page_author_owner"],
+      "auths": ["cookie+nonce"],
+      "post_states": ["draft"],
+      "method": "POST",
+      "route": "/blixis-editor/v1/pages/{id}/publish",
+      "expect": {
+        "status": 403,
+        "code": "rest_forbidden"
+      },
+      "note": "edit_post alone cannot publish."
+    },
+    {
+      "id": "editor-publish-needs-edit-post",
+      "surface": "editor",
+      "actors": ["page_publisher_other"],
+      "auths": ["cookie+nonce"],
+      "post_states": ["draft"],
+      "method": "POST",
+      "route": "/blixis-editor/v1/pages/{id}/publish",
+      "expect": {
+        "status": 403,
+        "code": "rest_forbidden"
+      },
+      "note": "publish_pages without edit_post on this page cannot publish."
+    },
+    {
+      "id": "editor-put-published-goes-through-autosave",
+      "surface": "editor",
+      "actors": ["page_author_owner", "editor"],
+      "auths": ["cookie+nonce"],
+      "post_states": ["publish_owned"],
+      "method": "PUT",
+      "route": "/blixis-editor/v1/pages/{id}/document",
+      "body": {
+        "document": "{\"schema\":1,\"denied\":true}"
+      },
+      "expect": {
+        "status": 409,
+        "code": "blixis_use_autosave"
+      },
+      "note": "A direct write to the live document would publish without publish_pages."
+    },
+    {
+      "id": "editor-invalid-json",
+      "surface": "editor",
+      "actors": ["page_author_owner"],
+      "auths": ["cookie+nonce"],
+      "post_states": ["draft"],
+      "method": "PUT",
+      "route": "/blixis-editor/v1/pages/{id}/document",
+      "body": {
+        "document": "{not json"
+      },
+      "expect": {
+        "status": 400,
+        "code": "rest_invalid_param"
+      }
+    },
+    {
+      "id": "core-draft-anonymous",
+      "surface": "core",
+      "actors": ["anonymous"],
+      "auths": ["none"],
+      "post_states": ["draft", "pending", "private", "trash"],
+      "method": "GET",
+      "route": "/wp/v2/pages/{id}",
+      "expect": {
+        "status": 401,
+        "code": "rest_forbidden"
+      }
+    },
+    {
+      "id": "core-api-key-is-not-a-user",
+      "surface": "core",
+      "actors": ["anonymous"],
+      "auths": ["bearer:valid"],
+      "post_states": ["draft"],
+      "method": "GET",
+      "route": "/wp/v2/pages/{id}",
+      "expect": {
+        "status": 401,
+        "code": "rest_forbidden"
+      }
+    },
+    {
+      "id": "core-api-key-users-me",
+      "surface": "core",
+      "actors": ["anonymous"],
+      "auths": ["bearer:valid"],
+      "post_states": ["publish"],
+      "method": "GET",
+      "route": "/wp/v2/users/me",
+      "expect": {
+        "status": 401,
+        "code": "rest_not_logged_in"
+      }
+    },
+    {
+      "id": "core-api-key-context-edit",
+      "surface": "core",
+      "actors": ["anonymous"],
+      "auths": ["bearer:valid"],
+      "post_states": ["publish"],
+      "method": "GET",
+      "route": "/wp/v2/pages/{id}",
+      "query": {
+        "context": "edit"
+      },
+      "expect": {
+        "status": 401,
+        "code": "rest_forbidden_context"
+      }
+    },
+    {
+      "id": "core-key-as-basic-password",
+      "surface": "core",
+      "actors": ["administrator"],
+      "auths": ["basic:key"],
+      "post_states": ["publish"],
+      "method": "GET",
+      "route": "/wp/v2/users/me",
+      "expect": {
+        "status": 401,
+        "code": "rest_not_logged_in"
+      },
+      "note": "Measured on 7.1.4 and 7.0.8: a failed application password leaves the request anonymous rather than returning incorrect_password."
+    },
+    {
+      "id": "core-publish-needs-publish-pages",
+      "surface": "core",
+      "actors": ["page_author_owner"],
+      "auths": ["cookie+nonce"],
+      "post_states": ["draft"],
+      "method": "POST",
+      "route": "/wp/v2/pages/{id}",
+      "body": {
+        "status": "publish"
+      },
+      "expect": {
+        "status": 403,
+        "code": "rest_cannot_publish"
+      }
+    },
+    {
+      "id": "core-revisions-low-privilege",
+      "surface": "core",
+      "actors": ["subscriber", "page_author_other"],
+      "auths": ["cookie+nonce"],
+      "post_states": ["draft"],
+      "method": "GET",
+      "route": "/wp/v2/pages/{id}/revisions",
+      "expect": {
+        "status": 403,
+        "code": "rest_cannot_read"
+      }
+    },
+    {
+      "id": "core-autosaves-anonymous",
+      "surface": "core",
+      "actors": ["anonymous"],
+      "auths": ["none"],
+      "post_states": ["draft"],
+      "method": "GET",
+      "route": "/wp/v2/pages/{id}/autosaves",
+      "expect": {
+        "status": 401,
+        "code": "rest_cannot_read"
+      }
+    },
+    {
+      "id": "keyed-no-key-is-401",
+      "surface": "content",
+      "actors": ["anonymous"],
+      "auths": ["none"],
+      "post_states": [
+        "publish",
+        "draft",
+        "pending",
+        "future",
+        "private",
+        "trash",
+        "password",
+        "nonexistent",
+        "unpublished",
+        "auto_draft",
+        "revision",
+        "attachment",
+        "nonpublic_cpt",
+        "wp_block",
+        "post_type_post"
+      ],
+      "method": "GET",
+      "route": "/blixis/v1/content/{id}",
+      "config": "keyed",
+      "expect": {
+        "status": 401,
+        "code": "UNAUTHORIZED"
+      }
+    },
+    {
+      "id": "keyed-wp-credentials-are-not-a-key",
+      "surface": "content",
+      "actors": ["administrator"],
+      "auths": ["cookie", "cookie+nonce", "cookie+bad_nonce", "app_password", "basic:key"],
+      "post_states": [
+        "publish",
+        "draft",
+        "pending",
+        "future",
+        "private",
+        "trash",
+        "password",
+        "nonexistent",
+        "unpublished",
+        "auto_draft",
+        "revision",
+        "attachment",
+        "nonpublic_cpt",
+        "wp_block",
+        "post_type_post"
+      ],
+      "method": "GET",
+      "route": "/blixis/v1/content/{id}",
+      "config": "keyed",
+      "expect": {
+        "status": 401,
+        "code": "UNAUTHORIZED"
+      },
+      "note": "Admin credentials neither authorize nor widen this route."
+    },
+    {
+      "id": "keyed-list-no-key",
+      "surface": "content",
+      "actors": ["anonymous", "administrator"],
+      "auths": ["none"],
+      "post_states": ["none"],
+      "method": "GET",
+      "route": "/blixis/v1/content",
+      "config": "keyed",
+      "expect": {
+        "status": 401,
+        "code": "UNAUTHORIZED"
+      }
+    },
+    {
+      "id": "keyed-bad-keys",
+      "surface": "content",
+      "actors": ["anonymous"],
+      "auths": [
+        "bearer:wrong",
+        "bearer:unknown",
+        "bearer:revoked",
+        "bearer:expired",
+        "bearer:rotated",
+        "bearer:malformed",
+        "bearer:empty"
+      ],
+      "post_states": ["publish", "draft", "nonexistent"],
+      "method": "GET",
+      "route": "/blixis/v1/content/{id}",
+      "config": "keyed",
+      "expect": {
+        "status": 401,
+        "code": "UNAUTHORIZED"
+      }
+    },
+    {
+      "id": "keyed-bad-keys-list",
+      "surface": "content",
+      "actors": ["anonymous"],
+      "auths": [
+        "bearer:wrong",
+        "bearer:unknown",
+        "bearer:revoked",
+        "bearer:expired",
+        "bearer:rotated",
+        "bearer:malformed",
+        "bearer:empty"
+      ],
+      "post_states": ["none"],
+      "method": "GET",
+      "route": "/blixis/v1/content",
+      "config": "keyed",
+      "expect": {
+        "status": 401,
+        "code": "UNAUTHORIZED"
+      }
+    },
+    {
+      "id": "keyed-wrong-scope",
+      "surface": "content",
+      "actors": ["anonymous"],
+      "auths": ["bearer:wrong_scope"],
+      "post_states": ["publish", "draft", "nonexistent"],
+      "method": "GET",
+      "route": "/blixis/v1/content/{id}",
+      "config": "keyed",
+      "expect": {
+        "status": 403,
+        "code": "FORBIDDEN"
+      }
+    },
+    {
+      "id": "keyed-key-in-query-string-refused",
+      "surface": "content",
+      "actors": ["anonymous"],
+      "auths": ["none"],
+      "post_states": ["publish"],
+      "method": "GET",
+      "route": "/blixis/v1/content/{id}",
+      "config": "keyed",
+      "query": {
+        "api_key": "{valid_key}"
+      },
+      "expect": {
+        "status": 401,
+        "code": "UNAUTHORIZED"
+      }
+    },
+    {
+      "id": "keyed-hidden-state-is-404",
+      "surface": "content",
+      "actors": ["anonymous", "administrator"],
+      "auths": ["bearer:valid"],
+      "post_states": [
+        "draft",
+        "pending",
+        "future",
+        "private",
+        "trash",
+        "password",
+        "nonexistent",
+        "unpublished",
+        "auto_draft",
+        "revision",
+        "attachment",
+        "nonpublic_cpt",
+        "wp_block",
+        "post_type_post"
+      ],
+      "method": "GET",
+      "route": "/blixis/v1/content/{id}",
+      "config": "keyed",
+      "expect": {
+        "status": 404,
+        "code": "NOT_FOUND"
+      }
+    },
+    {
+      "id": "keyed-admin-with-key-is-not-widened",
+      "surface": "content",
+      "actors": ["administrator"],
+      "auths": ["cookie+nonce+bearer:valid"],
+      "post_states": [
+        "draft",
+        "pending",
+        "future",
+        "private",
+        "trash",
+        "password",
+        "nonexistent",
+        "unpublished",
+        "auto_draft",
+        "revision",
+        "attachment",
+        "nonpublic_cpt",
+        "wp_block",
+        "post_type_post"
+      ],
+      "method": "GET",
+      "route": "/blixis/v1/content/{id}",
+      "config": "keyed",
+      "expect": {
+        "status": 404,
+        "code": "NOT_FOUND"
+      }
+    },
+    {
+      "id": "anonymous-mode-hidden-state-is-404",
+      "surface": "content",
+      "actors": ["anonymous"],
+      "auths": ["none"],
+      "post_states": [
+        "draft",
+        "pending",
+        "future",
+        "private",
+        "trash",
+        "password",
+        "nonexistent",
+        "unpublished",
+        "auto_draft",
+        "revision",
+        "attachment",
+        "nonpublic_cpt",
+        "wp_block",
+        "post_type_post"
+      ],
+      "method": "GET",
+      "route": "/blixis/v1/content/{id}",
+      "config": "anonymous",
+      "expect": {
+        "status": 404,
+        "code": "NOT_FOUND"
+      }
+    },
+    {
+      "id": "anonymous-mode-admin-is-not-widened",
+      "surface": "content",
+      "actors": ["administrator"],
+      "auths": ["cookie", "cookie+nonce", "cookie+bad_nonce", "app_password"],
+      "post_states": [
+        "draft",
+        "pending",
+        "future",
+        "private",
+        "trash",
+        "password",
+        "nonexistent",
+        "unpublished",
+        "auto_draft",
+        "revision",
+        "attachment",
+        "nonpublic_cpt",
+        "wp_block",
+        "post_type_post"
+      ],
+      "method": "GET",
+      "route": "/blixis/v1/content/{id}",
+      "config": "anonymous",
+      "expect": {
+        "status": 404,
+        "code": "NOT_FOUND"
+      }
+    },
+    {
+      "id": "anonymous-mode-bad-key-still-fails",
+      "surface": "content",
+      "actors": ["anonymous"],
+      "auths": [
+        "bearer:wrong",
+        "bearer:unknown",
+        "bearer:revoked",
+        "bearer:expired",
+        "bearer:rotated",
+        "bearer:malformed",
+        "bearer:empty"
+      ],
+      "post_states": ["publish", "draft"],
+      "method": "GET",
+      "route": "/blixis/v1/content/{id}",
+      "config": "anonymous",
+      "expect": {
+        "status": 401,
+        "code": "UNAUTHORIZED"
+      }
+    },
+    {
+      "id": "keyed-item-query-status-draft",
+      "surface": "content",
+      "actors": ["anonymous"],
+      "auths": ["bearer:valid"],
+      "post_states": ["publish", "draft", "nonexistent"],
+      "method": "GET",
+      "route": "/blixis/v1/content/{id}",
+      "config": "keyed",
+      "query": {
+        "status": "draft"
+      },
+      "expect": {
+        "status": 400,
+        "code": "INVALID_QUERY"
+      }
+    },
+    {
+      "id": "keyed-admin-list-query-status-draft",
+      "surface": "content",
+      "actors": ["administrator"],
+      "auths": ["cookie+nonce+bearer:valid"],
+      "post_states": ["publish"],
+      "method": "GET",
+      "route": "/blixis/v1/content",
+      "config": "keyed",
+      "query": {
+        "status": "draft"
+      },
+      "expect": {
+        "status": 400,
+        "code": "INVALID_QUERY"
+      }
+    },
+    {
+      "id": "anonymous-item-query-status-draft",
+      "surface": "content",
+      "actors": ["administrator"],
+      "auths": ["none", "cookie+nonce"],
+      "post_states": ["publish", "draft"],
+      "method": "GET",
+      "route": "/blixis/v1/content/{id}",
+      "config": "anonymous",
+      "query": {
+        "status": "draft"
+      },
+      "expect": {
+        "status": 400,
+        "code": "INVALID_QUERY"
+      }
+    },
+    {
+      "id": "keyed-item-query-status-any",
+      "surface": "content",
+      "actors": ["anonymous"],
+      "auths": ["bearer:valid"],
+      "post_states": ["publish", "draft", "nonexistent"],
+      "method": "GET",
+      "route": "/blixis/v1/content/{id}",
+      "config": "keyed",
+      "query": {
+        "status": "any"
+      },
+      "expect": {
+        "status": 400,
+        "code": "INVALID_QUERY"
+      }
+    },
+    {
+      "id": "keyed-admin-list-query-status-any",
+      "surface": "content",
+      "actors": ["administrator"],
+      "auths": ["cookie+nonce+bearer:valid"],
+      "post_states": ["publish"],
+      "method": "GET",
+      "route": "/blixis/v1/content",
+      "config": "keyed",
+      "query": {
+        "status": "any"
+      },
+      "expect": {
+        "status": 400,
+        "code": "INVALID_QUERY"
+      }
+    },
+    {
+      "id": "anonymous-item-query-status-any",
+      "surface": "content",
+      "actors": ["administrator"],
+      "auths": ["none", "cookie+nonce"],
+      "post_states": ["publish", "draft"],
+      "method": "GET",
+      "route": "/blixis/v1/content/{id}",
+      "config": "anonymous",
+      "query": {
+        "status": "any"
+      },
+      "expect": {
+        "status": 400,
+        "code": "INVALID_QUERY"
+      }
+    },
+    {
+      "id": "keyed-item-query-context-edit",
+      "surface": "content",
+      "actors": ["anonymous"],
+      "auths": ["bearer:valid"],
+      "post_states": ["publish", "draft", "nonexistent"],
+      "method": "GET",
+      "route": "/blixis/v1/content/{id}",
+      "config": "keyed",
+      "query": {
+        "context": "edit"
+      },
+      "expect": {
+        "status": 400,
+        "code": "INVALID_QUERY"
+      }
+    },
+    {
+      "id": "keyed-admin-list-query-context-edit",
+      "surface": "content",
+      "actors": ["administrator"],
+      "auths": ["cookie+nonce+bearer:valid"],
+      "post_states": ["publish"],
+      "method": "GET",
+      "route": "/blixis/v1/content",
+      "config": "keyed",
+      "query": {
+        "context": "edit"
+      },
+      "expect": {
+        "status": 400,
+        "code": "INVALID_QUERY"
+      }
+    },
+    {
+      "id": "anonymous-item-query-context-edit",
+      "surface": "content",
+      "actors": ["administrator"],
+      "auths": ["none", "cookie+nonce"],
+      "post_states": ["publish", "draft"],
+      "method": "GET",
+      "route": "/blixis/v1/content/{id}",
+      "config": "anonymous",
+      "query": {
+        "context": "edit"
+      },
+      "expect": {
+        "status": 400,
+        "code": "INVALID_QUERY"
+      }
+    },
+    {
+      "id": "keyed-item-query--fields-title",
+      "surface": "content",
+      "actors": ["anonymous"],
+      "auths": ["bearer:valid"],
+      "post_states": ["publish", "draft", "nonexistent"],
+      "method": "GET",
+      "route": "/blixis/v1/content/{id}",
+      "config": "keyed",
+      "query": {
+        "_fields": "title"
+      },
+      "expect": {
+        "status": 400,
+        "code": "INVALID_QUERY"
+      }
+    },
+    {
+      "id": "keyed-admin-list-query--fields-title",
+      "surface": "content",
+      "actors": ["administrator"],
+      "auths": ["cookie+nonce+bearer:valid"],
+      "post_states": ["publish"],
+      "method": "GET",
+      "route": "/blixis/v1/content",
+      "config": "keyed",
+      "query": {
+        "_fields": "title"
+      },
+      "expect": {
+        "status": 400,
+        "code": "INVALID_QUERY"
+      }
+    },
+    {
+      "id": "anonymous-item-query--fields-title",
+      "surface": "content",
+      "actors": ["administrator"],
+      "auths": ["none", "cookie+nonce"],
+      "post_states": ["publish", "draft"],
+      "method": "GET",
+      "route": "/blixis/v1/content/{id}",
+      "config": "anonymous",
+      "query": {
+        "_fields": "title"
+      },
+      "expect": {
+        "status": 400,
+        "code": "INVALID_QUERY"
+      }
+    },
+    {
+      "id": "keyed-item-query-include-id",
+      "surface": "content",
+      "actors": ["anonymous"],
+      "auths": ["bearer:valid"],
+      "post_states": ["publish", "draft", "nonexistent"],
+      "method": "GET",
+      "route": "/blixis/v1/content/{id}",
+      "config": "keyed",
+      "query": {
+        "include": "{id}"
+      },
+      "expect": {
+        "status": 400,
+        "code": "INVALID_QUERY"
+      }
+    },
+    {
+      "id": "keyed-admin-list-query-include-id",
+      "surface": "content",
+      "actors": ["administrator"],
+      "auths": ["cookie+nonce+bearer:valid"],
+      "post_states": ["publish"],
+      "method": "GET",
+      "route": "/blixis/v1/content",
+      "config": "keyed",
+      "query": {
+        "include": "{id}"
+      },
+      "expect": {
+        "status": 400,
+        "code": "INVALID_QUERY"
+      }
+    },
+    {
+      "id": "anonymous-item-query-include-id",
+      "surface": "content",
+      "actors": ["administrator"],
+      "auths": ["none", "cookie+nonce"],
+      "post_states": ["publish", "draft"],
+      "method": "GET",
+      "route": "/blixis/v1/content/{id}",
+      "config": "anonymous",
+      "query": {
+        "include": "{id}"
+      },
+      "expect": {
+        "status": 400,
+        "code": "INVALID_QUERY"
+      }
+    },
+    {
+      "id": "keyed-item-query-password-x",
+      "surface": "content",
+      "actors": ["anonymous"],
+      "auths": ["bearer:valid"],
+      "post_states": ["publish", "draft", "nonexistent"],
+      "method": "GET",
+      "route": "/blixis/v1/content/{id}",
+      "config": "keyed",
+      "query": {
+        "password": "x"
+      },
+      "expect": {
+        "status": 400,
+        "code": "INVALID_QUERY"
+      }
+    },
+    {
+      "id": "keyed-admin-list-query-password-x",
+      "surface": "content",
+      "actors": ["administrator"],
+      "auths": ["cookie+nonce+bearer:valid"],
+      "post_states": ["publish"],
+      "method": "GET",
+      "route": "/blixis/v1/content",
+      "config": "keyed",
+      "query": {
+        "password": "x"
+      },
+      "expect": {
+        "status": 400,
+        "code": "INVALID_QUERY"
+      }
+    },
+    {
+      "id": "anonymous-item-query-password-x",
+      "surface": "content",
+      "actors": ["administrator"],
+      "auths": ["none", "cookie+nonce"],
+      "post_states": ["publish", "draft"],
+      "method": "GET",
+      "route": "/blixis/v1/content/{id}",
+      "config": "anonymous",
+      "query": {
+        "password": "x"
+      },
+      "expect": {
+        "status": 400,
+        "code": "INVALID_QUERY"
+      }
+    },
+    {
+      "id": "keyed-item-query-post-status-draft",
+      "surface": "content",
+      "actors": ["anonymous"],
+      "auths": ["bearer:valid"],
+      "post_states": ["publish", "draft", "nonexistent"],
+      "method": "GET",
+      "route": "/blixis/v1/content/{id}",
+      "config": "keyed",
+      "query": {
+        "post_status": "draft"
+      },
+      "expect": {
+        "status": 400,
+        "code": "INVALID_QUERY"
+      }
+    },
+    {
+      "id": "keyed-admin-list-query-post-status-draft",
+      "surface": "content",
+      "actors": ["administrator"],
+      "auths": ["cookie+nonce+bearer:valid"],
+      "post_states": ["publish"],
+      "method": "GET",
+      "route": "/blixis/v1/content",
+      "config": "keyed",
+      "query": {
+        "post_status": "draft"
+      },
+      "expect": {
+        "status": 400,
+        "code": "INVALID_QUERY"
+      }
+    },
+    {
+      "id": "anonymous-item-query-post-status-draft",
+      "surface": "content",
+      "actors": ["administrator"],
+      "auths": ["none", "cookie+nonce"],
+      "post_states": ["publish", "draft"],
+      "method": "GET",
+      "route": "/blixis/v1/content/{id}",
+      "config": "anonymous",
+      "query": {
+        "post_status": "draft"
+      },
+      "expect": {
+        "status": 400,
+        "code": "INVALID_QUERY"
+      }
+    },
+    {
+      "id": "keyed-item-query-preview-true",
+      "surface": "content",
+      "actors": ["anonymous"],
+      "auths": ["bearer:valid"],
+      "post_states": ["publish", "draft", "nonexistent"],
+      "method": "GET",
+      "route": "/blixis/v1/content/{id}",
+      "config": "keyed",
+      "query": {
+        "preview": "true"
+      },
+      "expect": {
+        "status": 400,
+        "code": "INVALID_QUERY"
+      }
+    },
+    {
+      "id": "keyed-admin-list-query-preview-true",
+      "surface": "content",
+      "actors": ["administrator"],
+      "auths": ["cookie+nonce+bearer:valid"],
+      "post_states": ["publish"],
+      "method": "GET",
+      "route": "/blixis/v1/content",
+      "config": "keyed",
+      "query": {
+        "preview": "true"
+      },
+      "expect": {
+        "status": 400,
+        "code": "INVALID_QUERY"
+      }
+    },
+    {
+      "id": "anonymous-item-query-preview-true",
+      "surface": "content",
+      "actors": ["administrator"],
+      "auths": ["none", "cookie+nonce"],
+      "post_states": ["publish", "draft"],
+      "method": "GET",
+      "route": "/blixis/v1/content/{id}",
+      "config": "anonymous",
+      "query": {
+        "preview": "true"
+      },
+      "expect": {
+        "status": 400,
+        "code": "INVALID_QUERY"
+      }
+    },
+    {
+      "id": "keyed-item-query--envelope-1",
+      "surface": "content",
+      "actors": ["anonymous"],
+      "auths": ["bearer:valid"],
+      "post_states": ["publish", "draft", "nonexistent"],
+      "method": "GET",
+      "route": "/blixis/v1/content/{id}",
+      "config": "keyed",
+      "query": {
+        "_envelope": "1"
+      },
+      "expect": {
+        "status": 400,
+        "code": "INVALID_QUERY"
+      }
+    },
+    {
+      "id": "keyed-admin-list-query--envelope-1",
+      "surface": "content",
+      "actors": ["administrator"],
+      "auths": ["cookie+nonce+bearer:valid"],
+      "post_states": ["publish"],
+      "method": "GET",
+      "route": "/blixis/v1/content",
+      "config": "keyed",
+      "query": {
+        "_envelope": "1"
+      },
+      "expect": {
+        "status": 400,
+        "code": "INVALID_QUERY"
+      }
+    },
+    {
+      "id": "anonymous-item-query--envelope-1",
+      "surface": "content",
+      "actors": ["administrator"],
+      "auths": ["none", "cookie+nonce"],
+      "post_states": ["publish", "draft"],
+      "method": "GET",
+      "route": "/blixis/v1/content/{id}",
+      "config": "anonymous",
+      "query": {
+        "_envelope": "1"
+      },
+      "expect": {
+        "status": 400,
+        "code": "INVALID_QUERY"
+      }
+    },
+    {
+      "id": "keyed-item-query--jsonp-cb",
+      "surface": "content",
+      "actors": ["anonymous"],
+      "auths": ["bearer:valid"],
+      "post_states": ["publish", "draft", "nonexistent"],
+      "method": "GET",
+      "route": "/blixis/v1/content/{id}",
+      "config": "keyed",
+      "query": {
+        "_jsonp": "cb"
+      },
+      "expect": {
+        "status": 400,
+        "code": "INVALID_QUERY"
+      }
+    },
+    {
+      "id": "keyed-admin-list-query--jsonp-cb",
+      "surface": "content",
+      "actors": ["administrator"],
+      "auths": ["cookie+nonce+bearer:valid"],
+      "post_states": ["publish"],
+      "method": "GET",
+      "route": "/blixis/v1/content",
+      "config": "keyed",
+      "query": {
+        "_jsonp": "cb"
+      },
+      "expect": {
+        "status": 400,
+        "code": "INVALID_QUERY"
+      }
+    },
+    {
+      "id": "anonymous-item-query--jsonp-cb",
+      "surface": "content",
+      "actors": ["administrator"],
+      "auths": ["none", "cookie+nonce"],
+      "post_states": ["publish", "draft"],
+      "method": "GET",
+      "route": "/blixis/v1/content/{id}",
+      "config": "anonymous",
+      "query": {
+        "_jsonp": "cb"
+      },
+      "expect": {
+        "status": 400,
+        "code": "INVALID_QUERY"
+      }
+    },
+    {
+      "id": "keyed-item-query--embed-1",
+      "surface": "content",
+      "actors": ["anonymous"],
+      "auths": ["bearer:valid"],
+      "post_states": ["publish", "draft", "nonexistent"],
+      "method": "GET",
+      "route": "/blixis/v1/content/{id}",
+      "config": "keyed",
+      "query": {
+        "_embed": "1"
+      },
+      "expect": {
+        "status": 400,
+        "code": "INVALID_QUERY"
+      }
+    },
+    {
+      "id": "keyed-admin-list-query--embed-1",
+      "surface": "content",
+      "actors": ["administrator"],
+      "auths": ["cookie+nonce+bearer:valid"],
+      "post_states": ["publish"],
+      "method": "GET",
+      "route": "/blixis/v1/content",
+      "config": "keyed",
+      "query": {
+        "_embed": "1"
+      },
+      "expect": {
+        "status": 400,
+        "code": "INVALID_QUERY"
+      }
+    },
+    {
+      "id": "anonymous-item-query--embed-1",
+      "surface": "content",
+      "actors": ["administrator"],
+      "auths": ["none", "cookie+nonce"],
+      "post_states": ["publish", "draft"],
+      "method": "GET",
+      "route": "/blixis/v1/content/{id}",
+      "config": "anonymous",
+      "query": {
+        "_embed": "1"
+      },
+      "expect": {
+        "status": 400,
+        "code": "INVALID_QUERY"
+      }
+    },
+    {
+      "id": "keyed-item-query-api-key-x",
+      "surface": "content",
+      "actors": ["anonymous"],
+      "auths": ["bearer:valid"],
+      "post_states": ["publish", "draft", "nonexistent"],
+      "method": "GET",
+      "route": "/blixis/v1/content/{id}",
+      "config": "keyed",
+      "query": {
+        "api_key": "x"
+      },
+      "expect": {
+        "status": 400,
+        "code": "INVALID_QUERY"
+      }
+    },
+    {
+      "id": "keyed-admin-list-query-api-key-x",
+      "surface": "content",
+      "actors": ["administrator"],
+      "auths": ["cookie+nonce+bearer:valid"],
+      "post_states": ["publish"],
+      "method": "GET",
+      "route": "/blixis/v1/content",
+      "config": "keyed",
+      "query": {
+        "api_key": "x"
+      },
+      "expect": {
+        "status": 400,
+        "code": "INVALID_QUERY"
+      }
+    },
+    {
+      "id": "anonymous-item-query-api-key-x",
+      "surface": "content",
+      "actors": ["administrator"],
+      "auths": ["none", "cookie+nonce"],
+      "post_states": ["publish", "draft"],
+      "method": "GET",
+      "route": "/blixis/v1/content/{id}",
+      "config": "anonymous",
+      "query": {
+        "api_key": "x"
+      },
+      "expect": {
+        "status": 400,
+        "code": "INVALID_QUERY"
+      }
+    },
+    {
+      "id": "keyed-item-query--method-DELETE",
+      "surface": "content",
+      "actors": ["anonymous"],
+      "auths": ["bearer:valid"],
+      "post_states": ["publish", "draft", "nonexistent"],
+      "method": "GET",
+      "route": "/blixis/v1/content/{id}",
+      "config": "keyed",
+      "query": {
+        "_method": "DELETE"
+      },
+      "expect": {
+        "status": 400,
+        "code": "INVALID_QUERY"
+      }
+    },
+    {
+      "id": "keyed-admin-list-query--method-DELETE",
+      "surface": "content",
+      "actors": ["administrator"],
+      "auths": ["cookie+nonce+bearer:valid"],
+      "post_states": ["publish"],
+      "method": "GET",
+      "route": "/blixis/v1/content",
+      "config": "keyed",
+      "query": {
+        "_method": "DELETE"
+      },
+      "expect": {
+        "status": 400,
+        "code": "INVALID_QUERY"
+      }
+    },
+    {
+      "id": "anonymous-item-query--method-DELETE",
+      "surface": "content",
+      "actors": ["administrator"],
+      "auths": ["none", "cookie+nonce"],
+      "post_states": ["publish", "draft"],
+      "method": "GET",
+      "route": "/blixis/v1/content/{id}",
+      "config": "anonymous",
+      "query": {
+        "_method": "DELETE"
+      },
+      "expect": {
+        "status": 400,
+        "code": "INVALID_QUERY"
+      }
+    },
+    {
+      "id": "list-invalid-per-page-51",
+      "surface": "content",
+      "actors": ["anonymous"],
+      "auths": ["bearer:valid"],
+      "post_states": ["none"],
+      "method": "GET",
+      "route": "/blixis/v1/content",
+      "config": "keyed",
+      "query": {
+        "per_page": "51"
+      },
+      "expect": {
+        "status": 400,
+        "code": "INVALID_QUERY"
+      }
+    },
+    {
+      "id": "list-invalid-per-page-0",
+      "surface": "content",
+      "actors": ["anonymous"],
+      "auths": ["bearer:valid"],
+      "post_states": ["none"],
+      "method": "GET",
+      "route": "/blixis/v1/content",
+      "config": "keyed",
+      "query": {
+        "per_page": "0"
+      },
+      "expect": {
+        "status": 400,
+        "code": "INVALID_QUERY"
+      }
+    },
+    {
+      "id": "list-invalid-per-page--1",
+      "surface": "content",
+      "actors": ["anonymous"],
+      "auths": ["bearer:valid"],
+      "post_states": ["none"],
+      "method": "GET",
+      "route": "/blixis/v1/content",
+      "config": "keyed",
+      "query": {
+        "per_page": "-1"
+      },
+      "expect": {
+        "status": 400,
+        "code": "INVALID_QUERY"
+      }
+    },
+    {
+      "id": "list-invalid-per-page-abc",
+      "surface": "content",
+      "actors": ["anonymous"],
+      "auths": ["bearer:valid"],
+      "post_states": ["none"],
+      "method": "GET",
+      "route": "/blixis/v1/content",
+      "config": "keyed",
+      "query": {
+        "per_page": "abc"
+      },
+      "expect": {
+        "status": 400,
+        "code": "INVALID_QUERY"
+      }
+    },
+    {
+      "id": "list-invalid-per-page-array-1",
+      "surface": "content",
+      "actors": ["anonymous"],
+      "auths": ["bearer:valid"],
+      "post_states": ["none"],
+      "method": "GET",
+      "route": "/blixis/v1/content",
+      "config": "keyed",
+      "query": {
+        "per_page[]": "1"
+      },
+      "expect": {
+        "status": 400,
+        "code": "INVALID_QUERY"
+      }
+    },
+    {
+      "id": "list-invalid-page-0",
+      "surface": "content",
+      "actors": ["anonymous"],
+      "auths": ["bearer:valid"],
+      "post_states": ["none"],
+      "method": "GET",
+      "route": "/blixis/v1/content",
+      "config": "keyed",
+      "query": {
+        "page": "0"
+      },
+      "expect": {
+        "status": 400,
+        "code": "INVALID_QUERY"
+      }
+    },
+    {
+      "id": "list-invalid-page-abc",
+      "surface": "content",
+      "actors": ["anonymous"],
+      "auths": ["bearer:valid"],
+      "post_states": ["none"],
+      "method": "GET",
+      "route": "/blixis/v1/content",
+      "config": "keyed",
+      "query": {
+        "page": "abc"
+      },
+      "expect": {
+        "status": 400,
+        "code": "INVALID_QUERY"
+      }
+    },
+    {
+      "id": "list-invalid-page-array-1",
+      "surface": "content",
+      "actors": ["anonymous"],
+      "auths": ["bearer:valid"],
+      "post_states": ["none"],
+      "method": "GET",
+      "route": "/blixis/v1/content",
+      "config": "keyed",
+      "query": {
+        "page[]": "1"
+      },
+      "expect": {
+        "status": 400,
+        "code": "INVALID_QUERY"
+      }
+    },
+    {
+      "id": "list-invalid-slug-array-x",
+      "surface": "content",
+      "actors": ["anonymous"],
+      "auths": ["bearer:valid"],
+      "post_states": ["none"],
+      "method": "GET",
+      "route": "/blixis/v1/content",
+      "config": "keyed",
+      "query": {
+        "slug[]": "x"
+      },
+      "expect": {
+        "status": 400,
+        "code": "INVALID_QUERY"
+      }
+    },
+    {
+      "id": "list-invalid-slug-script",
+      "surface": "content",
+      "actors": ["anonymous"],
+      "auths": ["bearer:valid"],
+      "post_states": ["none"],
+      "method": "GET",
+      "route": "/blixis/v1/content",
+      "config": "keyed",
+      "query": {
+        "slug": "<script>"
+      },
+      "expect": {
+        "status": 400,
+        "code": "INVALID_QUERY"
+      }
+    },
+    {
+      "id": "no-route-content-abc",
+      "surface": "content",
+      "actors": ["anonymous"],
+      "auths": ["bearer:valid"],
+      "post_states": ["none"],
+      "method": "GET",
+      "route": "/blixis/v1/content/abc",
+      "config": "keyed",
+      "expect": {
+        "status": 404,
+        "code": "NOT_FOUND"
+      }
+    },
+    {
+      "id": "no-route-content-0",
+      "surface": "content",
+      "actors": ["anonymous"],
+      "auths": ["bearer:valid"],
+      "post_states": ["none"],
+      "method": "GET",
+      "route": "/blixis/v1/content/0",
+      "config": "keyed",
+      "expect": {
+        "status": 404,
+        "code": "NOT_FOUND"
+      }
+    },
+    {
+      "id": "no-route-content--1",
+      "surface": "content",
+      "actors": ["anonymous"],
+      "auths": ["bearer:valid"],
+      "post_states": ["none"],
+      "method": "GET",
+      "route": "/blixis/v1/content/-1",
+      "config": "keyed",
+      "expect": {
+        "status": 404,
+        "code": "NOT_FOUND"
+      }
+    },
+    {
+      "id": "no-route-content-007",
+      "surface": "content",
+      "actors": ["anonymous"],
+      "auths": ["bearer:valid"],
+      "post_states": ["none"],
+      "method": "GET",
+      "route": "/blixis/v1/content/007",
+      "config": "keyed",
+      "expect": {
+        "status": 404,
+        "code": "NOT_FOUND"
+      }
+    },
+    {
+      "id": "no-route-content-9223372036854775807",
+      "surface": "content",
+      "actors": ["anonymous"],
+      "auths": ["bearer:valid"],
+      "post_states": ["none"],
+      "method": "GET",
+      "route": "/blixis/v1/content/9223372036854775807",
+      "config": "keyed",
+      "expect": {
+        "status": 404,
+        "code": "NOT_FOUND"
+      }
+    },
+    {
+      "id": "no-route-content-99999999999999999999999",
+      "surface": "content",
+      "actors": ["anonymous"],
+      "auths": ["bearer:valid"],
+      "post_states": ["none"],
+      "method": "GET",
+      "route": "/blixis/v1/content/99999999999999999999999",
+      "config": "keyed",
+      "expect": {
+        "status": 404,
+        "code": "NOT_FOUND"
+      }
+    },
+    {
+      "id": "no-route-nope",
+      "surface": "content",
+      "actors": ["anonymous"],
+      "auths": ["bearer:valid"],
+      "post_states": ["none"],
+      "method": "GET",
+      "route": "/blixis/v1/nope",
+      "config": "keyed",
+      "expect": {
+        "status": 404,
+        "code": "NOT_FOUND"
+      }
+    },
+    {
+      "id": "write-post-item",
+      "surface": "content",
+      "actors": ["anonymous", "administrator"],
+      "auths": ["none", "cookie+nonce"],
+      "post_states": ["publish", "draft"],
+      "method": "POST",
+      "route": "/blixis/v1/content/{id}",
+      "config": "keyed",
+      "body": {
+        "title": "changed"
+      },
+      "expect": {
+        "status": 405,
+        "code": "METHOD_NOT_ALLOWED"
+      }
+    },
+    {
+      "id": "write-post-list",
+      "surface": "content",
+      "actors": ["anonymous"],
+      "auths": ["bearer:valid"],
+      "post_states": ["none"],
+      "method": "POST",
+      "route": "/blixis/v1/content",
+      "config": "keyed",
+      "body": {
+        "title": "changed"
+      },
+      "expect": {
+        "status": 405,
+        "code": "METHOD_NOT_ALLOWED"
+      }
+    },
+    {
+      "id": "write-put-item",
+      "surface": "content",
+      "actors": ["anonymous", "administrator"],
+      "auths": ["none", "cookie+nonce"],
+      "post_states": ["publish", "draft"],
+      "method": "PUT",
+      "route": "/blixis/v1/content/{id}",
+      "config": "keyed",
+      "body": {
+        "title": "changed"
+      },
+      "expect": {
+        "status": 405,
+        "code": "METHOD_NOT_ALLOWED"
+      }
+    },
+    {
+      "id": "write-put-list",
+      "surface": "content",
+      "actors": ["anonymous"],
+      "auths": ["bearer:valid"],
+      "post_states": ["none"],
+      "method": "PUT",
+      "route": "/blixis/v1/content",
+      "config": "keyed",
+      "body": {
+        "title": "changed"
+      },
+      "expect": {
+        "status": 405,
+        "code": "METHOD_NOT_ALLOWED"
+      }
+    },
+    {
+      "id": "write-patch-item",
+      "surface": "content",
+      "actors": ["anonymous", "administrator"],
+      "auths": ["none", "cookie+nonce"],
+      "post_states": ["publish", "draft"],
+      "method": "PATCH",
+      "route": "/blixis/v1/content/{id}",
+      "config": "keyed",
+      "body": {
+        "title": "changed"
+      },
+      "expect": {
+        "status": 405,
+        "code": "METHOD_NOT_ALLOWED"
+      }
+    },
+    {
+      "id": "write-patch-list",
+      "surface": "content",
+      "actors": ["anonymous"],
+      "auths": ["bearer:valid"],
+      "post_states": ["none"],
+      "method": "PATCH",
+      "route": "/blixis/v1/content",
+      "config": "keyed",
+      "body": {
+        "title": "changed"
+      },
+      "expect": {
+        "status": 405,
+        "code": "METHOD_NOT_ALLOWED"
+      }
+    },
+    {
+      "id": "write-delete-item",
+      "surface": "content",
+      "actors": ["anonymous", "administrator"],
+      "auths": ["none", "cookie+nonce"],
+      "post_states": ["publish", "draft"],
+      "method": "DELETE",
+      "route": "/blixis/v1/content/{id}",
+      "config": "keyed",
+      "body": {
+        "title": "changed"
+      },
+      "expect": {
+        "status": 405,
+        "code": "METHOD_NOT_ALLOWED"
+      }
+    },
+    {
+      "id": "write-delete-list",
+      "surface": "content",
+      "actors": ["anonymous"],
+      "auths": ["bearer:valid"],
+      "post_states": ["none"],
+      "method": "DELETE",
+      "route": "/blixis/v1/content",
+      "config": "keyed",
+      "body": {
+        "title": "changed"
+      },
+      "expect": {
+        "status": 405,
+        "code": "METHOD_NOT_ALLOWED"
+      }
+    },
+    {
+      "id": "default-config-refuses-plain-http",
+      "surface": "content",
+      "actors": ["anonymous", "administrator"],
+      "auths": ["none", "cookie+nonce"],
+      "post_states": ["publish", "draft"],
+      "method": "GET",
+      "route": "/blixis/v1/content/{id}",
+      "config": "default",
+      "expect": {
+        "status": 403,
+        "code": "HTTPS_REQUIRED"
+      }
+    },
+    {
+      "id": "default-config-ignores-spoofed-proto",
+      "surface": "content",
+      "actors": ["anonymous"],
+      "auths": ["none", "bearer:valid"],
+      "post_states": ["publish"],
+      "method": "GET",
+      "route": "/blixis/v1/content/{id}",
+      "config": "default",
+      "headers": {
+        "X-Forwarded-Proto": "https",
+        "X-Forwarded-Ssl": "on",
+        "Forwarded": "proto=https"
+      },
+      "expect": {
+        "status": 403,
+        "code": "HTTPS_REQUIRED"
+      }
+    },
+    {
+      "id": "keyadmin-get-anonymous",
+      "surface": "keyadmin",
+      "actors": ["anonymous"],
+      "auths": ["none", "bearer:valid"],
+      "post_states": ["none"],
+      "method": "GET",
+      "route": "/blixis-admin/v1/keys",
+      "config": "keyed",
+      "expect": {
+        "status": 401,
+        "code": "rest_forbidden"
+      }
+    },
+    {
+      "id": "keyadmin-get-low-privilege",
+      "surface": "keyadmin",
+      "actors": ["subscriber", "page_author_owner", "editor"],
+      "auths": ["cookie+nonce"],
+      "post_states": ["none"],
+      "method": "GET",
+      "route": "/blixis-admin/v1/keys",
+      "config": "keyed",
+      "expect": {
+        "status": 403,
+        "code": "rest_forbidden"
+      }
+    },
+    {
+      "id": "keyadmin-get-no-nonce",
+      "surface": "keyadmin",
+      "actors": ["administrator"],
+      "auths": ["cookie"],
+      "post_states": ["none"],
+      "method": "GET",
+      "route": "/blixis-admin/v1/keys",
+      "config": "keyed",
+      "expect": {
+        "status": 401,
+        "code": "rest_forbidden"
+      }
+    },
+    {
+      "id": "keyadmin-get-bad-nonce",
+      "surface": "keyadmin",
+      "actors": ["administrator"],
+      "auths": ["cookie+bad_nonce"],
+      "post_states": ["none"],
+      "method": "GET",
+      "route": "/blixis-admin/v1/keys",
+      "config": "keyed",
+      "expect": {
+        "status": 403,
+        "code": "rest_cookie_invalid_nonce"
+      }
+    },
+    {
+      "id": "keyadmin-get-app-password",
+      "surface": "keyadmin",
+      "actors": ["administrator"],
+      "auths": ["app_password"],
+      "post_states": ["none"],
+      "method": "GET",
+      "route": "/blixis-admin/v1/keys",
+      "config": "keyed",
+      "expect": {
+        "status": 403,
+        "code": "rest_forbidden"
+      },
+      "note": "A leaked application password must not mint API keys."
+    },
+    {
+      "id": "keyadmin-post-anonymous",
+      "surface": "keyadmin",
+      "actors": ["anonymous"],
+      "auths": ["none", "bearer:valid"],
+      "post_states": ["none"],
+      "method": "POST",
+      "route": "/blixis-admin/v1/keys",
+      "config": "keyed",
+      "expect": {
+        "status": 401,
+        "code": "rest_forbidden"
+      }
+    },
+    {
+      "id": "keyadmin-post-low-privilege",
+      "surface": "keyadmin",
+      "actors": ["subscriber", "page_author_owner", "editor"],
+      "auths": ["cookie+nonce"],
+      "post_states": ["none"],
+      "method": "POST",
+      "route": "/blixis-admin/v1/keys",
+      "config": "keyed",
+      "expect": {
+        "status": 403,
+        "code": "rest_forbidden"
+      }
+    },
+    {
+      "id": "keyadmin-post-no-nonce",
+      "surface": "keyadmin",
+      "actors": ["administrator"],
+      "auths": ["cookie"],
+      "post_states": ["none"],
+      "method": "POST",
+      "route": "/blixis-admin/v1/keys",
+      "config": "keyed",
+      "expect": {
+        "status": 401,
+        "code": "rest_forbidden"
+      }
+    },
+    {
+      "id": "keyadmin-post-bad-nonce",
+      "surface": "keyadmin",
+      "actors": ["administrator"],
+      "auths": ["cookie+bad_nonce"],
+      "post_states": ["none"],
+      "method": "POST",
+      "route": "/blixis-admin/v1/keys",
+      "config": "keyed",
+      "expect": {
+        "status": 403,
+        "code": "rest_cookie_invalid_nonce"
+      }
+    },
+    {
+      "id": "keyadmin-post-app-password",
+      "surface": "keyadmin",
+      "actors": ["administrator"],
+      "auths": ["app_password"],
+      "post_states": ["none"],
+      "method": "POST",
+      "route": "/blixis-admin/v1/keys",
+      "config": "keyed",
+      "expect": {
+        "status": 403,
+        "code": "rest_forbidden"
+      },
+      "note": "A leaked application password must not mint API keys."
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "$comment": "Accepted v1 prop baseline. docs/elements/*.json still lack these prop types, so product validation cannot enforce unknownProps or find URLs from those specs alone. Align them in task 05-01.",
+  "specVersion": 1,
+  "elements": {
+    "blixis/accordion": { "items": { "kind": "items", "fields": ["title", "body"] }, "allowMultiple": { "kind": "bool" } },
+    "blixis/button": { "label": { "kind": "text" }, "url": { "kind": "url" }, "variant": { "kind": "token" } },
+    "blixis/card": { "variant": { "kind": "token" } },
+    "blixis/column": { "basis": { "kind": "token" } },
+    "blixis/columns": { "columns": { "kind": "int", "min": 1, "max": 12 }, "gap": { "kind": "token" } },
+    "blixis/container": { "maxWidth": { "kind": "token" } },
+    "blixis/cta": { "variant": { "kind": "token" } },
+    "blixis/divider": { "style": { "kind": "enum", "values": ["solid", "dashed", "dotted"] } },
+    "blixis/form-embed": { "provider": { "kind": "enum", "values": ["wordpress"] }, "formId": { "kind": "ref" } },
+    "blixis/heading": { "text": { "kind": "text" }, "level": { "kind": "int", "min": 1, "max": 6 } },
+    "blixis/icon": { "iconId": { "kind": "iconId" }, "decorative": { "kind": "bool" } },
+    "blixis/image": { "mediaId": { "kind": "ref" }, "alt": { "kind": "text" }, "loading": { "kind": "enum", "values": ["lazy", "eager"] } },
+    "blixis/list": { "items": { "kind": "textList" }, "ordered": { "kind": "bool" } },
+    "blixis/navigation": { "menuId": { "kind": "ref" } },
+    "blixis/paragraph": { "text": { "kind": "text" } },
+    "blixis/quote": { "quote": { "kind": "text" }, "attribution": { "kind": "text" } },
+    "blixis/section": { "tag": { "kind": "enum", "values": ["section", "div", "header", "footer", "main", "article", "aside"] }, "padding": { "kind": "token" } },
+    "blixis/spacer": { "height": { "kind": "token" } },
+    "blixis/tabs": { "items": { "kind": "items", "fields": ["label", "body"] } },
+    "blixis/video": { "url": { "kind": "url" }, "title": { "kind": "text" } }
+  }
+}

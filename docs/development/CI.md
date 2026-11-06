@@ -1,6 +1,6 @@
 # CI checks
 
-CI covers the code that exists today: the theme, the plugin, shell scripts, documentation, and the 01-02 spike, which is the only TypeScript source. A product package adds its own jobs or joins these when it arrives. Both workflows run on every pull request and on pushes to `main`, with read-only `contents` permission.
+CI covers the code that exists today: the theme, the plugin, shell scripts, documentation, and the 01-02 and 01-05 spikes, which are the only TypeScript source. A product package adds its own jobs or joins these when it arrives. Both workflows run on every pull request and on pushes to `main`, with read-only `contents` permission.
 
 ## Checks
 
@@ -14,6 +14,8 @@ CI covers the code that exists today: the theme, the plugin, shell scripts, docu
 | `browser-tests` | Quality | Spike drag and drop tests on Playwright's Chromium, Firefox, and WebKit | See the [spike](../../spikes/01-02-compatibility/README.md) for local commands | Yes |
 | `scripts` | Quality | `bash -n`, ShellCheck, `scripts/test-setup-links.sh`, Compose configuration, JSON parsing, actionlint | The failed step names the tool | Yes |
 | `wordpress-integration` | Quality | Theme and plugin activation plus REST, revision, and preview smoke tests in a throwaway stack | Read the report step; failed checks are listed by name | Yes |
+| `contracts` | Quality | The [contract fixtures](../contracts/README.md) in TypeScript and PHP, cross-contract checks, and browser proofs; any skipped test fails | Run `pnpm run test` in `spikes/01-05-contracts`; a changed golden is a contract change | Not yet; add after this merges |
+| `contracts-wordpress (document)`, `(tokens)`, `(api)` | Quality | Contract proofs on WordPress 7.1.4 with PHP 8.4 and WordPress 7.0.8 with PHP 8.5 in a throwaway stack | Run `spikes/01-05-contracts/wordpress/run.sh <area>` and read the `FAIL` lines | Not yet; add after this merges |
 | `secrets` | Quality | gitleaks on history reachable from `HEAD` | Rotate a real credential, then remove it from the branch. Add a false positive's fingerprint to `.gitleaksignore` with the reason | Yes |
 | `licenses` | Quality | License check of installed npm packages | Review the flagged package before changing the allowed list | Yes |
 | `dependency-audit` | Quality | `pnpm audit`, `composer audit` | Update the affected package | No |

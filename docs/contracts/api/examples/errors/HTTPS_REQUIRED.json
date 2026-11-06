@@ -1,0 +1,8 @@
+{
+  "contract_version": "1.0",
+  "code": "HTTPS_REQUIRED",
+  "message": "This API requires HTTPS.",
+  "data": {
+    "status": 403
+  }
+}
