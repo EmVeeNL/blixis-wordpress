@@ -1,10 +1,10 @@
 # 01 Discovery Foundation
 
-**Status:** Ready. Tasks are planned unless their individual file records verified completion.
+**Status:** Backlog. Tasks are planned unless their individual file records verified completion.
 
 | ID | Task | Status | Priority |
 |---|---|---|---|
-| [01-01](01-requirements-and-scope.md) | Confirm requirements, personas, and MVP scope | Ready | P0 |
+| [01-01](01-requirements-and-scope.md) | Confirm requirements, personas, and MVP scope | Backlog | P0 |
 | [01-02](02-compatibility-spike.md) | Verify WordPress and toolchain compatibility | Backlog | P0 |
 | [01-03](03-repository-scaffold.md) | Build the monorepo scaffold | Backlog | P0 |
 | [01-04](04-quality-pipeline.md) | Extend the quality pipeline | Backlog | P0 |

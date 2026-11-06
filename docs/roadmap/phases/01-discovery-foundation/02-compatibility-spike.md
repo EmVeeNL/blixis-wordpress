@@ -29,20 +29,21 @@ Test candidate WordPress, PHP, Node, browser, Tailwind v4, and drag-and-drop ver
 
 ## Technical requirements
 
-- Use the module boundaries and contracts in [Architecture](../../../architecture/ARCHITECTURE.md).
-- Validate server-side data and permissions where applicable; document schema or ADR changes.
-- Preserve existing content and provide a migration or rollback plan for contract changes.
+- Select candidate WordPress/PHP and Node versions, then test the actual REST metadata/revision behavior and PHP integration needed by the planned document model.
+- Prove a minimal Tailwind CSS v4 build and nested drag/drop plus keyboard path with candidate dependencies; check package and icon/font licenses.
+- Test representative current Chrome, Firefox, Safari, and Edge versions or document any untested combination.
+- Replace the provisional [support matrix](../../../development/SUPPORT_MATRIX.md) with exact supported versions, constraints, and CI coverage.
 
 ## Acceptance criteria
 
-- [ ] The described capability works in the intended WordPress and browser environments.
-- [ ] Relevant security, accessibility, and performance requirements are verified.
-- [ ] Tests and documentation are included with the implementation.
-- [ ] A reviewed PR is merged, with evidence and metadata recorded here.
+- [ ] Exact versions and a supported/tested matrix are recorded with reproducible commands and environment details.
+- [ ] Protected post meta, revision behavior, Tailwind output, and drag/drop feasibility have evidence or explicit gaps.
+- [ ] Dependency and asset licenses are reviewed; unsupported combinations and mitigation are documented.
+- [ ] The reviewed PR is merged with test results and task metadata.
 
 ## Testing requirements
 
-Run a smoke matrix for REST metadata, CSS build, editor drag/drop, and supported browsers. Include negative permission, invalid-input, version, and regression cases where relevant. Record exact commands and results in the PR.
+Run smoke tests for WordPress REST meta and revisions, PHP versions, Node build, Tailwind CSS output, drag/drop pointer and keyboard use, and browser compatibility. Include failed-version and permission cases; record command output or CI links.
 
 ## Tracking and completion
 

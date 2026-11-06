@@ -29,20 +29,21 @@ Review data ownership, schema and token contracts, rendering and API trust bound
 
 ## Technical requirements
 
-- Use the module boundaries and contracts in [Architecture](../../../architecture/ARCHITECTURE.md).
-- Validate server-side data and permissions where applicable; document schema or ADR changes.
-- Preserve existing content and provide a migration or rollback plan for contract changes.
+- Confirm ownership of WordPress post fields, protected document meta, theme configuration, element manifests, renderer, editor, and Content API.
+- Review versioning, migrations, revision support, permission boundaries, public/draft separation, token generation, and cache invalidation using fixtures or proofs of concept.
+- Resolve provisional [ADRs](../../../architecture/DECISIONS.md) and relevant [open questions](../../../architecture/OPEN_QUESTIONS.md) with the project owner; record alternatives and consequences.
+- Publish stable contract examples for schema, tokens, and API before dependent implementation tasks become `Ready`.
 
 ## Acceptance criteria
 
-- [ ] The described capability works in the intended WordPress and browser environments.
-- [ ] Relevant security, accessibility, and performance requirements are verified.
-- [ ] Tests and documentation are included with the implementation.
-- [ ] A reviewed PR is merged, with evidence and metadata recorded here.
+- [ ] Module ownership and data flow are unambiguous across architecture, ADRs, examples, and roadmap.
+- [ ] Schema, token, renderer, and API boundaries have versioned examples and negative security cases.
+- [ ] Relevant ADRs have an evidence-backed status and owner decision; remaining questions have explicit follow-up owners.
+- [ ] The reviewed PR is merged with architecture/security review notes and task metadata.
 
 ## Testing requirements
 
-Architecture and threat-model review with contract fixtures and recorded decisions. Include negative permission, invalid-input, version, and regression cases where relevant. Record exact commands and results in the PR.
+Run contract fixtures for valid/invalid document graphs, token values, migration boundaries, and authorization cases where prototypes exist. Complete an architecture and threat-model review; validate links and record approvals, gaps, and exact test results.
 
 ## Tracking and completion
 
