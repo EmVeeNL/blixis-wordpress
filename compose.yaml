@@ -1,0 +1,27 @@
+
+services:
+  mariadb:
+    image: mariadb:11.4
+    container_name: blixis-mariadb
+    restart: unless-stopped
+
+    ports:
+      - "127.0.0.1:3307:3306"
+
+    environment:
+      MARIADB_ROOT_PASSWORD: "${DB_ROOT_PASSWORD}"
+      MARIADB_DATABASE: blixis
+      MARIADB_USER: blixis
+      MARIADB_PASSWORD: "${DB_PASSWORD}"
+
+    volumes:
+      - mariadb_data:/var/lib/mysql
+
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  mariadb_data:
