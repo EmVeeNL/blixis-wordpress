@@ -2,7 +2,7 @@
 id: "01-02"
 title: "Verify WordPress and toolchain compatibility"
 phase: "01"
-status: Backlog
+status: Ready
 priority: P0
 owner: "EmVeeNL"
 created_at: "2026-11-06"
@@ -53,10 +53,11 @@ Run smoke tests for WordPress REST meta and revisions, PHP versions, Node build,
 - **Commit references:** None.
 - **PR number and URL:** None.
 - **Started / completed / closed:** Not recorded.
-- **Status:** Backlog. Update frontmatter and history on every transition; follow [status workflow](../../../development/STATUS_WORKFLOW.md).
+- **Status:** Ready. Owner and acceptance criteria are defined; dependency `01-01` is Done. Follow the [status workflow](../../../development/STATUS_WORKFLOW.md) before starting work.
 
 ## Status history
 
 | Date | Transition | Evidence |
 |---|---|---|
 | 2026-11-06 | Initial planning → Backlog | Downloaded project plan; no implementation evidence |
+| 2026-11-06 | Backlog → Ready | Task `01-01` approved and merged in PR [#6](https://github.com/EmVeeNL/blixis-wordpress/pull/6) as `1c51d1b`; owner EmVeeNL and acceptance criteria are defined. |
