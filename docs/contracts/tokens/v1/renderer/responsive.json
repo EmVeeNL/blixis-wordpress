@@ -1,0 +1,11 @@
+[
+  { "name": "no-values", "prop": "align", "base": null, "overrides": {}, "resolved": { "base": null, "sm": null, "md": null, "lg": null, "xl": null }, "classes": "" },
+  { "name": "base-inherits-everywhere", "prop": "align", "base": "left", "overrides": {}, "resolved": { "base": "left", "sm": "left", "md": "left", "lg": "left", "xl": "left" }, "classes": "text-left" },
+  { "name": "md-applies-upward-only", "prop": "align", "base": "left", "overrides": { "md": "center" }, "resolved": { "base": "left", "sm": "left", "md": "center", "lg": "center", "xl": "center" }, "classes": "text-left md:text-center" },
+  { "name": "override-without-base", "prop": "align", "base": null, "overrides": { "lg": "right" }, "resolved": { "base": null, "sm": null, "md": null, "lg": "right", "xl": "right" }, "classes": "lg:text-right" },
+  { "name": "nearest-lower-wins", "prop": "align", "base": "left", "overrides": { "sm": "center", "xl": "right" }, "resolved": { "base": "left", "sm": "center", "md": "center", "lg": "center", "xl": "right" }, "classes": "text-left sm:text-center xl:text-right" },
+  { "name": "override-equal-to-inherited-emits-nothing", "prop": "align", "base": "left", "overrides": { "md": "left" }, "resolved": { "base": "left", "sm": "left", "md": "left", "lg": "left", "xl": "left" }, "classes": "text-left" },
+  { "name": "return-to-base-value", "prop": "align", "base": "left", "overrides": { "md": "center", "lg": "left" }, "resolved": { "base": "left", "sm": "left", "md": "center", "lg": "left", "xl": "left" }, "classes": "text-left md:text-center lg:text-left" },
+  { "name": "override-order-in-input-is-irrelevant", "prop": "align", "base": "left", "overrides": { "xl": "right", "sm": "center" }, "resolved": { "base": "left", "sm": "center", "md": "center", "lg": "center", "xl": "right" }, "classes": "text-left sm:text-center xl:text-right" },
+  { "name": "multi-class-value-prefixes-each", "prop": "variant", "base": "primary", "overrides": { "md": "secondary" }, "resolved": { "base": "primary", "sm": "primary", "md": "secondary", "lg": "secondary", "xl": "secondary" }, "classes": "bg-primary text-surface md:bg-surface md:text-primary" }
+]
