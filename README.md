@@ -96,4 +96,4 @@ The `docs/elements/` JSON files and `docs/examples/` are **specifications and ex
 
 Michael ([@EmVeeNL](https://github.com/EmVeeNL)) owns the roadmap tasks. Follow [AGENTS.md](AGENTS.md), the relevant task file, and [Contributing](CONTRIBUTING.md). Use a task branch from `main`, Conventional Commits, and a PR with exact test results. Update task status only when its evidence supports the transition.
 
-This repository has no published release of the planned editor or API. The current source license has not yet been specified in a `LICENSE` file; ask the maintainer before reusing code or assets outside this project.
+This repository has no published release of the planned editor or API. Code and documentation are licensed under [GPL-2.0-or-later](LICENSE). The two project images have separate [asset rights](docs/assets/README.md).

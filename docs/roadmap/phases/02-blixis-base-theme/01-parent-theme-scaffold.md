@@ -32,6 +32,7 @@ Complete theme metadata, enqueue hooks, theme support, template structure, and W
 - Use the module boundaries and contracts in [Architecture](../../../architecture/ARCHITECTURE.md).
 - Validate server-side data and permissions where applicable; document schema or ADR changes.
 - Preserve existing content and provide a migration or rollback plan for contract changes.
+- Align the theme and plugin `Requires at least` and `Requires PHP` headers with the approved WordPress 7.0 and PHP 8.3 support floors; retest activation refusal below those floors in a disposable fixture.
 
 ## Acceptance criteria
 

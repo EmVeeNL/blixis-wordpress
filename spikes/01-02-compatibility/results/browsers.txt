@@ -1,0 +1,17 @@
+Playwright 1.65.0, macOS 27.0.1 arm64. Command: npx playwright test --repeat-each=3. 10 tests per browser, 3 runs each.
+Google Chrome 156.0.8078.80 (installed): 30 passed
+Chrome for Testing 158.0.8127.18 (Playwright build): 30 passed
+Firefox 159.0 (Playwright build): 30 passed
+WebKit 27.2 (Playwright build, not Safari): 30 passed
+
+Tests:
+- keyboard: Escape cancels without changing the tree
+- keyboard: moves an item across sections
+- keyboard: moves an item into an empty section
+- keyboard: moves an item, announces it, and keeps focus
+- keyboard: reorders sections
+- pointer: moves an item into an empty section
+- pointer: moves an item into another section
+- pointer: refuses a section dropped on an item (invalid nesting)
+- pointer: reorders an item within a section
+- pointer: reorders sections

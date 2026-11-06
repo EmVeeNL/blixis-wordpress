@@ -1,0 +1,30 @@
+
+> blixis-compat-spike-frontend@0.0.0 licenses
+> node tests/check-licenses.ts
+
+Direct:
+  @dnd-kit/core@6.3.1: MIT
+  @playwright/test@1.65.0: Apache-2.0
+  @tabler/icons-react@3.50.0: MIT
+  @tailwindcss/cli@4.3.5: MIT
+  @types/node@26.6.6: MIT
+  @types/react-dom@18.3.7: MIT
+  @types/react@18.3.31: MIT
+  @vitejs/plugin-react@6.2.1: MIT
+  oxfmt@0.77.0: MIT
+  oxlint-tsgolint@7.0.2006: MIT
+  oxlint@1.92.0: MIT
+  react-dom@18.3.1: MIT
+  react@18.3.1: MIT
+  tailwindcss@4.3.5: MIT
+  typescript@7.0.2: Apache-2.0
+  vite@8.3.6: MIT
+All 74 installed packages: {
+  MIT: 61,
+  'Apache-2.0': 6,
+  '0BSD': 2,
+  ISC: 2,
+  'MPL-2.0': 2,
+  'BSD-3-Clause': 1
+}
+Flagged: []
