@@ -24,7 +24,7 @@ link_component() {
       return
     fi
     printf 'Conflicting symlink: %s\n' "$target" >&2
-    exit 1
+    return
   fi
   if [[ -e "$target" ]]; then
     printf 'Existing content preserved: %s\n' "$target" >&2
