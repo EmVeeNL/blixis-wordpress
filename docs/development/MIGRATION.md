@@ -25,5 +25,5 @@ To roll back local integration, unlink only `~/Sites/blixis/wp-content/themes/bl
 - Passed: current working files passed Gitleaks directory scan; no local configuration or backup was staged.
 - Limited: WP-CLI `wp db check` could not run because `mysqlcheck` is not installed on the host; the container-side table check passed.
 - Open: history scan flagged a possible secret in a now-removed bundled theme file; Git history was preserved.
-- Open: GitHub reports `main` is not protected. Configure required reviews and checks when the branch's CI is published; this task branch has not been committed or pushed.
+- Passed: PR #2 was squash merged into `main` as `1006a5a`. GitHub `main` protection now requires pull requests and the `syntax` check, applies to admins, requires linear history, and blocks force pushes and branch deletion. Required approval count is zero; maintainers can raise it when reviewers are available.
 - Not run: theme activation, plugin activation, JavaScript build, TypeScript checks, unit tests, and dependency scanning. Those features/toolchains are not implemented yet.

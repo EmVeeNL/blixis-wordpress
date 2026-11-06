@@ -2,7 +2,7 @@
 
 ## Phase 01 — Repository foundation
 
-- [01-03 Restructure repository](phases/01-repository-foundation/03-restructure-repository.md) — Busy. Source checkout and safe scaffolding are prepared; tracked third-party files and runtime Git separation require review.
+- [01-03 Restructure repository](phases/01-repository-foundation/03-restructure-repository.md) — Done. Source and runtime are separate, and PR #2 was squash merged.
 
 ## Later phases
 
