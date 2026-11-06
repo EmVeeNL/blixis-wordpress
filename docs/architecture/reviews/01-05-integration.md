@@ -1,6 +1,6 @@
 # 01-05 integration note
 
-**Status: integration of three independent reviews, not owner approval.** The reviews cover [document schema and migrations](01-05-document.md), [tokens and rendering](01-05-tokens.md), and [API permissions and draft security](01-05-api.md). Each ran in its own worktree and branch. This note records what happened when their results met.
+**Status: decisions accepted in delegated owner review on 2026-11-06; product implementation pending.** The independent reviews cover [document schema and migrations](01-05-document.md), [tokens and rendering](01-05-tokens.md), and [API permissions and draft security](01-05-api.md). Each ran in its own worktree and branch. This note records what happened when their results met and the accepted planning outcome.
 
 ## Conflicts between the reviews
 
@@ -21,13 +21,13 @@
 
 Reproduce: `spikes/01-05-contracts/wordpress/run.sh document`, which prints `unescaped_projection_runs_shortcode_before_late_renderer=true`. The fix writes `[` and `]` as numeric entities in the projection. Checks confirm no shortcode runs with the renderer active or in fallback, the text still displays literally, and the entities stay inert after `wp_kses_post`.
 
-## Decisions the owner must make
+## Accepted planning decisions
 
-Nothing below is approved. The contracts assume the recommendation until the owner says otherwise.
+The owner delegated routine architecture decisions for task 01-05. The outcomes below approve design contracts, not implemented features. Decisions 14 and 16 differ from the original recommendations; their rationale is in the [API](../decisions/ADR-007-api-authentication.md) and [document](../decisions/ADR-003-versioned-content-schema.md) ADRs.
 
-| # | Decision | Recommendation |
+| # | Decision | Accepted outcome |
 |---|---|---|
-| 1 | ADR-001 to ADR-007 status | Accept with the amendments in each ADR. ADR-008 stays Proposed |
+| 1 | ADR-001 to ADR-007 status | Accepted as design decisions with the amendments in each ADR. ADR-008 stays Proposed |
 | 2 | `post_content` holds a projection (ADR-003) | `core/html`, with brackets as entities |
 | 3 | Page ownership (ADR-006, Q05) | Presence of the document; no mode field |
 | 4 | Text props in version 1 | Plain text; inline marks later through a version bump |
@@ -40,17 +40,17 @@ Nothing below is approved. The contracts assume the recommendation until the own
 | 11 | External review (Q06) | Authenticated only for MVP |
 | 12 | API writes and access (Q10, Q11) | Read-only; authenticated by default |
 | 13 | API exposure | No raw document in version 1; pages only; accept 60-second staleness in anonymous mode |
-| 14 | API keys and quotas | Optional pepper constant with `wp_salt` fallback; counter table plus edge limits |
+| 14 | API keys and quotas | Dedicated external pepper required in production; no `wp_salt` fallback there. Counter table plus edge limits. Task 08-01 must prove pepper provisioning and rotation |
 | 15 | Roles | No Blixis role gets `edit_published_pages` without `publish_pages` |
-| 16 | `documentId` | Remove before version 1 ships; the API does not need it |
+| 16 | `documentId` | Retain as a required opaque record in the tested v1 envelope. It has no lookup, uniqueness, or permission role; removal needs a later schema-version decision |
 
 ## Follow-up owners
 
-Each open question has an owner and decision point in [Open questions](../OPEN_QUESTIONS.md). Michael owns the decisions above before 01-05 can be Done. Technical follow-ups were added to tasks 02-01, 03-05, 04-02, 05-01, 08-01, and 08-04.
+Remaining open questions have an owner and decision point in [Open questions](../OPEN_QUESTIONS.md). Technical follow-ups were added to tasks 02-01, 03-05, 04-02, 05-01, 08-01, and 08-04. The two deviations above also belong to 04-02 and 08-01 respectively.
 
 ## Applied and deferred edits
 
-Applied here: architecture, API plan, configuration, security guidance, examples, ADR evidence, and roadmap requirements. Deferred to task 05-01, pending decision 5: the element specifications and their asymmetry fixtures. The 01-02 spike still registers its meta with the capability callback that the API review showed is unsafe; it is throwaway and never runs on a real site, so it stays as evidence.
+Applied here: architecture, API plan, configuration, security guidance, examples, ADR evidence, and roadmap requirements. Task 05-01 must align element specifications and their asymmetry fixtures with accepted decision 5. The 01-02 spike still registers its meta with the capability callback that the API review showed is unsafe; it is throwaway and never runs on a real site, so it stays as evidence.
 
 ## Remaining gaps
 

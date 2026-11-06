@@ -20,7 +20,7 @@ flowchart LR
 
 ## Ownership and dependency rules
 
-Task 01-05 [reviewed](reviews/01-05-integration.md) these boundaries; the versioned contracts are in [`docs/contracts`](../contracts/README.md). They are proposed until the owner decides the [related ADRs](DECISIONS.md).
+Task 01-05 [reviewed](reviews/01-05-integration.md) these boundaries; the accepted design contracts are in [`docs/contracts`](../contracts/README.md) and the [related ADRs](DECISIONS.md). Product implementation remains planned.
 
 | Data or behavior | Owner | Must not |
 |---|---|---|
@@ -54,7 +54,7 @@ A validated `BlixisThemeConfig` is the intended canonical site configuration; se
 
 ## Editor and publication (planned)
 
-Use WordPress cookie authentication plus a REST nonce and post-specific capabilities for editor requests. Local immutable tree state needs undo/redo, dirty state, and conflict detection through an `If-Match` hash of the stored document, re-checked under a post-row lock in the write transaction. Autosave must never publish. Draft edits of a live page live in the user's autosave revision until an explicit publish that requires `edit_post` and `publish_pages`. Restoring a revision is a publication and needs that treatment in the interface. A draft preview is authenticated in MVP; external review links remain proposed in [ADR-005](decisions/ADR-005-review-security.md). The page ownership policy relative to Gutenberg remains proposed in [ADR-006](decisions/ADR-006-editor-and-gutenberg.md).
+Use WordPress cookie authentication plus a REST nonce and post-specific capabilities for editor requests. Local immutable tree state needs undo/redo, dirty state, and conflict detection through an `If-Match` hash of the stored document, re-checked under a post-row lock in the write transaction. Autosave must never publish. Draft edits of a live page live in the user's autosave revision until an explicit publish that requires `edit_post` and `publish_pages`. Restoring a revision is a publication and needs that treatment in the interface. A draft preview is authenticated in MVP under [ADR-005](decisions/ADR-005-review-security.md); external review links need a later decision. [ADR-006](decisions/ADR-006-editor-and-gutenberg.md) assigns ownership by document presence rather than a separate mode field.
 
 ## Cross-cutting contracts
 

@@ -1,6 +1,6 @@
 # Content API contract v1.0
 
-**Status: proposed in task 01-05.** No product API exists. Owner approval is pending; phase 08 implements this contract. Every rule here was run against real WordPress by the [proofs](../../../spikes/01-05-contracts/api/README.md). The reasoning is in the [review note](../../architecture/reviews/01-05-api.md).
+**Status: accepted design baseline from task 01-05.** No product API exists; phase 08 implements this contract. The WordPress [proofs](../../../spikes/01-05-contracts/api/README.md) exercised the request rules. A dedicated production pepper is an approved implementation requirement that the proof did not test; see below. The reasoning is in the [review note](../../architecture/reviews/01-05-api.md).
 
 | File | Purpose |
 |---|---|
@@ -44,6 +44,7 @@ No WordPress credential changes this. A cookie, a nonce, or an application passw
 - Credential: `Authorization: Bearer <key>`. A key in a query string or cookie is not read.
 - Format: `bxk_<16 hex key ID>_<43 base64url secret>`, from 32 CSPRNG bytes. Shown once at creation.
 - Storage: key ID, HMAC-SHA-256 of the secret, hash version, scopes, created, expires, revoked, replaced-by. Never the secret.
+- Production key hashing requires a dedicated high-entropy `BLIXIS_API_KEY_PEPPER` supplied through server configuration outside the database and repository. Without it, key issuance and validation fail closed. A `wp_salt()` fallback is not accepted for production because the salt can reside in the same database as the hashes. Task 08-01 must test provisioning, loss, and rotation; the 01-05 proof used the fallback only to exercise HMAC behavior.
 - Scope: `read:published`.
 - A key identifies a client. It never sets a WordPress user, so it opens no `/wp/v2` route, editor route, or key administration.
 - Keyed mode is the default. Anonymous mode needs explicit configuration, and it only removes the need for a key: visibility is unchanged. A key presented in anonymous mode is still validated.

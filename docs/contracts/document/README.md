@@ -1,13 +1,13 @@
 # Document contract v1
 
-**Status: proposed in task [01-05](../../roadmap/phases/01-discovery-foundation/05-architecture-contracts.md); not owner-approved.** No product code implements it yet. The reference validators are throwaway proofs in [`spikes/01-05-contracts/document`](../../../spikes/01-05-contracts/document/). The evidence is in the [review note](../../architecture/reviews/01-05-document.md).
+**Status: accepted design baseline from task [01-05](../../roadmap/phases/01-discovery-foundation/05-architecture-contracts.md); not implemented in product code.** Delegated owner review accepted this v1 envelope, including the non-authoritative `documentId`. The reference validators are throwaway proofs in [`spikes/01-05-contracts/document`](../../../spikes/01-05-contracts/document/). The evidence is in the [review note](../../architecture/reviews/01-05-document.md).
 
 ## What is here
 
 | Path | Purpose |
 |---|---|
 | [`v1/document.schema.json`](v1/document.schema.json) | JSON Schema (2020-12) for the structural envelope only |
-| [`v1/element-props.json`](v1/element-props.json) | Proposed prop types. The element specs do not state any, so `unknownProps: reject` cannot be enforced from them alone |
+| [`v1/element-props.json`](v1/element-props.json) | Accepted v1 prop baseline. The element specs do not state these yet; task 05-01 must align them before product validation can enforce `unknownProps: reject` |
 | [`v1/valid/`](v1/valid/) | Documents every validator must accept. `generated.json` describes boundary documents too large to commit |
 | [`v1/invalid/`](v1/invalid/) | Documents every validator must refuse. [`expected.json`](v1/invalid/expected.json) states each one's exact error codes, status, and reason. `.txt` files hold input that CI could not parse as JSON |
 | [`migrations/`](migrations/) | Golden migrations and preservation pairs, stated in [`expected.json`](migrations/expected.json). Schema v2 in these fixtures is hypothetical and is not a planned format |
@@ -21,7 +21,7 @@
 | `post_content` | Blixis Blocks, derived | A non-authoritative projection. See below |
 | `_blixis_content_hash` post meta | Blixis Blocks | SHA-256 of the stored `post_content`, revisioned, used to detect edits made outside Blixis |
 | `themeRef` | Document, as a record | Records the theme and the `BlixisThemeConfig` `schemaVersion` the page was authored against. It does not select the theme, and neither rendering nor caching reads it |
-| `documentId` | Document, as a record | Opaque. It is never used for lookup or authorization, because a duplicated page repeats it. The post ID is the identity |
+| `documentId` | Document, as a record | Required in v1 but opaque and non-authoritative. A duplicated page repeats it, so it is never used for lookup, uniqueness, or authorization. The post ID is the identity |
 
 ### `post_content`
 

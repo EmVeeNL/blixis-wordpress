@@ -32,6 +32,7 @@ Add hashed-at-rest key creation/revocation, scopes, quotas, and key-ID-only logs
 - Use the module boundaries and contracts in [Architecture](../../../architecture/ARCHITECTURE.md).
 - Validate server-side data and permissions where applicable; document schema or ADR changes.
 - Preserve existing content and provide a migration or rollback plan for contract changes.
+- Require a dedicated high-entropy server-side `BLIXIS_API_KEY_PEPPER` outside the database and repository; fail closed if absent. Test provisioning, loss, rotation, and recovery. The 01-05 proof used a `wp_salt()` fallback only to test HMAC behavior; that fallback is not the production contract.
 
 ## Acceptance criteria
 

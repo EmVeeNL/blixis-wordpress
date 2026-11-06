@@ -1,6 +1,6 @@
 # Token and renderer contract, version 1
 
-**Status: proposed by the 01-05 tokens review; not owner-approved and not implemented in a product package.** The fixtures here passed against the throwaway proof in [`spikes/01-05-contracts/tokens`](../../../spikes/01-05-contracts/tokens/). Task 03-02 (tokens) and task 05-01 (elements) implement it. See the [review note](../../architecture/reviews/01-05-tokens.md) for evidence and gaps.
+**Status: accepted design baseline from task 01-05; not implemented in a product package.** The fixtures here passed against the throwaway proof in [`spikes/01-05-contracts/tokens`](../../../spikes/01-05-contracts/tokens/). Task 03-02 (tokens) and task 05-01 (elements) implement it. See the [review note](../../architecture/reviews/01-05-tokens.md) for evidence and gaps.
 
 ## Files
 
@@ -38,6 +38,8 @@ A conforming implementation must also:
 ## Generation
 
 The PHP generator is the single production generator, because the only runtime on a WordPress host is PHP and saves are validated there. `tokens/src/generate.ts` is a test oracle that proves the bytes are reproducible; do not ship it. The admin preview sets `--blixis-*` values with `style.setProperty` from `token-map.json` after local validation, and the server result stays authoritative.
+
+The WordPress Site Editor is not a token source. Its user-origin settings must not override a Blixis token; task 03-05 must enforce and test this policy.
 
 Delivery on a public page: `wp_theme_json_data_theme` merges the [`theme.json` data](v1/golden/default.theme.json), and an inline `blixis-tokens` style carries the [CSS](v1/golden/default.tokens.css). Values are literal in both, and a parity test compares them with WordPress's actual output. Font sizes need `fluid: false`; slug `2xl` becomes `--wp--preset--font-size--2-xl`.
 

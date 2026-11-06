@@ -25,7 +25,7 @@ blocked_by: []
 
 ## Description
 
-Review data ownership, schema and token contracts, rendering and API trust boundaries; resolve provisional ADRs with the owner. The contracts in [`docs/contracts`](../../../contracts/README.md) are proposed; no product implementation is claimed.
+Review data ownership, schema and token contracts, rendering and API trust boundaries; resolve provisional ADRs with the owner. The contracts in [`docs/contracts`](../../../contracts/README.md) are accepted design baselines after delegated review; no product implementation is claimed.
 
 ## Technical requirements
 
@@ -36,9 +36,9 @@ Review data ownership, schema and token contracts, rendering and API trust bound
 
 ## Acceptance criteria
 
-- [ ] Module ownership and data flow are unambiguous across architecture, ADRs, examples, and roadmap.
+- [x] Module ownership and data flow are unambiguous across architecture, ADRs, examples, and roadmap.
 - [x] Schema, token, renderer, and API boundaries have versioned examples and negative security cases.
-- [ ] Relevant ADRs have an evidence-backed status and owner decision; remaining questions have explicit follow-up owners.
+- [x] Relevant ADRs have an evidence-backed status and owner decision; remaining questions have explicit follow-up owners.
 - [ ] The reviewed PR is merged with architecture/security review notes and task metadata.
 
 ## Testing requirements
@@ -61,7 +61,7 @@ At commit `866eec1` on 2026-11-06:
 | Local fault: projection without entity-encoded brackets | `pass=315 fail=4`, as intended |
 | Local fault: `paragraph.html` restored in the renderer registry | 4 tests fail, as intended |
 
-Reviewer fault runs are in each [review note](../../../architecture/reviews/01-05-integration.md). The architecture and threat-model reviews are complete. Owner approval and the remaining gaps are recorded in that note.
+Reviewer fault runs are in each [review note](../../../architecture/reviews/01-05-integration.md). The architecture and threat-model reviews are complete. Delegated owner decisions and implementation gaps are recorded in that note. The design is accepted; the combined save-to-publish path, real deployment conditions, and the other 16 elements remain unproven.
 
 ## Tracking and completion
 
@@ -71,7 +71,7 @@ Reviewer fault runs are in each [review note](../../../architecture/reviews/01-0
 - **Commit references:** `866eec1` is the commit tested below.
 - **PR number and URL:** [#16](https://github.com/EmVeeNL/blixis-wordpress/pull/16).
 - **Started / completed / closed:** Started 2026-11-06; not completed.
-- **Status:** In Review. Criteria 1 and 3 need the owner's decisions in the [integration note](../../../architecture/reviews/01-05-integration.md); ownership is documented but still proposed. Criterion 4 needs review and merge. Follow [status workflow](../../../development/STATUS_WORKFLOW.md).
+- **Status:** In Review. Criteria 1–3 have accepted design evidence; criterion 4 still needs PR merge evidence. Follow [status workflow](../../../development/STATUS_WORKFLOW.md).
 
 ## Status history
 
@@ -81,3 +81,4 @@ Reviewer fault runs are in each [review note](../../../architecture/reviews/01-0
 | 2026-11-06 | Backlog → Ready | Dependency `01-04` was completed in PR [#12](https://github.com/EmVeeNL/blixis-wordpress/pull/12), merged as `4fa55e6668d01bc9e447f66e783dbf327dd34a97`; owner and acceptance criteria are recorded. |
 | 2026-11-06 | Ready → Busy | Branch `docs/01-05-architecture-contracts` created from `a88559c`; three independent reviews started |
 | 2026-11-06 | Busy → In Review | PR [#16](https://github.com/EmVeeNL/blixis-wordpress/pull/16), commit `866eec1`; results above. Owner decisions and review pending |
+| 2026-11-06 | In Review, decisions resolved | Delegated owner review accepted ADR-001–007 as design, left ADR-008 Proposed, resolved Q04–Q06 and Q10–Q11, required an external API-key pepper in production, and retained `documentId` as a non-authoritative v1 record. The 16 outcomes and limits are in the [integration note](../../../architecture/reviews/01-05-integration.md). |
