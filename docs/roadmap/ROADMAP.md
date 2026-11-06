@@ -14,4 +14,4 @@ The 46 planned tasks from the project pack are organized into nine phases. The s
 | [08 — Content API](phases/08-content-api/_index.md) | Secure published-content API | Backlog |
 | [09 — Future extensions](phases/09-future-extensions/_index.md) | Frontend editing, premium, reuse, collaboration | Backlog |
 
-The API may move earlier only after schema and security decisions are approved. Dates and budget are unassigned. The [repository migration record](phases/01-repository-foundation/03-restructure-repository.md) documents prior completed work; it is not a remaining phase gate.
+The API may move earlier only after schema and security decisions are approved. Dates and budget are unassigned. The [repository migration record](../development/history/R-01-restructure-repository.md) documents prior completed work outside the active phases; it is not a remaining phase gate.
