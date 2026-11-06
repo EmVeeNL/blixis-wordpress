@@ -1,3 +1,9 @@
-# Repository guidance
+# Repository instructions
 
-This repository contains Blixis-owned source. The running site is `../blixis`. Preserve its Core, uploads, configuration, database, and existing themes. Never run `docker compose down -v`, reset Git history, or copy secrets into this repository. Work on a task branch from `main`; do not commit or push without authorization. Verify WordPress and Compose behavior after local integration changes.
+Before a task, read the [README](README.md), [PRD](docs/architecture/PRD.md), [architecture](docs/architecture/ARCHITECTURE.md), [decisions](docs/architecture/DECISIONS.md), [security and performance](docs/security/SECURITY_AND_PERFORMANCE.md), and the relevant roadmap task. Check dependencies and current evidence.
+
+The source checkout is `~/Developer/WordPress/blixis-wordpress`; the running WordPress site is `~/Sites/blixis`. Preserve its Core, uploads, `wp-config.php`, `.env`, checkout, database, and existing themes. Never run `docker compose down -v`, rewrite Git history, or copy secrets into this repository. Use `BLIXIS_WP_PATH` when the runtime location differs. Work on a task branch from synchronized `main`; do not commit or push without authorization.
+
+Follow [Git workflow](docs/development/GIT.md) and the [status workflow](docs/development/STATUS_WORKFLOW.md). Update task frontmatter and history only with verifiable status, tests, PR, merge, and release evidence. Do not claim a feature, test, PR, or release exists without verification. Keep the parent theme neutral; site branding belongs in child themes. Use versioned schema, registry, and token contracts. Every endpoint needs capability checks, validation, and contextual escaping; never cache unauthorized drafts. Keep credentials, customer data, unlicensed assets, and production dumps out of Git.
+
+For code work, add focused tests; check semantic HTML, keyboard use, responsive behavior, reduced motion, PHP and TypeScript quality, and migration compatibility. For local integration changes, verify WordPress and Compose behavior. [Reusable task prompts](docs/development/PROMPTS.md) are guidance, not evidence of completed work.

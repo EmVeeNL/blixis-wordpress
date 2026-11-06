@@ -1,0 +1,17 @@
+# Blixis documentation
+
+## Product and architecture
+
+- [Product requirements](architecture/PRD.md) and [MVP scope](roadmap/MVP.md)
+- [Architecture](architecture/ARCHITECTURE.md), [decisions](architecture/DECISIONS.md), and [open questions](architecture/OPEN_QUESTIONS.md)
+- [Base and child themes](development/TEMPLATE.md), [editor](architecture/EDITOR.md), [element registry](architecture/ELEMENTS.md), and [20 planned element specifications](elements/)
+- [Content API proposal](architecture/API.md) and [security/performance](security/SECURITY_AND_PERFORMANCE.md)
+
+## Delivery and development
+
+- [Roadmap](roadmap/ROADMAP.md) with nine phases and 46 planned tasks; [task status workflow](development/STATUS_WORKFLOW.md)
+- [Local configuration and tokens](development/CONFIGURATION.md), [support matrix](development/SUPPORT_MATRIX.md), [migration record](development/MIGRATION.md)
+- [Git and CI](development/GIT.md), [contributing](../CONTRIBUTING.md), [agent instructions](../AGENTS.md), and [prompts](development/PROMPTS.md)
+- [Examples](examples/) are conceptual contracts; [assets](assets/) are concept visuals
+
+**Status labels matter:** `Implemented` describes code verified in this repository; `Planned` is in the roadmap; `Proposed` needs an architectural or product decision. No future feature is complete by virtue of being documented here.

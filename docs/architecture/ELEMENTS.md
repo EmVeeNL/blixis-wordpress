@@ -1,0 +1,7 @@
+# Element registry and configuration
+
+The 20 JSON files in [`docs/elements`](../elements/) are **planned specifications**, not production registry data. Each contains a type, version, distinct icon ID, defaults, allowed parents/children, responsive fields, token bindings, validation and rendering requirements, accessibility obligations, and test categories. `Column` is a structural child of `Columns`; both appear in the planned 20-type list.
+
+At implementation, create a typed manifest loader with schema validation and duplicate checks at build time. Require an explicit renderer and migration policy for every registered type. Register only known types, reject arbitrary HTML/script/style and unsafe URL schemes, and enforce nesting and depth on both editor operations and server save. The PHP renderer must escape each output context. Keep icon IDs stable and review icon/font licenses.
+
+Use [the example manifest](../examples/element-manifest.example.ts) as a concept only; its imports and types are not implemented. [The sample document](../examples/content-document.json) is a contract illustration, not a stored WordPress record. Task [05-01](../roadmap/phases/05-elements-responsive-workflow/01-element-registry.md) owns implementation and contract tests.
