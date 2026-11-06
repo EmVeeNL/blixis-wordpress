@@ -1,12 +1,12 @@
 # 01-03 — Restructure repository
 
-- **Status:** Busy
+- **Status:** Done
 - **Priority:** High
 - **Dependencies:** Existing WordPress installation and database backup
 - **Branch:** `chore/01-03-restructure-monorepo`
-- **Commit references:** None for this task
-- **PR number / URL / status:** None / None / Not opened
-- **Completion date:** Not complete
+- **Commit references:** `1006a5a` (squash merge)
+- **PR number / URL / status:** [#2](https://github.com/EmVeeNL/blixis-wordpress/pull/2) / Merged
+- **Completion date:** 2026-11-06
 
 ## Description and technical scope
 
