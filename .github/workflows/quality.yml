@@ -139,11 +139,13 @@ jobs:
         with:
           fetch-depth: 0
           persist-credentials: false
-      - name: Scan full Git history with gitleaks
+      # HEAD limits the scan to commits this pull request would bring into main, so a
+      # finding on another branch cannot fail unrelated pull requests.
+      - name: Scan this branch history with gitleaks
         run: >-
           docker run --rm --user "$(id -u):$(id -g)" -v "$PWD:/repo" -w /repo
           zricethezav/gitleaks:v8.30.1@sha256:c00b6bd0aeb3071cbcb79009cb16a60dd9e0a7c60e2be9ab65d25e6bc8abbb7f
-          git --redact --no-banner --verbose .
+          git --redact --no-banner --verbose --log-opts=HEAD .
 
   licenses:
     runs-on: ubuntu-24.04
