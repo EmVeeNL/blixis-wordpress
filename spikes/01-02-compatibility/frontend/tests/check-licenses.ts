@@ -3,7 +3,7 @@ import { readdirSync, readFileSync, existsSync } from "node:fs";
 import { join } from "node:path";
 
 const allowed = new Set([
-  "NOT-MIT",
+  "MIT",
   "ISC",
   "Apache-2.0",
   "BSD-2-Clause",
