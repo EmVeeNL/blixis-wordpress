@@ -1,4 +1,1 @@
-async function work(): Promise<void> {}
-export function run(): void {
-  work();
-}
+export   const n   = 1
