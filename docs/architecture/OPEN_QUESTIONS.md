@@ -4,7 +4,7 @@ These are decisions to confirm before the owning phase. Current defaults are ass
 
 | ID | Decision needed | Working assumption | Owner | Decision point |
 |---|---|---|---|---|
-| Q02 | Package manager | pnpm | Michael | 01-03: before workspaces are added |
+| Q02 | Package manager | pnpm 12.18.0, tested in task 01-03 | Michael | 01-03: owner review of its PR |
 | Q04 | Token configuration persistence | WordPress option plus export | Michael | 03-05: before persistence is built |
 | Q05 | Gutenberg coexistence | One owner per page | Michael | 04-01: before the editor is mounted |
 | Q06 | External review | Authenticated preview first | Michael | 05-05: before preview is built |

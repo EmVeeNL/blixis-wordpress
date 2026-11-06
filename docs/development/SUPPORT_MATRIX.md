@@ -10,7 +10,9 @@
 | Refused versions | WordPress 7.1.4 on PHP 8.1.34; WordPress 6.5.8 on PHP 8.2.35 | Theme and plugin correctly refuse to activate |
 | Database | MariaDB 11.4.13 | Pass; same major line as `compose.yaml` |
 | Node | 26.13.0, 24.22.2, 22.23.4 | Clean `npm ci` and build pass |
-| Failing Node | 20.20.0, 18.20.8 | Build exits 1; 20 cannot run the `.ts` check scripts (`ERR_UNKNOWN_FILE_EXTENSION`), 18 also reports `EBADENGINE` warnings |
+| Failing Node | 20.20.0, 18.20.8 | Build exits 1; 20 cannot run the `.ts` check scripts (`ERR_UNKNOWN_FILE_EXTENSION`), 18 reports `Cannot find native binding` |
+| Package manager | pnpm 12.18.0 (task 01-03) | Frozen install, build, type check, lint, format check, and browser tests pass; the Node results here were rerun with it. Node 26 has no Corepack, so install pnpm with npm or `npx` |
+| PHP tooling | PHP_CodeSniffer 3.13.6, WPCS 3.4.1 (task 01-03) | Passes on `plugins` and `themes`; rejects an unescaped `$_GET` echo. Spacing rules are off because `.editorconfig` sets 4-space PHP |
 | TypeScript | 7.0.2, strict mode, TSX | Type check passes and rejects a deliberate type error |
 | Oxlint and Oxfmt | Oxlint 1.92.0, `oxlint-tsgolint` 7.0.2006, Oxfmt 0.77.0 | Type-aware lint with type checking, format check, and build pass on the isolated spike |
 | Tailwind CSS | 4.3.5 with `@tailwindcss/cli` 4.3.5 | `@theme` utilities, custom breakpoint, `motion-reduce`, runtime `--blixis-*` value, and unused-class removal verified |
@@ -29,6 +31,7 @@
 | Node | 26 LTS for builds, pinned to 26.13.0 | Matches the one-line policy and the local toolchain; 24 and 22 also pass |
 | TypeScript | 7.0.x, TSX only | Owner preference; type checking and the isolated editor proof pass |
 | Lint and format | Oxlint with `oxlint-tsgolint`; Oxfmt | Owner choice on 2026-11-06; isolated spike passes. Add production checks in task 01-04 |
+| Package manager | pnpm 12.18.0, pending owner confirmation of Q02 | Tested in task 01-03 |
 | Tailwind CSS, `@dnd-kit/core`, React | 4.3.5, 6.3.1, 18.3.1 | Exact pins from this proof |
 | Browsers | Current Chrome, Firefox, Safari, Edge | Unchanged policy; real Safari and Edge must be run by task 06-04 |
 
@@ -58,4 +61,4 @@
 
 All 74 installed packages have recognized licenses after adding Oxc tools: MIT 61, Apache-2.0 6, 0BSD 2, ISC 2, MPL-2.0 2, BSD-3-Clause 1 ([list](../../spikes/01-02-compatibility/results/licenses.txt)). The MPL-2.0 packages are `lightningcss`, used only at build time. Tabler icons, used by the planned icon IDs, are MIT in `@tabler/icons-react` 3.50.0. No fonts are in the repository.
 
-Michael authorized GPL-2.0-or-later for project code and documentation and confirmed rights to publish both project images on 2026-11-06. See [LICENSE](../../LICENSE) and the [asset rights record](../assets/README.md). The images are outside the GPL grant. This package-metadata review does not replace an audit of every upstream asset.
+Michael authorized GPL-2.0-or-later for project code and documentation and confirmed rights to publish both project images on 2026-11-06. See [LICENSE](../../LICENSE) and the [asset rights record](../assets/README.md). The images are outside the GPL grant. Composer tools are development-only: MIT, BSD-3-Clause, and LGPL-3.0-or-later (`phpcsutils`, `phpcsextra`). This package-metadata review does not replace an audit of every upstream asset.

@@ -71,15 +71,37 @@ docker compose --env-file "$HOME/Sites/blixis/.env" -f compose.yaml ps
 
 Read [configuration](docs/development/CONFIGURATION.md) and the [migration record](docs/development/MIGRATION.md) before changing local infrastructure. Never put runtime credentials, uploads, or database dumps in this repository.
 
+## Install and build
+
+A fresh checkout needs Node 26.13.0 (see `.nvmrc`), pnpm 12.18.0, PHP 8.3 or newer, and Composer. No local secrets, WordPress site, or database are required.
+
+```bash
+npm install --global pnpm@12.18.0   # or prefix the pnpm commands with: npx pnpm@12.18.0
+pnpm install --frozen-lockfile
+pnpm build                          # also: pnpm typecheck, pnpm lint, pnpm format:check
+composer install
+composer lint                       # PHP_CodeSniffer on plugins and themes
+bash scripts/test-setup-links.sh    # tests the link script on a temporary fake site
+```
+
+`pnpm build` writes `dist/` and `dist-css/` in `spikes/01-02-compatibility/frontend`. `composer install` writes `vendor/`. All of these, and `node_modules/`, are ignored by Git and stay out of WordPress, because the site links only the theme and plugin directories.
+
+pnpm refuses other Node major versions. Package build scripts stay off unless listed in `pnpm-workspace.yaml`. The 01-02 spike is the only workspace package so far, because it is the only TypeScript source; product packages are added with their first real code.
+
+To undo a local install, delete `node_modules/`, `vendor/`, and those build folders. This does not affect the site, its database, or the links. CI does not run these commands yet; task `01-04` adds them.
+
 ## Repository map
 
 ```text
 themes/blixis-base/       Minimal parent block theme
 plugins/blixis-blocks/    Plugin entry point
-scripts/                  Safe local links and documentation validation
+scripts/                  Safe local links, their test, and documentation validation
+spikes/                   Feasibility evidence; not product code
 docs/                     Product, architecture, development, security, and roadmap
 .github/workflows/        Current PHP syntax and documentation checks
 compose.yaml              MariaDB service with a stable Compose project name
+package.json              pnpm workspace root; pnpm-workspace.yaml lists its packages
+composer.json             PHP quality tooling; phpcs.xml.dist holds its rules
 ```
 
 The `docs/elements/` JSON files and `docs/examples/` are **specifications and examples**, not production registry code. Future workspaces should be introduced with their first real consumers.

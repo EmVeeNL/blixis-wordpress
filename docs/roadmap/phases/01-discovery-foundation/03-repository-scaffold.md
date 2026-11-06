@@ -2,19 +2,19 @@
 id: "01-03"
 title: "Build the monorepo scaffold"
 phase: "01"
-status: Ready
+status: Busy
 priority: P0
 owner: "EmVeeNL"
 created_at: "2026-11-06"
 updated_at: "2026-11-06"
 depends_on: ["01-02"]
-branch: null
+branch: "chore/01-03-workspace-scaffold"
 pr_number: null
 pr_url: null
 commit_sha: null
 merged_at: null
 merge_commit_sha: null
-started_at: null
+started_at: "2026-11-06"
 completed_at: null
 closed_at: null
 blocked_reason: null
@@ -49,11 +49,11 @@ Use a clean checkout for install/build and script smoke tests. Verify `bash -n s
 
 - **Priority:** P0
 - **Dependencies:** `01-02`
-- **Branch:** Not created.
+- **Branch:** `chore/01-03-workspace-scaffold`
 - **Commit references:** None.
 - **PR number and URL:** None.
-- **Started / completed / closed:** Not recorded.
-- **Status:** Ready. Dependency `01-02` is Done; owner and criteria are recorded. Follow [status workflow](../../../development/STATUS_WORKFLOW.md).
+- **Started / completed / closed:** Started 2026-11-06; not completed or closed.
+- **Status:** Busy. Follow [status workflow](../../../development/STATUS_WORKFLOW.md).
 
 ## Status history
 
@@ -61,3 +61,4 @@ Use a clean checkout for install/build and script smoke tests. Verify `bash -n s
 |---|---|---|
 | 2026-11-06 | Initial planning → Backlog | Downloaded project plan; no implementation evidence |
 | 2026-11-06 | Backlog → Ready | Dependency `01-02` was completed in PR [#8](https://github.com/EmVeeNL/blixis-wordpress/pull/8), merged as `d155e91987e6ace6d57380796ed0ac66890c5573`; owner and acceptance criteria are recorded. Package manager choice Q02 is part of this task's implementation planning. |
+| 2026-11-06 | Ready → Busy | Branch `chore/01-03-workspace-scaffold` created; workspace and PHP tooling started |
