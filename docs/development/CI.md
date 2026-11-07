@@ -6,7 +6,7 @@ CI covers the code that exists today: the theme, the plugin, shell scripts, docu
 
 | Check | Workflow | What it runs | To fix a failure | Required on `main` |
 |---|---|---|---|---|
-| `docs` | PHP lint | `python3 scripts/check-docs.py` | Repair the reported link or task field | Yes |
+| `docs` | PHP lint | `python3 scripts/check-docs.py` and Base `theme.json` parity with the accepted generic-fonts contract | Repair the reported link, task field, or reviewed preset mapping | Yes |
 | `syntax` | PHP lint | `php -l` on theme and plugin PHP with the runner's PHP | Fix the reported parse error | Yes |
 | `php-lint (8.3)`, `(8.4)`, `(8.5)` | Quality | `composer validate`, `php -l` on all tracked PHP, `composer lint` | Follow the PHP_CodeSniffer report; `vendor/bin/phpcbf` fixes marked issues | Yes |
 | `typescript` | Quality | `pnpm typecheck`, `pnpm lint` (Oxlint, `oxlint-tsgolint`, warnings fail), `pnpm format:check` (Oxfmt) | The failed step names the tool; run the same command locally | Yes |
