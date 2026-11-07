@@ -63,7 +63,6 @@ Clean build, CSS snapshots, expected utility presence, and bundle size check. In
 | 2026-11-06 | Initial planning → Backlog | Downloaded project plan; no implementation evidence |
 | 2026-11-07 | Backlog → Ready | Dependency `02-01` completed in [PR #18](https://github.com/EmVeeNL/blixis-wordpress/pull/18), merge `b922e1b`; owner and build acceptance criteria are recorded. |
 | 2026-11-07 | Ready → Busy | Integration branch `feat/02-02-tailwind-pipeline` started from synchronized `origin/main` at `708a077`; three agents own separate worktrees and file sets. |
-
 | 2026-11-07 | Busy → In Review | [PR #20](https://github.com/EmVeeNL/blixis-wordpress/pull/20), implementation/review `2be30ac`; local evidence below, required CI pending. |
 
 ## Integration review and evidence
