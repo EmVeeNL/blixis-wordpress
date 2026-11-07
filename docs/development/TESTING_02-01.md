@@ -1,0 +1,41 @@
+# Task 02-01 theme integration tests
+
+Disposable harness for the [Blixis Base parent theme](../roadmap/phases/02-blixis-base-theme/01-parent-theme-scaffold.md). It is test evidence only; it does not mark the task Done.
+
+## Run
+
+```sh
+tests/02-01/run.sh                    # static checks, then the default matrix
+tests/02-01/run.sh --static-only      # host-only, no Docker
+tests/02-01/run.sh "7.1.4 8.4 pass"   # chosen combinations: "<wp> <php 8.2-8.5> <pass|reject>"
+```
+
+Requires Docker, `openssl`, and `php` on the host. Default matrix (about 2 minutes, downloads WordPress from wordpress.org):
+
+| WordPress | PHP | Expected |
+|---|---|---|
+| 7.1.4, 7.0.8 | 8.3, 8.5 | Plugin and theme activate; all checks pass |
+| 7.1.4 | 8.2 | Both refuse to activate (below the PHP floor) |
+| 6.9.11 | 8.3 | Both refuse to activate (below the WordPress floor) |
+
+Exit codes: `0` all passed, `1` product checks failed, `2` harness fault (Docker, download, install, or missing result marker). Output lines are `PASS`, `FAIL`, or `HARNESS`.
+
+## What is checked
+
+- **Static (host):** theme and plugin `Requires at least` is 7.0 and `Requires PHP` is 8.3; `php -l`; no output before `<?php`; `theme.json` parses, version 3, palette includes every slug in the [token contract golden](../contracts/tokens/v1/golden/default.theme.json), no unresolved or orphaned colour presets; a singular-capable template (`singular`, `single`, or `page`) prints `wp:post-content`; block markup is balanced; no inline script or style; no site branding.
+- **Fixture:** activation, block theme, no parent, palette in global settings, rendered published post and page (200, unique marker after the excerpt length, title, one `main`, one `h1`, `lang` and viewport, no PHP errors), anonymous requests never see draft content, front page, REST index and login still answer with the plugin active, and the debug log has no Blixis entries.
+
+## Safety
+
+Each run uses a random Compose project name (`blixis-0201-<hex>`), a tmpfs MariaDB, a random root password, no published ports, and no bind mounts (files stream in as a tar). The WordPress server listens only inside the runner container. Nothing reads `~/Sites/blixis`, its database, links, `.env`, or the `blixis` project, and the stack is removed on exit. WP-CLI image digests are copied from the 01-02 spike.
+
+## Review evidence and limitations
+
+- Independent integration review on 2026-11-07 ran the combined implementation through the default six combinations: all passed. Setup supports, the parent stylesheet handle/URL/version, and password-protected content are also checked.
+- A disposable copy with `post-content` removed failed both the static check and the rendered post/page marker checks, returning exit 1. The unmodified implementation passed. This harness runs in the existing required `wordpress-integration` CI job; infrastructure faults return exit 2, so either category fails CI.
+- Base uses system font stacks instead of the golden fixture's illustrative `Local Sans`; preset slugs and sizes remain aligned. No fonts are downloaded.
+- The existing token proof fixture was regenerated from Base. Both WordPress 7.1.4/PHP 8.4 and 7.0.8/PHP 8.5 pass all 615 checks. Its old-theme assertions now verify current presets and full-content rendering. A throwaway four-fault copy (missing Base content, leaked runtime token declaration, forced fluid off, wrong-child config applied) fails exactly those four controls. The 10 generator/parity tests also pass.
+- Refusal relies on WordPress's own header check in WP-CLI; it does not test the admin UI.
+- Only the PHP built-in server is covered, not Apache, nginx, or caches. No browser, accessibility, or visual checks; keyboard, reduced motion, and responsive behavior need separate tests.
+- The orphan check only flags a non-contract palette slug that nothing references, so a retained `background` slug that `theme.json` still uses will pass.
+- PHP 8.4 images are pinned but not in the default matrix.

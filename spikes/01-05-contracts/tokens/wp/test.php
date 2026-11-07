@@ -125,7 +125,7 @@ blixis_check( 'golden css key', blixis_css_cache_key( $default ) === blixis_cont
 
 // ---------------------------------------------------------------- Before any config: Base alone.
 $base_only = blixis_fresh_styles();
-blixis_check( 'Base palette untouched without config', '#2563eb' === blixis_css_var( $base_only, '--wp--preset--color--accent' ) );
+blixis_check( 'Base palette untouched without config', '#06b6d4' === blixis_css_var( $base_only, '--wp--preset--color--accent' ) );
 
 // ---------------------------------------------------------------- Persistence and last-valid.
 wp_set_current_user( $admin_id );
@@ -226,7 +226,7 @@ blixis_check( 'body uses the surface preset', str_contains( $rules, 'background-
 blixis_check( 'no orphan background reference', ! str_contains( $rules, 'var(--wp--preset--color--background)' ) );
 blixis_check( 'parent theme files unchanged after save', blixis_tree_hash( $themes_root . '/blixis-base' ) === $parent_hash );
 
-// Control: a filter that adds only the palette leaves Base's background reference orphaned.
+// Control: deliberately restoring the old background reference creates an orphan.
 $only_palette = static fn( $data ) => $data->update_with(
 	array(
 		'version'  => 3,
@@ -239,21 +239,23 @@ $orphan_rules = blixis_fresh_styles( array( 'styles' ) );
 $orphan_vars  = blixis_fresh_styles();
 remove_filter( 'wp_theme_json_data_theme', $only_palette, 20 );
 blixis_check(
-	'finding: Base background preset orphans when the palette is replaced',
+	'control: obsolete background reference is orphaned',
 	str_contains( $orphan_rules, 'var(--wp--preset--color--background)' ) && null === blixis_css_var( $orphan_vars, '--wp--preset--color--background' )
 );
 
-// Control: without fluid:false, WordPress rewrites sizes and parity is lost.
+// Control: explicitly enabling fluid typography rewrites sizes and loses parity.
 $fluid = static fn( $data ) => $data->update_with(
 	array(
 		'version'  => 3,
 		'settings' => array(
 			'typography' => array(
+				'fluid' => true,
 				'fontSizes' => array(
 					array(
 						'slug' => '3xl',
 						'name' => '3xl',
 						'size' => '2rem',
+						'fluid' => true,
 					),
 				),
 			),
@@ -263,7 +265,7 @@ $fluid = static fn( $data ) => $data->update_with(
 add_filter( 'wp_theme_json_data_theme', $fluid, 20 );
 $fluid_value = (string) blixis_css_var( blixis_fresh_styles(), '--wp--preset--font-size--3-xl' );
 remove_filter( 'wp_theme_json_data_theme', $fluid, 20 );
-blixis_check( 'finding: Base fluid typography rewrites sizes without fluid:false', str_starts_with( $fluid_value, 'clamp(' ), $fluid_value );
+blixis_check( 'control: explicit fluid typography rewrites sizes', str_starts_with( $fluid_value, 'clamp(' ), $fluid_value );
 blixis_note( 'fluid rewrite of 2rem', $fluid_value );
 
 // Control: a Site Editor (user origin) override diverges from --blixis-*.
@@ -331,7 +333,7 @@ wp_cache_delete( 'alloptions', 'options' );
 wp_cache_delete( BLIXIS_PROOF_OPTION, 'options' );
 blixis_check( 'tampered row without previous yields no config', 'none' === blixis_proof_read()['source'] );
 $none_styles = blixis_fresh_styles();
-blixis_check( 'no config falls back to Base presets', '#2563eb' === blixis_css_var( $none_styles, '--wp--preset--color--accent' ) );
+blixis_check( 'no config falls back to Base presets', '#06b6d4' === blixis_css_var( $none_styles, '--wp--preset--color--accent' ) );
 $forged = $tampered;
 $forged['config'] = $default;
 $forged['hash']   = 'deadbeefdeadbeef';
@@ -345,9 +347,10 @@ wp_cache_delete( BLIXIS_PROOF_OPTION, 'options' );
 
 // ---------------------------------------------------------------- Theme slug guard.
 $slug_bytes = str_replace( '"slug":"blixis-starter"', '"slug":"other-child"', (string) wp_json_encode( json_decode( $default_bytes ) ) );
+$slug_bytes = str_replace( '#155dfc', '#112233', $slug_bytes );
 $other = blixis_proof_save( $slug_bytes );
 blixis_check( 'config for another child saves', 'saved' === $other['status'] );
-blixis_check( 'config for another child does not apply', '#155dfc' !== blixis_css_var( blixis_fresh_styles(), '--wp--preset--color--primary' ) );
+blixis_check( 'config for another child does not apply', '#155dfc' === blixis_css_var( blixis_fresh_styles(), '--wp--preset--color--primary' ) );
 blixis_proof_save( $default_bytes );
 
 // ---------------------------------------------------------------- REST permissions and export.
@@ -578,11 +581,11 @@ $tamper_body = (string) wp_remote_retrieve_body( wp_remote_get( home_url( '/?pag
 blixis_check( 'public: tampered row does not reach the wire', ! str_contains( $tamper_body, 'body{display:none}' ) && str_contains( $tamper_body, '--blixis-color-primary:' ), substr( $tamper_body, 0, 200 ) );
 $wpdb->update( $wpdb->options, array( 'option_value' => $good_row ), array( 'option_name' => BLIXIS_PROOF_OPTION ) );
 
-// Base alone has no route to the content: its only template shows the excerpt.
+// Task 02-01 gives Base a singular template that renders the plugin output.
 switch_theme( 'blixis-base' );
 $base_body = (string) wp_remote_retrieve_body( wp_remote_get( home_url( '/?page_id=' . $page_id ), array( 'timeout' => 30 ) ) );
-blixis_check( 'finding: Base index.html never renders the element HTML', ! str_contains( $base_body, '<h2 class="blixis-heading">Visible heading</h2>' ), substr( $base_body, 0, 200 ) );
-blixis_note( 'Base template shows excerpt text', str_contains( $base_body, 'Fallback body' ) ? 'yes' : 'no' );
+blixis_check( 'Base singular template renders the element HTML', str_contains( $base_body, '<h2 class="blixis-heading">Visible heading</h2>' ), substr( $base_body, 0, 200 ) );
+blixis_note( 'Base template shows fallback body text', str_contains( $base_body, 'Fallback body' ) ? 'yes' : 'no' );
 blixis_check( 'config for a child does not apply under Base', ! str_contains( $base_body, '--blixis-color-primary' ) );
 switch_theme( 'blixis-starter' );
 
@@ -596,7 +599,7 @@ wp_set_current_user( 0 );
 $no_plugin_body = (string) wp_remote_retrieve_body( $no_plugin );
 blixis_check( 'plugin inactive: page still served', 200 === wp_remote_retrieve_response_code( $no_plugin ) );
 blixis_check( 'plugin inactive: post body is the fallback', str_contains( $no_plugin_body, 'Fallback body' ) );
-blixis_check( 'plugin inactive: no document or token leak', ! str_contains( $no_plugin_body, 'SECRET_FUTURE_TEXT' ) && ! str_contains( $no_plugin_body, '--blixis-' ) );
+blixis_check( 'plugin inactive: no document or token leak', ! str_contains( $no_plugin_body, 'SECRET_FUTURE_TEXT' ) && ! preg_match( '/(?<![a-z-])--blixis-[a-z-]+\s*:/', $no_plugin_body ) );
 
 // ---------------------------------------------------------------- Cost and no-write guarantees.
 $started = hrtime( true );

@@ -127,6 +127,8 @@ jobs:
         run: >-
           spikes/01-02-compatibility/wordpress/run-matrix.sh
           "7.1.4 8.3 pass" "7.0.8 8.5 pass" "7.1.4 8.1 reject"
+      - name: Verify parent theme rendering and supported version floors
+        run: bash tests/02-01/run.sh
       - name: Report results and fail on any unmet expectation
         if: ${{ !cancelled() }}
         run: python3 spikes/01-02-compatibility/results/show.py "$RUNNER_TEMP/wordpress-matrix.jsonl"
