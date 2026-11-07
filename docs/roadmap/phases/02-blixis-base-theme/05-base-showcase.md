@@ -2,11 +2,11 @@
 id: "02-05"
 title: "Create the Blixis showcase"
 phase: "02"
-status: Backlog
+status: Ready
 priority: P0
 owner: "EmVeeNL"
 created_at: "2026-11-06"
-updated_at: "2026-11-06"
+updated_at: "2026-11-07"
 depends_on: ["02-04"]
 branch: null
 pr_number: null
@@ -52,10 +52,11 @@ Responsive visual review and contrast checks at representative widths. Include n
 - **Commit references:** None.
 - **PR number and URL:** None.
 - **Started / completed / closed:** Not recorded.
-- **Status:** Backlog. Update frontmatter and history on every transition; follow [status workflow](../../../development/STATUS_WORKFLOW.md).
+- **Status:** Ready. Dependency 02-04 is merged; criteria and owner are recorded. Update frontmatter and history on every transition; follow [status workflow](../../../development/STATUS_WORKFLOW.md).
 
 ## Status history
 
 | Date | Transition | Evidence |
 |---|---|---|
 | 2026-11-06 | Initial planning → Backlog | Downloaded project plan; no implementation evidence |
+| 2026-11-07 | Backlog → Ready | Dependency 02-04 merged in [PR #24](https://github.com/EmVeeNL/blixis-wordpress/pull/24), commit `7e722a46`; showcase criteria and EmVeeNL ownership are defined. |
