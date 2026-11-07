@@ -2,7 +2,7 @@
 
 ## Status and system boundary
 
-**Implemented:** this repository contains a neutral `blixis-base` block theme with a singular template and compiled Tailwind utilities, a `blixis-blocks` plugin entry point with a pure theme.json projection for already validated configuration, a link script, and a MariaDB Compose definition. The active site is `~/Sites/blixis`; its Core, uploads, configuration, and database remain outside this source checkout. The Blixis theme and plugin are linked into that site but are inactive. No editor, live token validation/persistence, content renderer, or Content API exists yet.
+**Implemented:** this repository contains a neutral `blixis-base` block theme with semantic page, single, archive, search, and 404 templates and compiled Tailwind utilities, a `blixis-blocks` plugin entry point with a pure theme.json projection for already validated configuration, a link script, and a MariaDB Compose definition. The active site is `~/Sites/blixis`; its Core, uploads, configuration, and database remain outside this source checkout. The Blixis theme and plugin are linked into that site but are inactive. No editor, live token validation/persistence, content renderer, or Content API exists yet.
 
 **Planned architecture:** Blixis Base is a versioned parent theme. Site branding belongs in a child theme. Blixis Blocks owns the editor, element registry, versioned document, persistence, and rendering. A separately deployable Content API module exposes deliberately published content. WordPress owns posts, permissions, revisions, and publication state.
 

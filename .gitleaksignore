@@ -5,3 +5,8 @@
 # False positive: fixed, public login for the disposable 02-03 WordPress fixture only.
 # Historical only: HEAD generates a per-run random password for its isolated tmpfs stack.
 624d7d5bd1a6ad71b61d51330a09201808c9ed8d:tests/02-03/run-wp.sh:generic-api-key:29
+
+# False positive: public sentinel strings used to detect fixture-content disclosure.
+# The matched values are T0204-PRIVATE-BODY and T0204-PENDING-BODY, not credentials.
+# Actual disposable WordPress passwords are randomly generated for each run.
+e0dd3a1966115ce73ebbac17d133981d09f334e6:tests/02-04/browser.mjs:generic-api-key:12

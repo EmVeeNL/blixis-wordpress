@@ -1,0 +1,12 @@
+html lang=en-US dir=ltr
+title "Search Results for “\"><img src=x onerror=\"window.__t0204_xss=1\">” – Fixture Site"
+viewport width=device-width,initial-scale=1
+skip-link href=#wp--skip-link--target "Skip to content"
+header
+  nav "Primary" links=["Sample Page","Sample Page","Static Front"]
+main
+  h1 "Search results for: “\"><img src=x onerror=\"window.__t0204_xss=1\">”"
+  form search
+    input type=search label="Search"
+    button "Search"
+footer

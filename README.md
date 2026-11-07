@@ -24,7 +24,7 @@ The first release line is planned as **v1.0.x for single-site WordPress**. WordP
 
 | Area | Current state | Next step |
 |---|---|---|
-| Blixis Base | Neutral parent block theme with singular rendering and contract presets; inactive in the local site | Templates, runtime token mapping, and accessibility work |
+| Blixis Base | Neutral parent block theme with semantic templates, accessible navigation, and contract presets; inactive in the local site | Base showcase and live token configuration |
 | Blixis Blocks | Installable plugin entry point; no editor UI | Versioned registry, editor, persistence, and PHP rendering |
 | Child themes | Planned | Generator, validated token setup, and preview |
 | Content API | Proposed, not implemented | Approve access model and build read-only published-content routes |

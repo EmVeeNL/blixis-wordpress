@@ -1,0 +1,34 @@
+html lang=en-US dir=ltr
+title "Search Results for “Filler” – Fixture Site"
+viewport width=device-width,initial-scale=1
+skip-link href=#wp--skip-link--target "Skip to content"
+header
+  nav "Primary" links=["Sample Page","Sample Page","Static Front"]
+main
+  h1 "Search results for: “Filler”"
+  form search
+    input type=search label="Search"
+    button "Search"
+  ul items=10
+    article
+      h2 "Filler Post 12"
+    article
+      h2 "Filler Post 11"
+    article
+      h2 "Filler Post 10"
+    article
+      h2 "Filler Post 09"
+    article
+      h2 "Filler Post 08"
+    article
+      h2 "Filler Post 07"
+    article
+      h2 "Filler Post 06"
+    article
+      h2 "Filler Post 05"
+    article
+      h2 "Filler Post 04"
+    article
+      h2 "Filler Post 03"
+  nav "Pagination" links=["2","Next Page"]
+footer

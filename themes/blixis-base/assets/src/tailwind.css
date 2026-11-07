@@ -8,6 +8,37 @@
 @source "../../patterns";
 @source "./safelist.html";
 
+.wp-site-blocks header .wp-block-page-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--blixis-spacing-sm, 0.5rem);
+  list-style: none;
+  padding-inline-start: 0;
+}
+/* Neutral template safeguards, also loaded in the editor. */
+.wp-site-blocks {
+  padding-inline: var(--blixis-spacing-md, 1rem);
+  overflow-wrap: anywhere;
+}
+.wp-site-blocks > * + * {
+  margin-block-start: var(--blixis-spacing-lg, 2rem);
+}
+.wp-block-page-list a,
+.wp-block-post-terms a,
+.wp-block-navigation a,
+.wp-block-query-pagination a,
+.wp-block-query-pagination .page-numbers,
+.wp-block-post-navigation-link a {
+  display: inline-flex;
+  align-items: center;
+  min-block-size: 24px;
+  min-inline-size: 24px;
+}
+.wp-site-blocks :is(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+
 @theme {
   --*: initial;
   --breakpoint-sm: 40rem;
