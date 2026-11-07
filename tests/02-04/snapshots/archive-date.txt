@@ -1,0 +1,30 @@
+html lang=en-US dir=ltr
+title "January 2026 – Fixture Site"
+viewport width=device-width,initial-scale=1
+skip-link href=#wp--skip-link--target "Skip to content"
+header
+  nav "Primary" links=["Sample Page","Sample Page","Static Front"]
+main
+  h1 "Month: January 2026"
+  ul items=10
+    article
+    article
+      h2 "Tom & Jerry’s “Quotes” 日本語 😀"
+    article
+      h2 "UnbreakableUnbreakableUnbreakableUnbreakableUnbreakableUnbreakableUnbreakableUnbreakableUnbreakableUnbreakableUnbreakableUnbreakableUnbreakableUnbreakableUnbreakableUnbreakableUnbreakableUnbreakable"
+    article
+      h2 "Protected: T0204 Protected Post"
+    article
+      h2 "First Post"
+    article
+      h2 "Filler Post 12"
+    article
+      h2 "Filler Post 11"
+    article
+      h2 "Filler Post 10"
+    article
+      h2 "Filler Post 09"
+    article
+      h2 "Filler Post 08"
+  nav "Pagination" links=["2","Next Page"]
+footer

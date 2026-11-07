@@ -367,7 +367,7 @@ async function runCase(page, c, ctx, tag = '') {
   const onResponse = (r) => { if (r.status() >= 400 && r.request().resourceType() !== 'document' && !/favicon/.test(r.url())) bad.push(`${r.status()} ${r.url()}`); };
   page.on('console', onConsole); page.on('pageerror', onError); page.on('request', onRequest); page.on('response', onResponse);
 
-  const response = await page.goto(BASE + withQuery(c.url, ctx.query ?? ''), { waitUntil: 'load' });
+  const response = await go(page, BASE + withQuery(c.url, ctx.query ?? ''));
   const s = await page.evaluate(structureFn);
   await structureChecks(page, c, s, response, { locale: ctx.locale });
   if (ctx.locale) {
@@ -382,7 +382,7 @@ async function runCase(page, c, ctx, tag = '') {
   // Responsive: no horizontal overflow at 320 (reflow), 768, 1280.
   for (const width of WIDTHS) {
     await page.setViewportSize({ width, height: 800 });
-    await page.goto(BASE + withQuery(c.url, ctx.query ?? ''), { waitUntil: 'load' });
+    await go(page, BASE + withQuery(c.url, ctx.query ?? ''));
     const o = await page.evaluate(overflowFn);
     check(`no horizontal overflow at ${width}px`, o.scrollWidth <= o.clientWidth, `scrollWidth ${o.scrollWidth} > ${o.clientWidth}; ${o.offenders.join('; ')}`);
     if (width === 320 || width === 1280) {

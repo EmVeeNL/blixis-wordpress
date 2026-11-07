@@ -1,0 +1,13 @@
+html lang=en-US dir=ltr
+title "T0204 Protected Post – Fixture Site"
+viewport width=device-width,initial-scale=1
+skip-link href=#wp--skip-link--target "Skip to content"
+header
+  nav "Primary" links=["Sample Page","Sample Page","Static Front"]
+main
+  article
+    h1 "Protected: T0204 Protected Post"
+    form password
+      input type=password label="Password:"
+      input type=submit label=""
+footer

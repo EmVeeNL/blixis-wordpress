@@ -1,0 +1,10 @@
+html lang=en-US dir=ltr
+title "Fixture Site – A disposable test site"
+viewport width=device-width,initial-scale=1
+skip-link href=#wp--skip-link--target "Skip to content"
+header
+  nav "Primary" links=["Sample Page","Sample Page","Static Front"]
+main
+  article
+    h1 "Static Front"
+footer

@@ -1,0 +1,33 @@
+html lang=en-US dir=ltr
+title "Search Results for “” – Fixture Site"
+viewport width=device-width,initial-scale=1
+skip-link href=#wp--skip-link--target "Skip to content"
+header
+  nav "Primary" links=["Sample Page","Sample Page","Static Front"]
+main
+  h1 "Search results for: “”"
+  form search
+    input type=search label="Search"
+    button "Search"
+  ul items=10
+    article
+      h2 "Hello world!"
+    article
+      h2 "Sample Page"
+    article
+      h2 "Protected: T0204 Protected Post"
+    article
+      h2 "Sample Page"
+    article
+      h2 "Static Front"
+    article
+      h2 "UnbreakableUnbreakableUnbreakableUnbreakableUnbreakableUnbreakableUnbreakableUnbreakableUnbreakableUnbreakableUnbreakableUnbreakableUnbreakableUnbreakableUnbreakableUnbreakableUnbreakableUnbreakable"
+    article
+      h2 "Tom & Jerry’s “Quotes” 日本語 😀"
+    article
+    article
+      h2 "First Post"
+    article
+      h2 "Filler Post 12"
+  nav "Pagination" links=["2","3","Next Page"]
+footer

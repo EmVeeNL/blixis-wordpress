@@ -17,7 +17,7 @@ Needs Docker, `openssl`, `curl`, Node 26 and `pnpm install --frozen-lockfile` (f
 
 ## What runs
 
-**Static (`static.mjs`, in the CI `build` job).** Every template has balanced block markup, exactly one `<main>`, exactly one h1 source, exactly one `header` part (`tagName` header) and one `footer` part (`tagName` footer). Parts contain no `<main>` or h1; each navigation block has an `ariaLabel`; the header has navigation; templates cover index, archive, search, 404 and a page/single (or singular) route. No script, inline style, PHP, `wp:html` in templates. PHP translation calls use the `blixis-base` text domain. `static.test.mjs` proves each rule can fail (ten mutation controls).
+**Static (`static.mjs`, in the CI `build` job).** Every template has balanced block markup, exactly one `<main>`, exactly one h1 source, exactly one `header` part (`tagName` header) and one `footer` part (`tagName` footer). Parts contain no `<main>` or h1; each navigation block has an `ariaLabel`; the header has navigation; templates cover index, archive, search, 404 and a page/single (or singular) route. No script, inline style, PHP, `wp:html` in templates. PHP translation calls use the `blixis-base` text domain. `static.test.mjs` proves each rule can fail (11 mutation controls).
 
 **Rendered (`run.sh` + `browser.mjs`).** A disposable WordPress (random Compose project, tmpfs database, no published ports, no bind mounts, random passwords, never `~/Sites/blixis`) is seeded with fixed content. Per route, in a reduced-motion browser:
 
@@ -38,13 +38,11 @@ The axe-core tarball is downloaded at test time, checked against a pinned SHA-51
 
 ## Integration expectations
 
-Tests are written for the combined 02-04 implementation. On the branch at `da65932` (Base with only `index` and `singular`) they must fail: no header/footer parts, no search or 404 template. After the template and `theme.json` branches are merged:
+The integrated theme uses one header and footer wrapper per template, paragraph-level site titles in the parts, inherited WordPress queries, and translated 404/no-result patterns. WordPress 7 provides the skip link for the main landmark. Navigation wraps inline at narrow widths, so it needs no overlay toggle or modal focus management. Core owns navigation fallback, publication visibility, escaping, and password protection.
 
-1. `node tests/02-04/static.mjs` passes.
-2. `tests/02-04/run.sh "7.1.4 8.3"` fails only with `semantic snapshot exists`.
-3. Review the rendered outlines in the `--out` directory, then run `tests/02-04/run.sh --update-snapshots "7.1.4 8.3"`, inspect the diff, and commit the snapshots with the templates.
-4. Run the default two-version matrix and `--browsers chromium,firefox`; outlines must be identical across versions.
-5. Expected template contract: header and footer parts with slugs `header` and `footer`; `nav` blocks with `ariaLabel`; a search form (`wp:search`) in the search and 404 templates; the 404 and empty-search templates explain the result in `main`.
+To update a legitimate structural change, run `tests/02-04/run.sh --update-snapshots "7.1.4 8.3"`, inspect the rendered outlines and screenshots, and commit the reviewed snapshots. CI checks both browsers and supported WordPress endpoints against these baselines.
+
+Theme strings use the `blixis-base` text domain; translated catalogs can be supplied in `languages`. The locale tests validate real Core translations and RTL layout; they do not claim bundled theme translation catalogs.
 
 ## Safety and limits
 

@@ -38,13 +38,15 @@ export function checkTheme(theme) {
   if (!has(templates, 'page') && !has(templates, 'singular')) fail('no template can render a page');
   for (const name of ['header', 'footer']) if (!has(parts, name)) fail(`parts/${name}.html is missing`);
 
+  const expandPatterns = (markup) => markup.replace(/<!--\s*wp:pattern\s+\{[^}]*"slug":"[^"/]+\/([a-z0-9-]+)"[^}]*\}\s*\/-->/g, (whole, slug) => {
+      const pattern = join(theme, 'patterns', `${slug}.php`);
+      return existsSync(pattern) ? read(pattern).replace(/<\?php[\s\S]*?\?>/g, '') : whole;
+    });
+
   const templateFiles = list(templates, '.html');
   for (const file of templateFiles) {
     // Patterns referenced from a template count as part of it (h1 and main checks see their markup).
-    const markup = read(join(templates, file)).replace(/<!--\s*wp:pattern\s+\{[^}]*"slug":"[^"/]+\/([a-z0-9-]+)"[^}]*\}\s*\/-->/g, (whole, slug) => {
-      const pattern = join(theme, 'patterns', `${slug}.php`);
-      return existsSync(pattern) ? read(pattern).replace(/^<\?php[\s\S]*?\?>\s*/, '') : whole;
-    });
+    const markup = expandPatterns(read(join(templates, file)));
     const label = `templates/${file}`;
     if (!balanced(markup)) fail(`${label}: block comments are unbalanced`);
     if (count(markup, /<main[\s>]/g) !== 1) fail(`${label}: needs exactly one <main> (found ${count(markup, /<main[\s>]/g)})`);
@@ -61,7 +63,7 @@ export function checkTheme(theme) {
   }
   // Only a template may own <main>; parts must not, and the header/footer parts keep semantic tags.
   for (const file of list(parts, '.html')) {
-    const markup = read(join(parts, file));
+    const markup = expandPatterns(read(join(parts, file)));
     const label = `parts/${file}`;
     if (!balanced(markup)) fail(`${label}: block comments are unbalanced`);
     if (/<main[\s>]/.test(markup)) fail(`${label}: a part must not contain <main>`);
@@ -79,7 +81,7 @@ export function checkTheme(theme) {
       fail(`parts/${slug}.html: contains <${slug}> but templates already reference it with tagName ${slug} (nested landmark)`);
     }
   }
-  if (has(parts, 'header') && !/wp:navigation\b|wp:page-list\b/.test(read(join(parts, 'header.html')))) fail('parts/header.html: no navigation block');
+  if (has(parts, 'header') && !/wp:navigation\b|wp:page-list\b/.test(expandPatterns(read(join(parts, 'header.html'))))) fail('parts/header.html: no navigation block');
 
   // Translations: PHP strings use the Base text domain; none dynamic.
   for (const file of list(theme, '.php').filter((f) => !f.includes('node_modules'))) {

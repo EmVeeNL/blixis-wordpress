@@ -1,0 +1,23 @@
+html lang=en-US dir=ltr
+title "Fixtures – Page 2 – Fixture Site"
+viewport width=device-width,initial-scale=1
+skip-link href=#wp--skip-link--target "Skip to content"
+header
+  nav "Primary" links=["Sample Page","Sample Page","Static Front"]
+main
+  h1 "Category: Fixtures"
+  ul items=6
+    article
+      h2 "Filler Post 06"
+    article
+      h2 "Filler Post 05"
+    article
+      h2 "Filler Post 04"
+    article
+      h2 "Filler Post 03"
+    article
+      h2 "Filler Post 02"
+    article
+      h2 "Filler Post 01"
+  nav "Pagination" links=["Previous Page","1"]
+footer
