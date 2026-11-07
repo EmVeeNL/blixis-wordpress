@@ -161,6 +161,30 @@ jobs:
           path: ${{ runner.temp }}/t0204
           retention-days: 7
 
+  # Optional showcase child theme with Base as parent, in real WordPress plus Chromium and Firefox.
+  # Fails with an explicit message until a child theme exists in themes/.
+  showcase:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/setup-pnpm
+      - name: Run showcase static checks and their negative controls
+        run: |
+          node --test tests/02-05/static.test.mjs
+          node tests/02-05/static.mjs
+      - name: Run child theme, accessibility, contrast and responsive tests in a throwaway stack
+        run: bash tests/02-05/run.sh --browsers chromium,firefox --out "$RUNNER_TEMP/t0205"
+      - name: Keep screenshots, contrast and axe reports
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: showcase-0205
+          path: ${{ runner.temp }}/t0205
+          retention-days: 7
+
   contracts:
     runs-on: ubuntu-24.04
     timeout-minutes: 15
