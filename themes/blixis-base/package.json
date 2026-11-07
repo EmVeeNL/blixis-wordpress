@@ -1,0 +1,17 @@
+{
+  "name": "blixis-base-theme",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Blixis Base parent theme asset pipeline. Compiled CSS is committed; WordPress hosts need no Node.",
+  "license": "GPL-2.0-or-later",
+  "type": "module",
+  "scripts": {
+    "clean": "rm -f assets/build/tailwind.css",
+    "build:css": "tailwindcss --input assets/src/tailwind.css --output assets/build/tailwind.css --minify",
+    "build": "pnpm run clean && pnpm run build:css"
+  },
+  "devDependencies": {
+    "@tailwindcss/cli": "4.3.5",
+    "tailwindcss": "4.3.5"
+  }
+}

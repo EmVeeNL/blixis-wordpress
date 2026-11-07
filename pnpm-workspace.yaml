@@ -3,6 +3,7 @@
 packages:
   - spikes/01-02-compatibility/frontend
   - spikes/01-05-contracts
+  - themes/blixis-base
 
 engineStrict: true
 

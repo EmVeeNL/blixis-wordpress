@@ -1,0 +1,46 @@
+/* Blixis Base utilities. Source of truth for names: docs/contracts/tokens/v1/golden/tailwind.css.
+   Utilities only: no preflight, no layer, no dynamic scanning of stored content. */
+@import "tailwindcss/utilities.css" source(none);
+
+/* Known template sources and the approved static safelist only. */
+@source "../../templates";
+@source "../../parts";
+@source "../../patterns";
+@source "./safelist.html";
+
+@theme {
+  --*: initial;
+  --breakpoint-sm: 40rem;
+  --breakpoint-md: 48rem;
+  --breakpoint-lg: 64rem;
+  --breakpoint-xl: 80rem;
+}
+
+@theme inline {
+  --color-primary: var(--blixis-color-primary);
+  --color-surface: var(--blixis-color-surface);
+  --color-foreground: var(--blixis-color-foreground);
+  --color-muted: var(--blixis-color-muted);
+  --color-accent: var(--blixis-color-accent);
+  --font-body: var(--blixis-font-body);
+  --font-heading: var(--blixis-font-heading);
+  --font-mono: var(--blixis-font-mono);
+  --text-xs: var(--blixis-text-xs);
+  --text-sm: var(--blixis-text-sm);
+  --text-base: var(--blixis-text-base);
+  --text-lg: var(--blixis-text-lg);
+  --text-xl: var(--blixis-text-xl);
+  --text-2xl: var(--blixis-text-2xl);
+  --text-3xl: var(--blixis-text-3xl);
+  --spacing-xs: var(--blixis-spacing-xs);
+  --spacing-sm: var(--blixis-spacing-sm);
+  --spacing-md: var(--blixis-spacing-md);
+  --spacing-lg: var(--blixis-spacing-lg);
+  --spacing-xl: var(--blixis-spacing-xl);
+  --radius-sm: var(--blixis-radius-sm);
+  --radius-md: var(--blixis-radius-md);
+  --radius-lg: var(--blixis-radius-lg);
+  --shadow-sm: var(--blixis-shadow-sm);
+  --shadow-md: var(--blixis-shadow-md);
+  --shadow-lg: var(--blixis-shadow-lg);
+}
