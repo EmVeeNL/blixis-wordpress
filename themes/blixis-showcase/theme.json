@@ -1,0 +1,48 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/theme.json",
+  "version": 3,
+  "settings": {
+    "color": {
+      "defaultPalette": false,
+      "palette": [
+        { "color": "#164c3a", "name": "Forest", "slug": "primary" },
+        { "color": "#d5ef57", "name": "Citrus", "slug": "accent" },
+        { "color": "#f6f7f2", "name": "Paper", "slug": "surface" },
+        { "color": "#18251f", "name": "Ink", "slug": "foreground" },
+        { "color": "#526258", "name": "Moss", "slug": "muted" }
+      ]
+    },
+    "typography": {
+      "defaultFontSizes": false,
+      "fontFamilies": [
+        { "fontFamily": "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif", "name": "System", "slug": "body" },
+        { "fontFamily": "Georgia, 'Times New Roman', serif", "name": "Editorial", "slug": "heading" }
+      ],
+      "fontSizes": [
+        { "fluid": false, "name": "Small", "size": "0.875rem", "slug": "small" },
+        { "fluid": false, "name": "Base", "size": "1rem", "slug": "base" },
+        { "fluid": false, "name": "Large", "size": "1.25rem", "slug": "large" },
+        { "fluid": false, "name": "Display", "size": "clamp(2.75rem, 6vw, 6rem)", "slug": "display" }
+      ]
+    }
+  },
+  "styles": {
+    "color": {
+      "background": "var:preset|color|surface",
+      "text": "var:preset|color|foreground"
+    },
+    "typography": {
+      "fontFamily": "var:preset|font-family|body",
+      "lineHeight": "1.6"
+    },
+    "elements": {
+      "heading": {
+        "typography": {
+          "fontFamily": "var:preset|font-family|heading",
+          "fontWeight": "500",
+          "lineHeight": "1.15"
+        }
+      }
+    }
+  }
+}
