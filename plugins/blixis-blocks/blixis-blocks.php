@@ -16,4 +16,6 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
+require_once __DIR__ . '/inc/tokens/theme-json.php';
+
 // Editor features are introduced with their implementation; see docs/architecture/EDITOR.md.

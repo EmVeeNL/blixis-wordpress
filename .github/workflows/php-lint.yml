@@ -22,6 +22,8 @@ jobs:
           persist-credentials: false
       - name: Check documentation links and roadmap metadata
         run: python3 scripts/check-docs.py
+      - name: Check neutral Base theme.json contract parity
+        run: python3 scripts/check-base-theme-json.py
   syntax:
     runs-on: ubuntu-24.04
     steps:
