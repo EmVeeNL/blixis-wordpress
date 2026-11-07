@@ -10,7 +10,7 @@ CI covers the code that exists today: the theme, the plugin, shell scripts, docu
 | `syntax` | PHP lint | `php -l` on theme and plugin PHP with the runner's PHP | Fix the reported parse error | Yes |
 | `php-lint (8.3)`, `(8.4)`, `(8.5)` | Quality | `composer validate`, `php -l` on all tracked PHP, `composer lint` | Follow the PHP_CodeSniffer report; `vendor/bin/phpcbf` fixes marked issues | Yes |
 | `typescript` | Quality | `pnpm typecheck`, `pnpm lint` (Oxlint, `oxlint-tsgolint`, warnings fail), `pnpm format:check` (Oxfmt) | The failed step names the tool; run the same command locally | Yes |
-| `build` | Quality | `pnpm build`, including Tailwind output assertions | Run `pnpm build` and read the first failure | Yes |
+| `build` | Quality | `pnpm build`, then verify the committed Base Tailwind CSS, expected utilities, bundle size, and source-map policy | Run `pnpm build` and `node tests/02-02/check.mjs`; commit a reviewed output change with its source | Yes |
 | `browser-tests` | Quality | Spike drag and drop tests on Playwright's Chromium, Firefox, and WebKit | See the [spike](../../spikes/01-02-compatibility/README.md) for local commands | Yes |
 | `scripts` | Quality | `bash -n`, ShellCheck, `scripts/test-setup-links.sh`, Compose configuration, JSON parsing, actionlint | The failed step names the tool | Yes |
 | `wordpress-integration` | Quality | Theme and plugin activation, singular rendering, version-floor refusal plus REST, revision, and preview smoke tests in throwaway stacks | Read the report step; failed checks are listed by name | Yes |
