@@ -13,12 +13,12 @@ Template: blixis-base
 */
 
 :root {
-	--showcase-ink: #18251f;
-	--showcase-paper: #f6f7f2;
-	--showcase-green: #164c3a;
-	--showcase-lime: #d5ef57;
-	--showcase-line: #d6ddd4;
-	--showcase-muted: #526258;
+	--showcase-ink: #111827;
+	--showcase-paper: #ffffff;
+	--showcase-blue: #0645f5;
+	--showcase-cyan: #08c7dc;
+	--showcase-line: #dce3f0;
+	--showcase-muted: #465675;
 	--showcase-radius: 1.25rem;
 }
 
@@ -29,18 +29,19 @@ body {
 }
 
 a {
-	color: var(--showcase-green);
+	color: var(--showcase-blue);
 	text-underline-offset: 0.2em;
 }
 
 a:hover {
-	color: #0b3024;
+	color: #0030bd;
 }
 
 :focus-visible {
-	outline: 3px solid #bdcb25;
+	outline: 3px solid var(--showcase-blue);
 	outline-offset: 4px;
 	border-radius: 0.2rem;
+	box-shadow: 0 0 0 2px #fff, 0 0 0 5px var(--showcase-blue);
 }
 
 .blixis-showcase-hero {
@@ -53,8 +54,8 @@ a:hover {
 	margin-inline: auto;
 	padding: clamp(3rem, 8vw, 7.5rem) clamp(1.25rem, 5vw, 5rem);
 	border-radius: 0 0 var(--showcase-radius) var(--showcase-radius);
-	background: var(--showcase-green);
-	color: #fff;
+	background: linear-gradient(115deg, #fff 18%, #f2fbff 60%, #f7f3ff);
+	color: var(--showcase-ink);
 	overflow: hidden;
 }
 
@@ -64,9 +65,9 @@ a:hover {
 	bottom: -11rem;
 	width: 27rem;
 	height: 27rem;
-	border: 1px solid rgb(255 255 255 / 22%);
+	border: 1px solid rgb(6 69 245 / 14%);
 	border-radius: 50%;
-	box-shadow: 0 0 0 3rem rgb(255 255 255 / 5%), 0 0 0 6rem rgb(255 255 255 / 4%);
+	box-shadow: 0 0 0 3rem rgb(6 69 245 / 4%), 0 0 0 6rem rgb(8 199 220 / 5%);
 	content: "";
 	pointer-events: none;
 }
@@ -88,7 +89,7 @@ a:hover {
 
 .blixis-showcase-hero p {
 	max-width: 38rem;
-	color: #e0ebe4;
+	color: #465675;
 	font-size: clamp(1.05rem, 1.5vw, 1.25rem);
 	line-height: 1.65;
 }
@@ -99,26 +100,26 @@ a:hover {
 	min-height: 3rem;
 	margin-top: 1rem;
 	padding: 0.75rem 1.25rem;
-	border: 2px solid var(--showcase-lime);
+	border: 2px solid var(--showcase-blue);
 	border-radius: 999px;
-	background: var(--showcase-lime);
-	color: var(--showcase-ink);
+	background: var(--showcase-blue);
+	color: #fff;
 	font-weight: 700;
 	text-decoration: none;
 }
 
 .blixis-showcase-hero a:hover {
-	background: transparent;
-	color: #fff;
+	background: #fff;
+	color: #0030bd;
 }
 
 .blixis-showcase-hero > :last-child {
 	position: relative;
 	min-height: 20rem;
-	border: 1px solid rgb(255 255 255 / 25%);
+	border: 1px solid #c8ddff;
 	border-radius: 48% 48% 1.25rem 1.25rem;
-	background: linear-gradient(145deg, #b7d6a9 0%, #7da58a 45%, #315f4d 100%);
-	box-shadow: inset 0 0 0 0.65rem rgb(255 255 255 / 12%);
+	background: linear-gradient(145deg, #d8fbff 0%, #73ddf2 44%, #4256ed 76%, #a75cff 100%);
+	box-shadow: inset 0 0 0 0.65rem rgb(255 255 255 / 45%), 0 1rem 3rem rgb(43 99 230 / 16%);
 }
 
 .blixis-showcase-hero > :last-child::before,
@@ -128,7 +129,7 @@ a:hover {
 	width: 55%;
 	height: 68%;
 	border-radius: 60% 60% 0 0;
-	background: linear-gradient(160deg, #a7c78d, #426d4d 75%);
+	background: linear-gradient(160deg, #f1ffff, #0bc7df 75%);
 	content: "";
 }
 
@@ -139,7 +140,7 @@ a:hover {
 
 .blixis-showcase-hero > :last-child::after {
 	right: 0;
-	background: linear-gradient(150deg, #d5e6ae, #6e9669 75%);
+	background: linear-gradient(150deg, #e4f2ff, #4552f4 75%);
 	clip-path: polygon(0 28%, 55% 0, 100% 25%, 100% 100%, 0 100%);
 }
 
@@ -159,7 +160,7 @@ a:hover {
 	border: 1px solid var(--showcase-line);
 	border-radius: var(--showcase-radius);
 	background: #fff;
-	box-shadow: 0 0.75rem 2rem rgb(24 37 31 / 5%);
+	box-shadow: 0 0.75rem 2rem rgb(25 48 105 / 5%);
 }
 
 .blixis-showcase-card h2,
@@ -215,6 +216,6 @@ a:hover {
 
 	.blixis-showcase-card:hover {
 		transform: translateY(-0.2rem);
-		box-shadow: 0 1rem 2rem rgb(24 37 31 / 10%);
+		box-shadow: 0 1rem 2rem rgb(25 48 105 / 10%);
 	}
 }

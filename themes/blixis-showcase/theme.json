@@ -5,11 +5,11 @@
     "color": {
       "defaultPalette": false,
       "palette": [
-        { "color": "#164c3a", "name": "Forest", "slug": "primary" },
-        { "color": "#d5ef57", "name": "Citrus", "slug": "accent" },
-        { "color": "#f6f7f2", "name": "Paper", "slug": "surface" },
-        { "color": "#18251f", "name": "Ink", "slug": "foreground" },
-        { "color": "#526258", "name": "Moss", "slug": "muted" }
+        { "color": "#0645f5", "name": "Blixis Blue", "slug": "primary" },
+        { "color": "#08c7dc", "name": "Cyan", "slug": "accent" },
+        { "color": "#ffffff", "name": "White", "slug": "surface" },
+        { "color": "#111827", "name": "Ink", "slug": "foreground" },
+        { "color": "#465675", "name": "Slate", "slug": "muted" }
       ]
     },
     "typography": {
