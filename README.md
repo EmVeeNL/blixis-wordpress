@@ -24,7 +24,7 @@ The first release line is planned as **v1.0.x for single-site WordPress**. WordP
 
 | Area | Current state | Next step |
 |---|---|---|
-| Blixis Base | Neutral parent block theme with singular rendering and contract presets; inactive in the local site | Templates, token mapping, Tailwind build, and accessibility work |
+| Blixis Base | Neutral parent block theme with singular rendering and contract presets; inactive in the local site | Templates, runtime token mapping, and accessibility work |
 | Blixis Blocks | Installable plugin entry point; no editor UI | Versioned registry, editor, persistence, and PHP rendering |
 | Child themes | Planned | Generator, validated token setup, and preview |
 | Content API | Proposed, not implemented | Approve access model and build read-only published-content routes |
@@ -84,9 +84,9 @@ composer lint                       # PHP_CodeSniffer on plugins and themes
 bash scripts/test-setup-links.sh    # tests the link script on a temporary fake site
 ```
 
-`pnpm build` writes `dist/` and `dist-css/` in `spikes/01-02-compatibility/frontend`. `composer install` writes `vendor/`. All of these, and `node_modules/`, are ignored by Git and stay out of WordPress, because the site links only the theme and plugin directories.
+`pnpm build` writes the committed `themes/blixis-base/assets/build/tailwind.css` and ignored spike `dist/` and `dist-css/` folders. Commit reviewed theme CSS changes with their sources; production WordPress hosts need no Node. `composer install` writes ignored `vendor/`; dependencies and spike build output stay outside the linked theme and plugin directories.
 
-pnpm refuses other Node major versions. Package build scripts stay off unless listed in `pnpm-workspace.yaml`. The 01-02 spike is the only workspace package so far, because it is the only TypeScript source; product packages are added with their first real code.
+pnpm refuses other Node major versions. Package build scripts stay off unless listed in `pnpm-workspace.yaml`. The workspace includes the compatibility and contract proofs plus the Base theme CSS package.
 
 To undo a local install, delete `node_modules/`, `vendor/`, and those build folders. This does not affect the site, its database, or the links. CI runs these commands; see [CI checks](docs/development/CI.md).
 
@@ -95,7 +95,7 @@ For parallel Claude and Codex work, use separate [Git worktrees](docs/developmen
 ## Repository map
 
 ```text
-themes/blixis-base/       Minimal parent block theme
+themes/blixis-base/       Parent block theme and committed Tailwind CSS
 plugins/blixis-blocks/    Plugin entry point
 scripts/                  Safe local links, their test, and documentation validation
 spikes/                   Feasibility evidence; not product code

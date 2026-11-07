@@ -26,8 +26,10 @@ function setup(): void {
 
 	// Editor parity is limited to the compiled utilities. Token-driven editor
 	// styles belong to task 02-03. A missing build is reported on the front end.
-	if ( null !== get_tailwind_asset() ) {
-		add_editor_style( TAILWIND_ASSET );
+	$tailwind = get_tailwind_asset();
+	if ( null !== $tailwind ) {
+		// Absolute parent URL prevents a child file from shadowing the build.
+		add_editor_style( $tailwind['url'] );
 	}
 }
 add_action( 'after_setup_theme', __NAMESPACE__ . '\setup' );
