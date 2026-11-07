@@ -3,5 +3,5 @@
 5f02e210f97ddfc350ab6c09d296e89bf8f0262f:wp-content/themes/twentytwentyfive/patterns/page-cv-bio.php:linkedin-client-secret:47
 
 # False positive: fixed, public login for the disposable 02-03 WordPress fixture only.
-# Random Compose project, tmpfs database, no host ports; browser.mjs uses the same test value.
+# Historical only: HEAD generates a per-run random password for its isolated tmpfs stack.
 624d7d5bd1a6ad71b61d51330a09201808c9ed8d:tests/02-03/run-wp.sh:generic-api-key:29

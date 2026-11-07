@@ -27,10 +27,13 @@ services:
     environment:
       T0203_DB_ROOT_PASSWORD: "${T0203_DB_ROOT_PASSWORD:?run through run.sh}"
       WP_CLI_CACHE_DIR: /tmp/wp-cli-cache
+      T0203_ADMIN_PASSWORD: "${T0203_ADMIN_PASSWORD:?run through run.sh}"
 
   browser:
     image: "${T0203_BROWSER_IMAGE:-mcr.microsoft.com/playwright:v1.65.0-noble@sha256:6e3fb709361521eb27161606e6da6d2674e5e89fa16516cb37d6fdd91372273d}"
     profiles: ["browser"]
+    environment:
+      T0203_ADMIN_PASSWORD: "${T0203_ADMIN_PASSWORD:?run through run.sh}"
     command: ["sleep", "infinity"]
     # Same namespace as the runner: WordPress is reachable as http://127.0.0.1:8080
     # inside the project only.

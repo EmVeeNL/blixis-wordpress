@@ -38,8 +38,9 @@ cli_image() {
 }
 
 T0203_DB_ROOT_PASSWORD="$(openssl rand -hex 24)"
+T0203_ADMIN_PASSWORD="$(openssl rand -hex 24)"
 COMPOSE_PROJECT_NAME="blixis-0203-$(openssl rand -hex 4)"
-export T0203_DB_ROOT_PASSWORD COMPOSE_PROJECT_NAME
+export T0203_DB_ROOT_PASSWORD T0203_ADMIN_PASSWORD COMPOSE_PROJECT_NAME
 cleanup() { docker compose --profile browser down --remove-orphans >/dev/null 2>&1 || true; }
 trap cleanup EXIT
 

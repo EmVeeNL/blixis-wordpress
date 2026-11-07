@@ -62,7 +62,7 @@ check('frontend swatch width is the configured content width (42rem=672px)', fro
 // ---- Editor.
 await page.goto(`${BASE}/wp-login.php`);
 await page.fill('#user_login', 'fixture_admin');
-await page.fill('#user_pass', 'fixture-pass-0203');
+await page.fill('#user_pass', process.env.T0203_ADMIN_PASSWORD);
 await Promise.all([page.waitForURL(/wp-admin/), page.click('#wp-submit')]);
 await page.goto(`${BASE}/wp-admin/post.php?post=${PAGE_ID}&action=edit`, { waitUntil: 'load' });
 let frame = null;

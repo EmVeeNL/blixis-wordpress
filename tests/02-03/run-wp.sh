@@ -26,7 +26,7 @@ wp config create --dbname="$DB" --dbuser=root --dbpass="$T0203_DB_ROOT_PASSWORD"
 wp config set WP_DEBUG true --raw --quiet >/dev/null 2>&1
 wp config set WP_DEBUG_LOG /tmp/debug.log --quiet >/dev/null 2>&1
 wp config set WP_DEBUG_DISPLAY false --raw --quiet >/dev/null 2>&1
-wp core install --url=http://127.0.0.1:8080 --title=Fixture --admin_user=fixture_admin --admin_password=fixture-pass-0203 --admin_email=admin@example.test --skip-email --quiet >/dev/null 2>&1 || fault "core install failed" # gitleaks:allow -- public disposable fixture login, never a real credential
+wp core install --url=http://127.0.0.1:8080 --title=Fixture --admin_user=fixture_admin --admin_password="$T0203_ADMIN_PASSWORD" --admin_email=admin@example.test --skip-email --quiet >/dev/null 2>&1 || fault "core install failed"
 
 cp -R /tmp/t/blixis-base wp-content/themes/blixis-base
 cp -R /tmp/t/blixis-blocks wp-content/plugins/blixis-blocks
