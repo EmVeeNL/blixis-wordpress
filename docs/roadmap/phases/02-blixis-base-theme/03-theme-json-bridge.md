@@ -2,19 +2,19 @@
 id: "02-03"
 title: "Bridge design tokens to theme.json"
 phase: "02"
-status: Ready
+status: Busy
 priority: P0
 owner: "EmVeeNL"
 created_at: "2026-11-06"
 updated_at: "2026-11-07"
 depends_on: ["02-02"]
-branch: null
+branch: "feat/02-03-theme-json-bridge"
 pr_number: null
 pr_url: null
 commit_sha: null
 merged_at: null
 merge_commit_sha: null
-started_at: null
+started_at: "2026-11-07"
 completed_at: null
 closed_at: null
 blocked_reason: null
@@ -48,11 +48,11 @@ Validate generated theme.json and compare editor and frontend screenshots. Inclu
 
 - **Priority:** P0
 - **Dependencies:** `02-02`
-- **Branch:** Not created.
+- **Branch:** `feat/02-03-theme-json-bridge`.
 - **Commit references:** None.
 - **PR number and URL:** None.
-- **Started / completed / closed:** Not recorded.
-- **Status:** Ready. Dependency 02-02 merged in PR #20; owner and acceptance criteria are recorded. Update frontmatter and history on every transition; follow [status workflow](../../../development/STATUS_WORKFLOW.md).
+- **Started / completed / closed:** Started 2026-11-07; completion and closure not recorded.
+- **Status:** Busy. Worktrees are implementing the pure mapping, WordPress proof, and precedence documentation. Follow [status workflow](../../../development/STATUS_WORKFLOW.md).
 
 ## Status history
 
@@ -60,3 +60,4 @@ Validate generated theme.json and compare editor and frontend screenshots. Inclu
 |---|---|---|
 | 2026-11-06 | Initial planning → Backlog | Downloaded project plan; no implementation evidence |
 | 2026-11-07 | Backlog → Ready | Dependency `02-02` completed in [PR #20](https://github.com/EmVeeNL/blixis-wordpress/pull/20), merge `e5ec048`; owner and token-bridge scope are recorded. |
+| 2026-11-07 | Ready → Busy | Integration branch `feat/02-03-theme-json-bridge` started from synchronized `origin/main` at `a6e5022`; isolated worktrees own the mapping, WordPress proof, and documentation. |

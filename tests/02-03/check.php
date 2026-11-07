@@ -146,6 +146,21 @@ foreach (glob("$contract/valid/*.json") ?: [] as $path) {
     }
 }
 
+// Inline deployment contract must stay synchronized with the accepted contract.
+$inline = \Blixis\Blocks\Tokens\theme_json_contract();
+foreach (['font', 'length', 'shadow', 'duration', 'easing'] as $kind) {
+    $check("inline grammar matches contract: $kind", $inline['patterns'][$kind] === '/' . $map['grammars'][$kind] . '/D');
+}
+$check('inline slug grammar matches contract', $inline['slug'] === '/' . $map['grammars']['slug'] . '/D');
+foreach (['generics' => 'fontGenerics', 'fallbacks' => 'fontFallbacks', 'breakpoints' => 'breakpointPreset'] as $key => $source) {
+    $check("inline $key matches contract", $inline[$key] === $map[$source]);
+}
+foreach ($map['sections'] as $section) {
+    if (empty($section['buildOnly'])) {
+        $check('inline token names match contract: ' . $section['section'], $inline['sections'][$section['section']] === array_keys($section['tokens']));
+    }
+}
+
 // ------------------------------------------------------------------ Theme fixtures.
 $themes_root = get_theme_root();
 $child_dir = "$themes_root/blixis-starter";
@@ -332,15 +347,6 @@ $leaf_strings = static function ($v) use (&$leaf_strings): array {
     }
     return $out;
 };
-$refusal_exempt = static function (array $errors): bool {
-    // Fields the generator never emits: an extra or unknown key, the theme block, breakpoints.
-    foreach ($errors as $e) {
-        if (!str_starts_with($e['code'], 'token.breakpoint.') && $e['code'] !== 'field.unknown') {
-            return false;
-        }
-    }
-    return true;
-};
 set_error_handler(static function (int $no, string $msg): bool {
     throw new ErrorException($msg, 0, $no);
 });
@@ -362,8 +368,7 @@ foreach (glob("$contract/invalid/*.json") ?: [] as $path) {
     } catch (Throwable $e) {
         $outcome = 'refused';
     }
-    $must_refuse = !$refusal_exempt($expected[$name]['errors'] ?? []);
-    $check("refuses invalid $name", $outcome === 'refused' || !$must_refuse && !str_starts_with($outcome, 'php-diagnostic'), $outcome);
+    $check("refuses invalid $name", $outcome === 'refused' && (is_array($input) ? $out === [] : true), $outcome);
     if (is_array($out)) {
         $leak = [];
         foreach ($leaf_strings($out) as $s) {

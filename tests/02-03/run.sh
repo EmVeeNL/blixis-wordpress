@@ -54,6 +54,15 @@ cp -R "$repo/themes/blixis-base" "$stage/blixis-base"
 cp -R "$plugin_dir" "$stage/blixis-blocks"
 send() { COPYFILE_DISABLE=1 tar -cf - -C "$stage" .; }
 
+if [[ $browser -eq 1 ]]; then
+  mkdir -p "$stage/node_modules"
+  for package in playwright playwright-core; do
+    source_dir="$repo/node_modules/.pnpm/$package@1.65.0/node_modules/$package"
+    if [[ ! -d "$source_dir" ]]; then echo "HARNESS FAULT: run pnpm install --frozen-lockfile before --browser"; exit 2; fi
+    cp -R "$source_dir" "$stage/node_modules/$package"
+  done
+fi
+
 product_fail=0
 harness_fault=0
 first=1
@@ -82,7 +91,7 @@ for combo in "${COMBOS[@]}"; do
     else
       # Seed content in the same site, then drive Chromium.
       docker compose exec -T runner sh -c 'cd /tmp/wp && wp eval-file /tmp/t/seed.php' 2>&1 | grep -E '^(NOTE|HARNESS) ' || true
-      docker compose exec -T browser sh -c 'mkdir -p /work && cd /work && tar -xf - && (test -d node_modules/playwright || npm install --no-audit --no-fund --silent playwright@1.64.1 >/dev/null 2>&1)' < <(COPYFILE_DISABLE=1 tar -cf - -C "$stage" browser.mjs)
+      docker compose exec -T browser sh -c 'mkdir -p /work && cd /work && tar -xf -' < <(COPYFILE_DISABLE=1 tar -cf - -C "$stage" browser.mjs node_modules)
       bres="$(docker compose exec -T browser sh -c 'cd /work && node browser.mjs' 2>&1)"
       brc=$?
       printf '%s\n' "$bres" | grep -E '^(PASS|FAIL|NOTE|HARNESS) ' || true
