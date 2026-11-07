@@ -33,14 +33,27 @@ const CHILD_SINGULAR = `<!-- wp:group {"tagName":"main","layout":{"type":"constr
 `;
 
 // Base is the real repository theme, so a change to it shows up in the WordPress proof.
-export function buildThemes(): Record<string, string> {
+export function buildThemes(
+  source = join(REPO_ROOT, "themes/blixis-base"),
+): Record<string, string> {
   const out: Record<string, string> = {};
-  const source = join(REPO_ROOT, "themes/blixis-base");
-  for (const name of readdirSync(source, { recursive: true, encoding: "utf8" }).sort()) {
-    if (name.includes(".")) {
-      out[`blixis-base/${name}`] = readFileSync(join(source, name), "utf8");
+  const collect = (directory: string): void => {
+    for (const entry of readdirSync(directory, { withFileTypes: true }).sort((a, b) =>
+      a.name.localeCompare(b.name),
+    )) {
+      // Workspace installs are not theme source and contain symlinks/binaries.
+      if (entry.name === "node_modules") continue;
+      const path = join(directory, entry.name);
+      if (entry.isDirectory()) collect(path);
+      else if (entry.isFile()) {
+        out[`blixis-base/${relative(source, path).split("\\").join("/")}`] = readFileSync(
+          path,
+          "utf8",
+        );
+      }
     }
-  }
+  };
+  collect(source);
   out["blixis-starter/style.css"] = CHILD_STYLE;
   out["blixis-starter/templates/singular.html"] = CHILD_SINGULAR;
   return out;

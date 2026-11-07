@@ -1,7 +1,8 @@
 // Determinism, byte parity with the PHP generator, and config/CSS/theme.json token parity.
 import assert from "node:assert/strict";
 import { Buffer } from "node:buffer";
-import { readFileSync } from "node:fs";
+import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
 import { BUNDLE_PATH, THEMES_PATH, buildBundle, buildThemes } from "../src/bundle.ts";
@@ -50,6 +51,21 @@ const phpRows = runPhp<Row[]>(
 void test("the PHP bundles match docs/contracts/tokens/v1 and themes/blixis-base byte for byte", () => {
   assert.deepEqual(JSON.parse(readFileSync(BUNDLE_PATH, "utf8")), buildBundle());
   assert.deepEqual(JSON.parse(readFileSync(THEMES_PATH, "utf8")), buildThemes());
+});
+
+void test("theme bundles include dotted asset directories but exclude installed dependencies", () => {
+  const fixture = mkdtempSync(join(tmpdir(), "blixis-theme-bundle-"));
+  try {
+    mkdirSync(join(fixture, "assets.v1"));
+    mkdirSync(join(fixture, "node_modules", ".bin"), { recursive: true });
+    writeFileSync(join(fixture, "assets.v1", "style.css"), ".fixture{}");
+    writeFileSync(join(fixture, "node_modules", ".bin", "compiler"), "dependency");
+    const bundle = buildThemes(fixture);
+    assert.equal(bundle["blixis-base/assets.v1/style.css"], ".fixture{}");
+    assert.ok(!Object.keys(bundle).some((name) => name.includes("node_modules")));
+  } finally {
+    rmSync(fixture, { recursive: true, force: true });
+  }
 });
 
 void test("CSS is byte-identical across TypeScript and PHP for every valid fixture", () => {
