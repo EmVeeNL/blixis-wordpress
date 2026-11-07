@@ -23,5 +23,11 @@ function setup(): void {
 	add_theme_support( 'responsive-embeds' );
 	add_theme_support( 'editor-styles' );
 	add_editor_style( 'style.css' );
+
+	// Editor parity is limited to the compiled utilities. Token-driven editor
+	// styles belong to task 02-03. A missing build is reported on the front end.
+	if ( null !== get_tailwind_asset() ) {
+		add_editor_style( TAILWIND_ASSET );
+	}
 }
 add_action( 'after_setup_theme', __NAMESPACE__ . '\setup' );
