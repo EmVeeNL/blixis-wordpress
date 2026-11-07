@@ -7,7 +7,7 @@ The 47 planned tasks are organized into nine phases, including Multisite support
 | Phase | Purpose | Status |
 |---|---|---|
 | [01 — Discovery and foundation](phases/01-discovery-foundation/_index.md) | Requirements, compatibility, tooling, contracts | Done |
-| [02 — Base theme](phases/02-blixis-base-theme/_index.md) | Theme scaffold Done; Tailwind build Ready | Busy |
+| [02 — Base theme](phases/02-blixis-base-theme/_index.md) | Theme scaffold Done; Tailwind build In Review | Busy |
 | [03 — Child theme and wizard](phases/03-child-theme-setup-wizard/_index.md) | Child theme, tokens, fonts, preview | Backlog |
 | [04 — Editor core](phases/04-editor-core/_index.md) | Shell, state, canvas, inspector | Backlog |
 | [05 — Elements and workflow](phases/05-elements-responsive-workflow/_index.md) | Registry, free elements, persistence, review | Backlog |

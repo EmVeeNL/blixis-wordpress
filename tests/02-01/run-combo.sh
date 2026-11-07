@@ -57,7 +57,8 @@ i=0; until wget -q -O /dev/null http://127.0.0.1:8080/ || [ $i -ge 30 ]; do i=$(
 export T0201_EXPECT_THEME_RC="$THEME_RC" T0201_EXPECT_PLUGIN_RC="$PLUGIN_RC" T0201_PHP="$PHPV" T0201_WP="$WP_VERSION"
 wp eval-file /tmp/t/check.php >/tmp/check.out 2>/tmp/check.err
 RC=$?
-kill "$SERVER" 2>/dev/null
 grep -E '^(PASS|FAIL) ' /tmp/check.out
 [ "$RC" -eq 0 ] || fault "check.php exited $RC: $(head -c 400 /tmp/check.err)"
+sh /tmp/t/run-assets.sh || fault "02-02 asset harness failed"
+kill "$SERVER" 2>/dev/null
 echo "DONE $WP_VERSION"

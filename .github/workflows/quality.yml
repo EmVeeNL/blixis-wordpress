@@ -67,6 +67,8 @@ jobs:
       - uses: ./.github/actions/setup-pnpm
       - name: Build workspace packages
         run: pnpm build
+      - name: Verify committed production CSS and utility policy
+        run: node tests/02-02/check.mjs
 
   browser-tests:
     runs-on: ubuntu-24.04
