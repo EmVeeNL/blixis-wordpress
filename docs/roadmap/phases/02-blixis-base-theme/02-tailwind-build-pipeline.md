@@ -2,11 +2,11 @@
 id: "02-02"
 title: "Build the Tailwind CSS v4 pipeline"
 phase: "02"
-status: Backlog
+status: Ready
 priority: P0
 owner: "EmVeeNL"
 created_at: "2026-11-06"
-updated_at: "2026-11-06"
+updated_at: "2026-11-07"
 depends_on: ["02-01"]
 branch: null
 pr_number: null
@@ -52,10 +52,11 @@ Clean build, CSS snapshots, expected utility presence, and bundle size check. In
 - **Commit references:** None.
 - **PR number and URL:** None.
 - **Started / completed / closed:** Not recorded.
-- **Status:** Backlog. Update frontmatter and history on every transition; follow [status workflow](../../../development/STATUS_WORKFLOW.md).
+- **Status:** Ready. Dependency 02-01 merged in PR #18; owner and build criteria are recorded. Update frontmatter and history on every transition; follow [status workflow](../../../development/STATUS_WORKFLOW.md).
 
 ## Status history
 
 | Date | Transition | Evidence |
 |---|---|---|
 | 2026-11-06 | Initial planning → Backlog | Downloaded project plan; no implementation evidence |
+| 2026-11-07 | Backlog → Ready | Dependency `02-01` completed in [PR #18](https://github.com/EmVeeNL/blixis-wordpress/pull/18), merge `b922e1b`; owner and build acceptance criteria are recorded. |
