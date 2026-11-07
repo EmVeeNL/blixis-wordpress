@@ -2,16 +2,16 @@
 id: "02-02"
 title: "Build the Tailwind CSS v4 pipeline"
 phase: "02"
-status: Busy
+status: In Review
 priority: P0
 owner: "EmVeeNL"
 created_at: "2026-11-06"
 updated_at: "2026-11-07"
 depends_on: ["02-01"]
 branch: "feat/02-02-tailwind-pipeline"
-pr_number: null
-pr_url: null
-commit_sha: null
+pr_number: 20
+pr_url: "https://github.com/EmVeeNL/blixis-wordpress/pull/20"
+commit_sha: "2be30ac"
 merged_at: null
 merge_commit_sha: null
 started_at: "2026-11-07"
@@ -51,10 +51,10 @@ Clean build, CSS snapshots, expected utility presence, and bundle size check. In
 - **Priority:** P0
 - **Dependencies:** `02-01`
 - **Branch:** `feat/02-02-tailwind-pipeline`.
-- **Commit references:** None.
-- **PR number and URL:** None.
+- **Commit references:** `598596d`, `6b77285`, `f3d6166`, `2be30ac`.
+- **PR number and URL:** [#20](https://github.com/EmVeeNL/blixis-wordpress/pull/20).
 - **Started / completed / closed:** Started 2026-11-07; completion and closure not recorded.
-- **Status:** Busy. Three isolated implementation commits were integrated and independently reviewed; local validation passed and a PR is being prepared. Follow [status workflow](../../../development/STATUS_WORKFLOW.md).
+- **Status:** In Review. Three isolated implementation commits were integrated and independently reviewed; local validation passed and PR #20 is open for required CI checks. Follow [status workflow](../../../development/STATUS_WORKFLOW.md).
 
 ## Status history
 
@@ -63,6 +63,8 @@ Clean build, CSS snapshots, expected utility presence, and bundle size check. In
 | 2026-11-06 | Initial planning → Backlog | Downloaded project plan; no implementation evidence |
 | 2026-11-07 | Backlog → Ready | Dependency `02-01` completed in [PR #18](https://github.com/EmVeeNL/blixis-wordpress/pull/18), merge `b922e1b`; owner and build acceptance criteria are recorded. |
 | 2026-11-07 | Ready → Busy | Integration branch `feat/02-02-tailwind-pipeline` started from synchronized `origin/main` at `708a077`; three agents own separate worktrees and file sets. |
+
+| 2026-11-07 | Busy → In Review | [PR #20](https://github.com/EmVeeNL/blixis-wordpress/pull/20), implementation/review `2be30ac`; local evidence below, required CI pending. |
 
 ## Integration review and evidence
 

@@ -1,11 +1,11 @@
 # 02 Blixis Base Theme
 
-**Status:** Busy. Task 02-01 is Done after [PR #18](https://github.com/EmVeeNL/blixis-wordpress/pull/18); 02-02 is Busy and the remaining tasks are Backlog.
+**Status:** Busy. Task 02-01 is Done after [PR #18](https://github.com/EmVeeNL/blixis-wordpress/pull/18); 02-02 is In Review and the remaining tasks are Backlog.
 
 | ID | Task | Status | Priority |
 |---|---|---|---|
 | [02-01](01-parent-theme-scaffold.md) | Build the Blixis Base parent theme | Done | P0 |
-| [02-02](02-tailwind-build-pipeline.md) | Build the Tailwind CSS v4 pipeline | Busy | P0 |
+| [02-02](02-tailwind-build-pipeline.md) | Build the Tailwind CSS v4 pipeline | In Review | P0 |
 | [02-03](03-theme-json-bridge.md) | Bridge design tokens to theme.json | Backlog | P0 |
 | [02-04](04-semantic-templates.md) | Create semantic WordPress templates | Backlog | P0 |
 | [02-05](05-base-showcase.md) | Create the Blixis showcase | Backlog | P0 |
