@@ -8,6 +8,8 @@ const BASE = 'http://127.0.0.1:8080';
 const PAGE_ID = 4242;
 const SWATCHES = ['primary', 'surface', 'foreground', 'muted', 'accent'];
 let fails = 0;
+let editorReport = null;
+let screenshotResults = null;
 const check = (name, ok, detail = '') => {
   if (!ok) fails++;
   console.log(`${ok ? 'PASS' : 'FAIL'} [browser] ${name}${!ok && detail ? ' -- ' + String(detail).slice(0, 300) : ''}`);
@@ -80,6 +82,7 @@ if (frame) {
   check('every seeded block is valid in the editor (no recovery prompt)', valid);
   const body = await frame.evaluateHandle(() => document.body);
   const editor = await frame.evaluate(probe, body);
+  editorReport = editor;
   await frame.locator('.t0203-primary').scrollIntoViewIfNeeded();
   await page.locator('iframe[name="editor-canvas"]').screenshot({ path: 'shots/editor-canvas.png' });
   await page.screenshot({ path: 'shots/editor-full.png' });
@@ -129,6 +132,7 @@ if (frame) {
   for (const s of SWATCHES) editorShots[s] = await frame.locator('.t0203-' + s).first().screenshot({ path: `shots/editor-swatch-${s}.png` });
   const pairs = SWATCHES.map((s) => [frontShots[s].toString('base64'), editorShots[s].toString('base64')]);
   const results = await decode(pairs);
+  screenshotResults = results;
   SWATCHES.forEach((s, i) => check(`swatch screenshot ${s}: frontend == editor pixel-for-pixel`, results[i].diff === 0, JSON.stringify(results[i])));
   // Control: the comparison must detect a difference between two different tokens.
   const control = await decode([[frontShots.primary.toString('base64'), frontShots.accent.toString('base64')]]);
@@ -137,6 +141,6 @@ if (frame) {
 const relevant = consoleErrors.filter((e) => !/favicon|Failed to load resource.*(404|403)|Gutenberg.*deprecat/i.test(e));
 note('console errors (filtered)', relevant.length ? relevant.join(' | ') : 'none');
 note('console errors (all)', consoleErrors.length);
-writeFileSync('shots/report.json', JSON.stringify({ front, consoleErrors }, null, 2));
+writeFileSync('shots/report.json', JSON.stringify({ front, editor: editorReport, screenshotResults, consoleErrors, fails }, null, 2));
 await browser.close();
 process.exit(fails === 0 ? 0 : 1);

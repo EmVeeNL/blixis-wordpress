@@ -49,7 +49,8 @@ trap 'rm -rf "$stage"; cleanup' EXIT
 mkdir -p "$stage/contract"
 cp -R check.php seed.php run-wp.sh browser.mjs fixtures "$stage/"
 for f in valid invalid golden token-map.json; do cp -R "$repo/docs/contracts/tokens/v1/$f" "$stage/contract/"; done
-cp -R "$repo/themes/blixis-base" "$stage/blixis-base"
+mkdir -p "$stage/blixis-base"
+COPYFILE_DISABLE=1 tar --exclude=node_modules -cf - -C "$repo/themes/blixis-base" . | tar -xf - -C "$stage/blixis-base"
 cp -R "$plugin_dir" "$stage/blixis-blocks"
 send() { COPYFILE_DISABLE=1 tar -cf - -C "$stage" .; }
 

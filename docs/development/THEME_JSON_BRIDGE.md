@@ -19,3 +19,19 @@ Blixis policy makes the validated configuration the future token source, not Sit
 ## Verification and rollback
 
 The parity check compares Base defaults with the contract fixture. The disposable WordPress proof tests generated data against golden fixtures and observes editor and frontend global styles, child inheritance, and invalid-input refusal. The task record distinguishes any screenshot evidence from server-side parity checks. No database migration is part of 02-03. Reverting the bridge code leaves Base's shipped `theme.json` as the fallback; a later token-contract change needs versioned fixtures and a migration decision.
+
+## Reproduce the proof
+
+Run `bash tests/02-03/run.sh` for disposable WordPress 7.1.4/PHP 8.3 and WordPress 7.0.8/PHP 8.5 stacks. This runs in the existing required `wordpress-integration` CI check. The 310 assertions per stack include every normalized valid fixture, strict refusal of every invalid array fixture, both golden projections, inline grammar/name drift checks, WordPress schema retention, actual HTTP global styles, child inheritance, and hostile CSS inputs. Non-array inputs are refused by PHP's array parameter type. The projection assumes the validator's canonical `theme` and breakpoint key order; it is not the raw JSON validator.
+
+For the separate Chromium proof, install the workspace with the pinned Node/pnpm versions and `pnpm install --frozen-lockfile`, then run:
+
+```bash
+bash tests/02-03/run.sh --browser --out /tmp/blixis-0203-shots
+```
+
+The browser container uses the same digest-pinned Playwright 1.65.0 image as CI and copies the two Playwright packages from the frozen workspace install; it does not install packages over the network. WordPress installation still requires wordpress.org. The harness uses a random Compose project, a tmpfs database, no host ports, and no runtime bind mounts. It never accesses the shared local site.
+
+The screenshot comparison covers five opaque token-color swatches in the editor and frontend. It hides editor-only empty-group chrome and excludes the outermost pixel rows where fractional positioning blends neighboring blocks. Full frontend, editor, and canvas screenshots are captured for inspection; they are not asserted equal. Computed-style checks additionally compare typography, button colors, selected token variables, and content width. This does not establish full-page visual parity, accessibility of a future token editor, or cross-browser visual parity. No new product UI, persistence permission surface, or public script is introduced here.
+
+A deliberately changed `defaultPalette: true` in a temporary copy of the production plugin fails both golden assertions and exits 1. This verifies that the WordPress proof detects a projection regression rather than merely reporting successful setup. Site Editor user-origin precedence is observed, not fixed: it can still override the primary token. Phase 03-05 must enforce the accepted token ownership policy.
