@@ -2,7 +2,7 @@
 id: "02-03"
 title: "Bridge design tokens to theme.json"
 phase: "02"
-status: In Review
+status: Done
 priority: P0
 owner: "EmVeeNL"
 created_at: "2026-11-06"
@@ -11,11 +11,11 @@ depends_on: ["02-02"]
 branch: "feat/02-03-theme-json-bridge"
 pr_number: 22
 pr_url: "https://github.com/EmVeeNL/blixis-wordpress/pull/22"
-commit_sha: "5c2128c"
-merged_at: null
-merge_commit_sha: null
+commit_sha: "126725c039ed91ac439276c87dbdb3a2b3ba877d"
+merged_at: "2026-11-07"
+merge_commit_sha: "da659327335024c8370b81511a91efcbb51f6677"
 started_at: "2026-11-07"
-completed_at: null
+completed_at: "2026-11-07"
 closed_at: null
 blocked_reason: null
 blocked_by: []
@@ -38,7 +38,7 @@ Map validated colors, typography, and layout tokens to WordPress theme.json; doc
 - [x] The described capability works in the intended WordPress and browser environments.
 - [x] Relevant security, accessibility, and performance requirements are verified.
 - [x] Tests and documentation are included with the implementation.
-- [ ] A reviewed PR is merged, with evidence and metadata recorded here.
+- [x] A reviewed PR is merged, with evidence and metadata recorded here.
 
 ## Testing requirements
 
@@ -49,10 +49,10 @@ Validate generated theme.json and compare editor and frontend screenshots. Inclu
 - **Priority:** P0
 - **Dependencies:** `02-02`
 - **Branch:** `feat/02-03-theme-json-bridge`.
-- **Commit references:** Integrated implementation and proof `5c2128c`.
+- **Commit references:** Implementation head `126725c`; merge `da659327335024c8370b81511a91efcbb51f6677`.
 - **PR number and URL:** [#22](https://github.com/EmVeeNL/blixis-wordpress/pull/22).
-- **Started / completed / closed:** Started 2026-11-07; completion and closure not recorded.
-- **Status:** In Review. Independent integration review completed; required GitHub checks and merge remain. Follow [status workflow](../../../development/STATUS_WORKFLOW.md).
+- **Started / completed / closed:** Started and completed 2026-11-07; not yet closed or released.
+- **Status:** Done. Independent integration review and all 16 required checks passed; PR #22 merged on 2026-11-07. Follow [status workflow](../../../development/STATUS_WORKFLOW.md).
 
 ## Verification evidence
 
@@ -62,6 +62,8 @@ Validate generated theme.json and compare editor and frontend screenshots. Inclu
 - Review covered the closed inline contract, every valid/invalid fixture, normalized-input precondition, strict failure behavior, schema retention, parent/child inheritance, public/editor global styles, and no production option/filter/REST path. Parent files and the shared local site remain untouched.
 - Screenshot evidence is five swatch interior comparisons and inspected full-page captures, not a claim of full-page equality. The [proof guide](../../../development/THEME_JSON_BRIDGE.md) documents pinned packages, isolation, exact commands, and exclusions. Site Editor ownership enforcement stays in 03-05; no new UI or permission surface exists here.
 
+The final randomized-login browser replay on `126725c` also passed 310 WordPress assertions and 28 Chromium checks. Required [Quality checks](https://github.com/EmVeeNL/blixis-wordpress/actions/runs/42391144993) and [PHP/documentation checks](https://github.com/EmVeeNL/blixis-wordpress/actions/runs/42391144998) passed before merge, including 310/0 assertions on each WordPress stack in CI. The secret-scan exception is only the exact historical fingerprint of the removed disposable fixture password; HEAD generates random per-run credentials.
+
 ## Status history
 
 | Date | Transition | Evidence |
@@ -70,3 +72,4 @@ Validate generated theme.json and compare editor and frontend screenshots. Inclu
 | 2026-11-07 | Backlog → Ready | Dependency `02-02` completed in [PR #20](https://github.com/EmVeeNL/blixis-wordpress/pull/20), merge `e5ec048`; owner and token-bridge scope are recorded. |
 | 2026-11-07 | Ready → Busy | Integration branch `feat/02-03-theme-json-bridge` started from synchronized `origin/main` at `a6e5022`; isolated worktrees own the mapping, WordPress proof, and documentation. |
 | 2026-11-07 | Busy → In Review | [PR #22](https://github.com/EmVeeNL/blixis-wordpress/pull/22); integrated proof `5c2128c`, independent contract/security/inheritance review and validation recorded above. |
+| 2026-11-07 | In Review → Done | Independent integration review, all 16 required checks green, and [PR #22](https://github.com/EmVeeNL/blixis-wordpress/pull/22) merged as `da659327335024c8370b81511a91efcbb51f6677` at 16:29:17 UTC. |
