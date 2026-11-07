@@ -15,6 +15,15 @@ golden = json.loads(golden_path.read_text(encoding="utf-8"))
 if base.pop("$schema", None) != "https://schemas.wp.org/trunk/theme.json":
     raise SystemExit("Base theme.json must declare the WordPress theme.json schema")
 
+# Template-part registration is theme structure, not part of the shared token
+# contract represented by the generic-fonts golden file.
+template_parts = base.pop("templateParts", None)
+if template_parts != [
+    {"name": "header", "area": "header"},
+    {"name": "footer", "area": "footer"},
+]:
+    raise SystemExit("Base theme.json must register the header and footer parts")
+
 if base != golden:
     raise SystemExit(
         "Base theme.json differs from generic-fonts.theme.json; "
