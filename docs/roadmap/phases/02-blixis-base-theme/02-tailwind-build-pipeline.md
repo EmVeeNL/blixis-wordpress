@@ -2,7 +2,7 @@
 id: "02-02"
 title: "Build the Tailwind CSS v4 pipeline"
 phase: "02"
-status: In Review
+status: Done
 priority: P0
 owner: "EmVeeNL"
 created_at: "2026-11-06"
@@ -11,11 +11,11 @@ depends_on: ["02-01"]
 branch: "feat/02-02-tailwind-pipeline"
 pr_number: 20
 pr_url: "https://github.com/EmVeeNL/blixis-wordpress/pull/20"
-commit_sha: "2be30ac"
-merged_at: null
-merge_commit_sha: null
+commit_sha: "ae313868bffa50d30c06f41c3843b7881546a42c"
+merged_at: "2026-11-07T11:23:03Z"
+merge_commit_sha: "e5ec04845f134abd98230016a5690dfba2b35c09"
 started_at: "2026-11-07"
-completed_at: null
+completed_at: "2026-11-07"
 closed_at: null
 blocked_reason: null
 blocked_by: []
@@ -40,7 +40,7 @@ Compile CSS-first @import and @theme sources; scan known templates and editor so
 - [x] WordPress loads the parent-owned build after global/Base styles with a content hash; a child file cannot shadow it; production/local missing-build paths are tested.
 - [x] Compiled CSS is registered for the editor; full browser/editor parity and runtime tokens are explicitly deferred. Source exclusion, reduced-motion variant generation, contract mapping, and bundle limits are tested; no full accessibility or performance audit is claimed.
 - [x] Focused tests, CI enforcement, build/deployment and rollback documentation are included.
-- [ ] A reviewed PR is merged, with evidence and metadata recorded here.
+- [x] A reviewed PR is merged, with evidence and metadata recorded here.
 
 ## Testing requirements
 
@@ -51,10 +51,10 @@ Clean build, CSS snapshots, expected utility presence, and bundle size check. In
 - **Priority:** P0
 - **Dependencies:** `02-01`
 - **Branch:** `feat/02-02-tailwind-pipeline`.
-- **Commit references:** `598596d`, `6b77285`, `f3d6166`, `2be30ac`.
+- **Commit references:** `598596d`, `6b77285`, `f3d6166`, `2be30ac`, `ae31386`; squash merge `e5ec048`.
 - **PR number and URL:** [#20](https://github.com/EmVeeNL/blixis-wordpress/pull/20).
-- **Started / completed / closed:** Started 2026-11-07; completion and closure not recorded.
-- **Status:** In Review. Three isolated implementation commits were integrated and independently reviewed; local validation passed and PR #20 is open for required CI checks. Follow [status workflow](../../../development/STATUS_WORKFLOW.md).
+- **Started / completed / closed:** Started and completed 2026-11-07; closure awaits release or owner acceptance.
+- **Status:** Done. Independently reviewed PR #20 merged as `e5ec048` after all 16 required checks passed on final head `ae31386`. Follow [status workflow](../../../development/STATUS_WORKFLOW.md).
 
 ## Status history
 
@@ -64,12 +64,13 @@ Clean build, CSS snapshots, expected utility presence, and bundle size check. In
 | 2026-11-07 | Backlog → Ready | Dependency `02-01` completed in [PR #18](https://github.com/EmVeeNL/blixis-wordpress/pull/18), merge `b922e1b`; owner and build acceptance criteria are recorded. |
 | 2026-11-07 | Ready → Busy | Integration branch `feat/02-02-tailwind-pipeline` started from synchronized `origin/main` at `708a077`; three agents own separate worktrees and file sets. |
 | 2026-11-07 | Busy → In Review | [PR #20](https://github.com/EmVeeNL/blixis-wordpress/pull/20), implementation/review `2be30ac`; local evidence below, required CI pending. |
+| 2026-11-07 | In Review → Done | [PR #20](https://github.com/EmVeeNL/blixis-wordpress/pull/20) merged `e5ec04845f134abd98230016a5690dfba2b35c09` at 2026-11-07T11:23:03Z; independent integration review and all 16 required checks passed. |
 
 ## Integration review and evidence
 
 The independent integration review added contract/pin/no-layer assertions, a real excluded-source injection and repeat-build comparison, and disposable WordPress regression cases for parent/child asset ownership, dependency ordering, absent global styles, and production/local missing builds. It corrected relative editor asset registration, which could otherwise load a child file at the same path.
 
-Local evidence (2026-11-07): isolated Node 26.13.0 and pnpm 12.18.0, `pnpm install --frozen-lockfile`, `pnpm build`, and `node tests/02-02/check.mjs` passed; output is 411 bytes and unchanged from the committed build. `bash tests/02-01/run.sh '7.0.8 8.3 pass'` passed against a disposable MariaDB fixture, including the new asset checks. WordPress also resolved the parent CSS bytes through `get_block_editor_theme_styles()` for both parent and child themes. Deliberate empty-output, cascade-layer, and source-map mutations were rejected by the CSS check. PHPCS, documentation validation, actionlint, and ShellCheck passed. CI will verify the full version matrix and required checks before merge.
+Local evidence (2026-11-07): isolated Node 26.13.0 and pnpm 12.18.0, `pnpm install --frozen-lockfile`, `pnpm build`, and `node tests/02-02/check.mjs` passed; output is 411 bytes and unchanged from the committed build. `bash tests/02-01/run.sh '7.0.8 8.3 pass'` passed against a disposable MariaDB fixture, including the new asset checks. WordPress also resolved the parent CSS bytes through `get_block_editor_theme_styles()` for both parent and child themes. Deliberate empty-output, cascade-layer, and source-map mutations were rejected by the CSS check. PHPCS, documentation validation, actionlint, and ShellCheck passed. CI verified the full version matrix and all 16 required checks on final head `ae31386`; the [Quality run](https://github.com/EmVeeNL/blixis-wordpress/actions/runs/42367560608) includes 290 contract tests with zero skips.
 
 CI exposed an existing contract-fixture bundler assumption: dotted paths were treated as files, so the new theme workspace dependency directory caused `EISDIR`. The bundler now walks regular files and excludes `node_modules`, with a dotted-directory/dependency regression test; the disposable theme bundle was synchronized without changing contract goldens. Local contract tests passed 282 tests with 8 browser tests skipped because Chromium could not launch in the local sandbox; CI requires zero skips. Contract typecheck, lint, and formatting passed.
 
