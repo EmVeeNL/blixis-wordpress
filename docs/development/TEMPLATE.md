@@ -13,3 +13,7 @@ Tailwind supplies unlayered utilities only, without preflight. The parent-owned 
 ![Blixis concept preview](../assets/blixis-base-preview.png)
 
 The image is a concept illustration, not a capture of a working theme. It belongs to a separate showcase, not every new site's default content. See [token configuration](CONFIGURATION.md) and [theme roadmap](../roadmap/phases/02-blixis-base-theme/_index.md).
+
+## Template and accessibility tests
+
+The 02-04 harness, described in [Task 02-04 semantic template tests](TESTING_02-04.md), checks Base templates and parts as rendered by real WordPress: one `main`, one banner and contentinfo, labelled navigation, one h1, a translated skip link with a valid target, keyboard order, no horizontal overflow from 320 px, draft and password privacy, RTL, and an integrity-pinned axe-core audit. Run `node tests/02-04/static.mjs` for the Docker-free structure checks and `tests/02-04/run.sh` for the full run. Semantic outlines in `tests/02-04/snapshots` are re-blessed with `--update-snapshots` only after reviewing the diff. Template changes that alter landmarks, headings, or navigation names must update them in the same commit.

@@ -69,6 +69,10 @@ jobs:
         run: pnpm build
       - name: Verify committed production CSS and utility policy
         run: node tests/02-02/check.mjs
+      - name: Verify semantic template and part structure, with negative controls
+        run: |
+          node --test tests/02-04/static.test.mjs
+          node tests/02-04/static.mjs
 
   browser-tests:
     runs-on: ubuntu-24.04
@@ -136,6 +140,26 @@ jobs:
       - name: Report results and fail on any unmet expectation
         if: ${{ !cancelled() }}
         run: python3 spikes/01-02-compatibility/results/show.py "$RUNNER_TEMP/wordpress-matrix.jsonl"
+
+  # Real WordPress plus Chromium and Firefox: landmarks, skip link, keyboard path, overflow,
+  # privacy, axe-core (pinned, integrity-checked), and semantic snapshots for every Base template.
+  semantic-templates:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/setup-pnpm
+      - name: Run template, accessibility, keyboard and privacy tests in a throwaway stack
+        run: bash tests/02-04/run.sh --browsers chromium,firefox --out "$RUNNER_TEMP/t0204"
+      - name: Keep screenshots, outlines and the axe report
+        if: ${{ failure() }}
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: semantic-templates-0204
+          path: ${{ runner.temp }}/t0204
+          retention-days: 7
 
   contracts:
     runs-on: ubuntu-24.04
