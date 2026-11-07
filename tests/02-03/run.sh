@@ -11,7 +11,6 @@
 # Exit: 0 all pass; 1 a check failed (product result); 2 harness fault.
 set -uo pipefail
 cd "$(dirname "${BASH_SOURCE[0]}")" || exit 2
-here="$(pwd -P)"
 repo="$(cd ../.. && pwd -P)"
 plugin_dir="$repo/plugins/blixis-blocks"
 browser=0

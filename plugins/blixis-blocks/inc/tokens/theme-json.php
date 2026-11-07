@@ -178,8 +178,10 @@ function theme_json_presets( array $values, callable $build ): array {
 /**
  * Project a normalized, validated BlixisThemeConfig v1 to theme.json data.
  *
- * Returns an empty array when the shape is malformed or unvalidated, so a caller
- * that merges the result applies nothing.
+ * Requires the normalized validator result, including contract key order for theme
+ * and breakpoints. This defensive guard is not the raw-input validator: parsing,
+ * limits, error diagnostics and normalization belong to task 03-02. Returns an
+ * empty array for a shape or value that fails the guard; merging it applies nothing.
  *
  * @param array $config Validated config as an associative array.
  * @return array<string, mixed>
