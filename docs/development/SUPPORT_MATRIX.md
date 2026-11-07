@@ -1,6 +1,6 @@
 # Support matrix
 
-**Status: approved planning baseline; implementation pending.** Task `01-02` tested the versions below on 2026-11-06. Michael delegated the support decision and selected Oxlint and Oxfmt for TypeScript 7. The target floors below apply to new work; current theme and plugin headers still declare WordPress 6.6 and PHP 8.2 until task `02-01` changes and retests them. Reproduction steps and raw results are in the [compatibility spike](../../spikes/01-02-compatibility/README.md).
+**Status: approved support baseline; component headers aligned in task 02-01.** Task `01-02` tested the versions below on 2026-11-06. Michael delegated the support decision and selected Oxlint and Oxfmt for TypeScript 7. The theme and plugin headers now require WordPress 7.0 and PHP 8.3; the [02-01 harness](TESTING_02-01.md) retests supported activation and refusal below both floors. Reproduction steps and raw results are in the [compatibility spike](../../spikes/01-02-compatibility/README.md).
 
 ## Tested results
 
@@ -25,8 +25,8 @@
 
 | Component | Target | Reason |
 |---|---|---|
-| WordPress | 7.0 and 7.1, raising the 6.6 header in task 02-01 | Only the 7.1 branch has full support; older versions passed, so this is a maintenance choice rather than a technical limit |
-| PHP | 8.3 to 8.5, raising the 8.2 header in task 02-01 | PHP 8.2 security support ends on 2026-12-31 and it lacks `json_validate()` |
+| WordPress | 7.0 and 7.1 | Only the 7.1 branch has full support; older versions passed, so this is a maintenance choice rather than a technical limit |
+| PHP | 8.3 to 8.5 | PHP 8.2 security support ends on 2026-12-31 and it lacks `json_validate()` |
 | MariaDB | 11.4 | The only tested database |
 | Node | 26 LTS for builds, pinned to 26.13.0 | Matches the one-line policy and the local toolchain; 24 and 22 also pass |
 | TypeScript | 7.0.x, TSX only | Owner preference; type checking and the isolated editor proof pass |

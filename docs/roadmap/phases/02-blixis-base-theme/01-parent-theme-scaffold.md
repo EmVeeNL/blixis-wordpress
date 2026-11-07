@@ -2,19 +2,19 @@
 id: "02-01"
 title: "Build the Blixis Base parent theme"
 phase: "02"
-status: Ready
+status: Busy
 priority: P0
 owner: "EmVeeNL"
 created_at: "2026-11-06"
-updated_at: "2026-11-06"
+updated_at: "2026-11-07"
 depends_on: ["01-05"]
-branch: null
+branch: "feat/02-01-parent-theme"
 pr_number: null
 pr_url: null
 commit_sha: null
 merged_at: null
 merge_commit_sha: null
-started_at: null
+started_at: "2026-11-07"
 completed_at: null
 closed_at: null
 blocked_reason: null
@@ -25,7 +25,7 @@ blocked_by: []
 
 ## Description
 
-Complete theme metadata, enqueue hooks, theme support, template structure, and WordPress integration without site branding. This is planned work; no implementation or PR is claimed.
+Complete theme metadata, enqueue hooks, theme support, template structure, and WordPress integration without site branding. The implementation now includes neutral setup and stylesheet hooks, token-aligned presets, singular rendering, and a disposable integration harness.
 
 ## Technical requirements
 
@@ -39,7 +39,7 @@ Complete theme metadata, enqueue hooks, theme support, template structure, and W
 
 - [ ] The described capability works in the intended WordPress and browser environments.
 - [ ] Relevant security, accessibility, and performance requirements are verified.
-- [ ] Tests and documentation are included with the implementation.
+- [x] Tests and documentation are included with the implementation.
 - [ ] A reviewed PR is merged, with evidence and metadata recorded here.
 
 ## Testing requirements
@@ -50,11 +50,11 @@ Activate in a disposable WordPress fixture; run PHP lint and template smoke test
 
 - **Priority:** P0
 - **Dependencies:** `01-05`
-- **Branch:** Not created.
+- **Branch:** `feat/02-01-parent-theme`.
 - **Commit references:** None.
 - **PR number and URL:** None.
-- **Started / completed / closed:** Not recorded.
-- **Status:** Ready. Dependency `01-05` is Done, the owner and criteria are recorded, and no implementation has started. Follow [status workflow](../../../development/STATUS_WORKFLOW.md).
+- **Started / completed / closed:** Started 2026-11-07; completion and closure not recorded.
+- **Status:** Busy. Three isolated worktrees are implementing theme setup, neutral templates, and integration checks. Follow [status workflow](../../../development/STATUS_WORKFLOW.md).
 
 ## Status history
 
@@ -62,3 +62,4 @@ Activate in a disposable WordPress fixture; run PHP lint and template smoke test
 |---|---|---|
 | 2026-11-06 | Initial planning → Backlog | Downloaded project plan; no implementation evidence |
 | 2026-11-06 | Backlog → Ready | Dependency `01-05` completed in [PR #16](https://github.com/EmVeeNL/blixis-wordpress/pull/16), merged as `06b1157`; owner and acceptance criteria are recorded. |
+| 2026-11-07 | Ready → Busy | Integration branch `feat/02-01-parent-theme` started from synchronized `origin/main` at `16b0eda`; three agents own separate worktrees and file sets. |

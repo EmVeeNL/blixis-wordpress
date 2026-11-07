@@ -29,10 +29,11 @@ Exit codes: `0` all passed, `1` product checks failed, `2` harness fault (Docker
 
 Each run uses a random Compose project name (`blixis-0201-<hex>`), a tmpfs MariaDB, a random root password, no published ports, and no bind mounts (files stream in as a tar). The WordPress server listens only inside the runner container. Nothing reads `~/Sites/blixis`, its database, links, `.env`, or the `blixis` project, and the stack is removed on exit. WP-CLI image digests are copied from the 01-02 spike.
 
-## Baseline and limitations
+## Review evidence and limitations
 
-- Before implementation lands, expected failures are: headers still 6.6 and 8.2, the missing `primary`, `surface`, and `muted` presets, no singular template, and no refusal below the floors. Any other failure, or exit code 2, is a harness problem.
-- The harness was also run against a temporary patched copy (floors, token slugs, `singular.html`); every check passed. That copy is not part of the repository.
+- Independent integration review on 2026-11-07 ran the combined implementation through the default six combinations: all passed. Setup supports, the parent stylesheet handle/URL/version, and password-protected content are also checked.
+- A disposable copy with `post-content` removed failed both the static check and the rendered post/page marker checks, returning exit 1. The unmodified implementation passed. This harness runs in the existing required `wordpress-integration` CI job; infrastructure faults return exit 2, so either category fails CI.
+- Base uses system font stacks instead of the golden fixture's illustrative `Local Sans`; preset slugs and sizes remain aligned. No fonts are downloaded.
 - Refusal relies on WordPress's own header check in WP-CLI; it does not test the admin UI.
 - Only the PHP built-in server is covered, not Apache, nginx, or caches. No browser, accessibility, or visual checks; keyboard, reduced motion, and responsive behavior need separate tests.
 - The orphan check only flags a non-contract palette slug that nothing references, so a retained `background` slug that `theme.json` still uses will pass.

@@ -32,6 +32,15 @@ $check('plugin is active alongside theme', $plugin_active);
 $check('theme header: Requires at least 7.0', wp_get_theme()->get('RequiresWP') === '7.0', (string) wp_get_theme()->get('RequiresWP'));
 $check('theme header: Requires PHP 8.3', wp_get_theme()->get('RequiresPHP') === '8.3', (string) wp_get_theme()->get('RequiresPHP'));
 
+// Theme bootstrap and public asset contract.
+foreach (['wp-block-styles', 'responsive-embeds', 'editor-styles'] as $support) {
+    $check("theme support: $support", current_theme_supports($support));
+}
+do_action('wp_enqueue_scripts');
+$style = wp_styles()->registered['blixis-base'] ?? null;
+$check('parent stylesheet is enqueued', wp_style_is('blixis-base', 'enqueued'));
+$check('parent stylesheet uses parent URL and theme version', $style && $style->src === get_template_directory_uri() . '/style.css' && $style->ver === wp_get_theme()->get('Version'));
+
 // Neutral structure: no site branding or demo content in the options WordPress reads for the theme.
 $theme = wp_get_theme();
 $check('theme name is neutral', stripos((string) $theme->get('Name'), 'wilde') === false && stripos((string) $theme->get('Name'), 'groei') === false);
@@ -64,6 +73,7 @@ $make = static function (string $type) use (&$markers, $filler): int {
 $post = $make('post');
 $page = $make('page');
 $draft = wp_insert_post(['post_type' => 'page', 'post_status' => 'draft', 'post_title' => 'Fixture draft', 'post_content' => '<p>T0201-DRAFT-MARKER</p>']);
+$protected = wp_insert_post(['post_type' => 'page', 'post_status' => 'publish', 'post_password' => 'fixture-only-password', 'post_title' => 'Protected fixture', 'post_content' => '<p>T0201-PROTECTED-MARKER</p>']);
 wp_set_current_user(0);
 
 foreach (['post' => $post, 'page' => $page] as $type => $id) {
@@ -76,6 +86,8 @@ foreach (['post' => $post, 'page' => $page] as $type => $id) {
     $check("singular $type declares lang and viewport", (bool) preg_match('/<html[^>]*\blang=/i', $html) && str_contains($html, 'name="viewport"'));
     $check("singular $type has no PHP errors in output", !preg_match('/(Fatal error|Warning:|Notice:|Deprecated:)/', $html));
 }
+[$status, $html] = $get(get_permalink($protected));
+$check('password protected content stays hidden', $status === 200 && !str_contains($html, 'T0201-PROTECTED-MARKER') && str_contains($html, 'post_password'));
 [$status, $html] = $get(home_url('/?p=' . $draft . '&post_type=page'));
 $check('anonymous request never receives draft content', !str_contains($html, 'T0201-DRAFT-MARKER'));
 [$status, $html] = $get(home_url('/'));

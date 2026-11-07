@@ -4,7 +4,7 @@
 
 ## Context
 
-Task [01-02](../../roadmap/phases/01-discovery-foundation/02-compatibility-spike.md) tested WordPress, PHP, Node, browser, Tailwind, and editor dependencies in isolated fixtures. The repository currently declares WordPress 6.6 and PHP 8.2 in its component headers. `typescript-eslint` 8.72.1 rejects TypeScript 7.0.2 through its peer requirement.
+Task [01-02](../../roadmap/phases/01-discovery-foundation/02-compatibility-spike.md) tested WordPress, PHP, Node, browser, Tailwind, and editor dependencies in isolated fixtures. At that decision, the repository declared WordPress 6.6 and PHP 8.2; task 02-01 now aligns component headers to WordPress 7.0 and PHP 8.3. `typescript-eslint` 8.72.1 rejects TypeScript 7.0.2 through its peer requirement.
 
 ## Decision
 

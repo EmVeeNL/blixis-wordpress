@@ -15,6 +15,8 @@ export PHP_INI_SCAN_DIR=":/tmp/php-ini"
 mkdir -p "$ROOT" /tmp/wp-cli-cache
 cd "$ROOT" || fault "no workdir"
 
+# PHP variables must reach PHP unchanged.
+# shellcheck disable=SC2016
 php -r '
 $m = new mysqli("db", "root", getenv("T0201_DB_ROOT_PASSWORD"));
 $m->query("DROP DATABASE IF EXISTS `" . $argv[1] . "`");
@@ -36,16 +38,16 @@ THEME_OUT="$(wp theme activate blixis-base 2>&1)"; THEME_RC=$?
 
 if [ "$EXPECT" = "reject" ]; then
   # Below the approved floors, both must refuse and leave nothing active.
-  [ "$PLUGIN_RC" -ne 0 ] && ok "plugin refuses activation below floor" || bad "plugin refuses activation below floor" "$PLUGIN_OUT"
-  [ "$THEME_RC" -ne 0 ] && ok "theme refuses activation below floor" || bad "theme refuses activation below floor" "$THEME_OUT"
-  [ "$(wp theme list --status=active --field=name 2>/dev/null)" != "blixis-base" ] && ok "theme not active after refusal" || bad "theme not active after refusal"
-  [ -z "$(wp plugin list --status=active --field=name 2>/dev/null | grep '^blixis-blocks$')" ] && ok "plugin not active after refusal" || bad "plugin not active after refusal"
+  if [ "$PLUGIN_RC" -ne 0 ]; then ok "plugin refuses activation below floor"; else bad "plugin refuses activation below floor" "$PLUGIN_OUT"; fi
+  if [ "$THEME_RC" -ne 0 ]; then ok "theme refuses activation below floor"; else bad "theme refuses activation below floor" "$THEME_OUT"; fi
+  if [ "$(wp theme list --status=active --field=name 2>/dev/null)" != "blixis-base" ]; then ok "theme not active after refusal"; else bad "theme not active after refusal"; fi
+  if ! wp plugin list --status=active --field=name 2>/dev/null | grep -q '^blixis-blocks$'; then ok "plugin not active after refusal"; else bad "plugin not active after refusal"; fi
   echo "DONE $WP_VERSION"
   exit 0
 fi
 
-[ "$PLUGIN_RC" -eq 0 ] && ok "plugin activates" || bad "plugin activates" "$PLUGIN_OUT"
-[ "$THEME_RC" -eq 0 ] && ok "theme activates" || bad "theme activates" "$THEME_OUT"
+if [ "$PLUGIN_RC" -eq 0 ]; then ok "plugin activates"; else bad "plugin activates" "$PLUGIN_OUT"; fi
+if [ "$THEME_RC" -eq 0 ]; then ok "theme activates"; else bad "theme activates" "$THEME_OUT"; fi
 
 wp server --host=127.0.0.1 --port=8080 >/tmp/server.log 2>&1 &
 SERVER=$!

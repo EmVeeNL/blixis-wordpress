@@ -7,7 +7,7 @@
 # Exit: 0 all checks pass; 1 one or more checks failed (product result);
 #       2 harness fault (Docker, download, install, missing result).
 set -uo pipefail
-cd "$(dirname "${BASH_SOURCE[0]}")"
+cd "$(dirname "${BASH_SOURCE[0]}")" || exit 2
 here="$(pwd -P)"
 repo="$(cd ../.. && pwd -P)"
 
@@ -40,7 +40,7 @@ COMPOSE_PROJECT_NAME="blixis-0201-$(openssl rand -hex 4)"
 export COMPOSE_PROJECT_NAME
 T0201_CLI_IMAGE="$(cli_image 8.3)"
 export T0201_CLI_IMAGE
-cleanup() { docker compose --profile run down --remove-orphans -v >/dev/null 2>&1 || true; }
+cleanup() { docker compose --profile run down --remove-orphans >/dev/null 2>&1 || true; }
 trap cleanup EXIT
 
 bundle() {
@@ -60,6 +60,8 @@ for combo in "${COMBOS[@]}"; do
   export T0201_CLI_IMAGE
   out="$(bundle | docker compose --profile run run --rm --no-deps -T runner sh -c \
     'mkdir -p /tmp/t && tar -xf - -C /tmp/t && exec sh /tmp/t/run-combo.sh "$0" "$1"' "$wp" "$expect" 2>&1)"
+  runner_rc=$?
+  if [[ $runner_rc -ne 0 ]]; then echo "HARNESS runner exited $runner_rc"; harness_fault=1; fi
   printf '%s\n' "$out" | grep -E '^(PASS|FAIL|HARNESS) ' || true
   if printf '%s\n' "$out" | grep -q '^HARNESS '; then harness_fault=1
   elif ! printf '%s\n' "$out" | grep -q '^DONE '; then echo "HARNESS FAULT: no DONE marker for $combo"; printf '%s\n' "$out" | tail -15; harness_fault=1

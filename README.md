@@ -3,7 +3,7 @@
 [![CI: PHP syntax and documentation](https://github.com/EmVeeNL/blixis-wordpress/actions/workflows/php-lint.yml/badge.svg)](https://github.com/EmVeeNL/blixis-wordpress/actions/workflows/php-lint.yml)
 [![Project status: foundation](https://img.shields.io/badge/status-foundation-blue)](docs/roadmap/ROADMAP.md)
 [![Platform: WordPress](https://img.shields.io/badge/platform-WordPress-21759B?logo=wordpress&logoColor=white)](https://wordpress.org/)
-[![PHP requirement: 8.2 or newer](https://img.shields.io/badge/PHP-8.2%2B-777BB4?logo=php&logoColor=white)](themes/blixis-base/style.css)
+[![PHP requirement: 8.3 or newer](https://img.shields.io/badge/PHP-8.3%2B-777BB4?logo=php&logoColor=white)](themes/blixis-base/style.css)
 [![Documentation](https://img.shields.io/badge/docs-project%20guide-0A66C2)](docs/README.md)
 
 **Blixis** is a planned WordPress theme and visual content platform. Its architecture combines a neutral **Blixis Base** parent theme, site-specific child themes, the **Blixis Blocks** editor, and a controlled Content API. The first client implementation is planned for **Wilde Groei**.
@@ -24,7 +24,7 @@ The first release line is planned as **v1.0.x for single-site WordPress**. WordP
 
 | Area | Current state | Next step |
 |---|---|---|
-| Blixis Base | Minimal discoverable block theme; inactive in the local site | Templates, token mapping, Tailwind build, and accessibility work |
+| Blixis Base | Neutral parent block theme with singular rendering and contract presets; inactive in the local site | Templates, token mapping, Tailwind build, and accessibility work |
 | Blixis Blocks | Installable plugin entry point; no editor UI | Versioned registry, editor, persistence, and PHP rendering |
 | Child themes | Planned | Generator, validated token setup, and preview |
 | Content API | Proposed, not implemented | Approve access model and build read-only published-content routes |
@@ -46,7 +46,7 @@ The existing local site uses the Docker Compose project `blixis` and MariaDB vol
 ### Prerequisites
 
 - A working local WordPress installation and WP-CLI for the verification commands below.
-- PHP 8.2 or newer for the current theme and plugin headers. The [approved target support matrix](docs/development/SUPPORT_MATRIX.md) raises the future floor to PHP 8.3 in task 02-01.
+- WordPress 7.0 or newer and PHP 8.3 or newer, matching the theme and plugin headers and [support matrix](docs/development/SUPPORT_MATRIX.md).
 - Docker Compose only if you use the included MariaDB service definition.
 
 ### Link the Blixis components
