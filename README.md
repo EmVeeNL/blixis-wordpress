@@ -24,9 +24,9 @@ The first release line is planned as **v1.0.x for single-site WordPress**. WordP
 
 | Area | Current state | Next step |
 |---|---|---|
-| Blixis Base | Neutral parent block theme with semantic templates, accessible navigation, and contract presets; inactive in the local site | Base showcase and live token configuration |
+| Blixis Base | Neutral parent block theme with semantic templates, accessible navigation, and contract presets; inactive in the local site | Live token configuration |
 | Blixis Blocks | Installable plugin entry point; no editor UI | Versioned registry, editor, persistence, and PHP rendering |
-| Child themes | Planned | Generator, validated token setup, and preview |
+| Child themes | Optional [Blixis Showcase](docs/development/SHOWCASE.md) with core-block patterns and a blue/cyan demonstration palette | Generator, validated token setup, and preview |
 | Content API | Proposed, not implemented | Approve access model and build read-only published-content routes |
 | Quality checks | GitHub Actions runs the [checks listed here](docs/development/CI.md) on existing code: PHP, TypeScript, build, browser and WordPress tests, scripts, secrets, and dependencies | Add jobs as new packages arrive |
 
@@ -96,6 +96,7 @@ For parallel Claude and Codex work, use separate [Git worktrees](docs/developmen
 
 ```text
 themes/blixis-base/       Parent block theme and committed Tailwind CSS
+themes/blixis-showcase/   Optional showcase child; never mandatory starter content
 plugins/blixis-blocks/    Plugin entry point
 scripts/                  Safe local links, their test, and documentation validation
 spikes/                   Feasibility evidence; not product code

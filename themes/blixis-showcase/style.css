@@ -1,0 +1,270 @@
+/*
+Theme Name: Blixis Showcase
+Theme URI: https://github.com/EmVeeNL/blixis-wordpress
+Author: Blixis
+Description: Optional branded showcase child theme for Blixis Base.
+Version: 0.1.0
+Requires at least: 7.0
+Requires PHP: 8.3
+License: GPLv2 or later
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
+Text Domain: blixis-showcase
+Template: blixis-base
+*/
+
+:root {
+	--showcase-ink: #111827;
+	--showcase-paper: #ffffff;
+	--showcase-blue: #0645f5;
+	--showcase-cyan: #08c7dc;
+	--showcase-line: #dce3f0;
+	--showcase-muted: #465675;
+	--showcase-radius: 1.25rem;
+}
+
+body {
+	background: var(--showcase-paper);
+	color: var(--showcase-ink);
+	font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+a {
+	color: var(--showcase-blue);
+	text-underline-offset: 0.2em;
+}
+
+a:hover {
+	color: #0030bd;
+}
+
+:focus-visible {
+	outline: 3px solid var(--showcase-blue);
+	outline-offset: 4px;
+	border-radius: 0.2rem;
+	box-shadow: 0 0 0 2px #fff, 0 0 0 5px var(--showcase-blue);
+}
+
+.blixis-showcase-hero {
+	position: relative;
+	display: grid;
+	grid-template-columns: minmax(0, 1.12fr) minmax(15rem, 0.88fr);
+	align-items: center;
+	gap: clamp(2rem, 6vw, 6rem);
+	max-width: 82rem;
+	margin-inline: auto;
+	padding: clamp(3rem, 8vw, 7.5rem) clamp(1.25rem, 5vw, 5rem);
+	border-radius: 0 0 var(--showcase-radius) var(--showcase-radius);
+	background: linear-gradient(115deg, #fff 18%, #f2fbff 60%, #f7f3ff);
+	color: var(--showcase-ink);
+	overflow: hidden;
+}
+
+.blixis-showcase-hero::after {
+	position: absolute;
+	right: -6rem;
+	bottom: -11rem;
+	width: 27rem;
+	height: 27rem;
+	border: 1px solid rgb(6 69 245 / 14%);
+	border-radius: 50%;
+	box-shadow: 0 0 0 3rem rgb(6 69 245 / 4%), 0 0 0 6rem rgb(8 199 220 / 5%);
+	content: "";
+	pointer-events: none;
+}
+
+.blixis-showcase-hero :where(h1, h2, p, a) {
+	position: relative;
+	z-index: 1;
+}
+
+.blixis-showcase-hero h1 {
+	max-width: 12ch;
+	margin: 0 0 1.25rem;
+	font-family: Georgia, "Times New Roman", serif;
+	font-size: clamp(2.75rem, 6.6vw, 6rem);
+	font-weight: 500;
+	letter-spacing: -0.03em;
+	line-height: 0.98;
+}
+
+.blixis-showcase-hero p {
+	max-width: 38rem;
+	color: #465675;
+	font-size: clamp(1.05rem, 1.5vw, 1.25rem);
+	line-height: 1.65;
+}
+
+.blixis-showcase-hero a {
+	display: inline-flex;
+	align-items: center;
+	min-height: 3rem;
+	margin-top: 1rem;
+	padding: 0.75rem 1.25rem;
+	border: 2px solid var(--showcase-blue);
+	border-radius: 999px;
+	background: var(--showcase-blue);
+	color: #fff;
+	font-weight: 700;
+	text-decoration: none;
+}
+
+.blixis-showcase-hero a:hover {
+	background: #fff;
+	color: #0030bd;
+}
+
+.blixis-showcase-concept {
+	position: relative;
+	min-height: 20rem;
+	border: 1px solid #c8ddff;
+	border-radius: 48% 48% 1.25rem 1.25rem;
+	background: linear-gradient(145deg, #d8fbff 0%, #73ddf2 44%, #4256ed 76%, #a75cff 100%);
+	box-shadow: inset 0 0 0 0.65rem rgb(255 255 255 / 45%), 0 1rem 3rem rgb(43 99 230 / 16%);
+}
+
+.blixis-showcase-concept::before,
+.blixis-showcase-concept::after {
+	position: absolute;
+	bottom: 0;
+	width: 55%;
+	height: 68%;
+	border-radius: 60% 60% 0 0;
+	background: linear-gradient(160deg, #f1ffff, #0bc7df 75%);
+	content: "";
+}
+
+.blixis-showcase-concept::before {
+	left: 0;
+	clip-path: polygon(0 30%, 42% 0, 100% 30%, 100% 100%, 0 100%);
+}
+
+.blixis-showcase-concept::after {
+	right: 0;
+	background: linear-gradient(150deg, #e4f2ff, #4552f4 75%);
+	clip-path: polygon(0 28%, 55% 0, 100% 25%, 100% 100%, 0 100%);
+}
+
+.blixis-showcase-grid,
+.blixis-showcase-features {
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	gap: 1rem;
+	max-width: 82rem;
+	margin: 0 auto;
+	padding: clamp(3rem, 7vw, 6rem) clamp(1.25rem, 5vw, 5rem);
+}
+
+.blixis-showcase-card {
+	min-width: 0;
+	padding: clamp(1.25rem, 2.5vw, 2rem);
+	border: 1px solid var(--showcase-line);
+	border-radius: var(--showcase-radius);
+	background: #fff;
+	box-shadow: 0 0.75rem 2rem rgb(25 48 105 / 5%);
+}
+
+.blixis-showcase-card h2,
+.blixis-showcase-card h3 {
+	margin-top: 0;
+	font-family: Georgia, "Times New Roman", serif;
+	font-size: clamp(1.4rem, 2.3vw, 2rem);
+	font-weight: 500;
+	letter-spacing: -0.025em;
+}
+
+.blixis-showcase-card p {
+	color: var(--showcase-muted);
+	line-height: 1.65;
+}
+
+.blixis-showcase-features {
+	grid-template-columns: 1fr 2fr;
+	align-items: start;
+	border-top: 1px solid var(--showcase-line);
+}
+
+.blixis-showcase-features > :first-child {
+	font-family: Georgia, "Times New Roman", serif;
+	font-size: clamp(1.8rem, 3vw, 3rem);
+}
+
+@media (max-width: 48rem) {
+	.blixis-showcase-hero {
+		grid-template-columns: 1fr;
+		gap: 2rem;
+		border-radius: 0;
+	}
+
+	.blixis-showcase-concept {
+		min-height: 14rem;
+	}
+
+	.blixis-showcase-grid {
+		grid-template-columns: 1fr;
+	}
+
+	.blixis-showcase-features {
+		grid-template-columns: 1fr;
+	}
+}
+
+@media (prefers-reduced-motion: no-preference) {
+	.blixis-showcase-card,
+	.blixis-showcase-hero a {
+		transition: transform 160ms ease, box-shadow 160ms ease, background-color 160ms ease;
+	}
+
+	.blixis-showcase-card:hover {
+		transform: translateY(-0.2rem);
+		box-shadow: 0 1rem 2rem rgb(25 48 105 / 10%);
+	}
+}
+
+/* Explicit block children keep Core's constrained layout from narrowing the grid. */
+.blixis-showcase-hero > .blixis-showcase-copy,
+.blixis-showcase-hero > .blixis-showcase-concept {
+	width: 100%;
+	max-width: none;
+	margin: 0;
+	min-width: 0;
+}
+
+.blixis-showcase-concept .blixis-showcase-concept-label {
+	position: relative;
+	z-index: 2;
+	margin: 1.5rem;
+	padding: 1rem;
+	background: #fff;
+	color: var(--showcase-ink);
+	font-size: 1rem;
+	border-radius: 0.5rem;
+}
+
+.blixis-showcase-status {
+	padding-inline: clamp(1.25rem, 5vw, 5rem);
+}
+
+.blixis-showcase-status > .blixis-showcase-grid {
+	max-width: none;
+	padding: 1rem 0 4rem;
+}
+
+.blixis-showcase-features-list li + li {
+	margin-top: 1rem;
+}
+
+.blixis-showcase-hero .is-style-outline a {
+	background: #fff;
+	color: var(--showcase-blue);
+}
+
+::selection {
+	background: #08c7dc;
+	color: #111827;
+}
+
+.blixis-showcase-status > h2 {
+	max-width: none;
+	margin-inline: 0;
+	font-size: clamp(1.8rem, 3vw, 3rem);
+}
