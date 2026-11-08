@@ -2,7 +2,7 @@
 
 ## Status and system boundary
 
-**Implemented:** this repository contains a neutral `blixis-base` block theme with semantic page, single, archive, search, and 404 templates and compiled Tailwind utilities, a `blixis-blocks` plugin entry point with a pure theme.json projection for already validated configuration, a link script, and a MariaDB Compose definition. The active site is `~/Sites/blixis`; its Core, uploads, configuration, and database remain outside this source checkout. The Blixis theme and plugin are linked into that site but are inactive. No editor, live token validation/persistence, content renderer, or Content API exists yet.
+**Implemented:** this repository contains a neutral `blixis-base` block theme with semantic page, single, archive, search, and 404 templates and compiled Tailwind utilities, an optional `blixis-showcase` child theme with core-block showcase patterns, a `blixis-blocks` plugin entry point with a pure theme.json projection for already validated configuration, a link script, and a MariaDB Compose definition. The active site is `~/Sites/blixis`; its Core, uploads, configuration, and database remain outside this source checkout. The Blixis theme and plugin are linked into that site but are inactive. No editor, live token validation/persistence, content renderer, or Content API exists yet.
 
 **Planned architecture:** Blixis Base is a versioned parent theme. Site branding belongs in a child theme. Blixis Blocks owns the editor, element registry, versioned document, persistence, and rendering. A separately deployable Content API module exposes deliberately published content. WordPress owns posts, permissions, revisions, and publication state.
 
@@ -37,7 +37,7 @@ Task 01-05 [reviewed](reviews/01-05-integration.md) these boundaries; the accept
 Data flow: the editor saves a validated document through `blixis-editor/v1`. On a live page, a save goes to the user's autosave revision; publishing promotes it, and writes the document and projection together. Public pages, core REST, feeds, search, and the Content API read published data only.
 
 - `themes/blixis-base` owns neutral templates, semantic structure, and theme contracts. The UI must never edit parent source.
-- A future child theme owns site branding and approved overrides. The proposed Wilde Groei site belongs there, not in Base.
+- The optional showcase child demonstrates site branding; future client child themes own their branding and approved overrides. The proposed Wilde Groei site belongs there, not in Base.
 - `plugins/blixis-blocks` owns editor and document routes. Keep the editor JavaScript out of public pages.
 - The future API has its own permission and key boundary. Do not expose protected post meta through a generic route.
 - Introduce shared packages when implemented: schema/element contracts independent of React, tokens independent of UI, editor depending on contracts, and PHP renderer validating against the same versioned contract. Do not create empty packages.
