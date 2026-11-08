@@ -16,7 +16,7 @@
       "defaultFontSizes": false,
       "fontFamilies": [
         { "fontFamily": "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif", "name": "System", "slug": "body" },
-        { "fontFamily": "Georgia, 'Times New Roman', serif", "name": "Editorial", "slug": "heading" }
+        { "fontFamily": "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif", "name": "Heading", "slug": "heading" }
       ],
       "fontSizes": [
         { "fluid": false, "name": "Small", "size": "0.875rem", "slug": "small" },
@@ -39,7 +39,7 @@
       "heading": {
         "typography": {
           "fontFamily": "var:preset|font-family|heading",
-          "fontWeight": "500",
+          "fontWeight": "700",
           "lineHeight": "1.15"
         }
       }

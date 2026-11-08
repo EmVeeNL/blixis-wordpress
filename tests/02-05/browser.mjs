@@ -251,6 +251,12 @@ async function runRoute(page, route, ctx) {
   check('reduced motion: no running animations', s.animations === 0, s.animations);
   if (route.kind === 'front' && ctx.firstFront) ctx.discovered.push(...s.navLinks);
 
+  if (route.kind === 'front' && ctx.browser === 'chromium') {
+    await page.setViewportSize({ width: 1200, height: 900 });
+    await go(page, BASE + route.url);
+    await page.screenshot({ path: 'shots/theme-screenshot-1200x900.png' });
+  }
+
   for (const width of WIDTHS) {
     await page.setViewportSize({ width, height: 900 });
     await go(page, BASE + route.url);

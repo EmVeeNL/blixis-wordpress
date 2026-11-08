@@ -24,7 +24,7 @@ The first release line is planned as **v1.0.x for single-site WordPress**. WordP
 
 | Area | Current state | Next step |
 |---|---|---|
-| Blixis Base | Neutral parent block theme with semantic templates, accessible navigation, and contract presets; inactive in the local site | Live token configuration |
+| Blixis Base | Neutral parent block theme with semantic templates, accessible navigation, and contract presets | Live token configuration |
 | Blixis Blocks | Installable plugin entry point; no editor UI | Versioned registry, editor, persistence, and PHP rendering |
 | Child themes | Optional [Blixis Showcase](docs/development/SHOWCASE.md) with core-block patterns and a blue/cyan demonstration palette | Generator, validated token setup, and preview |
 | Content API | Proposed, not implemented | Approve access model and build read-only published-content routes |
@@ -61,6 +61,8 @@ wp plugin list --path="$HOME/Sites/blixis"
 ```
 
 `setup-links.sh` links `themes/blixis-base` and `plugins/blixis-blocks` into the local site. It is safe to rerun and stops if a different file or link already occupies either destination. Set `BLIXIS_WP_PATH` to an **absolute** WordPress path before running the script if your site is elsewhere. Linking does not activate the theme or plugin.
+
+The optional [Showcase child theme](docs/development/SHOWCASE.md) is linked and activated separately when you want to view the English concept-inspired page locally. Its `screenshot.png` provides the Appearance → Themes thumbnail. The neutral Base parent has a separate purpose and will not display the Showcase front page when active.
 
 To inspect the existing database service without changing it:
 
