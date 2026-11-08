@@ -8,11 +8,11 @@ main
   h1 "Category: Fixtures"
   ul items=10
     article
-      h2 "Protected: T0204 Protected Post"
+      h2 "Tom & Jerry’s “Quotes” 日本語 😀"
     article
       h2 "UnbreakableUnbreakableUnbreakableUnbreakableUnbreakableUnbreakableUnbreakableUnbreakableUnbreakableUnbreakableUnbreakableUnbreakableUnbreakableUnbreakableUnbreakableUnbreakableUnbreakableUnbreakable"
     article
-      h2 "Tom & Jerry’s “Quotes” 日本語 😀"
+      h2 "Protected: T0204 Protected Post"
     article
       h2 "First Post"
     article
