@@ -43,6 +43,8 @@ export function buildThemes(
     )) {
       // Workspace installs are not theme source and contain symlinks/binaries.
       if (entry.name === "node_modules") continue;
+      // The admin thumbnail is a binary the text bundle cannot hold, and the token proofs do not read it.
+      if (entry.name === "screenshot.png" && directory === source) continue;
       const path = join(directory, entry.name);
       if (entry.isDirectory()) collect(path);
       else if (entry.isFile()) {

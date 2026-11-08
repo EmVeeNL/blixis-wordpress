@@ -62,7 +62,7 @@ wp plugin list --path="$HOME/Sites/blixis"
 
 `setup-links.sh` links `themes/blixis-base` and `plugins/blixis-blocks` into the local site. It is safe to rerun and stops if a different file or link already occupies either destination. Set `BLIXIS_WP_PATH` to an **absolute** WordPress path before running the script if your site is elsewhere. Linking does not activate the theme or plugin.
 
-The optional [Showcase child theme](docs/development/SHOWCASE.md) is linked and activated separately when you want to view the English concept-inspired page locally. Its `screenshot.png` provides the Appearance → Themes thumbnail. The neutral Base parent has a separate purpose and will not display the Showcase front page when active.
+The optional [Showcase child theme](docs/development/SHOWCASE.md) is linked and activated separately when you want to view the English concept-inspired page locally. Its `screenshot.png` provides its Appearance → Themes thumbnail; Base has its own screenshot of the neutral theme. Base will not display the Showcase front page when active.
 
 To inspect the existing database service without changing it:
 

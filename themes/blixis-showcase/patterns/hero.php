@@ -8,8 +8,8 @@
  * @package Blixis_Showcase
  */
 ?>
-<!-- wp:group {"tagName":"section","anchor":"top","align":"wide","className":"blixis-showcase-hero","layout":{"type":"constrained"}} -->
-<section id="top" class="wp-block-group alignwide blixis-showcase-hero">
+<!-- wp:group {"tagName":"section","anchor":"top","className":"blixis-showcase-hero","layout":{"type":"default"}} -->
+<section id="top" class="wp-block-group blixis-showcase-hero">
 <!-- wp:group {"className":"blixis-showcase-copy","layout":{"type":"default"}} -->
 <div class="wp-block-group blixis-showcase-copy">
 <!-- wp:paragraph {"className":"showcase-eyebrow"} -->
@@ -19,7 +19,7 @@
 <h1 class="wp-block-heading"><?php esc_html_e( 'A strong foundation for every website.', 'blixis-showcase' ); ?></h1>
 <!-- /wp:heading -->
 <!-- wp:paragraph {"className":"showcase-hero-description"} -->
-<p class="showcase-hero-description"><?php esc_html_e( 'A lightweight WordPress foundation, ready to be shaped with design tokens and Blixis Blocks as those planned tools are built.', 'blixis-showcase' ); ?></p>
+<p class="showcase-hero-description"><?php esc_html_e( 'A lightweight WordPress foundation with a theme.json design-token bridge. Token setup screens and Blixis Blocks are planned.', 'blixis-showcase' ); ?></p>
 <!-- /wp:paragraph -->
 <!-- wp:buttons {"className":"showcase-hero-actions"} -->
 <div class="wp-block-buttons showcase-hero-actions">

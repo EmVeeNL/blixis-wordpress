@@ -2,6 +2,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { mkdtempSync, mkdirSync, writeFileSync, rmSync } from 'node:fs';
+import { Buffer } from 'node:buffer';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { checkChild, discoverChild } from './static.mjs';
@@ -34,3 +35,17 @@ test('Base mentioning the child fails', () => hit(run({}, { ...BASE, 'templates/
 test('Base shipping an image fails', () => hit(run({}, { ...BASE, 'assets/a.png': 'x' }), /binary asset/));
 test('invalid theme.json fails', () => hit(run({ 'theme.json': '{' }), /theme.json/));
 test('discovery finds the child by Template header', () => { const r = make({ 'blixis-base/style.css': 'Template: x', 'zz/style.css': CSS }); assert.equal(discoverChild(r), join(r, 'zz')); });
+
+// Base's own admin screenshot is the single permitted Base binary.
+const png = (w, h, tag = 0) => { const b = Buffer.alloc(32); Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]).copy(b); b.writeUInt32BE(13, 8); b.write('IHDR', 12); b.writeUInt32BE(w, 16); b.writeUInt32BE(h, 20); b[28] = tag; return b; };
+const withBase = (shot, rights) => { const c = make({ 'demo-showcase/style.css': CSS, 'demo-showcase/screenshot.png': png(1200, 900, 7) }); const b = make({ ...BASE, 'screenshot.png': shot }); const r = checkChild(join(c, 'demo-showcase'), b, rights); rmSync(c, { recursive: true }); rmSync(b, { recursive: true }); return r.filter((m) => /Base/.test(m)); };
+const RIGHTS_BASE = { dir: null, readme: 'logo.webp screenshot.png themes/blixis-base/screenshot.png' };
+test('Base 1200x900 screenshot with a rights entry passes', () => assert.deepEqual(withBase(png(1200, 900, 1), RIGHTS_BASE), []));
+test('Base screenshot of the wrong size fails', () => hit(withBase(png(1280, 800, 1), RIGHTS_BASE), /1200×900/));
+test('Base screenshot without a rights entry fails', () => hit(withBase(png(1200, 900, 1), { dir: null, readme: 'screenshot.png' }), /no rights entry/));
+test('Base screenshot that copies the concept image fails', () => {
+  const dir = make({ 'blixis-base-preview.png': png(1200, 900, 1) });
+  hit(withBase(png(1200, 900, 1), { dir, readme: RIGHTS_BASE.readme + ' blixis-base-preview.png' }), /duplicates/);
+});
+test('Base screenshot that copies the child screenshot fails', () => hit(withBase(png(1200, 900, 7), RIGHTS_BASE), /duplicates/));
+test('any other Base binary still fails', () => hit(run({}, { ...BASE, 'assets/screenshot.png': 'x' }), /binary asset/));

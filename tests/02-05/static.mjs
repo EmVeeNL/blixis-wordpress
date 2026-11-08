@@ -76,7 +76,20 @@ export function checkChild(child, base, rights = { dir: null, readme: '' }) {
   const brand = [slug, header(css, 'Theme Name')].filter((s) => s && s.length > 3 && !/^blixis[- ]?(base)?$/i.test(s));
   for (const f of baseFiles) for (const b of brand) if (read(f).toLowerCase().includes(b.toLowerCase())) fail(`Base file ${f.slice(base.length + 1)} mentions the child "${b}"`);
   // Parent stays neutral: no webfonts or images shipped in Base, no child-only text domain.
-  for (const f of walk(base)) if (BINARY.has(extname(f).toLowerCase())) fail(`Base ships a binary asset: ${f.slice(base.length + 1)}`);
+  // The one allowed exception is Base's own 1200x900 admin screenshot, which needs a rights entry and
+  // must be an original capture of the neutral theme, not a copy of the concept image or the child's screenshot.
+  for (const f of walk(base)) {
+    if (!BINARY.has(extname(f).toLowerCase())) continue;
+    const rel = f.slice(base.length + 1);
+    if (rel !== 'screenshot.png') { fail(`Base ships a binary asset: ${rel}`); continue; }
+    const png = readFileSync(f);
+    const valid = png.length >= 24 && png.subarray(0, 8).equals(Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]));
+    if (!valid || png.readUInt32BE(16) !== 1200 || png.readUInt32BE(20) !== 900) fail('Base screenshot.png must be a 1200×900 PNG');
+    if (!rights.readme.includes('themes/blixis-base/screenshot.png')) fail('Base screenshot.png has no rights entry (themes/blixis-base/screenshot.png) in docs/assets/README.md');
+    const hash = sha(f);
+    const others = [...(rights.dir && existsSync(rights.dir) ? readdirSync(rights.dir).map((n) => join(rights.dir, n)) : []), join(child, 'screenshot.png')];
+    for (const other of others) if (existsSync(other) && statSync(other).isFile() && BINARY.has(extname(other).toLowerCase()) && sha(other) === hash) fail(`Base screenshot.png duplicates ${basename(other)}; it must be its own capture of the neutral theme`);
+  }
 
   // Asset rights: every binary in the child is a documented, rights-confirmed docs/assets file or a licensed font listed there.
   for (const f of files.filter((f) => BINARY.has(extname(f).toLowerCase()))) {

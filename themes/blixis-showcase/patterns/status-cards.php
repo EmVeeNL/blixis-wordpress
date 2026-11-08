@@ -8,8 +8,8 @@
  * @package Blixis_Showcase
  */
 ?>
-<!-- wp:group {"tagName":"section","anchor":"showcase-status","align":"wide","className":"blixis-showcase-status","layout":{"type":"constrained"}} -->
-<section id="showcase-status" class="wp-block-group alignwide blixis-showcase-status">
+<!-- wp:group {"tagName":"section","anchor":"showcase-status","className":"blixis-showcase-status","layout":{"type":"default"}} -->
+<section id="showcase-status" class="wp-block-group blixis-showcase-status">
 <!-- wp:heading {"level":2} -->
 <h2 class="wp-block-heading"><?php esc_html_e( 'Project status', 'blixis-showcase' ); ?></h2>
 <!-- /wp:heading -->
@@ -31,7 +31,7 @@
 <h3 class="wp-block-heading"><?php esc_html_e( 'Design tokens', 'blixis-showcase' ); ?></h3>
 <!-- /wp:heading -->
 <!-- wp:paragraph -->
-<p><strong><?php esc_html_e( 'Planned.', 'blixis-showcase' ); ?></strong> <?php esc_html_e( 'Token setup for colour, typography, and spacing is not complete; the settings screens are not available yet.', 'blixis-showcase' ); ?></p>
+<p><strong><?php esc_html_e( 'Partly implemented.', 'blixis-showcase' ); ?></strong> <?php esc_html_e( 'The theme.json token bridge is implemented; the token setup UI is planned.', 'blixis-showcase' ); ?></p>
 <!-- /wp:paragraph -->
 </div>
 <!-- /wp:group -->

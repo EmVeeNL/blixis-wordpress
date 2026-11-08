@@ -141,6 +141,38 @@ const contrastFn = () => {
   return out;
 };
 
+// Left-edge and row-position regression checks for the showcase front page.
+const layoutFn = (spec) => {
+  const box = (selector) => { const el = document.querySelector(selector); if (!el) return null; const r = el.getBoundingClientRect(); return { left: r.left, right: r.right, width: r.width }; };
+  const edges = Object.fromEntries(Object.entries(spec.edges).map(([name, selector]) => [name, box(selector)?.left ?? null]));
+  const band = box(spec.band);
+  const items = [...document.querySelectorAll(spec.items)].map((el) => { const r = el.getBoundingClientRect(); return { top: r.top, bottom: r.bottom, left: r.left }; });
+  return { edges, band, items, viewport: document.documentElement.clientWidth };
+};
+const LAYOUT_SPEC = {
+  edges: { header: '.showcase-header-inner .showcase-wordmark', eyebrow: '.blixis-showcase-hero .showcase-eyebrow', h1: '.blixis-showcase-hero h1', feature: '.blixis-showcase-features-list .showcase-feature-icon', statusHeading: '.blixis-showcase-status > h2', card: '.blixis-showcase-card', footer: '.showcase-footer-inner .showcase-wordmark' },
+  band: '.blixis-showcase-status',
+  items: '.blixis-showcase-features-list li',
+};
+// Returns a list of problems; empty means the page passes.
+const layoutProblems = (m) => {
+  const problems = [];
+  const names = Object.keys(m.edges);
+  const missing = names.filter((n) => m.edges[n] === null);
+  if (missing.length) problems.push(`missing: ${missing.join(',')}`);
+  else {
+    const lefts = names.map((n) => m.edges[n]);
+    if (Math.max(...lefts) - Math.min(...lefts) > 1) problems.push(`left edges differ: ${names.map((n) => `${n}=${m.edges[n].toFixed(1)}`).join(' ')}`);
+  }
+  if (!m.band || Math.abs(m.band.left) > 1 || Math.abs(m.band.width - m.viewport) > 1) problems.push(`status band not full width: ${JSON.stringify(m.band)} of ${m.viewport}`);
+  // Items sharing a row (same left-to-right band of tops) must share a top; stacked items must be evenly spaced.
+  const rows = [];
+  for (const item of m.items) { const row = rows.find((r) => Math.abs(r[0].top - item.top) < 40 && item.left > r[r.length - 1].left); if (row) row.push(item); else rows.push([item]); }
+  for (const row of rows) if (Math.max(...row.map((i) => i.top)) - Math.min(...row.map((i) => i.top)) > 1) problems.push(`feature row tops differ: ${row.map((i) => i.top.toFixed(1)).join(',')}`);
+  if (rows.length < 1 || m.items.length !== 4) problems.push(`expected 4 feature items, found ${m.items.length}`);
+  return problems;
+};
+
 const focusFn = () => {
   const el = document.activeElement;
   if (!el || el === document.body) return null;
@@ -255,6 +287,11 @@ async function runRoute(page, route, ctx) {
     await page.setViewportSize({ width: 1200, height: 900 });
     await go(page, BASE + route.url);
     await page.screenshot({ path: 'shots/theme-screenshot-1200x900.png' });
+    // Neutral Base theme alone, on a disposable site, for its own admin thumbnail.
+    await go(page, BASE + '/?page_id=6005&t0205_theme=blixis-base');
+    const base = await page.evaluate(() => ({ html: document.documentElement.outerHTML, h1: document.querySelector('h1')?.textContent ?? '', external: performance.getEntriesByType('resource').filter((e) => !e.name.startsWith(location.origin)).length }));
+    check('Base-alone capture renders the Base theme only (no showcase stylesheet) with its sample page', base.html.includes('/themes/blixis-base/') && !/blixis-showcase/i.test(base.html) && base.h1.includes('Neutral Base theme') && base.external === 0, base.h1);
+    await page.screenshot({ path: 'shots/base-screenshot-1200x900.png' });
   }
 
   for (const width of WIDTHS) {
@@ -273,6 +310,15 @@ async function runRoute(page, route, ctx) {
     const shot = await page.screenshot({ path: `shots/${ctx.browser}-${route.id}-${width}.png`, fullPage: true });
     check(`screenshot at ${width}px is not blank`, shot.length > 4000, `${shot.length} bytes`);
     if (width === 320) { await textSpacing(page); }
+  }
+
+  if (route.kind === 'front') {
+    for (const width of [1440, 1280, 820, 390, 320]) {
+      await page.setViewportSize({ width, height: 900 });
+      await go(page, BASE + route.url);
+      const problems = layoutProblems(await page.evaluate(layoutFn, LAYOUT_SPEC));
+      check(`layout at ${width}px: header, hero, features, cards and footer share one left edge; status band is full width; feature rows align`, problems.length === 0, problems.join('; '));
+    }
   }
 
   await page.setViewportSize({ width: 1280, height: 900 });
@@ -332,6 +378,15 @@ for (const name of wanted) {
   await page.setContent('<!doctype html><html lang="en"><body><div style="width:600px">wide</div></body></html>');
   const o = await page.evaluate(overflowFn);
   check('control: overflow audit reports a 600px box at 320px', o.scrollWidth > o.clientWidth, JSON.stringify(o));
+  await page.setViewportSize({ width: 1440, height: 900 });
+  const mk = (left, tops) => `<!doctype html><html><body style="margin:0"><div class="showcase-header-inner"><span class="showcase-wordmark" style="margin-left:${left}px">B</span></div><div class="blixis-showcase-hero"><p class="showcase-eyebrow" style="margin:0 0 0 40px">e</p><h1 style="margin:0 0 0 40px">h</h1></div><ul class="blixis-showcase-features-list" style="list-style:none;margin:0 0 0 40px;padding:0;display:flex;align-items:flex-start">${tops.map((t) => `<li style="margin-top:${t}px;width:80px"><span class="showcase-feature-icon" style="display:block">i</span></li>`).join('')}</ul><div class="blixis-showcase-status" style="margin-left:0;width:1440px"><h2 style="margin:0 0 0 40px">s</h2><div class="blixis-showcase-card" style="margin-left:40px">c</div></div><div class="showcase-footer-inner"><span class="showcase-wordmark" style="margin-left:40px">B</span></div></body></html>`;
+  await page.setContent(mk(40, [0, 0, 0, 0]));
+  const ok = layoutProblems(await page.evaluate(layoutFn, LAYOUT_SPEC));
+  const edgeOnly = ok.filter((p) => /left edges/.test(p));
+  check('control: layout audit accepts aligned left edges', edgeOnly.length === 0, ok.join('; '));
+  await page.setContent(mk(90, [0, 16, 0, 0]));
+  const bad = layoutProblems(await page.evaluate(layoutFn, LAYOUT_SPEC));
+  check('control: layout audit reports a shifted wordmark and a feature row 16px lower', bad.some((p) => /left edges differ/.test(p)) && bad.some((p) => /row tops differ/.test(p)), bad.join('; '));
   await browser.close();
 }
 writeFileSync('shots/report.json', JSON.stringify({ fails, axe: report.axe, contrast: report.contrast, checks: report.checks }, null, 2));
