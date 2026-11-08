@@ -57,3 +57,11 @@ Image rights are recorded only in [`docs/assets/README.md`](../assets/README.md)
 
 - Colour contrast over images and gradients, focus order of non-native widgets, and visual quality need the manual review.
 - Only Chromium runs by default; CI also runs Firefox. WebKit is not covered.
+
+## Integration evidence (2026-11-08)
+
+`T0205_NODE_MODULES=<primary-checkout>/node_modules bash tests/02-05/run.sh --browsers chromium,firefox --out /tmp/blixis-0205-final` passed against WordPress 7.1.4/PHP 8.3 and WordPress 7.0.8/PHP 8.5. Each combination passed 8 setup checks and 465 browser checks, with no PHP warnings, notices, deprecations or database errors. All 14 static negative controls passed. The exact front-page heading is asserted so neutral fallback content cannot pass as a showcase. ShellCheck, actionlint, PHP_CodeSniffer and documentation checks passed.
+
+Manual review covered full-page screenshots at 320, 768 and 1280 CSS pixels: content stacks on narrow screens, the hero and card grids align, both in-page links work through keyboard checks, and there is no overlap or clipped copy. The blue/cyan concept is interpreted with CSS artwork; the supplied concept bitmap remains documentation only. No image, font, CDN dependency or public JavaScript was added.
+
+The automated contrast audit reports hero gradient backgrounds for manual review. The hero's muted `#465675` text measures at least 6.75:1 against its light gradient stops; blue `#0645f5` buttons and links against white measure 6.61:1. The concept label sits on opaque white, with `#111827` text at 17.74:1. Cyan is decorative, not a text background. This evidence is not a complete WCAG conformance audit; WebKit remains outside this task's browser matrix. CI retains screenshots and detailed axe/contrast reports in its `showcase-0205` artifact for seven days.
