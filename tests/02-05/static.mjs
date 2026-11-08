@@ -37,6 +37,17 @@ export function checkChild(child, base, rights = { dir: null, readme: '' }) {
   if (header(css, 'Text Domain') && header(css, 'Text Domain') !== slug) fail(`Text Domain ${header(css, 'Text Domain')} must equal the directory name ${slug}`);
   if (slug === 'blixis-base') fail('the child must not be the parent directory');
 
+  if (slug === 'blixis-showcase') {
+    const screenshot = join(child, 'screenshot.png');
+    if (!existsSync(screenshot)) {
+      fail('Showcase screenshot.png is missing from the child theme');
+    } else {
+      const png = readFileSync(screenshot);
+      const valid = png.subarray(0, 8).equals(Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]));
+      if (!valid || png.length < 24 || png.readUInt32BE(16) !== 1200 || png.readUInt32BE(20) !== 900) fail('Showcase screenshot.png must be a 1200×900 PNG');
+    }
+  }
+
   const files = walk(child);
   const textFiles = files.filter((f) => TEXT.has(extname(f).toLowerCase()));
   for (const f of textFiles) {

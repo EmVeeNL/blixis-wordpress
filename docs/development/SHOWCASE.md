@@ -6,6 +6,15 @@ Test harness for the [Blixis showcase](../roadmap/phases/02-blixis-base-theme/05
 
 Copy `themes/blixis-base` and `themes/blixis-showcase` into a disposable or intended WordPress installation’s `wp-content/themes`, then activate **Blixis Showcase** explicitly. The standard link script intentionally installs only Base and Blocks. The child supplies a front-page template with core-block patterns; activation creates no pages, options, navigation or media. Existing page content stays in the database, although the showcase front-page template takes precedence on the home URL. Switch back to Base to restore its normal templates. Delete the inactive child directory to uninstall. No database migration is needed.
 
+For the local `~/Sites/blixis` installation, link the optional child only when you want to view it:
+
+```sh
+ln -s "$HOME/Developer/WordPress/blixis-wordpress/themes/blixis-showcase" "$HOME/Sites/blixis/wp-content/themes/blixis-showcase"
+wp --path="$HOME/Sites/blixis" theme activate blixis-showcase
+```
+
+First check that no file or symlink already occupies the target. The theme's 1200×900 `screenshot.png` is a capture of the rendered English showcase, used by WordPress under Appearance → Themes. It shows the child theme, not the neutral Base parent or a completed Blocks editor.
+
 Branding and its fixed demonstration palette belong exclusively to this optional child. Its `theme.json` is not the future canonical token configuration or a token settings interface. It inherits Base’s header, footer and inner-page templates.
 
 ## Run
@@ -28,7 +37,7 @@ A disposable Compose project (`blixis-0205-<random>`, tmpfs database, no publish
 
 ## What runs
 
-**Static (`static.mjs`, host only).** Child `style.css` has Theme Name, Version, License and `Template: blixis-base`; the text domain equals the directory name; `theme.json` is valid and versioned; no external stylesheet, font, script or remote `@import`; no inline script or dangerous PHP function; no credential-like strings; every `<img>` carries `alt`; every binary asset has an entry in [`docs/assets/README.md`](../assets/README.md) (by file name, or by hash against a file in `docs/assets`) and fonts need a licence record; no capability claim (drag and drop, page builder, setup wizard, visual or live token editor, element registry, AI, cloud sync, "WCAG compliant" and similar) unless the same line says it is planned or not yet available. Base files never mention the child's name or slug and ship no binary assets. `static.test.mjs` proves each rule can fail (14 controls).
+**Static (`static.mjs`, host only).** Child `style.css` has Theme Name, Version, License and `Template: blixis-base`; the text domain equals the directory name; `theme.json` is valid and versioned; Showcase has a 1200×900 PNG admin screenshot; no external stylesheet, font, script or remote `@import`; no inline script or dangerous PHP function; no credential-like strings; every `<img>` carries `alt`; every binary asset has an entry in [`docs/assets/README.md`](../assets/README.md) (by file name, or by hash against a file in `docs/assets`) and fonts need a licence record; no capability claim (drag and drop, page builder, setup wizard, visual or live token editor, element registry, AI, cloud sync, "WCAG compliant" and similar) unless the same line says it is planned or not yet available. Base files never mention the child's name or slug and ship no binary assets. `static.test.mjs` proves the original rules can fail (14 controls).
 
 **Setup (`run-wp.sh`).** On the fixture: Base alone renders one `main`, no child branding and no webfonts; WordPress reports no theme errors for the child; activating it gives stylesheet = child, template = `blixis-base`, and a block theme; Base files are byte-identical before and after activation and seeding.
 
@@ -62,6 +71,6 @@ Image rights are recorded only in [`docs/assets/README.md`](../assets/README.md)
 
 `T0205_NODE_MODULES=<primary-checkout>/node_modules bash tests/02-05/run.sh --browsers chromium,firefox --out /tmp/blixis-0205-final` passed against WordPress 7.1.4/PHP 8.3 and WordPress 7.0.8/PHP 8.5. Each combination passed 8 setup checks and 465 browser checks, with no PHP warnings, notices, deprecations or database errors. All 14 static negative controls passed. The exact front-page heading is asserted so neutral fallback content cannot pass as a showcase. ShellCheck, actionlint, PHP_CodeSniffer and documentation checks passed.
 
-Manual review covered full-page screenshots at 320, 768 and 1280 CSS pixels: content stacks on narrow screens, the hero and card grids align, both in-page links work through keyboard checks, and there is no overlap or clipped copy. The blue/cyan concept is interpreted with CSS artwork; the supplied concept bitmap remains documentation only. No image, font, CDN dependency or public JavaScript was added.
+Manual review covered full-page screenshots at 320, 768 and 1280 CSS pixels: content stacks on narrow screens, the hero and card grids align, both in-page links work through keyboard checks, and there is no overlap or clipped copy. The blue/cyan concept is interpreted with CSS artwork; the supplied concept bitmap remains documentation only. The child theme contains a generated WordPress admin screenshot, with no third-party image, font, CDN dependency or public JavaScript.
 
 The automated contrast audit reports hero gradient backgrounds for manual review. The hero's muted `#465675` text measures at least 6.75:1 against its light gradient stops; blue `#0645f5` buttons and links against white measure 6.61:1. The concept label sits on opaque white, with `#111827` text at 17.74:1. Cyan is decorative, not a text background. This evidence is not a complete WCAG conformance audit; WebKit remains outside this task's browser matrix. CI retains screenshots and detailed axe/contrast reports in its `showcase-0205` artifact for seven days.
