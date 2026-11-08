@@ -10,9 +10,8 @@
 ?>
 <!-- wp:group {"tagName":"section","align":"wide","className":"blixis-showcase-hero","layout":{"type":"constrained"}} -->
 <section class="wp-block-group alignwide blixis-showcase-hero">
-<!-- wp:paragraph {"className":"blixis-showcase-eyebrow"} -->
-<p class="blixis-showcase-eyebrow"><?php esc_html_e( 'Blixis Base theme', 'blixis-showcase' ); ?></p>
-<!-- /wp:paragraph -->
+<!-- wp:group {"className":"blixis-showcase-copy","layout":{"type":"default"}} -->
+<div class="wp-block-group blixis-showcase-copy">
 <!-- wp:heading {"level":1} -->
 <h1 class="wp-block-heading"><?php esc_html_e( 'A strong foundation for every website.', 'blixis-showcase' ); ?></h1>
 <!-- /wp:heading -->
@@ -29,6 +28,8 @@
 <!-- /wp:button -->
 </div>
 <!-- /wp:buttons -->
+</div>
+<!-- /wp:group -->
 <!-- wp:group {"className":"blixis-showcase-concept","layout":{"type":"constrained"}} -->
 <div class="wp-block-group blixis-showcase-concept">
 <!-- wp:paragraph {"className":"blixis-showcase-concept-label"} -->

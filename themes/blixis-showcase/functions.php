@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Load the optional showcase styles after Blixis Base.
  */
 function blixis_showcase_enqueue_styles(): void {
-	$path = get_stylesheet_directory() . '/style.css';
+	$path    = get_stylesheet_directory() . '/style.css';
 	$version = is_readable( $path ) ? (string) filemtime( $path ) : (string) wp_get_theme()->get( 'Version' );
 
 	wp_enqueue_style(

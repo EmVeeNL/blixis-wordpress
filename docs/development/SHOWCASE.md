@@ -1,6 +1,12 @@
-# Task 02-05 showcase tests
+# Optional Blixis showcase
 
 Test harness for the [Blixis showcase](../roadmap/phases/02-blixis-base-theme/05-base-showcase.md): an optional child theme of Blixis Base. It is test evidence only and does not mark the task Done. Results belong in the PR with exact commands. The showcase is a separate, optional child theme. It is never starter content for new sites, and Base stays brand-neutral.
+
+## Install and remove
+
+Copy `themes/blixis-base` and `themes/blixis-showcase` into a disposable or intended WordPress installation’s `wp-content/themes`, then activate **Blixis Showcase** explicitly. The standard link script intentionally installs only Base and Blocks. The child supplies a front-page template with core-block patterns; activation creates no pages, options, navigation or media. Existing page content stays in the database, although the showcase front-page template takes precedence on the home URL. Switch back to Base to restore its normal templates. Delete the inactive child directory to uninstall. No database migration is needed.
+
+Branding and its fixed demonstration palette belong exclusively to this optional child. Its `theme.json` is not the future canonical token configuration or a token settings interface. It inherits Base’s header, footer and inner-page templates.
 
 ## Run
 
@@ -26,7 +32,7 @@ A disposable Compose project (`blixis-0205-<random>`, tmpfs database, no publish
 
 **Setup (`run-wp.sh`).** On the fixture: Base alone renders one `main`, no child branding and no webfonts; WordPress reports no theme errors for the child; activating it gives stylesheet = child, template = `blixis-base`, and a block theme; Base files are byte-identical before and after activation and seeding.
 
-**Rendered (`browser.mjs`).** Front page (a static page, filled by a child pattern named `<slug>/front-page`, `<slug>/home` or `<slug>/showcase` when one is registered), About, Contact, a post, search, 404, an unpublished page, and up to six inner pages found through the header navigation. Per route, in a reduced-motion browser:
+**Rendered (`browser.mjs`).** Front page (the child’s `front-page.html` template renders its hero, principles and status patterns), About, Contact, a post, search, 404, an unpublished page, and up to six inner pages found through the header navigation. Per route, in a reduced-motion browser:
 
 | Area | Assertion |
 |---|---|
@@ -49,7 +55,5 @@ Image rights are recorded only in [`docs/assets/README.md`](../assets/README.md)
 
 ## Known and expected gaps
 
-- Until the child theme branch is integrated the run reports "no child theme found". The harness was exercised against a throwaway mock child, which proves the harness, not the showcase.
-- The front page body uses a child pattern only if one of the three names above is registered. Otherwise the seed adds a plain intro, which the placeholder-text check does not reject.
 - Colour contrast over images and gradients, focus order of non-native widgets, and visual quality need the manual review.
 - Only Chromium runs by default; CI also runs Firefox. WebKit is not covered.

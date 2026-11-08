@@ -46,4 +46,4 @@ if ( $locations ) {
 	}
 	set_theme_mod( 'nav_menu_locations', array_fill_keys( array_keys( $locations ), $menu ) );
 }
-echo 'NOTE seeded; theme ' . $slug . '; parent ' . get_template() . '; front pattern ' . ( $used ? $used : 'none (expected gap until child ships one)' ) . "\n";
+echo 'NOTE seeded; theme ' . $slug . '; parent ' . get_template() . '; front pattern ' . ( $used ? $used : 'none (child front-page template)' ) . "\n";

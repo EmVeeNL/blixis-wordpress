@@ -38,7 +38,7 @@
 <!-- wp:group {"className":"blixis-showcase-card","layout":{"type":"constrained"}} -->
 <div class="wp-block-group blixis-showcase-card">
 <!-- wp:heading {"level":3} -->
-<h3 class="wp-block-heading"><?php esc_html_e( 'Blixis Blocks', 'blixis-showcase' ); ?></h3>
+<h3 class="wp-block-heading"><?php esc_html_e( 'Blixis Blocks (planned)', 'blixis-showcase' ); ?></h3>
 <!-- /wp:heading -->
 <!-- wp:paragraph -->
 <p><strong><?php esc_html_e( 'Planned.', 'blixis-showcase' ); ?></strong> <?php esc_html_e( 'The Blocks editor does not exist yet. This page uses core WordPress blocks only.', 'blixis-showcase' ); ?></p>

@@ -278,7 +278,7 @@ async function runRoute(page, route, ctx) {
 }
 
 const ROUTES = [
-  { id: 'front', url: '/', kind: 'front', status: 200, keyboard: true },
+  { id: 'front', url: '/', kind: 'front', status: 200, keyboard: true, marker: 'A strong foundation for every website.' },
   { id: 'about', url: '/?page_id=6002', status: 200, marker: 'T0205-ABOUT-BODY', keyboard: true },
   { id: 'contact', url: '/?page_id=6003', status: 200, marker: 'T0205-CONTACT-BODY' },
   { id: 'post', url: '/?p=6101', status: 200, marker: 'T0205-POST-BODY' },
