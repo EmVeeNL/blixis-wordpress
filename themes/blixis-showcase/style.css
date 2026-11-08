@@ -12,6 +12,10 @@ Text Domain: blixis-showcase
 Template: blixis-base
 */
 
+/*
+ * Layout contract: every band (header, hero, features, status, footer) spans the full width and
+ * insets its content with the same --showcase-inset, so all left edges line up at every width.
+ */
 :root {
 	--showcase-ink: #111827;
 	--showcase-paper: #ffffff;
@@ -19,13 +23,17 @@ Template: blixis-base
 	--showcase-cyan: #08c7dc;
 	--showcase-line: #dce3f0;
 	--showcase-muted: #465675;
-	--showcase-radius: 1.25rem;
+	--showcase-radius: 0.85rem;
+	--showcase-font: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+	--showcase-gutter: clamp(1.25rem, 5vw, 5rem);
+	--showcase-max: 90rem;
+	--showcase-inset: max(var(--showcase-gutter), calc((100% - var(--showcase-max)) / 2 + var(--showcase-gutter)));
 }
 
 body {
 	background: var(--showcase-paper);
 	color: var(--showcase-ink);
-	font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+	font-family: var(--showcase-font);
 }
 
 a {
@@ -44,235 +52,40 @@ a:hover {
 	box-shadow: 0 0 0 2px #fff, 0 0 0 5px var(--showcase-blue);
 }
 
-.blixis-showcase-hero {
-	position: relative;
-	display: grid;
-	grid-template-columns: minmax(0, 1.12fr) minmax(15rem, 0.88fr);
-	align-items: center;
-	gap: clamp(2rem, 6vw, 6rem);
-	max-width: 82rem;
-	margin-inline: auto;
-	padding: clamp(3rem, 8vw, 7.5rem) clamp(1.25rem, 5vw, 5rem);
-	border-radius: 0 0 var(--showcase-radius) var(--showcase-radius);
-	background: linear-gradient(115deg, #fff 18%, #f2fbff 60%, #f7f3ff);
+::selection {
+	background: var(--showcase-cyan);
 	color: var(--showcase-ink);
+}
+
+/* Bands are full width: drop Base's site-blocks inset and vertical gaps between the template regions. */
+.wp-site-blocks {
+	padding-inline: 0;
+}
+
+.wp-site-blocks > * + *,
+.wp-site-blocks > main > * + * {
+	margin-block-start: 0;
+}
+
+.showcase-visually-hidden {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	padding: 0;
+	border: 0;
+	clip: rect(0, 0, 0, 0);
+	white-space: nowrap;
 	overflow: hidden;
 }
 
-.blixis-showcase-hero::after {
-	position: absolute;
-	right: -6rem;
-	bottom: -11rem;
-	width: 27rem;
-	height: 27rem;
-	border: 1px solid rgb(6 69 245 / 14%);
-	border-radius: 50%;
-	box-shadow: 0 0 0 3rem rgb(6 69 245 / 4%), 0 0 0 6rem rgb(8 199 220 / 5%);
-	content: "";
-	pointer-events: none;
-}
-
-.blixis-showcase-hero :where(h1, h2, p, a) {
-	position: relative;
-	z-index: 1;
-}
-
-.blixis-showcase-hero h1 {
-	max-width: 12ch;
-	margin: 0 0 1.25rem;
-	font-family: Georgia, "Times New Roman", serif;
-	font-size: clamp(2.75rem, 6.6vw, 6rem);
-	font-weight: 500;
-	letter-spacing: -0.03em;
-	line-height: 0.98;
-}
-
-.blixis-showcase-hero p {
-	max-width: 38rem;
-	color: #465675;
-	font-size: clamp(1.05rem, 1.5vw, 1.25rem);
-	line-height: 1.65;
-}
-
-.blixis-showcase-hero a {
-	display: inline-flex;
-	align-items: center;
-	min-height: 3rem;
-	margin-top: 1rem;
-	padding: 0.75rem 1.25rem;
-	border: 2px solid var(--showcase-blue);
-	border-radius: 999px;
-	background: var(--showcase-blue);
-	color: #fff;
-	font-weight: 700;
-	text-decoration: none;
-}
-
-.blixis-showcase-hero a:hover {
-	background: #fff;
-	color: #0030bd;
-}
-
-.blixis-showcase-concept {
-	position: relative;
-	min-height: 20rem;
-	border: 1px solid #c8ddff;
-	border-radius: 48% 48% 1.25rem 1.25rem;
-	background: linear-gradient(145deg, #d8fbff 0%, #73ddf2 44%, #4256ed 76%, #a75cff 100%);
-	box-shadow: inset 0 0 0 0.65rem rgb(255 255 255 / 45%), 0 1rem 3rem rgb(43 99 230 / 16%);
-}
-
-.blixis-showcase-concept::before,
-.blixis-showcase-concept::after {
-	position: absolute;
-	bottom: 0;
-	width: 55%;
-	height: 68%;
-	border-radius: 60% 60% 0 0;
-	background: linear-gradient(160deg, #f1ffff, #0bc7df 75%);
-	content: "";
-}
-
-.blixis-showcase-concept::before {
-	left: 0;
-	clip-path: polygon(0 30%, 42% 0, 100% 30%, 100% 100%, 0 100%);
-}
-
-.blixis-showcase-concept::after {
-	right: 0;
-	background: linear-gradient(150deg, #e4f2ff, #4552f4 75%);
-	clip-path: polygon(0 28%, 55% 0, 100% 25%, 100% 100%, 0 100%);
-}
-
-.blixis-showcase-grid,
-.blixis-showcase-features {
-	display: grid;
-	grid-template-columns: repeat(3, minmax(0, 1fr));
-	gap: 1rem;
-	max-width: 82rem;
-	margin: 0 auto;
-	padding: clamp(3rem, 7vw, 6rem) clamp(1.25rem, 5vw, 5rem);
-}
-
-.blixis-showcase-card {
-	min-width: 0;
-	padding: clamp(1.25rem, 2.5vw, 2rem);
-	border: 1px solid var(--showcase-line);
-	border-radius: var(--showcase-radius);
-	background: #fff;
-	box-shadow: 0 0.75rem 2rem rgb(25 48 105 / 5%);
-}
-
-.blixis-showcase-card h2,
-.blixis-showcase-card h3 {
-	margin-top: 0;
-	font-family: Georgia, "Times New Roman", serif;
-	font-size: clamp(1.4rem, 2.3vw, 2rem);
-	font-weight: 500;
-	letter-spacing: -0.025em;
-}
-
-.blixis-showcase-card p {
-	color: var(--showcase-muted);
-	line-height: 1.65;
-}
-
-.blixis-showcase-features {
-	grid-template-columns: 1fr 2fr;
-	align-items: start;
-	border-top: 1px solid var(--showcase-line);
-}
-
-.blixis-showcase-features > :first-child {
-	font-family: Georgia, "Times New Roman", serif;
-	font-size: clamp(1.8rem, 3vw, 3rem);
-}
-
-@media (max-width: 48rem) {
-	.blixis-showcase-hero {
-		grid-template-columns: 1fr;
-		gap: 2rem;
-		border-radius: 0;
-	}
-
-	.blixis-showcase-concept {
-		min-height: 14rem;
-	}
-
-	.blixis-showcase-grid {
-		grid-template-columns: 1fr;
-	}
-
-	.blixis-showcase-features {
-		grid-template-columns: 1fr;
-	}
-}
-
-@media (prefers-reduced-motion: no-preference) {
-	.blixis-showcase-card,
-	.blixis-showcase-hero a {
-		transition: transform 160ms ease, box-shadow 160ms ease, background-color 160ms ease;
-	}
-
-	.blixis-showcase-card:hover {
-		transform: translateY(-0.2rem);
-		box-shadow: 0 1rem 2rem rgb(25 48 105 / 10%);
-	}
-}
-
-/* Explicit block children keep Core's constrained layout from narrowing the grid. */
-.blixis-showcase-hero > .blixis-showcase-copy,
-.blixis-showcase-hero > .blixis-showcase-concept {
-	width: 100%;
-	max-width: none;
-	margin: 0;
-	min-width: 0;
-}
-
-.blixis-showcase-concept .blixis-showcase-concept-label {
-	position: relative;
-	z-index: 2;
-	margin: 1.5rem;
-	padding: 1rem;
-	background: #fff;
-	color: var(--showcase-ink);
-	font-size: 1rem;
-	border-radius: 0.5rem;
-}
-
-.blixis-showcase-status {
-	padding-inline: clamp(1.25rem, 5vw, 5rem);
-}
-
-.blixis-showcase-status > .blixis-showcase-grid {
-	max-width: none;
-	padding: 1rem 0 4rem;
-}
-
-.blixis-showcase-features-list li + li {
-	margin-top: 1rem;
-}
-
-.blixis-showcase-hero .is-style-outline a {
-	background: #fff;
-	color: var(--showcase-blue);
-}
-
-::selection {
-	background: #08c7dc;
-	color: #111827;
-}
-
-.blixis-showcase-status > h2 {
-	max-width: none;
-	margin-inline: 0;
-	font-size: clamp(1.8rem, 3vw, 3rem);
-}
-
-/* The optional showcase follows the supplied English concept preview. */
+/* Header and footer */
 .showcase-site-header {
 	border-bottom: 1px solid #e4e9f3;
 	background: #fff;
+}
+
+.showcase-site-footer {
+	border-top: 1px solid #e5eaf3;
 }
 
 .showcase-header-inner,
@@ -281,16 +94,24 @@ a:hover {
 	align-items: center;
 	justify-content: space-between;
 	gap: 2rem;
-	max-width: 94rem;
-	margin: 0 auto;
-	padding: 0.8rem clamp(1.25rem, 5vw, 5rem);
+	max-width: none;
+	margin: 0;
+	padding: 0.4rem var(--showcase-inset);
+}
+
+.showcase-footer-inner {
+	justify-content: flex-start;
+	padding-block: 0.9rem;
 }
 
 .showcase-wordmark {
+	display: inline-flex;
+	align-items: center;
+	min-height: 2.75rem;
 	color: #080d1b;
-	font-size: 1.7rem;
+	font-size: 1.45rem;
 	font-weight: 800;
-	letter-spacing: -0.075em;
+	letter-spacing: 0.1em;
 	line-height: 1;
 	text-decoration: none;
 }
@@ -319,21 +140,32 @@ a:hover {
 	color: var(--showcase-blue);
 }
 
-.blixis-showcase-hero {
-	grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
-	gap: clamp(2rem, 4vw, 4rem);
-	max-width: 94rem;
-	min-height: 29rem;
-	padding: clamp(3.5rem, 5vw, 5rem) clamp(1.25rem, 5vw, 5rem) 2rem;
-	border-radius: 0;
-	background: radial-gradient(ellipse at 78% 36%, #e2f8ff 0, transparent 34%), #fff;
-	overflow: visible;
+.showcase-footer-caption {
+	padding-left: 1.5rem;
+	border-left: 1px solid #d5deef;
+	color: var(--showcase-muted);
+	font-size: 0.85rem;
 }
 
-.blixis-showcase-hero::after,
-.blixis-showcase-concept::before,
-.blixis-showcase-concept::after {
-	display: none;
+/* Hero */
+.blixis-showcase-hero {
+	position: relative;
+	display: grid;
+	grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+	align-items: center;
+	gap: clamp(2rem, 4vw, 4rem);
+	max-width: none;
+	min-height: 29rem;
+	margin: 0;
+	padding: clamp(3.5rem, 5vw, 5rem) var(--showcase-inset) 2rem;
+	background: radial-gradient(ellipse at 78% 36%, #e2f8ff 0, transparent 34%), #fff;
+	color: var(--showcase-ink);
+}
+
+.blixis-showcase-hero > .blixis-showcase-copy,
+.blixis-showcase-hero > .showcase-art {
+	min-width: 0;
+	margin: 0;
 }
 
 .blixis-showcase-hero .showcase-eyebrow {
@@ -348,19 +180,21 @@ a:hover {
 
 .blixis-showcase-hero h1 {
 	max-width: 15ch;
-	font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-	font-size: clamp(2.8rem, 4.35vw, 4.55rem);
+	margin: 0 0 1.5rem;
+	font-family: var(--showcase-font);
+	font-size: clamp(2.6rem, 4.35vw, 4.4rem);
 	font-weight: 750;
-	letter-spacing: -0.06em;
-	line-height: 1.04;
+	letter-spacing: -0.02em;
+	line-height: 1.08;
+	text-wrap: balance;
 }
 
 .blixis-showcase-hero .showcase-hero-description {
 	max-width: 36rem;
-	margin-top: 0;
+	margin: 0;
 	color: #4c597a;
 	font-size: clamp(1.08rem, 1.6vw, 1.35rem);
-	line-height: 1.48;
+	line-height: 1.5;
 }
 
 .showcase-hero-actions {
@@ -369,12 +203,30 @@ a:hover {
 }
 
 .blixis-showcase-hero .showcase-hero-actions a {
+	display: inline-flex;
+	align-items: center;
 	min-height: 3.25rem;
 	margin: 0;
 	padding: 0.75rem 1.3rem;
+	border: 2px solid var(--showcase-blue);
 	border-radius: 0.55rem;
+	background: var(--showcase-blue);
+	color: #fff;
 	font-size: 1rem;
+	font-weight: 700;
+	text-decoration: none;
 }
+
+.blixis-showcase-hero .showcase-hero-actions a:hover {
+	background: #fff;
+	color: #0030bd;
+}
+
+.blixis-showcase-hero .is-style-outline a {
+	background: #fff;
+	color: var(--showcase-blue);
+}
+
 
 .showcase-art {
 	position: relative;
@@ -458,29 +310,17 @@ a:hover {
 .showcase-art-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.35rem; right: -0.1rem; bottom: 2.5rem; width: 19%; padding: 0.65rem; }
 .showcase-art-grid i { aspect-ratio: 1; border: 1px dashed #8fa8da; border-radius: 0.18rem; }
 
+/* Principles */
 .blixis-showcase-features {
-	display: block;
-	max-width: 94rem;
-	padding: 1.3rem clamp(1.25rem, 5vw, 5rem) 2rem;
-	border-top: 0;
+	max-width: none;
+	margin: 0;
+	padding: 1.3rem var(--showcase-inset) 2rem;
 }
 
-.showcase-visually-hidden {
-	position: absolute;
-	width: 1px;
-	height: 1px;
-	padding: 0;
-	border: 0;
-	clip: rect(0, 0, 0, 0);
-	white-space: nowrap;
-	overflow: hidden;
-}
-
-.blixis-showcase-features .blixis-showcase-features-list {
+.blixis-showcase-features-list {
 	display: grid;
 	grid-template-columns: repeat(4, minmax(0, 1fr));
 	gap: 1.2rem;
-	max-width: none;
 	margin: 0;
 	padding: 0;
 	list-style: none;
@@ -489,67 +329,176 @@ a:hover {
 .blixis-showcase-features-list li {
 	display: flex;
 	align-items: flex-start;
-	gap: 0.75rem;
+	gap: 0.85rem;
 	min-width: 0;
 	margin: 0;
 	padding-right: 1rem;
 	border-right: 1px solid #e1e8f3;
 }
 
-.blixis-showcase-features-list li:last-child { border-right: 0; }
-.blixis-showcase-features-list .showcase-feature-icon { min-width: 2.4rem; color: var(--showcase-blue); font-size: 2.2rem; line-height: 1; }
-.blixis-showcase-features-list strong { display: block; color: #111827; font-size: 1rem; line-height: 1.3; }
-.blixis-showcase-features-list small { display: block; color: #465675; font-size: 0.82rem; line-height: 1.45; }
+.blixis-showcase-features-list li:last-child {
+	border-right: 0;
+}
 
+.showcase-feature-icon {
+	flex: none;
+	width: 2.5rem;
+	height: 2.5rem;
+	color: var(--showcase-blue);
+}
+
+.showcase-feature-icon svg {
+	display: block;
+	width: 100%;
+	height: 100%;
+	fill: none;
+	stroke: currentcolor;
+	stroke-linecap: round;
+	stroke-linejoin: round;
+	stroke-width: 1.5;
+}
+
+.blixis-showcase-features-list strong {
+	display: block;
+	color: var(--showcase-ink);
+	font-size: 1rem;
+	line-height: 1.3;
+}
+
+.blixis-showcase-features-list small {
+	display: block;
+	color: var(--showcase-muted);
+	font-size: 0.82rem;
+	line-height: 1.45;
+}
+
+/* Project status */
 .blixis-showcase-status {
 	max-width: none;
-	padding: 2rem max(1.25rem, calc((100vw - 84rem) / 2)) 4rem;
+	margin: 0;
+	padding: 2rem var(--showcase-inset) 4rem;
 	background: #f7faff;
 }
 
 .blixis-showcase-status > h2 {
-	max-width: 94rem;
-	margin: 0 auto 1.25rem;
-	font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+	max-width: none;
+	margin: 0 0 1.25rem;
+	font-family: var(--showcase-font);
 	font-size: 1.05rem;
 	font-weight: 700;
 	letter-spacing: 0.04em;
 	text-transform: uppercase;
 }
 
-.blixis-showcase-status > .blixis-showcase-grid {
+.blixis-showcase-grid {
+	display: grid;
 	grid-template-columns: repeat(3, minmax(0, 1fr));
-	max-width: 94rem;
-	margin: 0 auto;
+	gap: 1rem;
+	max-width: none;
+	margin: 0;
 	padding: 0;
 }
 
-.blixis-showcase-card { border-radius: 0.85rem; box-shadow: none; }
-.blixis-showcase-card h3 { font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; font-size: 1.35rem; font-weight: 700; }
-.showcase-site-footer { border-top: 1px solid #e5eaf3; }
-.showcase-footer-inner { justify-content: flex-start; gap: 2rem; padding-block: 1.3rem; }
-.showcase-footer-caption { padding-left: 1.5rem; border-left: 1px solid #d5deef; color: #465675; font-size: 0.85rem; }
+.blixis-showcase-card {
+	min-width: 0;
+	padding: clamp(1.25rem, 2.5vw, 2rem);
+	border: 1px solid var(--showcase-line);
+	border-radius: var(--showcase-radius);
+	background: #fff;
+}
+
+.blixis-showcase-card > * {
+	max-width: none;
+}
+
+.blixis-showcase-card h3 {
+	margin-top: 0;
+	font-family: var(--showcase-font);
+	font-size: 1.35rem;
+	font-weight: 700;
+	letter-spacing: -0.01em;
+}
+
+.blixis-showcase-card p {
+	color: var(--showcase-muted);
+	line-height: 1.65;
+}
 
 @media (max-width: 58rem) {
-	.blixis-showcase-hero { grid-template-columns: 1fr; padding-top: 3rem; }
-	.blixis-showcase-hero h1 { max-width: 16ch; }
-	.showcase-art { max-width: 36rem; }
-	.blixis-showcase-features .blixis-showcase-features-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-	.blixis-showcase-features-list li:nth-child(2) { border-right: 0; }
+	.blixis-showcase-hero {
+		grid-template-columns: 1fr;
+		padding-top: 3rem;
+	}
+
+	.blixis-showcase-hero h1 {
+		max-width: 16ch;
+	}
+
+	.showcase-art {
+		max-width: 36rem;
+	}
+
+	.blixis-showcase-features-list {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+
+	.blixis-showcase-features-list li:nth-child(2) {
+		border-right: 0;
+	}
+
+	.blixis-showcase-grid {
+		grid-template-columns: 1fr;
+	}
 }
 
 @media (max-width: 40rem) {
-	.showcase-header-inner { align-items: flex-start; flex-direction: column; gap: 0.5rem; }
-	.showcase-header-nav ul { gap: 1.2rem; flex-wrap: wrap; }
-	.blixis-showcase-hero { gap: 1.25rem; min-height: 0; }
-	.blixis-showcase-hero h1 { font-size: clamp(2.4rem, 9vw, 3.4rem); }
-	.showcase-art { min-height: 16rem; }
-	.showcase-art-window { inset: 1.4rem 7% 0.6rem 5%; }
-	.showcase-art-palette { width: 42%; }
-	.showcase-art-grid { display: none; }
-	.blixis-showcase-features .blixis-showcase-features-list { grid-template-columns: 1fr; }
-	.blixis-showcase-features-list li { border-right: 0; }
-	.blixis-showcase-status > .blixis-showcase-grid { grid-template-columns: 1fr; }
-	.showcase-footer-inner { align-items: flex-start; flex-direction: column; gap: 0.5rem; }
-	.showcase-footer-caption { padding-left: 0; border-left: 0; }
+	.showcase-header-inner,
+	.showcase-footer-inner {
+		align-items: flex-start;
+		flex-direction: column;
+		gap: 0.5rem;
+	}
+
+	.showcase-header-nav ul {
+		flex-wrap: wrap;
+		gap: 1.2rem;
+	}
+
+	.showcase-footer-caption {
+		padding-left: 0;
+		border-left: 0;
+	}
+
+	.blixis-showcase-hero {
+		gap: 1.25rem;
+		min-height: 0;
+	}
+
+	.blixis-showcase-hero h1 {
+		font-size: clamp(2.4rem, 9vw, 3.4rem);
+	}
+
+	.showcase-art {
+		min-height: 16rem;
+	}
+
+	.showcase-art-window {
+		inset: 1.4rem 7% 0.6rem 5%;
+	}
+
+	.showcase-art-palette {
+		width: 42%;
+	}
+
+	.showcase-art-grid {
+		display: none;
+	}
+
+	.blixis-showcase-features-list {
+		grid-template-columns: 1fr;
+	}
+
+	.blixis-showcase-features-list li {
+		border-right: 0;
+	}
 }

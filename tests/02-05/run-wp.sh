@@ -23,6 +23,14 @@ wp config set WP_DEBUG_DISPLAY false --raw --quiet >/dev/null 2>&1
 wp core install --url=http://127.0.0.1:8080 --title=Fixture --admin_user=fixture_admin --admin_password="$T0205_ADMIN_PASSWORD" --admin_email=admin@example.test --skip-email --quiet >/dev/null 2>&1 || fault "core install failed"
 
 cp -R /tmp/t/blixis-base wp-content/themes/blixis-base
+# Test-only switch so one browser run can render Base alone (?t0205_theme=blixis-base) for its screenshot.
+mkdir -p wp-content/mu-plugins
+cat > wp-content/mu-plugins/t0205-theme-switch.php <<'EOP'
+<?php
+foreach ( array( 'stylesheet', 'template' ) as $t0205_option ) {
+	add_filter( "pre_option_$t0205_option", static fn( $value ) => ( isset( $_GET['t0205_theme'] ) && 'blixis-base' === $_GET['t0205_theme'] ) ? 'blixis-base' : $value );
+}
+EOP
 BASE_SUM_BEFORE="$(cd wp-content/themes/blixis-base && find . -type f | sort | xargs sha256sum | sha256sum)"
 wp theme activate blixis-base --quiet >/dev/null 2>&1 || fault "Base activation failed"
 PHP_CLI_SERVER_WORKERS=4 wp server --host=127.0.0.1 --port=8080 >/tmp/server.log 2>&1 &

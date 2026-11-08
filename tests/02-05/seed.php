@@ -30,11 +30,19 @@ $home  = $mk( array( 'import_id' => 6001, 'post_title' => 'Home', 'post_name' =>
 $about = $mk( array( 'import_id' => 6002, 'post_title' => 'About', 'post_name' => 'about', 'post_content' => $p( 'T0205-ABOUT-BODY' ) . '<!-- wp:heading {"level":2} --><h2 class="wp-block-heading">Section</h2><!-- /wp:heading -->' . $p( 'More text with a <a href="https://example.test/">link</a>.' ) ) );
 $mk( array( 'import_id' => 6003, 'post_title' => 'Contact', 'post_name' => 'contact', 'post_content' => $p( 'T0205-CONTACT-BODY' ) ) );
 $mk( array( 'import_id' => 6004, 'post_title' => 'T0205 Draft Secret', 'post_status' => 'draft', 'post_content' => $p( 'T0205-DRAFT-BODY' ) ) );
+$mk( array( 'import_id' => 6005, 'post_title' => 'Neutral Base theme', 'post_name' => 'base-preview', 'post_content' =>
+	'<!-- wp:heading {"level":2} --><h2 class="wp-block-heading">Semantic templates, neutral defaults</h2><!-- /wp:heading -->'
+	. $p( 'Blixis Base is the neutral parent theme. It supplies semantic block templates, accessible navigation and token-ready defaults without site branding.' )
+	. '<!-- wp:list --><ul class="wp-block-list"><!-- wp:list-item --><li>System fonts and no external requests</li><!-- /wp:list-item --><!-- wp:list-item --><li>Header, content and footer landmarks</li><!-- /wp:list-item --><!-- wp:list-item --><li>Branding belongs in a child theme</li><!-- /wp:list-item --></ul><!-- /wp:list -->'
+	. '<!-- wp:quote --><blockquote class="wp-block-quote"><!-- wp:paragraph --><p>Defaults stay neutral so a child theme can own the brand.</p><!-- /wp:paragraph --></blockquote><!-- /wp:quote -->'
+	. '<!-- wp:heading {"level":3} --><h3 class="wp-block-heading">Ready for a child theme</h3><!-- /wp:heading -->'
+	. $p( 'Colours, type and spacing come from theme.json presets, so a child theme can restyle every template without editing the parent.' )
+	. '<!-- wp:buttons --><div class="wp-block-buttons"><!-- wp:button --><div class="wp-block-button"><a class="wp-block-button__link wp-element-button" href="#">Primary action</a></div><!-- /wp:button --></div><!-- /wp:buttons -->' ) );
 wp_insert_post( array( 'import_id' => 6101, 'post_title' => 'Hello Showcase', 'post_name' => 'hello-showcase', 'post_status' => 'publish', 'post_content' => $p( 'T0205-POST-BODY' ) ) );
 
 update_option( 'show_on_front', 'page' );
 update_option( 'page_on_front', $home );
-update_option( 'blogname', 'Fixture Showcase' );
+update_option( 'blogname', 'Example Site' );
 update_option( 'blogdescription', 'A disposable test site' );
 
 // A primary menu if the child registers a location, so header navigation has inner-page links.
