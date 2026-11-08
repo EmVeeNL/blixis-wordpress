@@ -15,18 +15,18 @@ main
     article
       h2 "Sample Page"
     article
-      h2 "Protected: T0204 Protected Post"
-    article
-      h2 "Sample Page"
-    article
-      h2 "Static Front"
-    article
-      h2 "UnbreakableUnbreakableUnbreakableUnbreakableUnbreakableUnbreakableUnbreakableUnbreakableUnbreakableUnbreakableUnbreakableUnbreakableUnbreakableUnbreakableUnbreakableUnbreakableUnbreakableUnbreakable"
     article
       h2 "Tom & Jerry’s “Quotes” 日本語 😀"
     article
+      h2 "UnbreakableUnbreakableUnbreakableUnbreakableUnbreakableUnbreakableUnbreakableUnbreakableUnbreakableUnbreakableUnbreakableUnbreakableUnbreakableUnbreakableUnbreakableUnbreakableUnbreakableUnbreakable"
+    article
+      h2 "Protected: T0204 Protected Post"
     article
       h2 "First Post"
+    article
+      h2 "Static Front"
+    article
+      h2 "Sample Page"
     article
       h2 "Filler Post 12"
   nav "Pagination" links=["2","3","Next Page"]

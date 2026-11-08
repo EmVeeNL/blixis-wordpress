@@ -7,7 +7,8 @@ $post = static function ( array $args ): int {
 		'post_type'    => 'post',
 		'post_status'  => 'publish',
 		'post_author'  => 1,
-		'post_date'    => '2026-01-15 10:00:00',
+		// Unique fixture timestamps avoid undefined SQL ordering for equal dates.
+		'post_date'    => gmdate( 'Y-m-d H:i:s', strtotime( '2026-01-15 10:00:00 UTC' ) + (int) ( $args['import_id'] ?? 0 ) ),
 		'post_content' => '',
 	);
 	$id = wp_insert_post( array_merge( $defaults, $args ), true );

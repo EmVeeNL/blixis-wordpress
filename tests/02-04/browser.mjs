@@ -333,10 +333,11 @@ async function searchForm(page, c) {
   const box = page.getByRole('searchbox').first();
   if (!(await box.count())) { check('search form can be used from the keyboard', false, 'no searchbox role'); return; }
   await box.focus();
-  await page.keyboard.type('Filler');
-  await Promise.all([page.waitForURL(/[?&]s=Filler/, { waitUntil: 'load' }), page.keyboard.press('Enter')]);
+  await box.fill('');
+  await page.keyboard.type('Filler body');
+  await Promise.all([page.waitForURL((url) => url.searchParams.get('s') === 'Filler body', { waitUntil: 'load' }), page.keyboard.press('Enter')]);
   await page.waitForLoadState('load');
-  check('search form submits with Enter and lands on the search template', /[?&]s=Filler/.test(page.url()) && (await page.locator('main').count()) === 1);
+  check('search form submits with Enter and lands on the search template', new URL(page.url()).searchParams.get('s') === 'Filler body' && (await page.locator('main').count()) === 1);
 }
 
 async function responsiveMenu(page, c) {
