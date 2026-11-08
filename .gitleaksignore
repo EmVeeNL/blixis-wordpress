@@ -12,3 +12,6 @@
 e0dd3a1966115ce73ebbac17d133981d09f334e6:tests/02-04/browser.mjs:generic-api-key:12
 # Same public sentinels in the squash merge of PR #24.
 7e722a4630a91b1b490ffea725e71be4df8ec16f:tests/02-04/browser.mjs:generic-api-key:12
+
+# Historical false positive: deliberately fake static-audit negative control; never a credential.
+9e37c93e39a09c1e18603d86dc7ee452f36eada7:tests/02-05/static.test.mjs:generic-api-key:26

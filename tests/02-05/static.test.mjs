@@ -23,7 +23,7 @@ test('text domain must match directory', () => { const c = make({ 'demo-showcase
 test('external stylesheet fails', () => hit(run({ 'templates/a.html': '<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=X">' }), /external resource/));
 test('remote @import fails', () => hit(run({ 'a.css': '@import url("https://cdn.example.org/a.css");' }), /@import|external/));
 test('inline script fails', () => hit(run({ 'templates/a.html': '<script>1</script>' }), /inline script/));
-test('credential fails', () => hit(run({ 'functions.php': '<?php $api_key = "abcdef0123456789abcdef";' }), /credential/));
+test('credential fails', () => hit(run({ 'functions.php': '<?php $api_key = "abcdef0123456789abcdef";' }), /credential/)); // gitleaks:allow -- deliberately fake negative-control credential, never used for authentication.
 test('unimplemented claim fails, hedged claim passes', () => {
   hit(run({ 'patterns/a.php': '<?php // x\n?><p>Build with our drag and drop page builder.</p>' }), /unimplemented/);
   assert.deepEqual(run({ 'patterns/a.php': '<?php // x\n?><p>A drag and drop editor is planned for a later release.</p>' }), []);
