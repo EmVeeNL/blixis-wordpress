@@ -60,6 +60,7 @@ for spec in "fixture_admin2 administrator en_US" "fixture_nl administrator nl_NL
 done
 
 # One child theme, active, for the wizard to configure.
+# shellcheck disable=SC2016 # PHP code for wp eval; nothing should expand.
 wp eval '
 $created = Blixis\Blocks\ChildTheme\create( array( "name" => "Acme Site", "slug" => "acme-site", "starter" => "neutral" ) );
 if ( is_wp_error( $created ) ) { fwrite( STDERR, $created->get_error_message() ); exit( 1 ); }
