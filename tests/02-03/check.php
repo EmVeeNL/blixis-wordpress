@@ -146,18 +146,11 @@ foreach (glob("$contract/valid/*.json") ?: [] as $path) {
     }
 }
 
-// Inline deployment contract must stay synchronized with the accepted contract.
-$inline = \Blixis\Blocks\Tokens\theme_json_contract();
-foreach (['font', 'length', 'shadow', 'duration', 'easing'] as $kind) {
-    $check("inline grammar matches contract: $kind", $inline['patterns'][$kind] === '/' . $map['grammars'][$kind] . '/D');
-}
-$check('inline slug grammar matches contract', $inline['slug'] === '/' . $map['grammars']['slug'] . '/D');
-foreach (['generics' => 'fontGenerics', 'fallbacks' => 'fontFallbacks', 'breakpoints' => 'breakpointPreset'] as $key => $source) {
-    $check("inline $key matches contract", $inline[$key] === $map[$source]);
-}
+// The projection reads the shipped token map; it must be the accepted contract (v2 has no inline copy).
+$check('shipped token map equals the contract', \Blixis\Blocks\Tokens\token_map() === $map);
 foreach ($map['sections'] as $section) {
     if (empty($section['buildOnly'])) {
-        $check('inline token names match contract: ' . $section['section'], $inline['sections'][$section['section']] === array_keys($section['tokens']));
+        $check('projection reads token names: ' . $section['section'], isset(\Blixis\Blocks\Tokens\token_map()['fields']) && array_keys(\Blixis\Blocks\Tokens\token_map()['sections'][array_search($section['section'], array_column($map['sections'], 'section'), true)]['tokens']) === array_keys($section['tokens']));
     }
 }
 

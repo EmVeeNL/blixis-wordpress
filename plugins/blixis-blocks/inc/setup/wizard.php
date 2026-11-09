@@ -718,6 +718,22 @@ function handle(): void {
 		}
 	}
 
+	// An optional dark palette (contract v2) is kept when submitted with the colours: all five
+	// values together, or all empty to remove it. Validation below reports anything partial.
+	if ( 'colors' === $step && isset( $posted['colorsDark'] ) && is_array( $posted['colorsDark'] ) ) {
+		$dark = array();
+		foreach ( array_keys( token_map()['sections'][0]['tokens'] ) as $key ) {
+			$value                           = $posted['colorsDark'][ $key ] ?? '';
+			$dark[ $key ]                    = is_string( $value ) ? trim( $value ) : '';
+			$submitted['colorsDark'][ $key ] = $dark[ $key ];
+		}
+		if ( '' === implode( '', $dark ) ) {
+			unset( $config['colorsDark'] );
+		} else {
+			$config['colorsDark'] = $dark;
+		}
+	}
+
 	$errors = step_errors( $config, $step );
 	if ( 'typography' === $step ) {
 		$allowed = array_merge( usable_names(), token_map()['fontGenerics'] );
@@ -763,6 +779,10 @@ function step_errors( array $config, string $step ): array {
 	$out    = array();
 	foreach ( $result['errors'] as $error ) {
 		$section = explode( '/', trim( $error['path'], '/' ) )[0];
+		// The optional dark palette belongs to the step that holds the colours.
+		if ( 'colorsDark' === $section ) {
+			$section = 'colors';
+		}
 		if ( in_array( $section, step_sections()[ $step ], true ) ) {
 			$out[] = $error;
 		}

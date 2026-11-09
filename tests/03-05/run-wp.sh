@@ -60,6 +60,8 @@ for spec in "fixture_admin2 administrator en_US" "fixture_nl administrator nl_NL
 done
 
 wp eval-file /tmp/t/check.php 2>&1 | grep -E '^(PASS|FAIL|NOTE|HARNESS) ' || fault "check.php produced no result"
+# Token contract v2 (03-06 Part B): migration, colour formats, dark mode, scheme setting. Restores the stored row.
+wp eval-file /tmp/t/check-v2.php 2>&1 | grep -E '^(PASS|FAIL|NOTE|HARNESS) ' || fault "check-v2.php produced no result"
 
 # Browsers keep several connections open; enough workers keep one idle connection from blocking the next page.
 PHP_CLI_SERVER_WORKERS=8 wp server --host=127.0.0.1 --port=8080 >/tmp/server.log 2>&1 &
