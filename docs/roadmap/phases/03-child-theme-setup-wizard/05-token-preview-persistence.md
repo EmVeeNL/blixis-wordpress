@@ -55,7 +55,7 @@ Breakpoint snapshots and integration tests for save, stale state, and rollback. 
 - Deliberate faults: without the Site Editor policy, visitors got `#000000` from a Site Editor override (4 failures); without clearing caches on save, new values did not apply in the same request (4 failures); without the preview nonce check, an invalid preview link showed the draft (1 failure).
 - `tests/03-03/run.sh` and `tests/03-04/run.sh` still pass. Two layout defects found by them were fixed: a long rollback button and the preview frame overflowed at 320 px.
 - Reviewed screenshots: review step with the preview at 1280 px and at 320 px.
-- Limit: Base templates use token presets only for background and text colour, so a neutral Base preview shows few changes. Page-performance budgets are not claimed.
+- Limit: Base templates use token presets only for background and text colour, so a neutral Base preview shows few changes. Follow-up: [03-06](06-token-driven-themes.md). Page-performance budgets are not claimed.
 
 ## Tracking and completion
 
