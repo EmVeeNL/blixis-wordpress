@@ -440,6 +440,53 @@ async function shot(page, path) {
 }
 async function mergedShots(browser) {
   let s = await login(browser, USERS.en, { viewport: { width: 1280, height: 900 } });
+  await go(s.page, 'theme');
+  await s.page.check('input[name="choice"][value="__new"]');
+  await settle(s.page);
+  await shot(s.page, 'shots/d1-theme-1280.png');
+  await go(s.page, 'colors');
+  await s.page.fill('#blixis-colors-foreground', '#cccccc');
+  await settle(s.page);
+  await frameLoaded(s.page);
+  await shot(s.page, 'shots/d1-colors-1280.png');
+  await s.page.fill('#blixis-colors-foreground', '#101828');
+  await go(s.page, 'theme');
+  await s.page.check('input[name="choice"][value="__new"]');
+  await settle(s.page);
+  await shot(s.page, 'shots/c3-theme-new-1280.png');
+  await s.context.close();
+  s = await login(browser, USERS.en, { viewport: { width: 800, height: 900 } });
+  await go(s.page, 'colors');
+  await frameLoaded(s.page);
+  await shot(s.page, 'shots/d1-colors-800.png');
+  await s.context.close();
+  s = await login(browser, USERS.en, { viewport: { width: 320, height: 800 } });
+  await go(s.page, 'colors');
+  await frameLoaded(s.page);
+  await shot(s.page, 'shots/d1-tabs-320.png');
+  await s.context.close();
+  s = await login(browser, USERS.ar, { viewport: { width: 1280, height: 900 } });
+  await chooseTheme(s.page);
+  await go(s.page, 'colors');
+  await frameLoaded(s.page);
+  await shot(s.page, 'shots/d1-arabic-1280.png');
+  await s.context.close();
+  s = await login(browser, USERS.en, { viewport: { width: 1280, height: 900 } });
+  await s.page.goto(`${BASE}/wp-admin/profile.php`);
+  const modern = s.page.locator('input[name="admin_color"][value="modern"]');
+  if (await modern.count()) {
+    await modern.check();
+    await s.page.click('#submit');
+    await s.page.waitForLoadState('load');
+    await go(s.page, 'colors');
+    await frameLoaded(s.page);
+    await shot(s.page, 'shots/d1-modern-1280.png');
+  } else {
+    check('Modern scheme is available for the requested capture', false, 'profile colour option missing');
+  }
+  await s.context.close();
+
+  s = await login(browser, USERS.en, { viewport: { width: 1280, height: 900 } });
   await go(s.page, 'colors');
   await s.page.getByRole('switch', { name: 'Use dark colours' }).check();
   await s.page.fill('#blixis-colors-foreground', '#cccccc');

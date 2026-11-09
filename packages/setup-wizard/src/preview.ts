@@ -51,6 +51,33 @@ export function setupPreview(ctx: Context, onScheme: () => void): Preview | null
   if (describeSlot !== null) describeSlot.replaceWith(describe, live);
   else frame.closest(".blixis-setup-frame")?.after(el("p", {}, describe), live);
 
+  // Fit the page in the column: the frame keeps its device width (390, 820 or 1280 px) and is
+  // scaled down to the width of its box, so the whole page width shows. Without this script the
+  // box scrolls sideways instead.
+  const box = frame.closest<HTMLElement>(".blixis-setup-frame");
+  if (box !== null) {
+    const fit = (): void => {
+      const style = getComputedStyle(box);
+      const padX = Number.parseFloat(style.paddingLeft) + Number.parseFloat(style.paddingRight);
+      const padY = Number.parseFloat(style.paddingTop) + Number.parseFloat(style.paddingBottom);
+      const width = frame.offsetWidth;
+      const available = box.clientWidth - padX;
+      if (width === 0 || available <= 0) return;
+      const scale = Math.min(1, available / width);
+      box.classList.add("is-scaled");
+      frame.style.transformOrigin = style.direction === "rtl" ? "top right" : "top left";
+      frame.style.transform = scale < 1 ? `scale(${scale})` : "";
+      box.style.blockSize = `${frame.offsetHeight * scale + padY + 2}px`;
+    };
+    new ResizeObserver(fit).observe(box);
+    for (const radio of section.querySelectorAll<HTMLInputElement>(
+      'input[name="blixis_preview_width"]',
+    )) {
+      radio.addEventListener("change", () => requestAnimationFrame(fit));
+    }
+    fit();
+  }
+
   let last: Config = ctx.base;
   const currentScheme = (): PreviewScheme =>
     choice.querySelector<HTMLInputElement>('input[value="dark"]')?.checked === true
