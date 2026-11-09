@@ -2,7 +2,7 @@
 id: "03-02"
 title: "Define the token schema and CSS export"
 phase: "03"
-status: In Review
+status: Done
 priority: P0
 owner: "EmVeeNL"
 created_at: "2026-11-06"
@@ -12,10 +12,10 @@ branch: "feat/03-02-token-schema"
 pr_number: 34
 pr_url: "https://github.com/EmVeeNL/blixis-wordpress/pull/34"
 commit_sha: "66262cb"
-merged_at: null
-merge_commit_sha: null
+merged_at: "2026-11-09T09:55:53Z"
+merge_commit_sha: "00d2bd80494cec832cb1d79725cabca87a48a49d"
 started_at: "2026-11-09"
-completed_at: null
+completed_at: "2026-11-09"
 closed_at: null
 blocked_reason: null
 blocked_by: []
@@ -40,7 +40,7 @@ Implement matching server/client validators for colors, fonts, spacing, radius, 
 - [x] CSS injection fixtures are refused, no generated declaration can leave its rule, and a seeded property-based test finds no difference between the validators across 6,000 mutated inputs.
 - [x] Results are byte-identical on PHP 8.3, 8.4, and 8.5, and Blixis Blocks still loads cleanly in disposable WordPress 7.0 and 7.1.
 - [x] Tests and documentation ship with the change, and required CI runs them.
-- [ ] A reviewed PR is merged, with evidence and metadata recorded here.
+- [x] A reviewed PR is merged, with evidence and metadata recorded here.
 
 ## Testing requirements
 
@@ -59,10 +59,10 @@ Property-based validation, malformed-value cases, and CSS injection fixtures. In
 - **Priority:** P0
 - **Dependencies:** `03-01`
 - **Branch:** `feat/03-02-token-schema`.
-- **Commit references:** `66262cb` (implementation).
+- **Commit references:** `66262cb` (implementation); merge `00d2bd80494cec832cb1d79725cabca87a48a49d`.
 - **PR number and URL:** [#34](https://github.com/EmVeeNL/blixis-wordpress/pull/34).
-- **Started / completed / closed:** Started 2026-11-09; not completed.
-- **Status:** In Review. The last criterion needs review and merge. Update frontmatter and history on every transition; follow [status workflow](../../../development/STATUS_WORKFLOW.md).
+- **Started / completed / closed:** Started and completed 2026-11-09; not released.
+- **Status:** Done. PR #34 merged after all 18 required checks passed. Update frontmatter and history on every transition; follow [status workflow](../../../development/STATUS_WORKFLOW.md).
 
 ## Status history
 
@@ -72,3 +72,4 @@ Property-based validation, malformed-value cases, and CSS injection fixtures. In
 | 2026-11-09 | Backlog → Ready | Dependency `03-01` completed in [PR #32](https://github.com/EmVeeNL/blixis-wordpress/pull/32), merge `963fcc3`; concrete criteria written from token contract v1; Michael asked to continue with the next task. |
 | 2026-11-09 | Ready → Busy | Branch `feat/03-02-token-schema` from `4440a97`. |
 | 2026-11-09 | Busy → In Review | [PR #34](https://github.com/EmVeeNL/blixis-wordpress/pull/34), commit `66262cb`; evidence above. |
+| 2026-11-09 | In Review → Done | [PR #34](https://github.com/EmVeeNL/blixis-wordpress/pull/34) squash-merged as `00d2bd80494cec832cb1d79725cabca87a48a49d` at 09:55:53 UTC after all 18 required checks passed; CI ran the token tests with 9 passed and none skipped. |

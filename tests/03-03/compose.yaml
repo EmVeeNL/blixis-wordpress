@@ -1,0 +1,38 @@
+# Disposable stack for task 03-03 tests. Not the local site's stack: the database is in
+# tmpfs, no host port is published, nothing is bind-mounted, and run.sh sets a random
+# project name (blixis-0303-<random>), never `blixis`.
+name: blixis-0303-tests
+
+services:
+  db:
+    image: mariadb:11.4.13@sha256:d1891ede5a559f1086f55053bb8cc1569b0298338c4d72d71725a7f74f6ba620
+    environment:
+      MARIADB_ROOT_PASSWORD: "${T0303_DB_ROOT_PASSWORD:?run through run.sh}"
+    tmpfs:
+      - /var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 3s
+      timeout: 3s
+      retries: 30
+
+  # Long-lived so the built-in PHP server and the browser share one network namespace.
+  runner:
+    image: "${T0303_CLI_IMAGE:?run through run.sh}"
+    command: ["sleep", "infinity"]
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      T0303_DB_ROOT_PASSWORD: "${T0303_DB_ROOT_PASSWORD:?run through run.sh}"
+      T0303_ADMIN_PASSWORD: "${T0303_ADMIN_PASSWORD:?run through run.sh}"
+      WP_CLI_CACHE_DIR: /tmp/wp-cli-cache
+
+  browser:
+    image: "${T0303_BROWSER_IMAGE:-mcr.microsoft.com/playwright:v1.65.0-noble@sha256:6e3fb709361521eb27161606e6da6d2674e5e89fa16516cb37d6fdd91372273d}"
+    profiles: ["browser"]
+    command: ["sleep", "infinity"]
+    # Same namespace as the runner: WordPress is http://127.0.0.1:8080 inside the project only.
+    network_mode: "service:runner"
+    depends_on:
+      - runner

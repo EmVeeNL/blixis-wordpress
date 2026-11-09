@@ -1,0 +1,32 @@
+/* Blixis setup wizard (task 03-03). Uses logical properties so right-to-left admin works. */
+.blixis-setup-intro { max-inline-size: 48rem; }
+.blixis-setup-progress ol { display: flex; flex-wrap: wrap; gap: 0.5rem 1.25rem; margin: 1rem 0; padding: 0; list-style: none; }
+.blixis-setup-progress li { margin: 0; }
+.blixis-setup-progress a,
+.blixis-setup-progress span[aria-current] { display: inline-block; padding-block: 0.6rem; }
+.blixis-setup-progress span[aria-current] { font-weight: 600; border-block-end: 3px solid currentColor; }
+.blixis-setup-summary { margin: 1rem 0; padding: 0.75rem 1rem; border: 2px solid #b32d2e; border-inline-start-width: 6px; background: #fff; }
+.blixis-setup-summary:focus { outline: 2px solid #2271b1; outline-offset: 2px; }
+.blixis-setup-summary h2 { margin-block: 0 0.5rem; font-size: 1.1em; }
+.blixis-setup-summary a { color: #b32d2e; }
+.blixis-setup-section { margin-block: 1.25rem; padding: 1rem; border: 1px solid #c3c4c7; background: #fff; max-inline-size: 48rem; }
+.blixis-setup-section legend { padding-inline: 0.25rem; font-weight: 600; font-size: 1.05em; }
+.blixis-setup-field { margin-block: 0.9rem; }
+.blixis-setup-field label { display: block; font-weight: 600; }
+.blixis-setup-hint { margin: 0.15rem 0 0.35rem; color: #50575e; }
+.blixis-setup-error { margin: 0 0 0.35rem; color: #b32d2e; font-weight: 600; }
+.blixis-setup-field.has-error input { border-color: #b32d2e; box-shadow: 0 0 0 1px #b32d2e; }
+.blixis-setup-control { display: flex; align-items: center; gap: 0.5rem; }
+.blixis-setup-control input { inline-size: 100%; max-inline-size: 24rem; min-block-size: 2.5rem; }
+.blixis-setup-swatch { flex: none; inline-size: 1.75rem; block-size: 1.75rem; border: 1px solid #8c8f94; border-radius: 4px; }
+.blixis-setup-choice { display: flex; align-items: center; gap: 0.5rem; margin-block: 0.5rem; }
+.blixis-setup-choice input { margin: 0; }
+.blixis-setup-review { display: grid; grid-template-columns: minmax(8rem, max-content) 1fr; gap: 0.4rem 1rem; max-inline-size: 60rem; }
+.blixis-setup-review dt { font-weight: 600; }
+.blixis-setup-review dd { margin: 0; overflow-wrap: anywhere; }
+.blixis-setup-actions { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-block: 1.5rem; }
+.blixis-setup-actions .button { min-block-size: 2.5rem; line-height: 2.3; }
+@media (max-width: 600px) {
+	.blixis-setup-review { grid-template-columns: 1fr; }
+	.blixis-setup-review dd { margin-block-end: 0.5rem; }
+}
