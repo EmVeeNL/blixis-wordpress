@@ -2,7 +2,7 @@
 id: "03-06"
 title: "Make Base and child themes use the tokens, and make the wizard friendly"
 phase: "03"
-status: Backlog
+status: Ready
 priority: P0
 owner: "EmVeeNL"
 created_at: "2026-11-09"
@@ -56,7 +56,7 @@ Because the scope is large, deliver it in the parts below, each as its own revie
 
 - Restyle the progress list as clear, numbered steps with a visible current step, completed marks, and a layout that wraps well at 320 px and in right-to-left languages. It stays a list of links with `aria-current="step"`, not ARIA tabs, because each step is its own page.
 - The **New child theme** fields appear only when **Create a new child theme** is selected.
-- The main button names what happens: **Continue** when an existing child theme is selected or nothing on a step changed, **Create theme and continue** for a new theme, **Save and continue** when a step has changes. (Michael's "same with the colour feature" is read as: the Colours step and every later step use the same rule. Confirm before building.)
+- The main button names what happens: **Continue** when an existing child theme is selected or nothing on a step changed, **Create theme and continue** for a new theme, **Save and continue** when a step has changes. (Owner decision 6: every step uses the same rule.)
 
 **Controls instead of raw CSS**
 
@@ -72,7 +72,7 @@ Because the scope is large, deliver it in the parts below, each as its own revie
 
 **Technology**
 
-- These controls need JavaScript. The wizard stays usable without it (plain fields, server validation), and JavaScript enhances it. Build it with TypeScript 7 and the workspace tools; the choice between plain TypeScript and React (the phase 04 editor uses React) is an owner decision below.
+- These controls need JavaScript. The wizard stays usable without it (plain fields, server validation), and JavaScript enhances it. Build it with TypeScript 7 and the workspace tools; plain TypeScript with progressive enhancement, per owner decision 5.
 
 ## Part D — Accessibility for the new controls
 
@@ -89,14 +89,18 @@ Because the scope is large, deliver it in the parts below, each as its own revie
 - Blixis Base also loads its compiled Tailwind v4 utilities into the editor (`add_editor_style`, task 02-02), so Base template parts that use those utility classes look the same in the editor as on the site. The build is small (about 1 KB) because Base uses few utilities; it holds no token values, only `var(--blixis-*)` references.
 - So the editor shows Tailwind-built utilities where Base's templates use them, but editing in the Site Editor is WordPress styling, not Tailwind. The future Blixis Blocks editor (phase 04) will apply Tailwind utilities from its element registry; arbitrary Tailwind classes typed by users are not supported, by design (ADR-002).
 
-## Owner decisions needed before work starts
+## Owner decisions
 
-1. **Contract version:** recommended `schemaVersion` 2 with automatic migration of stored v1 configs (Part B).
-2. **Colour storage:** keep the chosen format (recommended) or convert everything to one format.
-3. **Dark mode:** follow the visitor's system setting by default, with an optional *always light* / *always dark* override (recommended). A visitor-facing toggle is out of scope unless requested.
-4. **Units:** the unit sets in Part C (recommended), or `px` and `rem` only.
-5. **Wizard technology:** plain TypeScript with progressive enhancement (recommended for the wizard: small, works without JavaScript), or React to match the phase 04 editor.
-6. **Button labels on later steps:** confirm the reading of "same with the colour feature" in Part C.
+Michael accepted the recommendations on 2026-11-09 ("for now, use the recommendations"):
+
+1. **Contract version:** `schemaVersion` 2, with a pure, tested migration that converts stored v1 configs on read and on save.
+2. **Colour storage:** each colour keeps the format it was entered in (hex, RGB, HSL, or OKLCH).
+3. **Dark mode:** follows the visitor's system setting by default, with an optional site override for *always light* or *always dark*. No visitor-facing toggle.
+4. **Units:** `px` and `rem` everywhere, `em` for type scale and spacing, `%`, `ch`, and `vw` for layout widths only.
+5. **Wizard technology:** plain TypeScript 7 with progressive enhancement; the wizard keeps working without JavaScript. React stays for the phase 04 editor.
+6. **Button labels:** every step uses the same rule: **Continue** when nothing changed or an existing theme is selected, **Create theme and continue** for a new theme, **Save and continue** when a step has changes.
+
+These are working decisions "for now"; revisit them before Part B if anything changes.
 
 ## Acceptance criteria
 
@@ -104,7 +108,7 @@ Because the scope is large, deliver it in the parts below, each as its own revie
 - [ ] **B:** colours can be entered and stored in hex, RGB, HSL, and OKLCH; an optional dark palette applies under `prefers-color-scheme: dark` and with the site override; stored v1 configs migrate without loss; validators, fixtures, goldens, and docs agree.
 - [ ] **C:** the progress list, conditional new-theme fields, button labels, sliders with unit menus, shadow presets and editor, motion presets with a play button, and per-step live previews work as described, with JavaScript on; the wizard still works with JavaScript off.
 - [ ] **D:** keyboard use, labels, contrast warnings, reduced motion, and axe-core checks pass at 1280 and 320 px in Chromium and Firefox, in English, Dutch, and Arabic.
-- [ ] The owner decisions above are recorded in this task and, where they change the contract, in the contract docs.
+- [ ] The owner decisions above are reflected in the contract docs where they change the contract.
 - [ ] **Owner check:** Michael tries every part on blixis.test and confirms before this task is marked Done.
 - [ ] Reviewed PRs for every part are merged, with evidence and metadata recorded here.
 
@@ -120,7 +124,7 @@ Extend the 03-05 harness (or the shared harness from [R-02](../../../development
 - **Commit references:** None.
 - **PR number and URL:** None.
 - **Started / completed / closed:** Not recorded.
-- **Status:** Backlog. It becomes Ready once Michael has answered the owner decisions above. Phase 03 exit (MVP-0) waits for this task. Follow [status workflow](../../../development/STATUS_WORKFLOW.md).
+- **Status:** Ready. Michael confirmed the scope and the owner decisions on 2026-11-09. Phase 03 exit (MVP-0) waits for this task. Follow [status workflow](../../../development/STATUS_WORKFLOW.md).
 
 ## Status history
 
@@ -128,3 +132,4 @@ Extend the 03-05 harness (or the shared harness from [R-02](../../../development
 |---|---|---|
 | 2026-11-09 | New → Backlog | Added after Michael's manual test on blixis.test: a body font chosen in the wizard did not show until `theme.json` was edited by hand, and a generated child theme cannot look like the Showcase. Proposed criteria await owner confirmation. |
 | 2026-11-09 | Scope extended (Backlog) | Michael added colour formats (hex, RGB, HSL, OKLCH), dark mode, and wizard usability: progress styling, conditional new-theme fields, button labels, sliders with units, friendly shadow and motion controls, and previews on every step. He asked whether the Site Editor uses Tailwind CSS v4 (answered above) and asked for all of it in this task. |
+| 2026-11-09 | Backlog → Ready | Michael accepted the recommended owner decisions; dependency `03-05` is Done; criteria and owner recorded. |

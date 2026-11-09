@@ -2,6 +2,8 @@
 
 **Status: accepted design baseline from task 01-05. The validator and stylesheet generator are implemented in Blixis Blocks and `packages/tokens` (task 03-02), the theme.json projection in task 02-03, and persistence, delivery, preview, and rollback in tasks 03-03 and 03-05; the renderer is not.** The fixtures here passed against the throwaway proof in [`spikes/01-05-contracts/tokens`](../../../spikes/01-05-contracts/tokens/). Task 03-02 (tokens) and task 05-01 (elements) implement it. See the [review note](../../architecture/reviews/01-05-tokens.md) for evidence and gaps.
 
+Planned: `schemaVersion` 2 adds colour formats (RGB, HSL, OKLCH), an optional dark palette, and more units, with an automatic v1 migration ([task 03-06](../../roadmap/phases/03-child-theme-setup-wizard/06-token-driven-themes.md#owner-decisions)). Version 1 below stays in force until then.
+
 ## Files
 
 | Path | Purpose |
