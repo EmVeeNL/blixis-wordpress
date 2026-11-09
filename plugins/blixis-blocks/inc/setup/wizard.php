@@ -328,7 +328,17 @@ function render(): void {
 		echo '<a class="button" href="' . esc_url( step_url( $keys[ $position - 1 ] ) ) . '">' . esc_html__( 'Back', 'blixis-blocks' ) . '</a> ';
 	}
 	if ( 'review' === $step ) {
-		echo '<button type="submit" name="intent" value="save" class="button button-primary">' . esc_html__( 'Save configuration', 'blixis-blocks' ) . '</button> ';
+		$labels    = array(
+			'continue' => __( 'Continue', 'blixis-blocks' ),
+			'save'     => __( 'Save and continue', 'blixis-blocks' ),
+			'create'   => __( 'Create theme and continue', 'blixis-blocks' ),
+		);
+		$label_key = submit_label_key( $step, $draft, $values );
+		echo '<button type="submit" name="intent" value="save" class="button button-primary" data-label-continue="' . esc_attr( $labels['continue'] ) . '" data-label-save="' . esc_attr( $labels['save'] ) . '" data-label-create="' . esc_attr( $labels['create'] ) . '">';
+		foreach ( $labels as $key => $label ) {
+			echo '<span class="blixis-setup-button-label' . ( $key === $label_key ? ' is-current-label' : '' ) . '" data-label-value="' . esc_attr( $key ) . '">' . esc_html( $label ) . '</span>';
+		}
+		echo '</button> ';
 		echo '<button type="submit" name="intent" value="reset" class="button">' . esc_html__( 'Discard draft and load saved values', 'blixis-blocks' ) . '</button>';
 		$stored = store_read();
 		if ( $stored && is_array( $stored['previous'] ) ) {
@@ -370,12 +380,13 @@ function submit_label_key( string $step, array $draft, array $values = array() )
 	}
 	$stored   = store_read();
 	$baseline = $stored['config'] ?? defaults();
-	foreach ( step_sections()[ $step ] ?? array() as $section ) {
+	$sections = 'review' === $step ? array_keys( (array) $draft['config'] ) : ( step_sections()[ $step ] ?? array() );
+	foreach ( $sections as $section ) {
 		if ( ( $draft['config'][ $section ] ?? null ) !== ( $baseline[ $section ] ?? null ) ) {
 			return 'save';
 		}
 	}
-	if ( 'colors' === $step && ( $draft['config']['colorsDark'] ?? null ) !== ( $baseline['colorsDark'] ?? null ) ) {
+	if ( in_array( $step, array( 'colors', 'review' ), true ) && ( $draft['config']['colorsDark'] ?? null ) !== ( $baseline['colorsDark'] ?? null ) ) {
 		return 'save';
 	}
 	return 'continue';

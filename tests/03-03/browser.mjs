@@ -165,9 +165,11 @@ async function fullFlow(browser) {
   await submit(page2);
   check('the review step is reached', (await currentStep(page2)).startsWith('Step 5 of 5'));
   check('review says nothing is saved yet', (await page2.locator('.blixis-setup-form').innerText()).includes('Nothing is saved yet'));
+  check('review action names the unsaved draft', (await page2.locator('button[value="save"]').innerText()) === 'Save and continue');
   await axe(page2, 'review step');
   await submit(page2);
   check('saving reports revision 1', (await page2.locator('.blixis-setup-notice').innerText()).includes('revision 1'));
+  check('review action says Continue after saving the unchanged draft', (await page2.locator('button[value="save"]').innerText()) === 'Continue');
 
   // Conflict: this administrator edits, another saves first.
   await page2.goto(`${WIZARD}&step=colors`);
