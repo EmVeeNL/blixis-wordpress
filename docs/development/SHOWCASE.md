@@ -15,7 +15,7 @@ wp --path="$HOME/Sites/blixis" theme activate blixis-showcase
 
 First check that no file or symlink already occupies the target. The theme's 1200×900 `screenshot.png` is a capture of the rendered English showcase, used by WordPress under Appearance → Themes. It shows the child theme, not the neutral Base parent or a completed Blocks editor. Base has its own 1200×900 `screenshot.png`, a capture of the unbranded Base theme rendering a plain sample page. Both screenshots come from a disposable WordPress fixture (the harness mu-plugin renders Base alone with `?t0205_theme=blixis-base`), never from `~/Sites/blixis`. Retake them after visual changes.
 
-Branding and its fixed demonstration palette belong exclusively to this optional child. Its `theme.json` is not the future canonical token configuration or a token settings interface. It inherits Base’s header, footer and inner-page templates.
+The Showcase remains a branded example child, while Base stays neutral. Its CSS reads the emitted `--blixis-*` colour, font, spacing and layout properties with the original Showcase values as fallbacks, so the unconfigured appearance remains the same and a configured theme can restyle it. Its `theme.json` is not the canonical token configuration or a token settings interface. It inherits Base’s header, footer and inner-page templates.
 
 ## Run
 

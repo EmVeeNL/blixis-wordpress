@@ -78,7 +78,7 @@ async function keyboardThemeStep(page) {
       if (!info.visible) unfocusedVisible += `${info.id} `;
     }
   }
-  check('keyboard reaches the theme choice, name, slug, and submit in order', /blixis-theme-choice-[a-z0-9-]+ blixis-theme-name blixis-theme-slug submit/.test(order.join(' ')), order.join(' '));
+  check('keyboard reaches the theme choice, name, slug, starter, and submit in order', /blixis-theme-choice-[a-z0-9-]+ blixis-theme-name blixis-theme-slug blixis-new-starter submit/.test(order.join(' ')), order.join(' '));
   check('every focused wizard control shows a focus indicator', unfocusedVisible === '', unfocusedVisible);
 }
 
@@ -109,6 +109,9 @@ async function fullFlow(browser) {
   check('the summary link moves focus to the field', (await page.evaluate(() => document.activeElement?.id)) === 'blixis-theme-slug');
   await page.keyboard.press(process.platform === 'darwin' ? 'Meta+A' : 'Control+A');
   await page.keyboard.type('acme-site');
+  await page.keyboard.press('Tab');
+  await page.keyboard.press('ArrowDown');
+  await page.keyboard.press('Tab');
   await Promise.all([page.waitForURL(/step=colors/), page.keyboard.press('Enter')]);
   check('a valid theme moves on to the colours step', (await currentStep(page)).startsWith('Step 2 of 5'));
   check('the theme step is marked completed', (await page.locator('.blixis-setup-progress li.is-done').count()) === 1);

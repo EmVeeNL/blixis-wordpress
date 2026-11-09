@@ -83,6 +83,14 @@ add_action(
                 'methods'             => 'POST',
                 'callback'            => __NAMESPACE__ . '\\rest_create',
                 'permission_callback' => __NAMESPACE__ . '\\rest_permission',
+                'args'                => array(
+					'starter' => array(
+						'type'        => 'string',
+						'required'    => false,
+						'default'     => 'none',
+						'description' => __( 'Optional neutral starter page and patterns.', 'blixis-blocks' ),
+					),
+				),
                 'show_in_index'       => false,
             )
         );

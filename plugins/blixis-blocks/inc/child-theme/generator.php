@@ -28,7 +28,7 @@ const REQUIRES_WP  = '7.0';
 const REQUIRES_PHP = '8.3';
 
 /**
- * Field rules. Every generated header value comes from these fields only.
+ * Input field rules. Header values are generated only from validated text fields.
  *
  * @return array<string, array{required: bool, max: int}>
  */
@@ -51,6 +51,10 @@ function fields(): array {
 			'max'      => 64,
 		),
         'version'     => array(
+			'required' => false,
+			'max'      => 16,
+		),
+        'starter'     => array(
 			'required' => false,
 			'max'      => 16,
 		),
@@ -152,6 +156,14 @@ function validate( array $input ): array {
         unset($values['version']);
     }
     $values['version'] ??= '0.1.0';
+    $values['starter'] ??= 'none';
+    if (!in_array($values['starter'], array( 'none', 'neutral' ), true)) {
+        $errors[] = array(
+			'field' => 'starter',
+			'code'  => 'invalid_starter',
+		);
+		unset($values['starter']);
+	}
 
     return array(
 		'values' => $values,
@@ -228,11 +240,69 @@ add_action( 'wp_enqueue_scripts', '{$function}', 30 );
 
 PHP;
 
-    return array(
+    $files = array(
         'style.css'     => $style,
         'theme.json'    => $theme_json,
         'functions.php' => $functions,
     );
+
+    if ('neutral' === ( $values['starter'] ?? 'none' )) {
+        $files['templates/front-page.html'] = <<<HTML
+<!-- wp:template-part {"slug":"header","tagName":"header"} /-->
+<!-- wp:group {"tagName":"main","layout":{"type":"default"}} -->
+<main class="wp-block-group">
+<!-- wp:pattern {"slug":"{$values['slug']}/intro"} /-->
+<!-- wp:pattern {"slug":"{$values['slug']}/features"} /-->
+</main>
+<!-- /wp:group -->
+<!-- wp:template-part {"slug":"footer","tagName":"footer"} /-->
+HTML;
+        $files['patterns/intro.php']        = <<<PHP
+<?php
+/**
+ * Title: Introduction
+ * Slug: {$values['slug']}/intro
+ * Categories: featured
+ * Description: A neutral introduction section.
+ */
+?>
+<!-- wp:group {"tagName":"section","layout":{"type":"constrained"}} -->
+<section class="wp-block-group">
+<!-- wp:heading {"level":1} -->
+<h1 class="wp-block-heading">Welcome</h1>
+<!-- /wp:heading -->
+<!-- wp:paragraph -->
+<p>Introduce your site and what visitors can find here.</p>
+<!-- /wp:paragraph -->
+<!-- wp:buttons -->
+<div class="wp-block-buttons"><!-- wp:button --><div class="wp-block-button"><a class="wp-block-button__link wp-element-button" href="#features">Explore</a></div><!-- /wp:button --></div>
+<!-- /wp:buttons -->
+</section>
+<!-- /wp:group -->
+PHP;
+        $files['patterns/features.php']     = <<<PHP
+<?php
+/**
+ * Title: Features
+ * Slug: {$values['slug']}/features
+ * Categories: featured
+ * Description: Three editable highlights for a site.
+ */
+?>
+<!-- wp:group {"tagName":"section","anchor":"features","layout":{"type":"constrained"}} -->
+<section id="features" class="wp-block-group">
+<!-- wp:heading {"level":2} --><h2 class="wp-block-heading">What we offer</h2><!-- /wp:heading -->
+<!-- wp:columns -->
+<div class="wp-block-columns"><!-- wp:column --><div class="wp-block-column"><!-- wp:heading {"level":3} --><h3 class="wp-block-heading">First highlight</h3><!-- /wp:heading --><!-- wp:paragraph --><p>Describe a useful part of your work.</p><!-- /wp:paragraph --></div><!-- /wp:column -->
+<!-- wp:column --><div class="wp-block-column"><!-- wp:heading {"level":3} --><h3 class="wp-block-heading">Second highlight</h3><!-- /wp:heading --><!-- wp:paragraph --><p>Share another detail visitors should know.</p><!-- /wp:paragraph --></div><!-- /wp:column -->
+<!-- wp:column --><div class="wp-block-column"><!-- wp:heading {"level":3} --><h3 class="wp-block-heading">Third highlight</h3><!-- /wp:heading --><!-- wp:paragraph --><p>Help visitors understand how to get started.</p><!-- /wp:paragraph --></div><!-- /wp:column --></div>
+<!-- /wp:columns -->
+</section>
+<!-- /wp:group -->
+PHP;
+    }
+
+    return $files;
 }
 
 /**
@@ -286,7 +356,12 @@ function create( array $input ): array|WP_Error {
         return new WP_Error('blixis_child_write_failed', __('The child theme could not be written.', 'blixis-blocks'), array( 'status' => 500 ));
     }
     foreach (build_files($values) as $file => $contents) {
-        if (!$wp_filesystem->put_contents($staging . DIRECTORY_SEPARATOR . $file, $contents, FS_CHMOD_FILE)) {
+        $directory = dirname($file);
+		if ('.' !== $directory && !wp_mkdir_p($staging . DIRECTORY_SEPARATOR . $directory)) {
+			$wp_filesystem->delete($staging, true);
+			return new WP_Error('blixis_child_write_failed', __('The child theme could not be written.', 'blixis-blocks'), array( 'status' => 500 ));
+		}
+		if (!$wp_filesystem->put_contents($staging . DIRECTORY_SEPARATOR . $file, $contents, FS_CHMOD_FILE)) {
             $wp_filesystem->delete($staging, true);
             return new WP_Error('blixis_child_write_failed', __('The child theme could not be written.', 'blixis-blocks'), array( 'status' => 500 ));
         }

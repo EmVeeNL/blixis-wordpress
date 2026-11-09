@@ -553,6 +553,15 @@ function render_theme_step( array $draft, array $errors, array $values ): void {
 		echo '<fieldset class="blixis-setup-section"><legend>' . esc_html__( 'New child theme', 'blixis-blocks' ) . '</legend>';
 		render_field( '/theme/name', __( 'Theme name', 'blixis-blocks' ), (string) ( $values['new_name'] ?? '' ), __( 'Shown under Appearance → Themes, for example Acme Site.', 'blixis-blocks' ), $errors['/theme/name'] ?? null );
 		render_field( '/theme/slug', __( 'Theme slug', 'blixis-blocks' ), (string) ( $values['new_slug'] ?? '' ), __( 'Folder name: lowercase letters, digits, and single hyphens, for example acme-site.', 'blixis-blocks' ), $errors['/theme/slug'] ?? null );
+		$starter = (string) ( $values['new_starter'] ?? 'none' );
+		echo '<p><label for="blixis-new-starter">' . esc_html__( 'Starting content', 'blixis-blocks' ) . '</label><br>';
+		echo '<select id="blixis-new-starter" name="new_starter">';
+		echo '<option value="none"' . selected( $starter, 'none', false ) . '>' . esc_html__( 'Blank theme', 'blixis-blocks' ) . '</option>';
+		echo '<option value="neutral"' . selected( $starter, 'neutral', false ) . '>' . esc_html__( 'Neutral front page with editable sections', 'blixis-blocks' ) . '</option>';
+		echo '</select></p>';
+		if ( isset( $errors['/theme/starter'] ) ) {
+			echo '<p class="blixis-setup-error" role="alert">' . esc_html__( 'Choose a valid starting option.', 'blixis-blocks' ) . '</p>';
+		}
 		echo '<p class="blixis-setup-hint">' . esc_html__( 'Fill these in only when you create a new child theme. The theme is not activated.', 'blixis-blocks' ) . '</p>';
 		echo '</fieldset>';
 	}
@@ -772,8 +781,9 @@ function handle_theme( int $user, array $draft, string $next ): void {
 	// phpcs:disable WordPress.Security.NonceVerification.Missing -- Verified by the caller.
 	$choice = isset( $_POST['choice'] ) ? sanitize_key( wp_unslash( $_POST['choice'] ) ) : '';
 	// The generator validates both fields strictly, so they are passed on unchanged.
-	$name = isset( $_POST['new_name'] ) && is_string( $_POST['new_name'] ) ? wp_unslash( $_POST['new_name'] ) : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-	$slug = isset( $_POST['new_slug'] ) && is_string( $_POST['new_slug'] ) ? wp_unslash( $_POST['new_slug'] ) : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+	$name    = isset( $_POST['new_name'] ) && is_string( $_POST['new_name'] ) ? wp_unslash( $_POST['new_name'] ) : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+	$slug    = isset( $_POST['new_slug'] ) && is_string( $_POST['new_slug'] ) ? wp_unslash( $_POST['new_slug'] ) : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+	$starter = isset( $_POST['new_starter'] ) && is_string( $_POST['new_starter'] ) ? sanitize_key( wp_unslash( $_POST['new_starter'] ) ) : 'none';
 	// phpcs:enable
 
 	if ( NEW_THEME === $choice ) {
@@ -782,14 +792,15 @@ function handle_theme( int $user, array $draft, string $next ): void {
 		}
 		$created = create_child_theme(
 			array(
-				'name' => $name,
-				'slug' => $slug,
+				'name'    => $name,
+				'slug'    => $slug,
+				'starter' => $starter,
 			)
 		);
 		if ( is_wp_error( $created ) ) {
 			$errors = array();
 			foreach ( (array) ( $created->get_error_data()['errors'] ?? array() ) as $error ) {
-				if ( in_array( $error['field'], array( 'name', 'slug' ), true ) ) {
+				if ( in_array( $error['field'], array( 'name', 'slug', 'starter' ), true ) ) {
 					$errors[] = array(
 						'code' => $error['code'],
 						'path' => '/theme/' . $error['field'],
@@ -808,9 +819,10 @@ function handle_theme( int $user, array $draft, string $next ): void {
 				array(
 					'errors' => $errors,
 					'values' => array(
-						'choice'   => NEW_THEME,
-						'new_name' => $name,
-						'new_slug' => $slug,
+						'choice'      => NEW_THEME,
+						'new_name'    => $name,
+						'new_slug'    => $slug,
+						'new_starter' => $starter,
 					),
 				)
 			);

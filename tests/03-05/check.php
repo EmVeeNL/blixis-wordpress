@@ -32,7 +32,7 @@ $tokens_css = static function (): string {
 };
 
 // Child theme and a Font Library family for the body font.
-$made = create(['name' => 'Acme Site', 'slug' => 'acme-site']);
+$made = create(['name' => 'Acme Site', 'slug' => 'acme-site', 'starter' => 'neutral']);
 $check('the child theme is created', !is_wp_error($made));
 switch_theme('acme-site');
 $dir = wp_get_font_dir();
@@ -55,6 +55,8 @@ $config['theme']['slug'] = 'acme-site';
 $green = $config;
 $green['colors']['primary'] = '#0a7a3f';
 $green['fonts']['body'] = 'Liberation Sans';
+$green['fonts']['heading'] = 'Georgia';
+$green['spacing']['md'] = '2rem';
 $blue = $config;
 $blue['colors']['primary'] = '#1d4ed8';
 
