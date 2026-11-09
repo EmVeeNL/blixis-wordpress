@@ -98,7 +98,7 @@ On 2026-11-06 the delegated architecture review walked the planned journeys agai
 
 | Role and journey | Planning result | Limit |
 |---|---|---|
-| Site builder (J1) | FR-01–03 and phases 02–03 cover child-theme setup, token validation, preview, and public output. | Editor parity waits for MVP-1; no working wizard exists. |
+| Site builder (J1) | FR-01–03 and phases 02–03 cover child-theme setup, token validation, preview, and public output. | Implemented in phases 02 and 03 (setup wizard, validation, preview, rollback); editor parity waits for MVP-1. Phase 03 exit awaits owner acceptance. |
 | Editor (J2) | FR-04–09 and FR-11 cover draft creation, edit, reordering, responsive controls, save, and reopen. | No editor or usability test exists. |
 | Reviewer (J3) | FR-10 covers authenticated draft preview and negative access tests. | Q06 sets authenticated-only preview for MVP; external share links require a later scope decision. |
 | Publisher (J4) | FR-09–10 and the PRD keep publish explicit; autosave and preview cannot publish. | WordPress role and capability behavior needs implementation tests. |

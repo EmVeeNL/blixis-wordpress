@@ -19,7 +19,7 @@
 <h1 class="wp-block-heading"><?php esc_html_e( 'A strong foundation for every website.', 'blixis-showcase' ); ?></h1>
 <!-- /wp:heading -->
 <!-- wp:paragraph {"className":"showcase-hero-description"} -->
-<p class="showcase-hero-description"><?php esc_html_e( 'A lightweight WordPress foundation with a theme.json design-token bridge. Token setup screens and Blixis Blocks are planned.', 'blixis-showcase' ); ?></p>
+<p class="showcase-hero-description"><?php esc_html_e( 'A lightweight WordPress foundation with validated design tokens, local fonts, and setup screens with preview and rollback. The Blixis Blocks editor is planned.', 'blixis-showcase' ); ?></p>
 <!-- /wp:paragraph -->
 <!-- wp:buttons {"className":"showcase-hero-actions"} -->
 <div class="wp-block-buttons showcase-hero-actions">

@@ -31,7 +31,7 @@
 <h3 class="wp-block-heading"><?php esc_html_e( 'Design tokens', 'blixis-showcase' ); ?></h3>
 <!-- /wp:heading -->
 <!-- wp:paragraph -->
-<p><strong><?php esc_html_e( 'Partly implemented.', 'blixis-showcase' ); ?></strong> <?php esc_html_e( 'The theme.json token bridge is implemented; the token setup UI is planned.', 'blixis-showcase' ); ?></p>
+<p><strong><?php esc_html_e( 'Implemented.', 'blixis-showcase' ); ?></strong> <?php esc_html_e( 'Colours, fonts, and spacing are validated and set under Appearance → Blixis setup, with preview and rollback.', 'blixis-showcase' ); ?></p>
 <!-- /wp:paragraph -->
 </div>
 <!-- /wp:group -->

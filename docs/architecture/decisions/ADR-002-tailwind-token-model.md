@@ -1,7 +1,7 @@
 # ADR-002 — CSS-first token model
 
 - **Date:** 2026-11-06
-- **Status:** Accepted (design; implementation pending)
+- **Status:** Accepted (implemented in tasks 02-02, 02-03, and 03-02 to 03-05)
 - **Owner:** Michael, through delegated 01-05 architecture review
 
 ## Context
