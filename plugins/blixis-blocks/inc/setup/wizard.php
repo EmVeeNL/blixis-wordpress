@@ -303,7 +303,7 @@ function render(): void {
 		$reachable = 'theme' === $key || '' !== ( $draft['config']['theme']['slug'] ?? '' );
 		/* translators: 1: step number, 2: number of steps, 3: step name. */
 		$label = sprintf( __( 'Step %1$d of %2$d: %3$s', 'blixis-blocks' ), $index + 1, count( $keys ), $steps[ $key ] );
-		$state = $done ? ' <span class="blixis-setup-state">' . esc_html__( '(completed)', 'blixis-blocks' ) . '</span>' : '';
+		$state = $done ? ' <span class="blixis-setup-state screen-reader-text">' . esc_html__( '(completed)', 'blixis-blocks' ) . '</span>' : '';
 		echo '<li class="' . ( $key === $step ? 'is-current' : '' ) . ( $done ? ' is-done' : '' ) . '">';
 		if ( $reachable ) {
 			echo '<a href="' . esc_url( step_url( $key ) ) . '"' . ( $key === $step ? ' aria-current="step"' : '' ) . '>' . esc_html( $label ) . $state . '</a>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $state is built from escaped parts.

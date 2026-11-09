@@ -62,6 +62,7 @@ async function axe(page, label) {
 
 async function frameLoaded(page) {
   const handle = await page.$('.blixis-setup-frame iframe');
+  if (handle === null) throw new Error(`no preview frame on ${page.url()}: ${(await page.title())}`);
   await handle.scrollIntoViewIfNeeded();
   await page.waitForFunction(() => {
     const doc = document.querySelector('.blixis-setup-frame iframe')?.contentDocument;
@@ -315,9 +316,7 @@ async function layoutFlow(browser) {
   await fast.fill('120');
 
   const button = page.locator('.blixis-setup-actions button[name="intent"][value="next"]');
-  if ((await button.getAttribute('data-label-save')) === null) {
-    note('button labels', 'the submit button has no data-label-* attributes in this build; label switching not exercised');
-  } else {
+  {
     const start = (await button.innerText()).trim();
     await page.fill('#blixis-spacing-md', '0.75');
     check('the button says Save and continue once a field changes', (await button.innerText()).trim() === (await button.getAttribute('data-label-save')));
@@ -336,18 +335,9 @@ async function layoutFlow(browser) {
 }
 
 
-// Codex's server code renders data-label-*; until both branches meet, add them to the page in
-// flight so the script's switching is exercised either way.
+// The server renders the three labels (data-label-*); the script switches between them.
 async function labelFlow(browser) {
   const { context, page } = await login(browser, USERS.en);
-  await context.route('**/themes.php?page=blixis-setup*', async (route) => {
-    const response = await route.fetch();
-    let body = await response.text();
-    if (!body.includes('data-label-save')) {
-      body = body.replace('name="intent" value="next" class="button button-primary">Save and continue', 'name="intent" value="next" class="button button-primary" data-label-continue="Continue" data-label-save="Save and continue" data-label-create="Create theme and continue">Continue');
-    }
-    await route.fulfill({ response, body });
-  });
   await go(page, 'layout');
   const button = page.locator('.blixis-setup-actions button[name="intent"][value="next"]');
   check('the submit button carries its three labels', (await button.getAttribute('data-label-save')) !== null, await button.innerText());
@@ -359,8 +349,7 @@ async function labelFlow(browser) {
   check('and returns to its first label when the value is restored', (await button.innerText()).trim() === start, `${start} / ${await button.innerText()}`);
   await go(page, 'theme');
   await page.check('input[name="choice"][value="__new"]').catch(() => {});
-  const label = (await button.innerText()).trim();
-  note('theme step label with a new theme selected', label);
+  check('with a new theme selected the button says Create theme and continue', (await button.innerText()).trim() === (await button.getAttribute('data-label-create')), await button.innerText());
   await context.close();
 }
 
@@ -437,6 +426,43 @@ async function darkReview(browser) {
   await context.close();
 }
 
+
+// Full-page captures without the fixed admin bar and menu: made static they still take up space,
+// so they are taken out of the capture instead.
+async function shot(page, path) {
+  await page.addStyleTag({ content: '#wpadminbar, #adminmenumain { display: none !important; } #wpcontent, #wpfooter { margin-inline-start: 0 !important; } html.wp-toolbar { padding-top: 0 !important; }' });
+  await page.screenshot({ path, fullPage: true });
+}
+async function mergedShots(browser) {
+  let s = await login(browser, USERS.en, { viewport: { width: 1280, height: 900 } });
+  await go(s.page, 'colors');
+  await s.page.fill('#blixis-colors-foreground', '#cccccc');
+  await settle(s.page);
+  await frameLoaded(s.page);
+  await shot(s.page, 'shots/c3-colors-1280.png');
+  await s.page.fill('#blixis-colors-foreground', '#101828');
+  await go(s.page, 'theme');
+  await s.page.check('input[name="choice"][value="__new"]');
+  await settle(s.page);
+  await shot(s.page, 'shots/c3-theme-new-1280.png');
+  await s.context.close();
+  s = await login(browser, USERS.en, { viewport: { width: 320, height: 800 } });
+  await go(s.page, 'colors');
+  await frameLoaded(s.page);
+  await shot(s.page, 'shots/c3-colors-320.png');
+  await s.context.close();
+  s = await login(browser, USERS.ar, { viewport: { width: 1280, height: 900 } });
+  await chooseTheme(s.page);
+  await go(s.page, 'colors');
+  await frameLoaded(s.page);
+  await shot(s.page, 'shots/c3-colors-arabic.png');
+  await go(s.page, 'theme');
+  await s.page.check('input[name="choice"][value="__new"]');
+  await settle(s.page);
+  await shot(s.page, 'shots/c3-theme-new-arabic.png');
+  await s.context.close();
+}
+
 async function a11yMatrix(browser, engine) {
   for (const [locale, user] of Object.entries(USERS)) {
     const setup = await login(browser, user);
@@ -490,6 +516,7 @@ for (const name of names) {
     await noJavaScriptFlow(browser);
     await permissionChecks(browser);
     await darkReview(browser);
+    if (name === 'chromium') await mergedShots(browser);
     await a11yMatrix(browser, name);
   } catch (error) {
     check('browser flow completed without an exception', false, error.stack || error.message);

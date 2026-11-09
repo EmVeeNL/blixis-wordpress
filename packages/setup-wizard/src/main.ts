@@ -53,9 +53,15 @@ function setupLabels(form: HTMLFormElement, themeStep: boolean): void {
     create: button.dataset["labelCreate"] ?? "",
   };
   const initial = snapshot(form);
-  const shown = (Object.keys(labels) as LabelKey[]).find(
-    (key) => labels[key] === button.textContent?.trim(),
-  );
+  // The server renders one span per label and marks the current one; only the marking changes.
+  const spans = [
+    ...button.querySelectorAll<HTMLElement>(".blixis-setup-button-label[data-label-value]"),
+  ];
+  const shown =
+    (spans.find((span) => span.classList.contains("is-current-label"))?.dataset["labelValue"] as
+      | LabelKey
+      | undefined) ??
+    (Object.keys(labels) as LabelKey[]).find((key) => labels[key] === button.textContent?.trim());
   const refresh = (): void => {
     const key = labelFor({
       creating:
@@ -64,7 +70,12 @@ function setupLabels(form: HTMLFormElement, themeStep: boolean): void {
       changed: hasChanged(initial, snapshot(form)),
       initial: shown ?? "continue",
     });
-    if (labels[key] !== "" && button.textContent !== labels[key]) button.textContent = labels[key];
+    if (spans.length > 0) {
+      for (const span of spans)
+        span.classList.toggle("is-current-label", span.dataset["labelValue"] === key);
+    } else if (labels[key] !== "" && button.textContent !== labels[key]) {
+      button.textContent = labels[key];
+    }
   };
   form.addEventListener("input", refresh);
   form.addEventListener("change", refresh);
