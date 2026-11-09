@@ -2,13 +2,13 @@
 
 Task [03-03](../roadmap/phases/03-child-theme-setup-wizard/03-wizard-ui.md) adds **Appearance → Blixis setup** to Blixis Blocks. It is a server-rendered form in five steps: child theme, colours, typography, spacing and layout, and review. It needs no JavaScript build; one inline line moves focus to the error summary.
 
-Saving stores the configuration. Applying it to the site (theme.json data and the token stylesheet), live preview, and rollback belong to task 03-05, so a save does not change the public site yet.
+Saving stores the configuration, and it applies at once while its child theme is the active theme. The review step shows a preview of the draft and offers a rollback to the previous saved configuration (task 03-05, see [applying tokens](TOKENS.md#applying-tokens)).
 
 ## Steps
 
 1. **Child theme.** Choose an existing child theme of Blixis Base, or create one with the [child theme generator](CHILD_THEME.md). Creating needs `install_themes`; the theme is not activated. Later steps stay unavailable until a theme is chosen.
 2. **Colours**, 3. **Typography** (font families and type scale), 4. **Spacing and layout** (spacing, radius, layout widths, shadows, motion). Every field comes from the [token map](../contracts/tokens/v1/token-map.json) and starts from the contract defaults, with system fonts. Font fields are a choice of generic families and the usable families installed under Appearance → Fonts, with a table of every installed family, its licence, and why it can or cannot be used ([local fonts](FONTS.md)). Breakpoints are fixed and not shown.
-5. **Review and save.** Lists every value and the saved revision.
+5. **Review and save.** Lists every value and the saved revision, previews the draft on the front page at 390, 820, and 1280 px, and offers save, discard draft, and roll back.
 
 The progress list marks the current step with `aria-current="step"` and completed steps in text. Each section is a `fieldset` with a `legend`; each field has a label, a hint, and, after a failed submit, an error linked with `aria-describedby` and `aria-invalid`. An error summary at the top receives focus and links to each field. Token values are entered left to right, also in right-to-left languages.
 

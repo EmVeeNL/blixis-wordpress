@@ -2,19 +2,19 @@
 id: "03-05"
 title: "Preview and persist design tokens"
 phase: "03"
-status: Backlog
+status: Busy
 priority: P0
 owner: "EmVeeNL"
 created_at: "2026-11-06"
-updated_at: "2026-11-06"
+updated_at: "2026-11-09"
 depends_on: ["03-04"]
-branch: null
+branch: "feat/03-05-token-preview"
 pr_number: null
 pr_url: null
 commit_sha: null
 merged_at: null
 merge_commit_sha: null
-started_at: null
+started_at: "2026-11-09"
 completed_at: null
 closed_at: null
 blocked_reason: null
@@ -25,7 +25,7 @@ blocked_by: []
 
 ## Description
 
-Update responsive previews from validated tokens; persist versions, invalidate assets, and allow rollback. This is planned work; no implementation or PR is claimed.
+Update responsive previews from validated tokens; persist versions, invalidate assets, and allow rollback. See [applying tokens](../../../development/TOKENS.md#applying-tokens).
 
 ## Technical requirements
 
@@ -36,27 +36,41 @@ Update responsive previews from validated tokens; persist versions, invalidate a
 
 ## Acceptance criteria
 
-- [ ] The described capability works in the intended WordPress and browser environments.
-- [ ] Relevant security, accessibility, and performance requirements are verified.
-- [ ] Tests and documentation are included with the implementation.
+- [x] A stored, revalidated config applies to the site while its child theme is active, through theme-origin theme.json data, an inline token stylesheet, and local Font Library `@font-face` rules; a config for another theme does not apply.
+- [x] A save or rollback is visible on the next request: theme.json caches are cleared and `blixis_tokens_changed` announces the change for page caches.
+- [x] Rollback restores the previous config as a new compare-and-swap revision and can itself be undone; a corrupt current config falls back to the previous one, then to Base presets.
+- [x] Site Editor user settings cannot override Blixis token presets or layout widths, proven against a control, while other user settings are kept.
+- [x] The wizard previews the user's draft on the front page at 390, 820, and 1280 px without changing stored values; only that user with a valid nonce sees the draft, and preview responses are not cacheable or indexable.
+- [x] The review step has no axe-core violations at 1280 and 320 px and fits at 320 px, and the 03-03 and 03-04 suites still pass.
+- [x] Tests and documentation ship with the change, and required CI runs them.
 - [ ] A reviewed PR is merged, with evidence and metadata recorded here.
 
 ## Testing requirements
 
 Breakpoint snapshots and integration tests for save, stale state, and rollback. Include negative permission, invalid-input, version, and regression cases where relevant. Record exact commands and results in the PR.
 
+## Verification evidence
+
+- `bash tests/03-05/run.sh --browsers chromium,firefox` on disposable WordPress 7.1.4/PHP 8.3 and 7.0.8/PHP 8.5: 22 in-process, 30 browser, and 5 post-browser checks pass on each stack; three full runs passed.
+- Deliberate faults: without the Site Editor policy, visitors got `#000000` from a Site Editor override (4 failures); without clearing caches on save, new values did not apply in the same request (4 failures); without the preview nonce check, an invalid preview link showed the draft (1 failure).
+- `tests/03-03/run.sh` and `tests/03-04/run.sh` still pass. Two layout defects found by them were fixed: a long rollback button and the preview frame overflowed at 320 px.
+- Reviewed screenshots: review step with the preview at 1280 px and at 320 px.
+- Limit: Base templates use token presets only for background and text colour, so a neutral Base preview shows few changes. Page-performance budgets are not claimed.
+
 ## Tracking and completion
 
 - **Priority:** P0
 - **Dependencies:** `03-04`
-- **Branch:** Not created.
+- **Branch:** `feat/03-05-token-preview`.
 - **Commit references:** None.
 - **PR number and URL:** None.
-- **Started / completed / closed:** Not recorded.
-- **Status:** Backlog. Update frontmatter and history on every transition; follow [status workflow](../../../development/STATUS_WORKFLOW.md).
+- **Started / completed / closed:** Started 2026-11-09; not completed.
+- **Status:** Busy. Update frontmatter and history on every transition; follow [status workflow](../../../development/STATUS_WORKFLOW.md).
 
 ## Status history
 
 | Date | Transition | Evidence |
 |---|---|---|
 | 2026-11-06 | Initial planning → Backlog | Downloaded project plan; no implementation evidence |
+| 2026-11-09 | Backlog → Ready | Dependency `03-04` completed in [PR #36](https://github.com/EmVeeNL/blixis-wordpress/pull/36), merge `8e3ee32`; concrete criteria written; Michael asked to start. |
+| 2026-11-09 | Ready → Busy | Branch `feat/03-05-token-preview` from `8e3ee32`. |

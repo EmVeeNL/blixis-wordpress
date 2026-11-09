@@ -23,6 +23,7 @@ use function Blixis\Blocks\Fonts\installed_families;
 use function Blixis\Blocks\Fonts\usable_names;
 use function Blixis\Blocks\Tokens\canonical_json;
 use function Blixis\Blocks\Tokens\store_read;
+use function Blixis\Blocks\Tokens\store_rollback;
 use function Blixis\Blocks\Tokens\store_write;
 use function Blixis\Blocks\Tokens\token_map;
 use function Blixis\Blocks\Tokens\validate_bytes;
@@ -272,7 +273,7 @@ function render(): void {
 
 	echo '<div class="wrap blixis-setup">';
 	echo '<h1>' . esc_html__( 'Blixis setup', 'blixis-blocks' ) . '</h1>';
-	echo '<p class="blixis-setup-intro">' . esc_html__( 'Choose a child theme of Blixis Base and set its design tokens. Saving stores the configuration; applying it to the site arrives with the token preview.', 'blixis-blocks' ) . '</p>';
+	echo '<p class="blixis-setup-intro">' . esc_html__( 'Choose a child theme of Blixis Base and set its design tokens. Saving applies them to the site while that child theme is active; you can preview before saving and roll back afterwards.', 'blixis-blocks' ) . '</p>';
 
 	echo '<nav class="blixis-setup-progress" aria-label="' . esc_attr__( 'Setup progress', 'blixis-blocks' ) . '"><ol>';
 	foreach ( $keys as $index => $key ) {
@@ -331,6 +332,10 @@ function render(): void {
 	if ( 'review' === $step ) {
 		echo '<button type="submit" name="intent" value="save" class="button button-primary">' . esc_html__( 'Save configuration', 'blixis-blocks' ) . '</button> ';
 		echo '<button type="submit" name="intent" value="reset" class="button">' . esc_html__( 'Discard draft and load saved values', 'blixis-blocks' ) . '</button>';
+		$stored = store_read();
+		if ( $stored && is_array( $stored['previous'] ) ) {
+			echo ' <button type="submit" name="intent" value="rollback" class="button">' . esc_html__( 'Roll back to the previous saved configuration', 'blixis-blocks' ) . '</button>';
+		}
 	} else {
 		echo '<button type="submit" name="intent" value="next" class="button button-primary">' . esc_html__( 'Save and continue', 'blixis-blocks' ) . '</button>';
 	}
@@ -578,6 +583,39 @@ function render_review( array $draft ): void {
 		echo '<dt>' . esc_html( $label ) . '</dt><dd>' . esc_html( implode( '; ', $parts ) ) . '</dd>';
 	}
 	echo '</dl>';
+	render_preview( $draft );
+}
+
+/**
+ * Preview of the draft on the site's front page, at fixed device widths.
+ *
+ * The widths are preview controls only; they never change stored values. They work
+ * without JavaScript: the checked radio button sets the frame width through CSS.
+ *
+ * @param array $draft Draft.
+ */
+function render_preview( array $draft ): void {
+	$url    = add_query_arg( \Blixis\Blocks\Tokens\PREVIEW_PARAM, wp_create_nonce( \Blixis\Blocks\Tokens\PREVIEW_ACTION ), home_url( '/' ) );
+	$widths = array(
+		'mobile'  => array( 390, __( 'Mobile, 390 px', 'blixis-blocks' ) ),
+		'tablet'  => array( 820, __( 'Tablet, 820 px', 'blixis-blocks' ) ),
+		'desktop' => array( 1280, __( 'Desktop, 1280 px', 'blixis-blocks' ) ),
+	);
+	echo '<section class="blixis-setup-preview" aria-labelledby="blixis-preview-heading">';
+	echo '<h3 id="blixis-preview-heading">' . esc_html__( 'Preview', 'blixis-blocks' ) . '</h3>';
+	echo '<p>' . esc_html__( 'The front page with these values. Only you see it; visitors see the saved configuration.', 'blixis-blocks' ) . '</p>';
+	if ( ( $draft['config']['theme']['slug'] ?? '' ) !== get_stylesheet() ) {
+		/* translators: %s: theme slug. */
+		echo '<p class="blixis-setup-hint">' . esc_html( sprintf( __( 'The preview uses the active theme. Visitors see these tokens only after %s is activated.', 'blixis-blocks' ), (string) $draft['config']['theme']['slug'] ) ) . '</p>';
+	}
+	echo '<fieldset class="blixis-setup-widths"><legend>' . esc_html__( 'Preview width', 'blixis-blocks' ) . '</legend>';
+	foreach ( $widths as $key => list( $px, $label ) ) {
+		echo '<input type="radio" name="blixis_preview_width" id="blixis-preview-' . esc_attr( $key ) . '" value="' . esc_attr( (string) $px ) . '"' . checked( 'mobile', $key, false ) . ' form="blixis-preview-controls">';
+		echo '<label for="blixis-preview-' . esc_attr( $key ) . '">' . esc_html( $label ) . '</label> ';
+	}
+	echo '</fieldset>';
+	echo '<div class="blixis-setup-frame" role="region" tabindex="0" aria-label="' . esc_attr__( 'Preview frame; scroll sideways for wider widths', 'blixis-blocks' ) . '"><iframe title="' . esc_attr__( 'Preview of the front page with the draft tokens', 'blixis-blocks' ) . '" src="' . esc_url( $url ) . '" loading="lazy"></iframe></div>';
+	echo '</section>';
 }
 
 /**
@@ -622,6 +660,19 @@ function handle(): void {
 	}
 
 	if ( 'review' === $step ) {
+		if ( 'rollback' === $intent ) {
+			$stored = store_read();
+			$result = $stored ? store_rollback( $stored['revision'] ) : new \WP_Error( 'blixis_config_no_previous', __( 'There is no previous configuration to roll back to.', 'blixis-blocks' ) );
+			if ( is_wp_error( $result ) ) {
+				flash( $user, 'review', array( 'failure' => $result->get_error_message() ) );
+			} else {
+				delete_user_meta( $user, DRAFT_META );
+				/* translators: %d: revision number. */
+				flash( $user, 'review', array( 'notice' => sprintf( __( 'Rolled back to the previous configuration as revision %d.', 'blixis-blocks' ), $result['revision'] ) ) );
+			}
+			wp_safe_redirect( step_url( 'review' ) );
+			exit;
+		}
 		if ( 'reset' === $intent ) {
 			delete_user_meta( $user, DRAFT_META );
 			flash( $user, 'review', array( 'notice' => __( 'The draft was discarded. These are the saved values.', 'blixis-blocks' ) ) );
