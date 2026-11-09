@@ -10,7 +10,17 @@ Saving stores the configuration, and it applies at once while its child theme is
 2. **Colours**, 3. **Typography** (font families and type scale), 4. **Spacing and layout** (spacing, radius, layout widths, shadows, motion). Every field comes from the [token map](../contracts/tokens/v2/token-map.json) and starts from the contract defaults, with system fonts. Font fields are a choice of generic families and the usable families installed under Appearance → Fonts, with a table of every installed family, its licence, and why it can or cannot be used ([local fonts](FONTS.md)). Breakpoints are fixed and not shown.
 5. **Review and save.** Lists every value and the saved revision, previews the draft on the front page at 390, 820, and 1280 px, and offers save, discard draft, and roll back.
 
-The progress list marks the current step with `aria-current="step"` and completed steps in text. Each section is a `fieldset` with a `legend`; each field has a label, a hint, and, after a failed submit, an error linked with `aria-describedby` and `aria-invalid`. An error summary at the top receives focus and links to each field. Token values are entered left to right, also in right-to-left languages.
+The progress indicator is an ordered list of step links. Reachable steps, including the current step, remain links; the current link has `aria-current="step"`. Number markers are visible, completed steps also show a check mark and the translated text `(completed)`, so completion is not conveyed by colour alone. Its flex layout wraps at narrow widths and uses logical CSS properties for right-to-left layouts. Each section is a `fieldset` with a `legend`; each field has a label, a hint, and, after a failed submit, an error linked with `aria-describedby` and `aria-invalid`. An error summary at the top receives focus and links to each field. Token values are entered left to right, also in right-to-left languages.
+
+On step 1, the new-theme fieldset is hidden when an existing child theme is selected. CSS `:has()` ties visibility to the native radio selection without JavaScript. Browsers without `:has()` show the fields as a fallback, and a server-rendered validation error forces them visible so rejected values and errors remain available. When hidden, the fieldset uses `display: none`, so its controls do not enter keyboard order or the accessibility tree.
+
+The primary action label follows owner decision 6 on every editable step: `Continue` for an existing theme or an unchanged step, `Create theme and continue` for a new theme, and `Save and continue` for a step whose draft differs from the saved configuration (or contract defaults before the first save). The server chooses the initial label from the draft, and CSS switches it to the create label when the new-theme radio is checked. The server never relies on the displayed text to validate or process a submission. The button exposes this localization-aware contract for progressive enhancement:
+
+- `data-label-continue`: translated `Continue`
+- `data-label-save`: translated `Save and continue`
+- `data-label-create`: translated `Create theme and continue`
+
+An enhancement may change only the visible button text as fields change. The form action remains `next`; PHP validation and draft handling stay authoritative.
 
 ## Validation, drafts, and saving
 

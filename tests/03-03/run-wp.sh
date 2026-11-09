@@ -33,6 +33,14 @@ wp language core install nl_NL ar --quiet >/dev/null 2>&1 || fault "language pac
 wp config set WP_HTTP_BLOCK_EXTERNAL true --raw --quiet >/dev/null 2>&1
 
 cp -R /tmp/t/blixis-base wp-content/themes/blixis-base
+mkdir -p wp-content/themes/fixture-child
+cat > wp-content/themes/fixture-child/style.css <<'THEME'
+/*
+Theme Name: Fixture Child
+Template: blixis-base
+Version: 1.0.0
+*/
+THEME
 cp -R /tmp/t/blixis-blocks wp-content/plugins/blixis-blocks
 wp plugin activate blixis-blocks --quiet >/dev/null 2>&1 || fault "plugin activation failed"
 wp theme activate blixis-base --quiet >/dev/null 2>&1 || fault "theme activation failed"

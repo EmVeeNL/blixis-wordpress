@@ -283,10 +283,8 @@ function render(): void {
 		$label = sprintf( __( 'Step %1$d of %2$d: %3$s', 'blixis-blocks' ), $index + 1, count( $keys ), $steps[ $key ] );
 		$state = $done ? ' <span class="blixis-setup-state">' . esc_html__( '(completed)', 'blixis-blocks' ) . '</span>' : '';
 		echo '<li class="' . ( $key === $step ? 'is-current' : '' ) . ( $done ? ' is-done' : '' ) . '">';
-		if ( $key === $step ) {
-			echo '<span aria-current="step">' . esc_html( $label ) . $state . '</span>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $state is built from escaped parts.
-		} elseif ( $reachable ) {
-			echo '<a href="' . esc_url( step_url( $key ) ) . '">' . esc_html( $label ) . $state . '</a>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $state is built from escaped parts.
+		if ( $reachable ) {
+			echo '<a href="' . esc_url( step_url( $key ) ) . '"' . ( $key === $step ? ' aria-current="step"' : '' ) . '>' . esc_html( $label ) . $state . '</a>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $state is built from escaped parts.
 		} else {
 			echo '<span>' . esc_html( $label ) . '</span>';
 		}
@@ -337,7 +335,17 @@ function render(): void {
 			echo ' <button type="submit" name="intent" value="rollback" class="button">' . esc_html__( 'Roll back to the previous saved configuration', 'blixis-blocks' ) . '</button>';
 		}
 	} else {
-		echo '<button type="submit" name="intent" value="next" class="button button-primary">' . esc_html__( 'Save and continue', 'blixis-blocks' ) . '</button>';
+		$labels    = array(
+			'continue' => __( 'Continue', 'blixis-blocks' ),
+			'save'     => __( 'Save and continue', 'blixis-blocks' ),
+			'create'   => __( 'Create theme and continue', 'blixis-blocks' ),
+		);
+		$label_key = submit_label_key( $step, $draft, $values );
+		echo '<button type="submit" name="intent" value="next" class="button button-primary" data-label-continue="' . esc_attr( $labels['continue'] ) . '" data-label-save="' . esc_attr( $labels['save'] ) . '" data-label-create="' . esc_attr( $labels['create'] ) . '">';
+		foreach ( $labels as $key => $label ) {
+			echo '<span class="blixis-setup-button-label' . ( $key === $label_key ? ' is-current-label' : '' ) . '" data-label-value="' . esc_attr( $key ) . '">' . esc_html( $label ) . '</span>';
+		}
+		echo '</button>';
 	}
 	echo '</div></form></div>';
 
@@ -345,6 +353,32 @@ function render(): void {
 		// Move focus to the error summary so keyboard and screen reader users land on it.
 		echo '<script>document.getElementById("blixis-setup-errors").focus();</script>';
 	}
+}
+
+/**
+ * Pick the no-JavaScript submit label from the currently selected theme and draft state.
+ *
+ * @param string $step   Current step.
+ * @param array  $draft  Draft.
+ * @param array  $values Rejected values from the current request.
+ * @return 'continue'|'save'|'create'
+ */
+function submit_label_key( string $step, array $draft, array $values = array() ): string {
+	if ( 'theme' === $step ) {
+		$choice = (string) ( $values['choice'] ?? $draft['config']['theme']['slug'] ?? '' );
+		return NEW_THEME === $choice ? 'create' : 'continue';
+	}
+	$stored   = store_read();
+	$baseline = $stored['config'] ?? defaults();
+	foreach ( step_sections()[ $step ] ?? array() as $section ) {
+		if ( ( $draft['config'][ $section ] ?? null ) !== ( $baseline[ $section ] ?? null ) ) {
+			return 'save';
+		}
+	}
+	if ( 'colors' === $step && ( $draft['config']['colorsDark'] ?? null ) !== ( $baseline['colorsDark'] ?? null ) ) {
+		return 'save';
+	}
+	return 'continue';
 }
 
 /**
@@ -550,7 +584,8 @@ function render_theme_step( array $draft, array $errors, array $values ): void {
 	}
 	echo '</fieldset>';
 	if ( $can_new ) {
-		echo '<fieldset class="blixis-setup-section"><legend>' . esc_html__( 'New child theme', 'blixis-blocks' ) . '</legend>';
+		$has_theme_errors = isset( $errors['/theme/name'] ) || isset( $errors['/theme/slug'] ) || isset( $errors['/theme/starter'] );
+		echo '<fieldset class="blixis-setup-section blixis-setup-new-theme' . ( $has_theme_errors ? ' has-errors' : '' ) . '"><legend>' . esc_html__( 'New child theme', 'blixis-blocks' ) . '</legend>';
 		render_field( '/theme/name', __( 'Theme name', 'blixis-blocks' ), (string) ( $values['new_name'] ?? '' ), __( 'Shown under Appearance → Themes, for example Acme Site.', 'blixis-blocks' ), $errors['/theme/name'] ?? null );
 		render_field( '/theme/slug', __( 'Theme slug', 'blixis-blocks' ), (string) ( $values['new_slug'] ?? '' ), __( 'Folder name: lowercase letters, digits, and single hyphens, for example acme-site.', 'blixis-blocks' ), $errors['/theme/slug'] ?? null );
 		$starter = (string) ( $values['new_starter'] ?? 'none' );
