@@ -89,6 +89,30 @@ async function colorsFlow(browser) {
   const darkSwitch = page.getByRole('switch', { name: 'Use dark colours' });
   check('the dark colours have a switch, off when there is no dark palette, and their rows are hidden', (await darkSwitch.count()) === 1 && !(await darkSwitch.isChecked()) && !(await page.locator('#blixis-section-colorsdark .blixis-dark-rows').isVisible()));
 
+  check('the generic help shows once per card, not under every colour row', (await page.locator('#blixis-section-colors .blixis-row__help').count()) === 0 && (await page.locator('#blixis-section-colors .blixis-card__intro').count()) === 1);
+  check('row labels align with the top of their control', await page.evaluate(() => {
+    const row = document.querySelector('#blixis-section-colors .blixis-row');
+    const label = row.querySelector('.blixis-row__label').getBoundingClientRect();
+    const control = row.querySelector('.blixis-row__control').getBoundingClientRect();
+    return Math.abs(label.top - control.top) < 14;
+  }));
+  check('the preview width is a three-way segmented control', JSON.stringify(await page.locator('.blixis-seg--widths .blixis-seg__opt').evaluateAll((els) => els.map((el) => el.textContent.trim().split(',')[0]))) === JSON.stringify(['Mobile', 'Tablet', 'Desktop']));
+  await frameLoaded(page);
+  await page.check('label[for="blixis-preview-desktop"] input');
+  await settle(page);
+  check('the preview frame is scaled to fit its column at the desktop width', await page.evaluate(() => {
+    const box = document.querySelector('.blixis-setup-frame').getBoundingClientRect();
+    const frame = document.querySelector('.blixis-setup-frame iframe').getBoundingClientRect();
+    return frame.right <= box.right + 1 && frame.width > 100;
+  }));
+  check('the completed-step check mark is centred in its circle', await page.evaluate(() => {
+    const dot = document.querySelector('.blixis-setup-progress li.is-done .blixis-setup-progress-dot');
+    const text = dot.querySelector('svg').getBoundingClientRect();
+    const box = dot.getBoundingClientRect();
+    return Math.abs((text.left + text.right) / 2 - (box.left + box.right) / 2) < 3 && Math.abs((text.top + text.bottom) / 2 - (box.top + box.bottom) / 2) < 4;
+  }));
+  await page.check('label[for="blixis-preview-mobile"] input');
+
   const primary = page.locator('#blixis-colors-primary');
   const primaryField = field(page, 'colors', 'primary');
   await primary.fill('oklch(0.55 0.22 262)');
@@ -443,78 +467,61 @@ async function mergedShots(browser) {
   await go(s.page, 'theme');
   await s.page.check('input[name="choice"][value="__new"]');
   await settle(s.page);
-  await shot(s.page, 'shots/d1-theme-1280.png');
-  await go(s.page, 'colors');
-  await s.page.fill('#blixis-colors-foreground', '#cccccc');
-  await settle(s.page);
-  await frameLoaded(s.page);
-  await shot(s.page, 'shots/d1-colors-1280.png');
-  await s.page.fill('#blixis-colors-foreground', '#101828');
-  await go(s.page, 'theme');
-  await s.page.check('input[name="choice"][value="__new"]');
-  await settle(s.page);
-  await shot(s.page, 'shots/c3-theme-new-1280.png');
-  await s.context.close();
-  s = await login(browser, USERS.en, { viewport: { width: 800, height: 900 } });
-  await go(s.page, 'colors');
-  await frameLoaded(s.page);
-  await shot(s.page, 'shots/d1-colors-800.png');
-  await s.context.close();
-  s = await login(browser, USERS.en, { viewport: { width: 320, height: 800 } });
-  await go(s.page, 'colors');
-  await frameLoaded(s.page);
-  await shot(s.page, 'shots/d1-tabs-320.png');
-  await s.context.close();
-  s = await login(browser, USERS.ar, { viewport: { width: 1280, height: 900 } });
-  await chooseTheme(s.page);
-  await go(s.page, 'colors');
-  await frameLoaded(s.page);
-  await shot(s.page, 'shots/d1-arabic-1280.png');
-  await s.context.close();
-  s = await login(browser, USERS.en, { viewport: { width: 1280, height: 900 } });
-  await s.page.goto(`${BASE}/wp-admin/profile.php`);
-  const modern = s.page.locator('input[name="admin_color"][value="modern"]');
-  if (await modern.count()) {
-    await modern.check();
-    await s.page.click('#submit');
-    await s.page.waitForLoadState('load');
-    await go(s.page, 'colors');
-    await frameLoaded(s.page);
-    await shot(s.page, 'shots/d1-modern-1280.png');
-  } else {
-    check('Modern scheme is available for the requested capture', false, 'profile colour option missing');
-  }
-  await s.context.close();
-
-  s = await login(browser, USERS.en, { viewport: { width: 1280, height: 900 } });
+  await shot(s.page, 'shots/e-theme-new-1280.png');
   await go(s.page, 'colors');
   await s.page.getByRole('switch', { name: 'Use dark colours' }).check();
   await s.page.fill('#blixis-colors-foreground', '#cccccc');
   await settle(s.page);
   await frameLoaded(s.page);
-  await shot(s.page, 'shots/d2-colors-1280.png');
+  await shot(s.page, 'shots/e-colors-1280.png');
   await s.page.fill('#blixis-colors-foreground', '#101828');
   await s.page.getByRole('switch', { name: 'Use dark colours' }).uncheck();
   await go(s.page, 'typography');
   await s.page.fill('#blixis-fonts-body', 'serif');
   await settle(s.page);
   await frameLoaded(s.page);
-  await shot(s.page, 'shots/d2-typography-combobox-1280.png');
+  await shot(s.page, 'shots/e-typography-combobox-1280.png');
   await s.page.keyboard.press('Escape');
   await go(s.page, 'layout');
-  await s.page.evaluate(() => document.querySelector('#blixis-section-spacing')?.scrollIntoView());
-  await shot(s.page, 'shots/d2-spacing-1280.png');
+  await frameLoaded(s.page);
+  await shot(s.page, 'shots/e-spacing-1280.png');
+  await s.context.close();
+  s = await login(browser, USERS.en, { viewport: { width: 900, height: 900 } });
+  await go(s.page, 'colors');
+  await frameLoaded(s.page);
+  await shot(s.page, 'shots/e-colors-900.png');
   await s.context.close();
   s = await login(browser, USERS.en, { viewport: { width: 320, height: 800 } });
   await go(s.page, 'colors');
   await frameLoaded(s.page);
-  await shot(s.page, 'shots/d2-colors-320.png');
+  await shot(s.page, 'shots/e-colors-320.png');
   await s.context.close();
   s = await login(browser, USERS.ar, { viewport: { width: 1280, height: 900 } });
   await chooseTheme(s.page);
   await go(s.page, 'colors');
   await frameLoaded(s.page);
-  await shot(s.page, 'shots/d2-colors-arabic.png');
+  await shot(s.page, 'shots/e-arabic-1280.png');
+  await s.context.close();
+  // The Modern admin colour scheme: the accent follows the user's choice.
+  s = await login(browser, USERS.en, { viewport: { width: 1280, height: 900 } });
+  for (const scheme of ['modern', 'fresh']) {
+    await s.page.goto(`${BASE}/wp-admin/profile.php`);
+    const radio = s.page.locator(`input[name="admin_color"][value="${scheme}"]`);
+    if ((await radio.count()) === 0) {
+      check(`the ${scheme} admin colour scheme is available`, false, 'profile colour option missing');
+      continue;
+    }
+    await radio.check();
+    await s.page.click('#submit');
+    await s.page.waitForLoadState('load');
+    if (scheme === 'modern') {
+      await go(s.page, 'colors');
+      await frameLoaded(s.page);
+      const accent = await s.page.evaluate(() => getComputedStyle(document.querySelector('.blixis-setup')).getPropertyValue('--blixis-accent').trim());
+      check('the wizard accent follows the Modern admin colour scheme', accent !== '', accent);
+      await shot(s.page, 'shots/e-modern-1280.png');
+    }
+  }
   await s.context.close();
 }
 

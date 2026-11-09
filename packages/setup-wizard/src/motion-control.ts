@@ -159,7 +159,11 @@ export function buildMotionSample(
       ),
     };
   });
-  const play = el("button", { type: "button", class: "button" }, t(ctx, "play"));
+  const play = el(
+    "button",
+    { type: "button", class: "blixis-btn blixis-btn--secondary blixis-btn--small" },
+    t(ctx, "play"),
+  );
   const still = el("p", { class: "blixis-motion-still", role: "note" });
   const heading = el("h3", { id: uid("blixis-spec-heading") }, t(ctx, "specimenMotion"));
   const section = el(
