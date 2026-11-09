@@ -79,6 +79,11 @@ const valid: Record<string, Json> = {
     muted: "oklch(0.55 0.04 255)",
     accent: "#0cf",
   }),
+  // Keeps the serif and monospace generic families covered now that generic-fonts equals Base.
+  "generic-fonts-serif": {
+    ...clone(),
+    fonts: { body: "sans-serif", heading: "serif", mono: "monospace" },
+  },
   "colors-dark": { ...clone(), colorsDark: DARK_HEX },
   "colors-dark-mixed-formats": {
     ...clone(),

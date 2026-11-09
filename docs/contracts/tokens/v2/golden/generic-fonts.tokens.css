@@ -1,4 +1,4 @@
-/* Blixis tokens: contract 2, generator 2, config 4cc580166870a3be */
+/* Blixis tokens: contract 2, generator 2, config b52c51bd4480aff4 */
 :root {
   --blixis-color-primary: #155dfc;
   --blixis-color-surface: #ffffff;
@@ -6,7 +6,7 @@
   --blixis-color-muted: #64748b;
   --blixis-color-accent: #06b6d4;
   --blixis-font-body: system-ui;
-  --blixis-font-heading: serif;
+  --blixis-font-heading: system-ui;
   --blixis-font-mono: ui-monospace;
   --blixis-text-xs: 0.75rem;
   --blixis-text-sm: 0.875rem;

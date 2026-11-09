@@ -13,7 +13,7 @@
   },
   "fonts": {
     "body": "system-ui",
-    "heading": "serif",
+    "heading": "system-ui",
     "mono": "ui-monospace"
   },
   "typeScale": {

@@ -125,7 +125,7 @@
           "slug": "body"
         },
         {
-          "fontFamily": "serif",
+          "fontFamily": "system-ui",
           "name": "Heading",
           "slug": "heading"
         },
