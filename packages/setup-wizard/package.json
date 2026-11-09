@@ -1,0 +1,26 @@
+{
+  "name": "@blixis/setup-wizard",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Progressive enhancement for the Blixis setup wizard (task 03-06): colour, length, shadow and motion controls and live previews. Builds one script into Blixis Blocks; the PHP validator stays authoritative.",
+  "license": "GPL-2.0-or-later",
+  "type": "module",
+  "scripts": {
+    "build": "vite build",
+    "test": "node --test \"test/**/*.test.ts\"",
+    "lint": "oxlint --deny-warnings --type-aware --type-check src test vite.config.ts",
+    "format:check": "oxfmt --check src test vite.config.ts package.json tsconfig.json",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@blixis/tokens": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "26.6.6",
+    "oxfmt": "0.77.0",
+    "oxlint": "1.92.0",
+    "oxlint-tsgolint": "7.0.2006",
+    "typescript": "7.0.2",
+    "vite": "8.3.6"
+  }
+}
