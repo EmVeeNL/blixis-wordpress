@@ -263,7 +263,7 @@ async function layoutFlow(browser) {
   await page.keyboard.press('Home');
   check('spacing keyboard: Home reaches the minimum from the token map', (await hidden(page, 'spacing', 'md')) === '0.5rem');
   await page.fill('#blixis-spacing-md', '1');
-  check('radius and layout widths have sliders and unit menus', (await page.locator('.blixis-setup-radius input[type=range]').count()) === 3 && (await page.locator('.blixis-setup-layout select').count()) === 3);
+  check('radius and layout widths have sliders and unit menus', (await page.locator('.blixis-setup-section--radius input[type=range]').count()) === 3 && (await page.locator('.blixis-setup-section--layout select').count()) === 3);
   const widthUnits = await field(page, 'layout', 'contentWidth').locator('select option').allTextContents();
   check('layout widths offer px, rem, %, ch, and vw', JSON.stringify(widthUnits) === JSON.stringify(['px', 'rem', '%', 'ch', 'vw']), widthUnits.join());
   const spacingUnits = await md.locator('select option').allTextContents();
@@ -301,7 +301,7 @@ async function layoutFlow(browser) {
   const fast = page.locator('#blixis-motion-durationfast');
   await fast.fill('200');
   check('motion speeds are millisecond sliders from the token map', (await hidden(page, 'motion', 'durationFast')) === '200ms' && (await field(page, 'motion', 'durationFast').locator('input[type=range]').getAttribute('max')) === '500');
-  const speedLabels = await page.locator('.blixis-setup-motion > .blixis-setup-field > label').allTextContents();
+  const speedLabels = await page.locator('.blixis-setup-section--motion > .blixis-setup-field > label').allTextContents();
   check('the speeds are named Fast, Normal, Slow', JSON.stringify(speedLabels) === JSON.stringify(['Fast', 'Normal', 'Slow', 'Easing']), speedLabels.join());
   const easing = field(page, 'motion', 'easing');
   const easingNames = await easing.locator('.blixis-card-name').allTextContents();

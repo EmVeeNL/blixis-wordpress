@@ -493,7 +493,7 @@ function render_section( string $section, array $current, array $errors, array $
 		return;
 	}
 	$legend = $dark ? __( 'Dark colours (optional)', 'blixis-blocks' ) : ( section_labels()[ $section ] ?? $section );
-	echo '<fieldset class="blixis-setup-section blixis-setup-' . esc_attr( strtolower( $section ) ) . '"><legend>' . esc_html( $legend ) . '</legend>';
+	echo '<fieldset class="blixis-setup-section blixis-setup-section--' . esc_attr( strtolower( $section ) ) . '"><legend>' . esc_html( $legend ) . '</legend>';
 	if ( $dark ) {
 		echo '<p class="blixis-setup-hint">' . esc_html__( 'Fill in all five to use a dark palette, or leave all five empty. Without one, dark mode uses the light colours.', 'blixis-blocks' ) . '</p>';
 		echo '<p class="blixis-ctl-tools"><button type="button" class="button" data-blixis-copy-light hidden>' . esc_html__( 'Start from the light colours', 'blixis-blocks' ) . '</button></p>';
