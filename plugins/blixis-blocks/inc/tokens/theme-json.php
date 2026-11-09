@@ -1,8 +1,8 @@
 <?php
 /**
- * Pure projection of a validated BlixisThemeConfig v1 to theme.json data.
+ * Pure projection of a validated BlixisThemeConfig (contract v2) to theme.json data.
  *
- * Contract: docs/contracts/tokens (generator version 1). This module performs no
+ * Contract: docs/contracts/tokens (generator version 2). This module performs no
  * option reads, no filtering and no output. Validation and persistence arrive with
  * task 03-02; until then the shape is checked defensively and the function fails
  * closed by returning an empty array.
@@ -19,127 +19,116 @@ if (!defined('ABSPATH')) {
 }
 
 /**
- * Closed token names and value grammars for contract v1.
+ * Check that the config has exactly the current schema's shape and valid, normalized values.
  *
- * Mirrors docs/contracts/tokens/v1/token-map.json; kept inline so the plugin
- * deploys without the docs directory.
- *
- * @return array<string, mixed>
- */
-function theme_json_contract(): array {
-    $length   = '(?:0|(?:[1-9][0-9]{0,3}|0)(?:\.[0-9]{1,4})?(?:rem|px))';
-    $s_length = '(?:0|(?:[1-9][0-9]{0,2}|0)(?:\.[0-9]{1,3})?(?:rem|px))';
-    $color    = '#(?:[0-9A-Fa-f]{3}|[0-9A-Fa-f]{6}|[0-9A-Fa-f]{8})';
-    $layer    = '(?:inset )?-?' . $s_length . ' -?' . $s_length . ' ' . $s_length . ' -?' . $s_length . ' ' . $color;
-
-    return array(
-        'sections'    => array(
-            'colors'    => array( 'primary', 'surface', 'foreground', 'muted', 'accent' ),
-            'fonts'     => array( 'body', 'heading', 'mono' ),
-            'typeScale' => array( 'xs', 'sm', 'base', 'lg', 'xl', '2xl', '3xl' ),
-            'spacing'   => array( 'xs', 'sm', 'md', 'lg', 'xl' ),
-            'radius'    => array( 'sm', 'md', 'lg' ),
-            'layout'    => array( 'contentWidth', 'wideWidth', 'gutter' ),
-            'shadows'   => array( 'sm', 'md', 'lg' ),
-            'motion'    => array( 'durationFast', 'durationBase', 'durationSlow', 'easing' ),
-        ),
-        'patterns'    => array(
-            'color'    => '/^#(?:[0-9a-f]{6}|[0-9a-f]{8})$/D',
-            'font'     => '/^(?=.{1,64}$)[A-Za-z][A-Za-z0-9]*(?:[ -][A-Za-z0-9]+){0,7}$/D',
-            'length'   => '/^' . $length . '$/D',
-            'shadow'   => '/^(?:none|' . $layer . '(?:, ' . $layer . '){0,3})$/D',
-            'duration' => '/^(?:0|[1-9][0-9]{0,3})ms$/D',
-            'easing'   => '/^(?:linear|ease|ease-in|ease-out|ease-in-out|cubic-bezier\((?:0(?:\.[0-9]{1,3})?|1(?:\.0{1,3})?), -?[0-9](?:\.[0-9]{1,3})?, (?:0(?:\.[0-9]{1,3})?|1(?:\.0{1,3})?), -?[0-9](?:\.[0-9]{1,3})?\))$/D',
-        ),
-        'generics'    => array( 'serif', 'sans-serif', 'monospace', 'system-ui', 'ui-sans-serif', 'ui-serif', 'ui-monospace' ),
-        'fallbacks'   => array(
-            'body'    => 'system-ui, sans-serif',
-            'heading' => 'system-ui, sans-serif',
-            'mono'    => 'ui-monospace, monospace',
-        ),
-        'parent'      => 'blixis-base',
-        'slug'        => '/^[a-z][a-z0-9-]{0,62}$/D',
-        'breakpoints' => array(
-			'sm' => '40rem',
-			'md' => '48rem',
-			'lg' => '64rem',
-			'xl' => '80rem',
-		),
-    );
-}
-
-/**
- * Whether a section value matches the grammar for its section and key.
- *
- * @param string $section Section name.
- * @param string $key     Token key.
- * @param mixed  $value   Candidate value.
- * @param array  $contract Contract data.
- */
-function theme_json_value_ok( string $section, string $key, mixed $value, array $contract ): bool {
-    if (!is_string($value)) {
-        return false;
-    }
-    $patterns = $contract['patterns'];
-    $kind     = match ($section) {
-        'colors'  => 'color',
-        'fonts'   => 'font',
-        'shadows' => 'shadow',
-        'motion'  => 'easing' === $key ? 'easing' : 'duration',
-        default   => 'length',
-    };
-    if ('font' === $kind && in_array($value, $contract['generics'], true)) {
-        return true;
-    }
-    return 1 === preg_match($patterns[ $kind ], $value);
-}
-
-/**
- * Check that the config has exactly the v1 shape and valid, normalized values.
+ * Uses the shipped token map and the validator's value rules, so there is one definition.
  *
  * @param array $config Candidate config.
  */
 function theme_json_shape_ok( array $config ): bool {
-    $contract = theme_json_contract();
-    $expected = array_merge(array( 'schemaVersion', 'theme', 'breakpoints' ), array_keys($contract['sections']));
-    $keys     = array_keys($config);
+    $map      = token_map();
+    $grammars = $map['grammars'];
+    $expected = array( 'schemaVersion', 'theme' );
+    foreach ($map['sections'] as $section) {
+        $expected[] = $section['section'];
+    }
+    $keys = array_keys($config);
+    if (isset($config['colorsDark'])) {
+        $expected[] = 'colorsDark';
+    }
     sort($expected);
     sort($keys);
-    if ($keys !== $expected || 1 !== $config['schemaVersion']) {
+    if ($keys !== $expected || $map['contractVersion'] !== $config['schemaVersion']) {
         return false;
     }
 
     $theme = $config['theme'];
     if (
         !is_array($theme) || array_keys($theme) !== array( 'slug', 'parent' )
-        || !is_string($theme['slug']) || 1 !== preg_match($contract['slug'], $theme['slug'])
-        || $contract['parent'] !== $theme['parent']
+        || !is_string($theme['slug']) || !grammar_matches($grammars['slug'], $theme['slug'])
+        || $map['theme']['parent'] !== $theme['parent']
     ) {
         return false;
     }
-    if ($config['breakpoints'] !== $contract['breakpoints']) {
-        return false;
-    }
 
-    foreach ($contract['sections'] as $section => $names) {
-        $values = $config[ $section ];
+    foreach ($map['sections'] as $section) {
+        $name   = $section['section'];
+        $values = $config[ $name ];
         if (!is_array($values)) {
             return false;
         }
-        $have = array_keys($values);
+        $names = array_keys($section['tokens']);
+        $have  = array_keys($values);
+        sort($have);
         $want = $names;
+        sort($want);
+        if ($have !== $want) {
+            return false;
+        }
+        if ('breakpoint' === $section['kind']) {
+            if ($values !== $map['breakpointPreset']) {
+                return false;
+            }
+            continue;
+        }
+        foreach ($names as $key) {
+            if (!theme_json_value_ok($map, $section, (string) $key, $values[ $key ])) {
+                return false;
+            }
+        }
+    }
+    if (isset($config['colorsDark'])) {
+        $dark = $config['colorsDark'];
+        if (!is_array($dark)) {
+            return false;
+        }
+        $have = array_keys($dark);
+        $want = array_keys($map['sections'][0]['tokens']);
         sort($have);
         sort($want);
         if ($have !== $want) {
             return false;
         }
-        foreach ($names as $name) {
-            if (!theme_json_value_ok($section, $name, $values[ $name ], $contract)) {
+        foreach ($dark as $value) {
+            if (!is_string($value) || !color_valid($value) || !theme_json_normalized_color($value)) {
                 return false;
             }
         }
     }
     return true;
+}
+
+/**
+ * Whether a section value matches the grammar for its field, in normalized form.
+ *
+ * @param array  $map     Token map.
+ * @param array  $section Section definition.
+ * @param string $key     Token key.
+ * @param mixed  $value   Candidate value.
+ */
+function theme_json_value_ok( array $map, array $section, string $key, mixed $value ): bool {
+    if (!is_string($value)) {
+        return false;
+    }
+    if ('font' === $section['kind']) {
+        return in_array($value, $map['fontGenerics'], true) || grammar_matches($map['grammars']['font'], $value);
+    }
+    if ('color' === $section['kind']) {
+        return color_valid($value) && theme_json_normalized_color($value);
+    }
+    if ('shadow' === $section['kind'] && strtolower($value) !== $value) {
+        return false;
+    }
+    return value_fits($map['grammars'], field_grammar($map, $section, $key), $value, false);
+}
+
+/**
+ * Hex colours must be in the validator's normalized form: lower case, six or eight digits.
+ *
+ * @param string $value Valid colour.
+ */
+function theme_json_normalized_color( string $value ): bool {
+    return '#' !== $value[0] || 1 === preg_match('/^#(?:[0-9a-f]{6}|[0-9a-f]{8})$/D', $value);
 }
 
 /**
@@ -149,11 +138,11 @@ function theme_json_shape_ok( array $config ): bool {
  * @param string $family Validated family.
  */
 function theme_json_font_stack( string $key, string $family ): string {
-    $contract = theme_json_contract();
-    if (in_array($family, $contract['generics'], true)) {
+    $map = token_map();
+    if (in_array($family, $map['fontGenerics'], true)) {
         return $family;
     }
-    return '"' . $family . '", ' . ( $contract['fallbacks'][ $key ] ?? 'sans-serif' );
+    return '"' . $family . '", ' . ( $map['fontFallbacks'][ $key ] ?? 'sans-serif' );
 }
 
 /**
@@ -176,7 +165,7 @@ function theme_json_presets( array $values, callable $build ): array {
 }
 
 /**
- * Project a normalized, validated BlixisThemeConfig v1 to theme.json data.
+ * Project a normalized, validated BlixisThemeConfig to theme.json data.
  *
  * Requires the normalized validator result, including contract key order for theme
  * and breakpoints. This defensive guard is not the raw-input validator: parsing,
@@ -191,8 +180,9 @@ function theme_json_from_validated_config( array $config ): array {
         return array();
     }
 
-    $layout = $config['layout'];
-    $motion = $config['motion'];
+    $layout      = $config['layout'];
+    $motion      = $config['motion'];
+    $color_names = token_map()['sections'][0]['tokens'];
 
     return array(
         'version'  => 3,
@@ -201,7 +191,9 @@ function theme_json_from_validated_config( array $config ): array {
                 'defaultPalette' => false,
                 'palette'        => theme_json_presets(
                     $config['colors'],
-                    static fn( string $slug, string $value ): array => array( 'color' => $value )
+                    // With a dark palette the presets point at the custom properties, which the token
+                    // stylesheet switches under prefers-color-scheme, so blocks follow the scheme.
+                    static fn( string $slug, string $value ): array => array( 'color' => isset($config['colorsDark']) ? 'var(' . ( $color_names[ $slug ] ?? '' ) . ')' : $value )
                 ),
             ),
             'typography' => array(

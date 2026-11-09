@@ -12,11 +12,21 @@ export function fontStack(key: string, family: string, map: TokenMap = tokenMap)
   return `"${family}", ${map.fontFallbacks[key] ?? "sans-serif"}`;
 }
 
-export function previewProperties(config: Config, map: TokenMap = tokenMap): Map<string, string> {
+export type PreviewScheme = "light" | "dark";
+
+// The custom properties for a preview. With scheme "dark" the colours come from colorsDark when
+// the config has one, otherwise from colors (the same fallback as the server's stylesheet).
+export function previewProperties(
+  config: Config,
+  map: TokenMap = tokenMap,
+  scheme: PreviewScheme = "light",
+): Map<string, string> {
   const out = new Map<string, string>();
   for (const part of map.sections) {
     if (part.buildOnly === true) continue;
-    const values = section(config, part.section);
+    const dark =
+      scheme === "dark" && part.section === "colors" && config["colorsDark"] !== undefined;
+    const values = section(config, dark ? "colorsDark" : part.section);
     for (const [key, name] of Object.entries(part.tokens)) {
       if (name === null) continue;
       const value = values[key] ?? "";

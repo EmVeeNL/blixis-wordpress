@@ -7,7 +7,7 @@ from pathlib import Path
 
 root = Path(__file__).resolve().parents[1]
 base_path = root / "themes/blixis-base/theme.json"
-golden_path = root / "docs/contracts/tokens/v1/golden/generic-fonts.theme.json"
+golden_path = root / "docs/contracts/tokens/v2/golden/generic-fonts.theme.json"
 
 base = json.loads(base_path.read_text(encoding="utf-8"))
 golden = json.loads(golden_path.read_text(encoding="utf-8"))

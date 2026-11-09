@@ -1,7 +1,8 @@
-// BlixisThemeConfig v1 validator for the browser (task 03-02). Must return the same
+// BlixisThemeConfig validator (contract v2; a stored v1 config is read under v1 rules and migrated) for the browser (task 03-02). Must return the same
 // {code, path} errors as plugins/blixis-blocks/inc/tokens/validate.php for every input;
 // tests/03-02 compares them. The server result stays authoritative.
-import { type TokenMap, tokenMap } from "./token-map.ts";
+import { parseColor, shadowColors } from "./color.ts";
+import { type Section, type TokenMap, tokenMap } from "./token-map.ts";
 
 export type ValidationError = { code: string; path: string };
 export type Config = Record<string, unknown>;
@@ -80,6 +81,8 @@ function byteCompare(a: string, b: string): number {
 }
 
 export function normalizeColor(value: string): string {
+  // rgb(), hsl() and oklch() keep the entered text.
+  if (!value.startsWith("#")) return value;
   const lower = value.toLowerCase();
   if (lower.length === 4) {
     const [, r = "", g = "", b = ""] = lower;
@@ -88,18 +91,57 @@ export function normalizeColor(value: string): string {
   return lower;
 }
 
+// Migrates a normalized config to the current schema version, one step at a time. Pure: the
+// config must already have passed validation at its own version. Version 1 to 2 only changes
+// the version number, because every v1 value is a valid v2 value; the additions (colour
+// formats, units, colorsDark) are optional or widen a grammar. Anything else is returned as is.
+export function migrateConfig(config: Config, map: TokenMap = tokenMap): Config {
+  let out = config;
+  let version = out["schemaVersion"];
+  while (typeof version === "number" && version >= 1 && version < map.contractVersion) {
+    if (version === 1) out = { ...out, schemaVersion: 2 };
+    version = out["schemaVersion"];
+  }
+  return out;
+}
+
+// The grammar name that applies to a section and key.
+export function fieldGrammar(map: TokenMap, section: Section, key: string): string {
+  const fallback =
+    section.kind === "motion" ? (key === "easing" ? "easing" : "duration") : section.kind;
+  return map.fields[section.section]?.[key]?.grammar ?? fallback;
+}
+
+// Whether a value fits its grammar, including colour component ranges and the colours in shadows.
+function valueFits(
+  map: TokenMap,
+  grammars: Record<string, string>,
+  grammar: string,
+  value: string,
+  legacy: boolean,
+): boolean {
+  if (!new RegExp(grammars[grammar] ?? "^$").test(value)) return false;
+  if (legacy) return true;
+  if (grammar === "color") return parseColor(value, map) !== null;
+  if (grammar === "shadow")
+    return shadowColors(value).every((color) => parseColor(color, map) !== null);
+  return true;
+}
+
 function checkToken(
   map: TokenMap,
-  kind: string,
+  grammars: Record<string, string>,
+  section: Section,
   key: string,
   value: string,
+  legacy: boolean,
 ): { code: string } | { value: string } {
-  let grammar = kind;
-  if (kind === "motion") grammar = key === "easing" ? "easing" : "duration";
-  const pattern = new RegExp(map.grammars[grammar] ?? "^$");
-  if (!pattern.test(value)) return { code: map.errorCodes[grammar] ?? "token.invalid" };
-  if (kind === "color") return { value: normalizeColor(value) };
-  if (kind === "shadow") return { value: value.toLowerCase() };
+  const grammar = fieldGrammar(map, section, key);
+  if (!valueFits(map, grammars, grammar, value, legacy)) {
+    return { code: map.errorCodes[grammar] ?? "token.invalid" };
+  }
+  if (section.kind === "color") return { value: normalizeColor(value) };
+  if (section.kind === "shadow") return { value: value.toLowerCase() };
   return { value };
 }
 
@@ -135,20 +177,48 @@ function validateObject(root: JsonObject, map: TokenMap): ValidationResult {
   if (!Object.hasOwn(root, "schemaVersion")) return fail("field.required", "/schemaVersion");
   const version = root["schemaVersion"];
   if (typeof version !== "number") return fail("field.wrong_type", "/schemaVersion");
-  if (version !== map.contractVersion) return fail("schema.version_unsupported", "/schemaVersion");
+  let legacy = false;
+  let grammars = map.grammars;
+  if (version === map.contractVersion) {
+    // current version
+  } else if (Number.isInteger(version) && Object.hasOwn(map.legacyVersions, String(version))) {
+    // A stored older config is read under the rules it was written with, then migrated.
+    legacy = true;
+    grammars = { ...map.grammars, ...map.legacyVersions[String(version)]?.grammars };
+  } else {
+    return fail("schema.version_unsupported", "/schemaVersion");
+  }
 
   const errors: ValidationError[] = [];
-  const output: Config = { schemaVersion: map.contractVersion };
-  const known = new Set(["schemaVersion", "theme", ...map.sections.map((s) => s.section)]);
+  const output: Config = { schemaVersion: version };
+  const optional = legacy ? [] : map.optionalSections;
+  const known = new Set([
+    "schemaVersion",
+    "theme",
+    ...map.sections.map((s) => s.section),
+    ...optional.map((s) => s.section),
+  ]);
   for (const key of Object.keys(root)) {
     if (!known.has(key)) errors.push({ code: "field.unknown", path: pointer("", key) });
   }
 
   validateTheme(root, map, errors, output);
-  for (const section of map.sections) {
+  const definitions: { section: Section; required: boolean }[] = map.sections.map((section) => ({
+    section,
+    required: true,
+  }));
+  for (const extra of optional) {
+    // An optional section mirrors the tokens of another one and may be left out.
+    const mirror = map.sections.find((s) => s.section === extra.mirrors);
+    definitions.push({
+      section: { section: extra.section, kind: extra.kind, tokens: mirror?.tokens ?? {} },
+      required: false,
+    });
+  }
+  for (const { section, required } of definitions) {
     const name = section.section;
     if (!Object.hasOwn(root, name)) {
-      errors.push({ code: "field.required", path: `/${name}` });
+      if (required) errors.push({ code: "field.required", path: `/${name}` });
       continue;
     }
     const raw = root[name];
@@ -177,7 +247,7 @@ function validateObject(root: JsonObject, map: TokenMap): ValidationResult {
         shapeOk = false;
         continue;
       }
-      const checked = checkToken(map, section.kind, key, value);
+      const checked = checkToken(map, grammars, section, key, value, legacy);
       if ("code" in checked) {
         errors.push({ code: checked.code, path });
         grammarError = true;
@@ -193,7 +263,7 @@ function validateObject(root: JsonObject, map: TokenMap): ValidationResult {
     errors.sort((a, b) => byteCompare(a.path, b.path) || byteCompare(a.code, b.code));
     return { ok: false, errors };
   }
-  return { ok: true, config: output, errors: [] };
+  return { ok: true, config: migrateConfig(output, map), errors: [] };
 }
 
 function validateTheme(

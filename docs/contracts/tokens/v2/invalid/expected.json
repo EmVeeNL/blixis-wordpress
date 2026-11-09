@@ -1,0 +1,1234 @@
+{
+  "breakpoint-editable-value.json": {
+    "errors": [
+      {
+        "code": "token.breakpoint.not_preset",
+        "path": "/breakpoints/md"
+      }
+    ]
+  },
+  "breakpoint-equal.json": {
+    "errors": [
+      {
+        "code": "token.breakpoint.not_ascending",
+        "path": "/breakpoints/lg"
+      }
+    ]
+  },
+  "breakpoint-new-name.json": {
+    "errors": [
+      {
+        "code": "field.unknown",
+        "path": "/breakpoints/2xl"
+      }
+    ]
+  },
+  "breakpoint-not-ascending.json": {
+    "errors": [
+      {
+        "code": "token.breakpoint.not_ascending",
+        "path": "/breakpoints/md"
+      }
+    ]
+  },
+  "breakpoint-px.json": {
+    "errors": [
+      {
+        "code": "token.breakpoint.invalid",
+        "path": "/breakpoints/md"
+      }
+    ]
+  },
+  "breakpoint-var.json": {
+    "errors": [
+      {
+        "code": "token.breakpoint.invalid",
+        "path": "/breakpoints/md"
+      }
+    ]
+  },
+  "breakpoint-zero.json": {
+    "errors": [
+      {
+        "code": "token.breakpoint.invalid",
+        "path": "/breakpoints/sm"
+      }
+    ]
+  },
+  "color-array.json": {
+    "errors": [
+      {
+        "code": "field.wrong_type",
+        "path": "/colors/primary"
+      }
+    ]
+  },
+  "color-comment.json": {
+    "errors": [
+      {
+        "code": "token.color.invalid",
+        "path": "/colors/primary"
+      }
+    ]
+  },
+  "color-control-char.json": {
+    "errors": [
+      {
+        "code": "token.color.invalid",
+        "path": "/colors/primary"
+      }
+    ]
+  },
+  "color-css-breakout.json": {
+    "errors": [
+      {
+        "code": "token.color.invalid",
+        "path": "/colors/primary"
+      }
+    ]
+  },
+  "color-expression.json": {
+    "errors": [
+      {
+        "code": "token.color.invalid",
+        "path": "/colors/primary"
+      }
+    ]
+  },
+  "color-five-digits.json": {
+    "errors": [
+      {
+        "code": "token.color.invalid",
+        "path": "/colors/primary"
+      }
+    ]
+  },
+  "color-fullwidth-hash.json": {
+    "errors": [
+      {
+        "code": "token.color.invalid",
+        "path": "/colors/primary"
+      }
+    ]
+  },
+  "color-hex-four-digits.json": {
+    "errors": [
+      {
+        "code": "token.color.invalid",
+        "path": "/colors/primary"
+      }
+    ]
+  },
+  "color-hsl-comma.json": {
+    "errors": [
+      {
+        "code": "token.color.invalid",
+        "path": "/colors/primary"
+      }
+    ]
+  },
+  "color-hsl-deg-unit.json": {
+    "errors": [
+      {
+        "code": "token.color.invalid",
+        "path": "/colors/primary"
+      }
+    ]
+  },
+  "color-hsl-hue-out-of-range.json": {
+    "errors": [
+      {
+        "code": "token.color.invalid",
+        "path": "/colors/primary"
+      }
+    ]
+  },
+  "color-hsl-lightness-out-of-range.json": {
+    "errors": [
+      {
+        "code": "token.color.invalid",
+        "path": "/colors/primary"
+      }
+    ]
+  },
+  "color-hsl-no-percent.json": {
+    "errors": [
+      {
+        "code": "token.color.invalid",
+        "path": "/colors/primary"
+      }
+    ]
+  },
+  "color-hsl-percent-hue.json": {
+    "errors": [
+      {
+        "code": "token.color.invalid",
+        "path": "/colors/primary"
+      }
+    ]
+  },
+  "color-hsl-saturation-out-of-range.json": {
+    "errors": [
+      {
+        "code": "token.color.invalid",
+        "path": "/colors/primary"
+      }
+    ]
+  },
+  "color-hsla-function.json": {
+    "errors": [
+      {
+        "code": "token.color.invalid",
+        "path": "/colors/primary"
+      }
+    ]
+  },
+  "color-import.json": {
+    "errors": [
+      {
+        "code": "token.color.invalid",
+        "path": "/colors/primary"
+      }
+    ]
+  },
+  "color-missing.json": {
+    "errors": [
+      {
+        "code": "field.required",
+        "path": "/colors/primary"
+      }
+    ]
+  },
+  "color-named.json": {
+    "errors": [
+      {
+        "code": "token.color.invalid",
+        "path": "/colors/primary"
+      }
+    ]
+  },
+  "color-nul.json": {
+    "errors": [
+      {
+        "code": "token.color.invalid",
+        "path": "/colors/primary"
+      }
+    ]
+  },
+  "color-null.json": {
+    "errors": [
+      {
+        "code": "field.wrong_type",
+        "path": "/colors/primary"
+      }
+    ]
+  },
+  "color-number.json": {
+    "errors": [
+      {
+        "code": "field.wrong_type",
+        "path": "/colors/primary"
+      }
+    ]
+  },
+  "color-object.json": {
+    "errors": [
+      {
+        "code": "field.wrong_type",
+        "path": "/colors/primary"
+      }
+    ]
+  },
+  "color-oklab-function.json": {
+    "errors": [
+      {
+        "code": "token.color.invalid",
+        "path": "/colors/primary"
+      }
+    ]
+  },
+  "color-oklch-chroma-out-of-range.json": {
+    "errors": [
+      {
+        "code": "token.color.invalid",
+        "path": "/colors/primary"
+      }
+    ]
+  },
+  "color-oklch-chroma-percent.json": {
+    "errors": [
+      {
+        "code": "token.color.invalid",
+        "path": "/colors/primary"
+      }
+    ]
+  },
+  "color-oklch-hue-out-of-range.json": {
+    "errors": [
+      {
+        "code": "token.color.invalid",
+        "path": "/colors/primary"
+      }
+    ]
+  },
+  "color-oklch-hue-unit.json": {
+    "errors": [
+      {
+        "code": "token.color.invalid",
+        "path": "/colors/primary"
+      }
+    ]
+  },
+  "color-oklch-lightness-out-of-range.json": {
+    "errors": [
+      {
+        "code": "token.color.invalid",
+        "path": "/colors/primary"
+      }
+    ]
+  },
+  "color-oklch-lightness-percent-out-of-range.json": {
+    "errors": [
+      {
+        "code": "token.color.invalid",
+        "path": "/colors/primary"
+      }
+    ]
+  },
+  "color-oklch-none-keyword.json": {
+    "errors": [
+      {
+        "code": "token.color.invalid",
+        "path": "/colors/primary"
+      }
+    ]
+  },
+  "color-rgb-alpha-out-of-range.json": {
+    "errors": [
+      {
+        "code": "token.color.invalid",
+        "path": "/colors/primary"
+      }
+    ]
+  },
+  "color-rgb-alpha-percent-out-of-range.json": {
+    "errors": [
+      {
+        "code": "token.color.invalid",
+        "path": "/colors/primary"
+      }
+    ]
+  },
+  "color-rgb-breakout.json": {
+    "errors": [
+      {
+        "code": "token.color.invalid",
+        "path": "/colors/primary"
+      }
+    ]
+  },
+  "color-rgb-calc.json": {
+    "errors": [
+      {
+        "code": "token.color.invalid",
+        "path": "/colors/primary"
+      }
+    ]
+  },
+  "color-rgb-comma.json": {
+    "errors": [
+      {
+        "code": "token.color.invalid",
+        "path": "/colors/primary"
+      }
+    ]
+  },
+  "color-rgb-double-space.json": {
+    "errors": [
+      {
+        "code": "token.color.invalid",
+        "path": "/colors/primary"
+      }
+    ]
+  },
+  "color-rgb-exponent.json": {
+    "errors": [
+      {
+        "code": "token.color.invalid",
+        "path": "/colors/primary"
+      }
+    ]
+  },
+  "color-rgb-function.json": {
+    "errors": [
+      {
+        "code": "token.color.invalid",
+        "path": "/colors/primary"
+      }
+    ]
+  },
+  "color-rgb-leading-zero.json": {
+    "errors": [
+      {
+        "code": "token.color.invalid",
+        "path": "/colors/primary"
+      }
+    ]
+  },
+  "color-rgb-missing-channel.json": {
+    "errors": [
+      {
+        "code": "token.color.invalid",
+        "path": "/colors/primary"
+      }
+    ]
+  },
+  "color-rgb-mixed-percent.json": {
+    "errors": [
+      {
+        "code": "token.color.invalid",
+        "path": "/colors/primary"
+      }
+    ]
+  },
+  "color-rgb-negative.json": {
+    "errors": [
+      {
+        "code": "token.color.invalid",
+        "path": "/colors/primary"
+      }
+    ]
+  },
+  "color-rgb-out-of-range.json": {
+    "errors": [
+      {
+        "code": "token.color.invalid",
+        "path": "/colors/primary"
+      }
+    ]
+  },
+  "color-rgb-percent-out-of-range.json": {
+    "errors": [
+      {
+        "code": "token.color.invalid",
+        "path": "/colors/primary"
+      }
+    ]
+  },
+  "color-rgb-trailing-newline.json": {
+    "errors": [
+      {
+        "code": "token.color.invalid",
+        "path": "/colors/primary"
+      }
+    ]
+  },
+  "color-rgb-uppercase-function.json": {
+    "errors": [
+      {
+        "code": "token.color.invalid",
+        "path": "/colors/primary"
+      }
+    ]
+  },
+  "color-rgb-var.json": {
+    "errors": [
+      {
+        "code": "token.color.invalid",
+        "path": "/colors/primary"
+      }
+    ]
+  },
+  "color-rgba-function.json": {
+    "errors": [
+      {
+        "code": "token.color.invalid",
+        "path": "/colors/primary"
+      }
+    ]
+  },
+  "color-style-close.json": {
+    "errors": [
+      {
+        "code": "token.color.invalid",
+        "path": "/colors/primary"
+      }
+    ]
+  },
+  "color-trailing-newline.json": {
+    "errors": [
+      {
+        "code": "token.color.invalid",
+        "path": "/colors/primary"
+      }
+    ]
+  },
+  "color-unicode-escape.json": {
+    "errors": [
+      {
+        "code": "token.color.invalid",
+        "path": "/colors/primary"
+      }
+    ]
+  },
+  "color-unknown-name.json": {
+    "errors": [
+      {
+        "code": "field.unknown",
+        "path": "/colors/brand"
+      }
+    ]
+  },
+  "color-url.json": {
+    "errors": [
+      {
+        "code": "token.color.invalid",
+        "path": "/colors/primary"
+      }
+    ]
+  },
+  "color-var-smuggle.json": {
+    "errors": [
+      {
+        "code": "token.color.invalid",
+        "path": "/colors/primary"
+      }
+    ]
+  },
+  "colors-dark-empty-object.json": {
+    "errors": [
+      {
+        "code": "field.required",
+        "path": "/colorsDark/accent"
+      },
+      {
+        "code": "field.required",
+        "path": "/colorsDark/foreground"
+      },
+      {
+        "code": "field.required",
+        "path": "/colorsDark/muted"
+      },
+      {
+        "code": "field.required",
+        "path": "/colorsDark/primary"
+      },
+      {
+        "code": "field.required",
+        "path": "/colorsDark/surface"
+      }
+    ]
+  },
+  "colors-dark-invalid-color.json": {
+    "errors": [
+      {
+        "code": "token.color.invalid",
+        "path": "/colorsDark/surface"
+      }
+    ]
+  },
+  "colors-dark-missing-key.json": {
+    "errors": [
+      {
+        "code": "field.required",
+        "path": "/colorsDark/accent"
+      }
+    ]
+  },
+  "colors-dark-not-object.json": {
+    "errors": [
+      {
+        "code": "field.wrong_type",
+        "path": "/colorsDark"
+      }
+    ]
+  },
+  "colors-dark-null.json": {
+    "errors": [
+      {
+        "code": "field.wrong_type",
+        "path": "/colorsDark"
+      }
+    ]
+  },
+  "colors-dark-out-of-range.json": {
+    "errors": [
+      {
+        "code": "token.color.invalid",
+        "path": "/colorsDark/accent"
+      }
+    ]
+  },
+  "colors-dark-unknown-key.json": {
+    "errors": [
+      {
+        "code": "field.unknown",
+        "path": "/colorsDark/brand"
+      }
+    ]
+  },
+  "colors-dark-wrong-type.json": {
+    "errors": [
+      {
+        "code": "field.wrong_type",
+        "path": "/colorsDark/muted"
+      }
+    ]
+  },
+  "easing-bezier-x-range.json": {
+    "errors": [
+      {
+        "code": "token.easing.invalid",
+        "path": "/motion/easing"
+      }
+    ]
+  },
+  "easing-steps.json": {
+    "errors": [
+      {
+        "code": "token.easing.invalid",
+        "path": "/motion/easing"
+      }
+    ]
+  },
+  "easing-url.json": {
+    "errors": [
+      {
+        "code": "token.easing.invalid",
+        "path": "/motion/easing"
+      }
+    ]
+  },
+  "easing-var.json": {
+    "errors": [
+      {
+        "code": "token.easing.invalid",
+        "path": "/motion/easing"
+      }
+    ]
+  },
+  "font-comma-list.json": {
+    "errors": [
+      {
+        "code": "token.font.invalid",
+        "path": "/fonts/body"
+      }
+    ]
+  },
+  "font-css-escape.json": {
+    "errors": [
+      {
+        "code": "token.font.invalid",
+        "path": "/fonts/body"
+      }
+    ]
+  },
+  "font-double-quote-breakout.json": {
+    "errors": [
+      {
+        "code": "token.font.invalid",
+        "path": "/fonts/body"
+      }
+    ]
+  },
+  "font-double-space.json": {
+    "errors": [
+      {
+        "code": "token.font.invalid",
+        "path": "/fonts/body"
+      }
+    ]
+  },
+  "font-empty.json": {
+    "errors": [
+      {
+        "code": "token.font.invalid",
+        "path": "/fonts/body"
+      }
+    ]
+  },
+  "font-non-ascii.json": {
+    "errors": [
+      {
+        "code": "token.font.invalid",
+        "path": "/fonts/body"
+      }
+    ]
+  },
+  "font-single-quote.json": {
+    "errors": [
+      {
+        "code": "token.font.invalid",
+        "path": "/fonts/body"
+      }
+    ]
+  },
+  "font-style-close.json": {
+    "errors": [
+      {
+        "code": "token.font.invalid",
+        "path": "/fonts/body"
+      }
+    ]
+  },
+  "font-too-long.json": {
+    "errors": [
+      {
+        "code": "token.font.invalid",
+        "path": "/fonts/body"
+      }
+    ]
+  },
+  "font-trailing-newline.json": {
+    "errors": [
+      {
+        "code": "token.font.invalid",
+        "path": "/fonts/body"
+      }
+    ]
+  },
+  "font-url.json": {
+    "errors": [
+      {
+        "code": "token.font.invalid",
+        "path": "/fonts/body"
+      }
+    ]
+  },
+  "font-var.json": {
+    "errors": [
+      {
+        "code": "token.font.invalid",
+        "path": "/fonts/body"
+      }
+    ]
+  },
+  "motion-breakout.json": {
+    "errors": [
+      {
+        "code": "token.duration.invalid",
+        "path": "/motion/durationBase"
+      }
+    ]
+  },
+  "motion-negative.json": {
+    "errors": [
+      {
+        "code": "token.duration.invalid",
+        "path": "/motion/durationFast"
+      }
+    ]
+  },
+  "motion-seconds.json": {
+    "errors": [
+      {
+        "code": "token.duration.invalid",
+        "path": "/motion/durationFast"
+      }
+    ]
+  },
+  "parent-other-theme.json": {
+    "errors": [
+      {
+        "code": "token.parent.invalid",
+        "path": "/theme/parent"
+      }
+    ]
+  },
+  "pointer-escaping.json": {
+    "errors": [
+      {
+        "code": "field.unknown",
+        "path": "/colors/a~1b~0c"
+      }
+    ]
+  },
+  "radius-unknown-name.json": {
+    "errors": [
+      {
+        "code": "field.unknown",
+        "path": "/radius/xl"
+      }
+    ]
+  },
+  "radius-url.json": {
+    "errors": [
+      {
+        "code": "token.length.invalid",
+        "path": "/radius/md"
+      }
+    ]
+  },
+  "radius-var.json": {
+    "errors": [
+      {
+        "code": "token.length.invalid",
+        "path": "/radius/md"
+      }
+    ]
+  },
+  "root-array.json": {
+    "errors": [
+      {
+        "code": "config.not_object",
+        "path": ""
+      }
+    ]
+  },
+  "root-constructor-key.json": {
+    "errors": [
+      {
+        "code": "field.unknown",
+        "path": "/constructor"
+      }
+    ]
+  },
+  "root-proto-key.json": {
+    "errors": [
+      {
+        "code": "field.unknown",
+        "path": "/__proto__"
+      }
+    ]
+  },
+  "root-string.json": {
+    "errors": [
+      {
+        "code": "config.not_object",
+        "path": ""
+      }
+    ]
+  },
+  "root-unknown-key.json": {
+    "errors": [
+      {
+        "code": "field.unknown",
+        "path": "/extra"
+      }
+    ]
+  },
+  "section-array.json": {
+    "errors": [
+      {
+        "code": "field.wrong_type",
+        "path": "/colors"
+      }
+    ]
+  },
+  "section-empty-object.json": {
+    "errors": [
+      {
+        "code": "field.required",
+        "path": "/colors/accent"
+      },
+      {
+        "code": "field.required",
+        "path": "/colors/foreground"
+      },
+      {
+        "code": "field.required",
+        "path": "/colors/muted"
+      },
+      {
+        "code": "field.required",
+        "path": "/colors/primary"
+      },
+      {
+        "code": "field.required",
+        "path": "/colors/surface"
+      }
+    ]
+  },
+  "section-missing.json": {
+    "errors": [
+      {
+        "code": "field.required",
+        "path": "/shadows"
+      }
+    ]
+  },
+  "section-string.json": {
+    "errors": [
+      {
+        "code": "field.wrong_type",
+        "path": "/spacing"
+      }
+    ]
+  },
+  "several-errors-sorted.json": {
+    "errors": [
+      {
+        "code": "token.color.invalid",
+        "path": "/colors/primary"
+      },
+      {
+        "code": "token.length.invalid",
+        "path": "/spacing/md"
+      },
+      {
+        "code": "field.unknown",
+        "path": "/zzz"
+      }
+    ]
+  },
+  "shadow-comment.json": {
+    "errors": [
+      {
+        "code": "token.shadow.invalid",
+        "path": "/shadows/sm"
+      }
+    ]
+  },
+  "shadow-css-breakout.json": {
+    "errors": [
+      {
+        "code": "token.shadow.invalid",
+        "path": "/shadows/sm"
+      }
+    ]
+  },
+  "shadow-em-unit.json": {
+    "errors": [
+      {
+        "code": "token.shadow.invalid",
+        "path": "/shadows/sm"
+      }
+    ]
+  },
+  "shadow-five-layers.json": {
+    "errors": [
+      {
+        "code": "token.shadow.invalid",
+        "path": "/shadows/lg"
+      }
+    ]
+  },
+  "shadow-named-color.json": {
+    "errors": [
+      {
+        "code": "token.shadow.invalid",
+        "path": "/shadows/sm"
+      }
+    ]
+  },
+  "shadow-rgb-comma.json": {
+    "errors": [
+      {
+        "code": "token.shadow.invalid",
+        "path": "/shadows/sm"
+      }
+    ]
+  },
+  "shadow-rgb-out-of-range.json": {
+    "errors": [
+      {
+        "code": "token.shadow.invalid",
+        "path": "/shadows/sm"
+      }
+    ]
+  },
+  "shadow-url.json": {
+    "errors": [
+      {
+        "code": "token.shadow.invalid",
+        "path": "/shadows/sm"
+      }
+    ]
+  },
+  "shadow-var.json": {
+    "errors": [
+      {
+        "code": "token.shadow.invalid",
+        "path": "/shadows/sm"
+      }
+    ]
+  },
+  "slug-injection.json": {
+    "errors": [
+      {
+        "code": "token.slug.invalid",
+        "path": "/theme/slug"
+      }
+    ]
+  },
+  "slug-traversal.json": {
+    "errors": [
+      {
+        "code": "token.slug.invalid",
+        "path": "/theme/slug"
+      }
+    ]
+  },
+  "slug-wrong-type.json": {
+    "errors": [
+      {
+        "code": "field.wrong_type",
+        "path": "/theme/slug"
+      }
+    ]
+  },
+  "spacing-calc-var.json": {
+    "errors": [
+      {
+        "code": "token.length.invalid",
+        "path": "/spacing/md"
+      }
+    ]
+  },
+  "spacing-comment.json": {
+    "errors": [
+      {
+        "code": "token.length.invalid",
+        "path": "/spacing/md"
+      }
+    ]
+  },
+  "spacing-css-breakout.json": {
+    "errors": [
+      {
+        "code": "token.length.invalid",
+        "path": "/spacing/md"
+      }
+    ]
+  },
+  "spacing-exponent.json": {
+    "errors": [
+      {
+        "code": "token.length.invalid",
+        "path": "/spacing/md"
+      }
+    ]
+  },
+  "spacing-important.json": {
+    "errors": [
+      {
+        "code": "token.length.invalid",
+        "path": "/spacing/md"
+      }
+    ]
+  },
+  "spacing-leading-dot.json": {
+    "errors": [
+      {
+        "code": "token.length.invalid",
+        "path": "/spacing/md"
+      }
+    ]
+  },
+  "spacing-negative.json": {
+    "errors": [
+      {
+        "code": "token.length.invalid",
+        "path": "/spacing/md"
+      }
+    ]
+  },
+  "spacing-no-unit.json": {
+    "errors": [
+      {
+        "code": "token.length.invalid",
+        "path": "/spacing/md"
+      }
+    ]
+  },
+  "spacing-percent.json": {
+    "errors": [
+      {
+        "code": "token.length.invalid",
+        "path": "/spacing/md"
+      }
+    ]
+  },
+  "spacing-trailing-newline.json": {
+    "errors": [
+      {
+        "code": "token.length.invalid",
+        "path": "/spacing/md"
+      }
+    ]
+  },
+  "spacing-unicode-digit.json": {
+    "errors": [
+      {
+        "code": "token.length.invalid",
+        "path": "/spacing/md"
+      }
+    ]
+  },
+  "spacing-upper-unit.json": {
+    "errors": [
+      {
+        "code": "token.length.invalid",
+        "path": "/spacing/md"
+      }
+    ]
+  },
+  "spacing-var.json": {
+    "errors": [
+      {
+        "code": "token.length.invalid",
+        "path": "/spacing/md"
+      }
+    ]
+  },
+  "theme-extra-key.json": {
+    "errors": [
+      {
+        "code": "field.unknown",
+        "path": "/theme/textDomain"
+      }
+    ]
+  },
+  "type-clamp.json": {
+    "errors": [
+      {
+        "code": "token.length.invalid",
+        "path": "/typeScale/lg"
+      }
+    ]
+  },
+  "unit-ch-negative.json": {
+    "errors": [
+      {
+        "code": "token.length.invalid",
+        "path": "/layout/contentWidth"
+      }
+    ]
+  },
+  "unit-ch-radius.json": {
+    "errors": [
+      {
+        "code": "token.length.invalid",
+        "path": "/radius/sm"
+      }
+    ]
+  },
+  "unit-ch-spacing.json": {
+    "errors": [
+      {
+        "code": "token.length.invalid",
+        "path": "/spacing/md"
+      }
+    ]
+  },
+  "unit-em-content-width.json": {
+    "errors": [
+      {
+        "code": "token.length.invalid",
+        "path": "/layout/contentWidth"
+      }
+    ]
+  },
+  "unit-em-gutter.json": {
+    "errors": [
+      {
+        "code": "token.length.invalid",
+        "path": "/layout/gutter"
+      }
+    ]
+  },
+  "unit-em-radius.json": {
+    "errors": [
+      {
+        "code": "token.length.invalid",
+        "path": "/radius/md"
+      }
+    ]
+  },
+  "unit-percent-gutter.json": {
+    "errors": [
+      {
+        "code": "token.length.invalid",
+        "path": "/layout/gutter"
+      }
+    ]
+  },
+  "unit-percent-type-scale.json": {
+    "errors": [
+      {
+        "code": "token.length.invalid",
+        "path": "/typeScale/lg"
+      }
+    ]
+  },
+  "unit-uppercase-em.json": {
+    "errors": [
+      {
+        "code": "token.length.invalid",
+        "path": "/typeScale/lg"
+      }
+    ]
+  },
+  "unit-vh-width.json": {
+    "errors": [
+      {
+        "code": "token.length.invalid",
+        "path": "/layout/wideWidth"
+      }
+    ]
+  },
+  "unit-vw-type-scale.json": {
+    "errors": [
+      {
+        "code": "token.length.invalid",
+        "path": "/typeScale/lg"
+      }
+    ]
+  },
+  "version-fraction.json": {
+    "errors": [
+      {
+        "code": "schema.version_unsupported",
+        "path": "/schemaVersion"
+      }
+    ]
+  },
+  "version-missing.json": {
+    "errors": [
+      {
+        "code": "field.required",
+        "path": "/schemaVersion"
+      }
+    ]
+  },
+  "version-string.json": {
+    "errors": [
+      {
+        "code": "field.wrong_type",
+        "path": "/schemaVersion"
+      }
+    ]
+  },
+  "version-unsupported.json": {
+    "errors": [
+      {
+        "code": "schema.version_unsupported",
+        "path": "/schemaVersion"
+      }
+    ]
+  },
+  "width-boolean.json": {
+    "errors": [
+      {
+        "code": "field.wrong_type",
+        "path": "/layout/wideWidth"
+      }
+    ]
+  },
+  "width-expression.json": {
+    "errors": [
+      {
+        "code": "token.length.invalid",
+        "path": "/layout/contentWidth"
+      }
+    ]
+  },
+  "width-viewport-unit.json": {
+    "errors": [
+      {
+        "code": "token.length.invalid",
+        "path": "/layout/contentWidth"
+      }
+    ]
+  }
+}

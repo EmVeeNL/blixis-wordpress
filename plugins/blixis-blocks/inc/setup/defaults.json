@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "theme": {
     "slug": "blixis-starter",
     "parent": "blixis-base"

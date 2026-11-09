@@ -1,6 +1,6 @@
 <?php
 /**
- * BlixisThemeConfig v1 validator (task 03-02).
+ * BlixisThemeConfig validator (task 03-02, contract v2 from task 03-06).
  *
  * Contract: docs/contracts/tokens. Validates raw bytes and returns a normalized
  * config or a sorted list of {code, path} errors. Pure PHP: no WordPress calls,
@@ -17,6 +17,8 @@ namespace Blixis\Blocks\Tokens;
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
+
+require_once __DIR__ . '/color.php';
 
 /**
  * The token map: closed names, grammars, error codes, limits, and the breakpoint preset.
@@ -58,12 +60,16 @@ function pointer( string $parent_path, $key ): string {
 }
 
 /**
- * Normalizes a hex colour: lower case and six or eight digits.
+ * Normalizes a colour: hex becomes lower case with six or eight digits; other formats stay as entered.
  *
  * @param string $value Valid colour.
  * @return string
  */
 function normalize_color( string $value ): string {
+	if ( '#' !== $value[0] ) {
+		// rgb(), hsl() and oklch() keep the entered text.
+		return $value;
+	}
 	$lower = strtolower( $value );
 	if ( 4 === strlen( $lower ) ) {
 		return '#' . $lower[1] . $lower[1] . $lower[2] . $lower[2] . $lower[3] . $lower[3];
@@ -140,6 +146,75 @@ function exceeds_depth( string $bytes, int $limit ): bool {
 }
 
 /**
+ * Migrates a normalized config to the current schema version, one step at a time.
+ *
+ * Pure: takes a config that already passed validation at its own version. Version 1 to 2
+ * only changes the version number, because every v1 value is a valid v2 value; the
+ * additions (colour formats, units, colorsDark) are optional or widen a grammar.
+ * Anything that is not a lower, known version is returned unchanged.
+ *
+ * @param array<string, mixed> $config Normalized config.
+ * @return array<string, mixed>
+ */
+function migrate_config( array $config ): array {
+	$current = (int) token_map()['contractVersion'];
+	$version = $config['schemaVersion'] ?? null;
+	while ( is_int( $version ) && $version >= 1 && $version < $current ) {
+		if ( 1 === $version ) {
+			$config['schemaVersion'] = 2;
+		}
+		$version = $config['schemaVersion'];
+	}
+	return $config;
+}
+
+/**
+ * The grammar name that applies to a section and key.
+ *
+ * @param array<mixed> $map     Token map.
+ * @param array<mixed> $section Section definition.
+ * @param string       $key     Token key.
+ * @return string
+ */
+function field_grammar( array $map, array $section, string $key ): string {
+	if ( 'motion' === $section['kind'] ) {
+		$default = 'easing' === $key ? 'easing' : 'duration';
+	} else {
+		$default = $section['kind'];
+	}
+	return $map['fields'][ $section['section'] ][ $key ]['grammar'] ?? $default;
+}
+
+/**
+ * Whether a value fits its grammar, including colour component ranges and the colours in shadows.
+ *
+ * @param array<string, string> $grammars Grammar sources for the config version being read.
+ * @param string                $grammar  Grammar name.
+ * @param string                $value    Candidate.
+ * @param bool                  $legacy   True for a version 1 config (hex only, no range rules needed).
+ * @return bool
+ */
+function value_fits( array $grammars, string $grammar, string $value, bool $legacy ): bool {
+	if ( ! grammar_matches( $grammars[ $grammar ], $value ) ) {
+		return false;
+	}
+	if ( $legacy ) {
+		return true;
+	}
+	if ( 'color' === $grammar ) {
+		return null !== parse_color( $value );
+	}
+	if ( 'shadow' === $grammar ) {
+		foreach ( shadow_colors( $value ) as $color ) {
+			if ( null === parse_color( $color ) ) {
+				return false;
+			}
+		}
+	}
+	return true;
+}
+
+/**
  * Validates the decoded object.
  *
  * @param object       $root Decoded root.
@@ -164,14 +239,25 @@ function validate_object( object $root, array $map ): array {
 		return $single( 'field.wrong_type', '/schemaVersion' );
 	}
 	// JSON has one number type: 1.0 and 1e0 are 1 in JSON.parse and in JSON Schema's integer.
-	if ( (float) $version !== (float) $map['contractVersion'] ) {
+	$legacy = false;
+	if ( (float) $version === (float) $map['contractVersion'] ) {
+		$grammars = $map['grammars'];
+	} elseif ( isset( $map['legacyVersions'][ (string) (int) $version ] ) && (float) (int) $version === (float) $version ) {
+		// A stored older config is read under the rules it was written with, then migrated.
+		$legacy   = true;
+		$grammars = $map['legacyVersions'][ (string) (int) $version ]['grammars'] + $map['grammars'];
+	} else {
 		return $single( 'schema.version_unsupported', '/schemaVersion' );
 	}
 
-	$errors = array();
-	$output = array( 'schemaVersion' => $map['contractVersion'] );
-	$known  = array( 'schemaVersion', 'theme' );
+	$errors   = array();
+	$output   = array( 'schemaVersion' => (int) $version );
+	$known    = array( 'schemaVersion', 'theme' );
+	$optional = $legacy ? array() : $map['optionalSections'];
 	foreach ( $map['sections'] as $section ) {
+		$known[] = $section['section'];
+	}
+	foreach ( $optional as $section ) {
 		$known[] = $section['section'];
 	}
 	foreach ( $root as $key => $unused ) {
@@ -185,13 +271,37 @@ function validate_object( object $root, array $map ): array {
 
 	validate_theme( $root, $map, $errors, $output );
 
+	$definitions = array();
 	foreach ( $map['sections'] as $section ) {
+		$definitions[] = array( $section, true );
+	}
+	foreach ( $optional as $section ) {
+		// An optional section mirrors the tokens of another one and may be left out.
+		$mirror = null;
+		foreach ( $map['sections'] as $candidate ) {
+			if ( $candidate['section'] === $section['mirrors'] ) {
+				$mirror = $candidate;
+			}
+		}
+		$definitions[] = array(
+			array(
+				'section' => $section['section'],
+				'kind'    => $section['kind'],
+				'tokens'  => $mirror['tokens'],
+			),
+			false,
+		);
+	}
+
+	foreach ( $definitions as list( $section, $required ) ) {
 		$name = $section['section'];
 		if ( ! property_exists( $root, $name ) ) {
-			$errors[] = array(
-				'code' => 'field.required',
-				'path' => '/' . $name,
-			);
+			if ( $required ) {
+				$errors[] = array(
+					'code' => 'field.required',
+					'path' => '/' . $name,
+				);
+			}
 			continue;
 		}
 		$raw = $root->{$name};
@@ -233,11 +343,8 @@ function validate_object( object $root, array $map ): array {
 				$shape_ok = false;
 				continue;
 			}
-			$grammar = $section['kind'];
-			if ( 'motion' === $grammar ) {
-				$grammar = 'easing' === $key ? 'easing' : 'duration';
-			}
-			if ( ! grammar_matches( $map['grammars'][ $grammar ], $value ) ) {
+			$grammar = field_grammar( $map, $section, $key );
+			if ( ! value_fits( $grammars, $grammar, $value, $legacy ) ) {
 				$errors[]      = array(
 					'code' => $map['errorCodes'][ $grammar ],
 					'path' => $path,
@@ -271,7 +378,7 @@ function validate_object( object $root, array $map ): array {
 	return array(
 		'ok'     => true,
 		'errors' => array(),
-		'config' => $output,
+		'config' => migrate_config( $output ),
 	);
 }
 

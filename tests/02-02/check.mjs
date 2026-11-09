@@ -8,7 +8,7 @@ const asset = 'themes/blixis-base/assets/build/tailwind.css';
 const fullPath = resolve(root, asset);
 const mapPath = `${fullPath}.map`;
 const source = readFileSync(resolve(root, 'themes/blixis-base/assets/src/tailwind.css'), 'utf8');
-const golden = readFileSync(resolve(root, 'docs/contracts/tokens/v1/golden/tailwind.css'), 'utf8');
+const golden = readFileSync(resolve(root, 'docs/contracts/tokens/v2/golden/tailwind.css'), 'utf8');
 assert.equal(source.slice(source.indexOf('@theme')), golden.slice(golden.indexOf('@theme')), 'token names and fixed breakpoints must match the accepted contract');
 assert.ok(source.includes('@import "tailwindcss/utilities.css" source(none);'), 'only utilities with automatic scanning disabled may be imported');
 assert.deepEqual([...source.matchAll(/@source "([^"]+)";/g)].map((match) => match[1]), ['../../templates', '../../parts', '../../patterns', './safelist.html'], 'sources must remain explicitly reviewed');

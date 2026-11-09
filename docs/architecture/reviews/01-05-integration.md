@@ -33,7 +33,7 @@ The owner delegated routine architecture decisions for task 01-05. The outcomes 
 | 4 | Text props in version 1 | Plain text; inline marks later through a version bump |
 | 5 | Nesting | Allow `section > container` and card with quote or video; remove `container > section` |
 | 6 | Limits | 1 MiB, 2,000 nodes, depth 16. Set the revision cap after measuring real pages |
-| 7 | Breakpoints and tokens | Fixed 40, 48, 64, 80rem with no `2xl`; hex colors and ASCII font names in version 1; rollback depth one |
+| 7 | Breakpoints and tokens | Fixed 40, 48, 64, 80rem with no `2xl`; hex colors and ASCII font names in version 1; rollback depth one. **Partly superseded:** the hex-only colour rule was reopened and replaced in token contract version 2 (hex, `rgb()`, `hsl()`, `oklch()`, an optional dark palette, and more units; [task 03-06](../../roadmap/phases/03-child-theme-setup-wizard/06-token-driven-themes.md), [token contract](../../contracts/tokens/README.md)). Breakpoints, ASCII font names, and rollback depth one stand |
 | 8 | Token module and permission (Q04) | Inside Blocks; `edit_theme_options`; one JSON option plus export |
 | 9 | Site Editor | Not a token source; it cannot change a Blixis token |
 | 10 | Unknown elements | Render nothing publicly; diagnostics need `edit_post` |

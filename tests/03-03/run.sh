@@ -27,7 +27,7 @@ const [a, b] = process.argv.slice(1).map((f) => JSON.parse(require("node:fs").re
 b.fonts = a.fonts;
 if (JSON.stringify(a) !== JSON.stringify(b)) { console.log("FAIL [static] wizard defaults drifted from the contract defaults"); process.exit(1); }
 console.log("PASS [static] wizard defaults match the contract except fonts");
-' "$repo/plugins/blixis-blocks/inc/setup/defaults.json" "$repo/docs/contracts/tokens/v1/valid/default.json" || exit 1
+' "$repo/plugins/blixis-blocks/inc/setup/defaults.json" "$repo/docs/contracts/tokens/v2/valid/default.json" || exit 1
 
 # Pinned test-time dependency, verified by integrity. Not shipped, not in the lockfile.
 AXE_VERSION=4.14.0
