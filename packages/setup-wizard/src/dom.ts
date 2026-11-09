@@ -76,3 +76,14 @@ export function labelText(input: HTMLElement): string {
 
 export const prefersReducedMotion = (): MediaQueryList =>
   window.matchMedia("(prefers-reduced-motion: reduce)");
+
+// A switch: a native checkbox with role="switch", labelled by the text beside it.
+export function makeSwitch(
+  text: string,
+  checked: boolean,
+): { root: HTMLLabelElement; input: HTMLInputElement } {
+  const input = el("input", { type: "checkbox", role: "switch", id: uid("blixis-switch") });
+  input.checked = checked;
+  const root = el("label", { class: "blixis-switch", for: input.id }, input, el("span", {}, text));
+  return { root, input };
+}

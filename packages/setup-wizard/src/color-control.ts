@@ -34,6 +34,8 @@ export function enhanceColor(ctx: Context, input: HTMLInputElement, parts: Parts
   const control = parts.control ?? parts.wrap;
   control.querySelector(".blixis-setup-swatch")?.remove();
 
+  // The swatch shows the exact value in any format; the native colour input sits invisibly on
+  // top of it, so a click opens the picker.
   const picker = el("input", {
     type: "color",
     class: "blixis-ctl-picker",
@@ -43,23 +45,17 @@ export function enhanceColor(ctx: Context, input: HTMLInputElement, parts: Parts
   const formatId = uid("blixis-format");
   const select = el("select", {
     id: formatId,
-    class: "blixis-ctl-format-select",
+    class: "blixis-group__unit blixis-ctl-format-select",
     "aria-label": t(ctx, "formatFor", label),
   });
   for (const format of COLOR_FORMATS) {
     select.append(el("option", { value: format }, ctx.strings[FORMAT_LABEL[format]] ?? format));
   }
-  const row = el(
-    "div",
-    { class: "blixis-ctl-format" },
-    el("span", { "aria-hidden": "true" }, t(ctx, "format")),
-    select,
-  );
+  input.classList.add("blixis-group__value");
+  const group = el("div", { class: "blixis-group" }, input, select);
   const contrast = el("ul", { class: "blixis-ctl-contrast" });
-  control.prepend(picker);
-  control.append(swatch);
-  control.after(row);
-  row.after(contrast);
+  control.replaceChildren(el("span", { class: "blixis-swatch" }, swatch, picker), group);
+  control.after(contrast);
 
   const show = (): void => {
     const value = input.value.trim();
@@ -109,10 +105,6 @@ export function refreshContrast(
   const empty = Object.values(palette).every((value) => value === "");
   for (const field of fields) field.contrast.replaceChildren();
   if (optional && empty) return;
-  const surface = fields.find((field) => field.key === "surface");
-  if (surface !== undefined) {
-    surface.contrast.append(el("li", { class: "is-note" }, t(ctx, "contrastSurface")));
-  }
   for (const result of checkPalette(palette, ctx.map)) {
     const field = fields.find((candidate) => candidate.key === result.key);
     if (field === undefined) continue;
@@ -130,10 +122,11 @@ export function refreshContrast(
       text = t(ctx, "contrastWarn", kind, ratioText(result.ratio), result.required);
     }
     const icon = state === "is-pass" ? "✓" : state === "is-warn" ? "⚠" : "•";
+    const tone = state === "is-pass" ? "ok" : state === "is-warn" ? "warn" : "note";
     field.contrast.append(
       el(
         "li",
-        { class: state },
+        { class: `${state} blixis-chip blixis-chip--${tone}` },
         el("span", { class: "blixis-ctl-icon", "aria-hidden": "true" }, icon),
         el("span", {}, text),
       ),

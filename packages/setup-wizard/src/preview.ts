@@ -19,19 +19,17 @@ export function setupPreview(ctx: Context, onScheme: () => void): Preview | null
     return null;
 
   const group = uid("blixis-preview-scheme");
-  const mk = (value: PreviewScheme, checked: boolean): HTMLElement => {
-    const id = uid("blixis-preview-scheme-option");
-    return el(
-      "span",
-      { class: "blixis-ctl-choice" },
-      el("input", { type: "radio", name: group, id, value, checked }),
-      el("label", { for: id }, t(ctx, value === "light" ? "light" : "dark")),
+  const mk = (value: PreviewScheme, checked: boolean): HTMLElement =>
+    el(
+      "label",
+      { class: "blixis-seg__opt" },
+      el("input", { type: "radio", name: group, value, checked }),
+      el("span", {}, t(ctx, value === "light" ? "light" : "dark")),
     );
-  };
   const choice = el(
     "fieldset",
-    { class: "blixis-setup-widths blixis-preview-scheme" },
-    el("legend", {}, t(ctx, "previewColours")),
+    { class: "blixis-seg blixis-preview-scheme" },
+    el("legend", { class: "screen-reader-text" }, t(ctx, "previewColours")),
     mk("light", true),
     mk("dark", false),
   );
@@ -41,10 +39,17 @@ export function setupPreview(ctx: Context, onScheme: () => void): Preview | null
     "aria-live": "polite",
     "aria-atomic": "true",
   });
-  const describe = el("button", { type: "button", class: "button" }, t(ctx, "describe"));
-  const widths = section.querySelector(".blixis-setup-widths");
-  (widths ?? section.querySelector("h3"))?.after(choice);
-  frame.closest(".blixis-setup-frame")?.after(el("p", {}, describe), live);
+  const describe = el(
+    "button",
+    { type: "button", class: "blixis-btn blixis-btn--secondary blixis-btn--small" },
+    t(ctx, "describe"),
+  );
+  const schemeSlot = section.querySelector('[data-blixis-slot="preview-scheme"]');
+  const describeSlot = section.querySelector('[data-blixis-slot="preview-describe"]');
+  if (schemeSlot !== null) schemeSlot.replaceWith(choice);
+  else section.querySelector(".blixis-setup-widths")?.after(choice);
+  if (describeSlot !== null) describeSlot.replaceWith(describe, live);
+  else frame.closest(".blixis-setup-frame")?.after(el("p", {}, describe), live);
 
   let last: Config = ctx.base;
   const currentScheme = (): PreviewScheme =>

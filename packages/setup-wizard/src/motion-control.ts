@@ -23,7 +23,7 @@ export function enhanceDuration(ctx: Context, input: HTMLInputElement, parts: Pa
     labelledBy: parts.label.id,
     describedBy: description,
     valueText: (value) => `${value} ms`,
-    extra: el("span", { class: "blixis-ctl-unit-text", "aria-hidden": "true" }, "ms"),
+    extra: el("span", { class: "blixis-group__suffix", "aria-hidden": "true" }, "ms"),
     onInput(value) {
       input.value = value === null ? "" : formatLength({ amount: value, unit: "ms" });
       announceChange(input);
@@ -73,7 +73,7 @@ export function bezierPoints(value: string): [number, number, number, number] | 
 function curve(value: string): SVGSVGElement {
   const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
   svg.setAttribute("viewBox", "-4 -4 48 48");
-  svg.setAttribute("class", "blixis-card-curve");
+  svg.setAttribute("class", "blixis-pcard__curve");
   svg.setAttribute("aria-hidden", "true");
   svg.setAttribute("focusable", "false");
   const p = bezierPoints(value) ?? POINTS["linear"] ?? [0, 0, 1, 1];
@@ -101,10 +101,10 @@ export function enhanceEasing(ctx: Context, input: HTMLInputElement, parts: Part
     cards.append(
       el(
         "label",
-        { class: "blixis-card" },
+        { class: "blixis-pcard" },
         radio,
         curve(easing.value),
-        el("span", { class: "blixis-card-name" }, t(ctx, `easing_${easing.id}`)),
+        el("span", { class: "blixis-pcard__name" }, t(ctx, `easing_${easing.id}`)),
       ),
     );
   }

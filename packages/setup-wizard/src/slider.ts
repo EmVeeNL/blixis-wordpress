@@ -28,21 +28,30 @@ export function numberSlider(options: {
 }): NumberSlider {
   const slider = el("input", {
     type: "range",
-    class: "blixis-ctl-range",
+    class: "blixis-range blixis-ctl-range",
     "aria-labelledby": options.labelledBy,
     "aria-describedby": options.describedBy,
   });
   const number = el("input", {
     type: "number",
     id: options.numberId,
-    class: "blixis-ctl-number",
+    class: "blixis-group__value blixis-ctl-number",
     inputmode: "decimal",
     dir: "ltr",
     autocomplete: "off",
     "aria-describedby": options.describedBy,
   });
-  const root = el("div", { class: "blixis-ctl-slider" }, slider, number);
-  if (options.extra !== undefined) root.append(options.extra);
+  const group = el("div", { class: "blixis-group blixis-group--narrow" }, number);
+  if (options.extra !== undefined) group.append(options.extra);
+  const root = el("div", { class: "blixis-ctl-slider" }, slider, group);
+  // The filled part of the track, up to the thumb (Chromium and Safari; Firefox has its own).
+  const fill = (): void => {
+    const min = Number.parseFloat(slider.min);
+    const max = Number.parseFloat(slider.max);
+    const value = Number.parseFloat(slider.value);
+    const pct = max > min ? ((value - min) / (max - min)) * 100 : 0;
+    slider.style.setProperty("--blixis-range-pct", `${Math.min(100, Math.max(0, pct))}%`);
+  };
   let decimals = 0;
 
   const announce = (value: number): void => {
@@ -51,6 +60,7 @@ export function numberSlider(options: {
   slider.addEventListener("input", () => {
     const value = Number.parseFloat(slider.value);
     number.value = formatNumber(value, decimals);
+    fill();
     announce(value);
     options.onInput(value, "slider");
   });
@@ -59,6 +69,7 @@ export function numberSlider(options: {
     const usable = value !== null && Number.isFinite(value) ? value : null;
     if (usable !== null) {
       slider.value = String(usable);
+      fill();
       announce(usable);
     }
     options.onInput(usable, "number");
@@ -86,6 +97,7 @@ export function numberSlider(options: {
         number.value = formatNumber(value, Math.max(decimals, 4));
         announce(value);
       }
+      fill();
     },
   };
 }
