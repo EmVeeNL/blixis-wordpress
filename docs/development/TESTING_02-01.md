@@ -22,7 +22,7 @@ Exit codes: `0` all passed, `1` product checks failed, `2` harness fault (Docker
 
 ## What is checked
 
-- **Static (host):** theme and plugin `Requires at least` is 7.0 and `Requires PHP` is 8.3; `php -l`; no output before `<?php`; `theme.json` parses, version 3, palette includes every slug in the [token contract golden](../contracts/tokens/v1/golden/default.theme.json), no unresolved or orphaned colour presets; a singular-capable template (`singular`, `single`, or `page`) prints `wp:post-content`; block markup is balanced; no inline script or style; no site branding.
+- **Static (host):** theme and plugin `Requires at least` is 7.0 and `Requires PHP` is 8.3; `php -l`; no output before `<?php`; `theme.json` parses, version 3, palette includes every slug in the [token contract golden](../contracts/tokens/v2/golden/default.theme.json), no unresolved or orphaned colour presets; a singular-capable template (`singular`, `single`, or `page`) prints `wp:post-content`; block markup is balanced; no inline script or style; no site branding.
 - **Fixture:** activation, block theme, no parent, palette in global settings, rendered published post and page (200, unique marker after the excerpt length, title, one `main`, one `h1`, `lang` and viewport, no PHP errors), anonymous requests never see draft content, front page, REST index and login still answer with the plugin active, and the debug log has no Blixis entries.
 
 ## Safety
