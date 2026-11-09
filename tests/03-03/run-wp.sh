@@ -45,7 +45,8 @@ done
 
 wp eval-file /tmp/t/check.php 2>&1 | grep -E '^(PASS|FAIL|NOTE|HARNESS) ' || fault "check.php produced no result"
 
-PHP_CLI_SERVER_WORKERS=4 wp server --host=127.0.0.1 --port=8080 >/tmp/server.log 2>&1 &
+# Browsers keep several connections open; enough workers keep one idle connection from blocking the next page.
+PHP_CLI_SERVER_WORKERS=8 wp server --host=127.0.0.1 --port=8080 >/tmp/server.log 2>&1 &
 i=0; until wget -q -O /dev/null http://127.0.0.1:8080/ || [ $i -ge 30 ]; do i=$((i+1)); sleep 1; done
 [ $i -lt 30 ] || fault "built-in server did not answer"
 echo "DONE $WP_VERSION"
