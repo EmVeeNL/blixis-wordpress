@@ -203,6 +203,10 @@ jobs:
         run: |
           pnpm --filter blixis-contract-spike run test 2>&1 | tee "$RUNNER_TEMP/contracts.txt"
           grep -q '^.* skipped 0$' "$RUNNER_TEMP/contracts.txt"
+      - name: Run the shipped token validators and generator against contract v1 (03-02)
+        run: |
+          pnpm --filter @blixis/tokens run test 2>&1 | tee "$RUNNER_TEMP/tokens.txt"
+          grep -q '^.* skipped 0$' "$RUNNER_TEMP/tokens.txt"
 
   contracts-wordpress:
     runs-on: ubuntu-24.04

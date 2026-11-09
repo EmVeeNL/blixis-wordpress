@@ -16,6 +16,8 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
+require_once __DIR__ . '/inc/tokens/validate.php';
+require_once __DIR__ . '/inc/tokens/css.php';
 require_once __DIR__ . '/inc/tokens/theme-json.php';
 require_once __DIR__ . '/inc/child-theme/generator.php';
 require_once __DIR__ . '/inc/child-theme/rest.php';

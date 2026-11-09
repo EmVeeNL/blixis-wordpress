@@ -1,6 +1,7 @@
 # List only packages with real source. Add entries with their first consumer.
 # Both are throwaway spikes; remove each when it retires.
 packages:
+  - packages/tokens
   - spikes/01-02-compatibility/frontend
   - spikes/01-05-contracts
   - themes/blixis-base
