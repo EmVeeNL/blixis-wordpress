@@ -2,16 +2,16 @@
 id: "03-04"
 title: "Manage local fonts"
 phase: "03"
-status: Busy
+status: In Review
 priority: P0
 owner: "EmVeeNL"
 created_at: "2026-11-06"
 updated_at: "2026-11-09"
 depends_on: ["03-03"]
 branch: "feat/03-04-local-fonts"
-pr_number: null
-pr_url: null
-commit_sha: null
+pr_number: 36
+pr_url: "https://github.com/EmVeeNL/blixis-wordpress/pull/36"
+commit_sha: "9057a1e"
 merged_at: null
 merge_commit_sha: null
 started_at: "2026-11-09"
@@ -61,10 +61,10 @@ Upload rejection cases, license review, and font loading measurements. Include n
 - **Priority:** P0
 - **Dependencies:** `03-03`
 - **Branch:** `feat/03-04-local-fonts`.
-- **Commit references:** None.
-- **PR number and URL:** None.
+- **Commit references:** `9057a1e` (implementation).
+- **PR number and URL:** [#36](https://github.com/EmVeeNL/blixis-wordpress/pull/36).
 - **Started / completed / closed:** Started 2026-11-09; not completed.
-- **Status:** Busy. Update frontmatter and history on every transition; follow [status workflow](../../../development/STATUS_WORKFLOW.md).
+- **Status:** In Review. The last criterion needs review and merge. Update frontmatter and history on every transition; follow [status workflow](../../../development/STATUS_WORKFLOW.md).
 
 ## Status history
 
@@ -73,3 +73,4 @@ Upload rejection cases, license review, and font loading measurements. Include n
 | 2026-11-06 | Initial planning → Backlog | Downloaded project plan; no implementation evidence |
 | 2026-11-09 | Backlog → Ready | Dependency `03-03` completed in [PR #35](https://github.com/EmVeeNL/blixis-wordpress/pull/35), merge `9c732b0`; Michael decided Q13 (WordPress Font Library); concrete criteria written. |
 | 2026-11-09 | Ready → Busy | Branch `feat/03-04-local-fonts` from `9c732b0`. |
+| 2026-11-09 | Busy → In Review | [PR #36](https://github.com/EmVeeNL/blixis-wordpress/pull/36), commit `9057a1e`; evidence above. |
