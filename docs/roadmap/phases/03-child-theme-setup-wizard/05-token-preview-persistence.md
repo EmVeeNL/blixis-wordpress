@@ -2,7 +2,7 @@
 id: "03-05"
 title: "Preview and persist design tokens"
 phase: "03"
-status: In Review
+status: Done
 priority: P0
 owner: "EmVeeNL"
 created_at: "2026-11-06"
@@ -12,10 +12,10 @@ branch: "feat/03-05-token-preview"
 pr_number: 37
 pr_url: "https://github.com/EmVeeNL/blixis-wordpress/pull/37"
 commit_sha: "d05e02b"
-merged_at: null
-merge_commit_sha: null
+merged_at: "2026-11-09T11:33:45Z"
+merge_commit_sha: "cc2ea45d3ea8bc152d471f8469e8e82a6c835263"
 started_at: "2026-11-09"
-completed_at: null
+completed_at: "2026-11-09"
 closed_at: null
 blocked_reason: null
 blocked_by: []
@@ -43,7 +43,7 @@ Update responsive previews from validated tokens; persist versions, invalidate a
 - [x] The wizard previews the user's draft on the front page at 390, 820, and 1280 px without changing stored values; only that user with a valid nonce sees the draft, and preview responses are not cacheable or indexable.
 - [x] The review step has no axe-core violations at 1280 and 320 px and fits at 320 px, and the 03-03 and 03-04 suites still pass.
 - [x] Tests and documentation ship with the change, and required CI runs them.
-- [ ] A reviewed PR is merged, with evidence and metadata recorded here.
+- [x] A reviewed PR is merged, with evidence and metadata recorded here.
 
 ## Testing requirements
 
@@ -62,10 +62,10 @@ Breakpoint snapshots and integration tests for save, stale state, and rollback. 
 - **Priority:** P0
 - **Dependencies:** `03-04`
 - **Branch:** `feat/03-05-token-preview`.
-- **Commit references:** `d05e02b` (implementation).
+- **Commit references:** `d05e02b` (implementation); merge `cc2ea45d3ea8bc152d471f8469e8e82a6c835263`.
 - **PR number and URL:** [#37](https://github.com/EmVeeNL/blixis-wordpress/pull/37).
-- **Started / completed / closed:** Started 2026-11-09; not completed.
-- **Status:** In Review. The last criterion needs review and merge. Update frontmatter and history on every transition; follow [status workflow](../../../development/STATUS_WORKFLOW.md).
+- **Started / completed / closed:** Started and completed 2026-11-09; not released.
+- **Status:** Done. PR #37 merged after all 19 required checks passed. Update frontmatter and history on every transition; follow [status workflow](../../../development/STATUS_WORKFLOW.md).
 
 ## Status history
 
@@ -75,3 +75,4 @@ Breakpoint snapshots and integration tests for save, stale state, and rollback. 
 | 2026-11-09 | Backlog → Ready | Dependency `03-04` completed in [PR #36](https://github.com/EmVeeNL/blixis-wordpress/pull/36), merge `8e3ee32`; concrete criteria written; Michael asked to start. |
 | 2026-11-09 | Ready → Busy | Branch `feat/03-05-token-preview` from `8e3ee32`. |
 | 2026-11-09 | Busy → In Review | [PR #37](https://github.com/EmVeeNL/blixis-wordpress/pull/37), commit `d05e02b`; evidence above. |
+| 2026-11-09 | In Review → Done | [PR #37](https://github.com/EmVeeNL/blixis-wordpress/pull/37) squash-merged as `cc2ea45d3ea8bc152d471f8469e8e82a6c835263` at 11:33:45 UTC after all 19 required checks passed, including the 03-03, 03-04, and 03-05 harnesses in `setup-wizard`. |
