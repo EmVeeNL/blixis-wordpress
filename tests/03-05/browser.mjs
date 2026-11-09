@@ -74,6 +74,14 @@ async function publicTokens(browser) {
   return { ...values, font, starter, external: requests.filter((u) => !u.startsWith(BASE) && !u.startsWith('data:') && !u.startsWith(`blob:${BASE}`)) };
 }
 
+async function capturePublicPage(browser, url, width, filename) {
+  const context = await browser.newContext({ viewport: { width, height: 900 }, reducedMotion: 'reduce' });
+  const page = await context.newPage();
+  await page.goto(url, { waitUntil: 'load' });
+  await page.screenshot({ path: `shots/${filename}`, fullPage: true });
+  await context.close();
+}
+
 async function starterResponsive(browser) {
   for (const width of [320, 1280]) {
     const context = await browser.newContext({ viewport: { width, height: 900 }, reducedMotion: 'reduce' });
@@ -164,6 +172,9 @@ async function fullFlow(browser) {
   check('saving reports revision 6', (await page.locator('.blixis-setup-notice').innerText()).includes('revision 6'));
   pub = await publicTokens(browser);
   check('visitors see the new colour at once after saving', pub.blixis === RED && pub.preset === RED, JSON.stringify(pub));
+  await capturePublicPage(browser, `${BASE}/`, 1280, 'child-neutral-starter-tokens-1280.png');
+  await capturePublicPage(browser, `${BASE}/`, 320, 'child-neutral-starter-tokens-320.png');
+  await capturePublicPage(browser, `${BASE}/?t0305_no_tokens=1`, 1280, 'child-neutral-starter-default-1280.png');
   const rollback = page.locator('button[value="rollback"]');
   check('a rollback button is offered when a previous config exists', (await rollback.count()) === 1);
   await rollback.click();

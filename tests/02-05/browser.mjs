@@ -292,6 +292,19 @@ async function runRoute(page, route, ctx) {
     const base = await page.evaluate(() => ({ html: document.documentElement.outerHTML, h1: document.querySelector('h1')?.textContent ?? '', external: performance.getEntriesByType('resource').filter((e) => !e.name.startsWith(location.origin)).length }));
     check('Base-alone capture renders the Base theme only (no showcase stylesheet) with its sample page', base.html.includes('/themes/blixis-base/') && !/blixis-showcase/i.test(base.html) && base.h1.includes('Neutral Base theme') && base.external === 0, base.h1);
     await page.screenshot({ path: 'shots/base-screenshot-1200x900.png' });
+    for (const width of [1280, 320]) {
+      await page.setViewportSize({ width, height: 900 });
+      await go(page, BASE + '/?page_id=6005&t0205_theme=blixis-base');
+      await page.screenshot({ path: `shots/base-unconfigured-${width}.png`, fullPage: true });
+    }
+
+    // Exercise the same CSS properties that the token stylesheet emits, for a visual proof that
+    // the optional Showcase follows configured values while retaining its no-config fallback.
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await go(page, BASE + route.url);
+    const tokenStyle = await page.addStyleTag({ content: ':root{--blixis-color-primary:#b42318;--blixis-color-accent:#7f1d1d;--blixis-color-foreground:#101828;--blixis-color-surface:#fff;--blixis-color-muted:#475569;--blixis-font-body:Georgia,serif;--blixis-font-heading:Georgia,serif;--blixis-spacing-md:2rem;--blixis-spacing-sm:1.25rem;--blixis-spacing-lg:2rem;--blixis-layout-gutter:2rem;--blixis-layout-wide-width:80rem}' });
+    await page.screenshot({ path: 'shots/showcase-tokens-1280.png', fullPage: true });
+    await tokenStyle.evaluate((element) => element.remove());
   }
 
   for (const width of WIDTHS) {

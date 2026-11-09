@@ -247,6 +247,7 @@ PHP;
     );
 
     if ('neutral' === ( $values['starter'] ?? 'none' )) {
+		$text_domain                        = $values['slug'];
         $files['templates/front-page.html'] = <<<HTML
 <!-- wp:template-part {"slug":"header","tagName":"header"} /-->
 <!-- wp:group {"tagName":"main","layout":{"type":"default"}} -->
@@ -269,13 +270,13 @@ HTML;
 <!-- wp:group {"tagName":"section","layout":{"type":"constrained"}} -->
 <section class="wp-block-group">
 <!-- wp:heading {"level":1} -->
-<h1 class="wp-block-heading">Welcome</h1>
+<h1 class="wp-block-heading"><?php esc_html_e( 'Welcome', '{$text_domain}' ); ?></h1>
 <!-- /wp:heading -->
 <!-- wp:paragraph -->
-<p>Introduce your site and what visitors can find here.</p>
+<p><?php esc_html_e( 'Introduce your site and what visitors can find here.', '{$text_domain}' ); ?></p>
 <!-- /wp:paragraph -->
 <!-- wp:buttons -->
-<div class="wp-block-buttons"><!-- wp:button --><div class="wp-block-button"><a class="wp-block-button__link wp-element-button" href="#features">Explore</a></div><!-- /wp:button --></div>
+<div class="wp-block-buttons"><!-- wp:button --><div class="wp-block-button"><a class="wp-block-button__link wp-element-button" href="#features" title="<?php esc_attr_e( 'Explore the feature highlights', '{$text_domain}' ); ?>"><?php esc_html_e( 'Explore', '{$text_domain}' ); ?></a></div><!-- /wp:button --></div>
 <!-- /wp:buttons -->
 </section>
 <!-- /wp:group -->
@@ -291,11 +292,11 @@ PHP;
 ?>
 <!-- wp:group {"tagName":"section","anchor":"features","layout":{"type":"constrained"}} -->
 <section id="features" class="wp-block-group">
-<!-- wp:heading {"level":2} --><h2 class="wp-block-heading">What we offer</h2><!-- /wp:heading -->
+<!-- wp:heading {"level":2} --><h2 class="wp-block-heading"><?php esc_html_e( 'What we offer', '{$text_domain}' ); ?></h2><!-- /wp:heading -->
 <!-- wp:columns -->
-<div class="wp-block-columns"><!-- wp:column --><div class="wp-block-column"><!-- wp:heading {"level":3} --><h3 class="wp-block-heading">First highlight</h3><!-- /wp:heading --><!-- wp:paragraph --><p>Describe a useful part of your work.</p><!-- /wp:paragraph --></div><!-- /wp:column -->
-<!-- wp:column --><div class="wp-block-column"><!-- wp:heading {"level":3} --><h3 class="wp-block-heading">Second highlight</h3><!-- /wp:heading --><!-- wp:paragraph --><p>Share another detail visitors should know.</p><!-- /wp:paragraph --></div><!-- /wp:column -->
-<!-- wp:column --><div class="wp-block-column"><!-- wp:heading {"level":3} --><h3 class="wp-block-heading">Third highlight</h3><!-- /wp:heading --><!-- wp:paragraph --><p>Help visitors understand how to get started.</p><!-- /wp:paragraph --></div><!-- /wp:column --></div>
+<div class="wp-block-columns"><!-- wp:column --><div class="wp-block-column"><!-- wp:heading {"level":3} --><h3 class="wp-block-heading"><?php esc_html_e( 'First highlight', '{$text_domain}' ); ?></h3><!-- /wp:heading --><!-- wp:paragraph --><p><?php esc_html_e( 'Describe a useful part of your work.', '{$text_domain}' ); ?></p><!-- /wp:paragraph --></div><!-- /wp:column -->
+<!-- wp:column --><div class="wp-block-column"><!-- wp:heading {"level":3} --><h3 class="wp-block-heading"><?php esc_html_e( 'Second highlight', '{$text_domain}' ); ?></h3><!-- /wp:heading --><!-- wp:paragraph --><p><?php esc_html_e( 'Share another detail visitors should know.', '{$text_domain}' ); ?></p><!-- /wp:paragraph --></div><!-- /wp:column -->
+<!-- wp:column --><div class="wp-block-column"><!-- wp:heading {"level":3} --><h3 class="wp-block-heading"><?php esc_html_e( 'Third highlight', '{$text_domain}' ); ?></h3><!-- /wp:heading --><!-- wp:paragraph --><p><?php esc_html_e( 'Help visitors understand how to get started.', '{$text_domain}' ); ?></p><!-- /wp:paragraph --></div><!-- /wp:column --></div>
 <!-- /wp:columns -->
 </section>
 <!-- /wp:group -->
@@ -356,10 +357,13 @@ function create( array $input ): array|WP_Error {
         return new WP_Error('blixis_child_write_failed', __('The child theme could not be written.', 'blixis-blocks'), array( 'status' => 500 ));
     }
     foreach (build_files($values) as $file => $contents) {
-        $directory = dirname($file);
-		if ('.' !== $directory && !wp_mkdir_p($staging . DIRECTORY_SEPARATOR . $directory)) {
-			$wp_filesystem->delete($staging, true);
-			return new WP_Error('blixis_child_write_failed', __('The child theme could not be written.', 'blixis-blocks'), array( 'status' => 500 ));
+		$directory = dirname($file);
+		if ('.' !== $directory) {
+			$directory_path = $staging . DIRECTORY_SEPARATOR . $directory;
+			if (!$wp_filesystem->is_dir($directory_path) && !$wp_filesystem->mkdir($directory_path, FS_CHMOD_DIR)) {
+				$wp_filesystem->delete($staging, true);
+				return new WP_Error('blixis_child_write_failed', __('The child theme could not be written.', 'blixis-blocks'), array( 'status' => 500 ));
+			}
 		}
 		if (!$wp_filesystem->put_contents($staging . DIRECTORY_SEPARATOR . $file, $contents, FS_CHMOD_FILE)) {
             $wp_filesystem->delete($staging, true);

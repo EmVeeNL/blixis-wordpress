@@ -88,6 +88,7 @@ async function fullFlow(browser) {
   check('wizard opens on step 1, the child theme', (await currentStep(page)).startsWith('Step 1 of 5'));
   check('later steps are not links before a theme is chosen', (await page.locator('.blixis-setup-progress a').count()) === 0);
   await axe(page, 'theme step');
+  await page.screenshot({ path: 'shots/theme-step-1280.png', fullPage: true });
 
   // Keyboard only: choose "new", type an invalid slug, submit with Enter.
   await keyboardThemeStep(page);

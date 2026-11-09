@@ -57,7 +57,7 @@
       "defaultFontSizes": false,
       "fontFamilies": [
         { "fontFamily": "system-ui", "name": "Body", "slug": "body" },
-        { "fontFamily": "serif", "name": "Heading", "slug": "heading" },
+        { "fontFamily": "system-ui", "name": "Heading", "slug": "heading" },
         { "fontFamily": "ui-monospace", "name": "Mono", "slug": "mono" }
       ],
       "fontSizes": [

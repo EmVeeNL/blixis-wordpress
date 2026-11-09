@@ -36,6 +36,22 @@ cp -R /tmp/t/blixis-base wp-content/themes/blixis-base
 cp -R /tmp/t/blixis-blocks wp-content/plugins/blixis-blocks
 wp plugin activate blixis-blocks --quiet >/dev/null 2>&1 || fault "plugin activation failed"
 wp theme activate blixis-base --quiet >/dev/null 2>&1 || fault "theme activation failed"
+mkdir -p wp-content/mu-plugins
+cat > wp-content/mu-plugins/t0305-unconfigured-capture.php <<'PHP'
+<?php
+if ( isset( $_GET['t0305_no_tokens'] ) && '1' === $_GET['t0305_no_tokens'] ) {
+	add_action(
+		'plugins_loaded',
+		static function (): void {
+			remove_filter( 'wp_theme_json_data_theme', 'Blixis\\Blocks\\Tokens\\filter_theme_json', 20 );
+			remove_filter( 'wp_theme_json_data_user', 'Blixis\\Blocks\\Tokens\\filter_user_theme_json', 20 );
+			remove_action( 'wp_enqueue_scripts', 'Blixis\\Blocks\\Tokens\\enqueue_tokens', 20 );
+			remove_action( 'enqueue_block_assets', 'Blixis\\Blocks\\Tokens\\enqueue_tokens', 20 );
+		},
+		100
+	);
+}
+PHP
 for spec in "fixture_admin2 administrator en_US" "fixture_nl administrator nl_NL" "fixture_ar administrator ar" "fixture_editor editor en_US" "fixture_subscriber subscriber en_US"; do
   # shellcheck disable=SC2086
   set -- $spec

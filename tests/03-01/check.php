@@ -86,6 +86,7 @@ $check('every Base style preset reference exists in Base theme.json', !$missing_
 $neutral = build_files(validate($ok_input + ['starter' => 'neutral'])['values']);
 $check('neutral starter writes a front page and two patterns', isset($neutral['templates/front-page.html'], $neutral['patterns/intro.php'], $neutral['patterns/features.php']));
 $check('neutral starter uses child-scoped pattern names', str_contains($neutral['templates/front-page.html'], 'acme-site/intro') && str_contains($neutral['templates/front-page.html'], 'acme-site/features'));
+$check('neutral starter marks visible text for child-theme translation', str_contains($neutral['patterns/intro.php'], "esc_html_e( 'Welcome', 'acme-site' )") && str_contains($neutral['patterns/features.php'], "esc_html_e( 'What we offer', 'acme-site' )") && str_contains($neutral['patterns/intro.php'], "esc_attr_e( 'Explore the feature highlights', 'acme-site' )"));
 $invalid_starter = validate(['name' => 'A', 'slug' => 'abc', 'starter' => 'branded']);
 $check('unknown starter is rejected', in_array(['field' => 'starter', 'code' => 'invalid_starter'], $invalid_starter['errors'], true));
 
@@ -161,7 +162,7 @@ $check('traversal slug over HTTP returns 400 with a field error', $s === 400 && 
 [$s, $j] = $post(['name' => 'Bad', 'slug' => 'blixis-base'], $admin_session, $admin_session['nonce']);
 $check('parent slug over HTTP returns 400 reserved_slug', $s === 400 && in_array(['field' => 'slug', 'code' => 'reserved_slug'], $j['data']['errors'] ?? [], true), $s . ' ' . wp_json_encode($j));
 [$s, $j] = $post(['name' => 'Bad', 'slug' => 'bad-site', 'starter' => 'branded'], $admin_session, $admin_session['nonce']);
-$check('unknown starter over HTTP is rejected before creating a theme', $s === 400 && in_array(['field' => 'starter', 'code' => 'invalid_starter'], $j['data']['errors'] ?? [], true) && !$exists('bad-site'), $s . ' ' . wp_json_encode($j));
+$check('REST starter enum rejects unknown values before creating a theme', $s === 400 && ($j['code'] ?? '') === 'rest_invalid_param' && !$exists('bad-site'), $s . ' ' . wp_json_encode($j));
 [$s] = $post(['name' => 'Twenty', 'slug' => 'twentytwentyfive'], $admin_session, $admin_session['nonce']);
 $check('existing theme slug returns 409', $s === 409, (string) $s);
 

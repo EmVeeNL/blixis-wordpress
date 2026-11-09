@@ -20,7 +20,7 @@ Text fields may not contain control characters, `<`, `>`, or `*/`, because they 
 | Response | Meaning |
 |---|---|
 | `201` | Created. Body: `slug`, `name`, `version`. No server paths |
-| `400 blixis_child_invalid` | `data.errors` lists `{field, code}`: `unknown_field`, `invalid_type`, `required`, `too_long`, `invalid_characters`, `invalid_slug`, `reserved_slug`, `invalid_version`, or `invalid_starter` |
+| `400 blixis_child_invalid` | `data.errors` lists `{field, code}`: `unknown_field`, `invalid_type`, `required`, `too_long`, `invalid_characters`, `invalid_slug`, `reserved_slug`, or `invalid_version`. Unknown `starter` values are rejected by REST argument validation as `rest_invalid_param` |
 | `401` | Not logged in |
 | `403` | Missing `edit_theme_options` or `install_themes`, or no valid `wp_rest` nonce in `X-WP-Nonce`. Application passwords are refused because they carry no nonce |
 | `409 blixis_child_exists` | A theme, directory, or file with that slug already exists |

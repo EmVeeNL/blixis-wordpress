@@ -86,6 +86,7 @@ add_action(
                 'args'                => array(
 					'starter' => array(
 						'type'        => 'string',
+						'enum'        => array( 'none', 'neutral' ),
 						'required'    => false,
 						'default'     => 'none',
 						'description' => __( 'Optional neutral starter page and patterns.', 'blixis-blocks' ),
