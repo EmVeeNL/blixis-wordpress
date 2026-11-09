@@ -190,7 +190,7 @@ function enqueue_tokens(): void {
 	}
 	wp_register_style( 'blixis-tokens', false, array(), null ); // phpcs:ignore WordPress.WP.EnqueuedResourceParameters.MissingVersion -- Inline only.
 	wp_enqueue_style( 'blixis-tokens' );
-	wp_add_inline_style( 'blixis-tokens', generate_css( $config ) );
+	wp_add_inline_style( 'blixis-tokens', generate_css( $config, scheme_get() ) );
 }
 
 /**

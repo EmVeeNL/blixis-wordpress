@@ -1,0 +1,191 @@
+{
+  "settings": {
+    "border": {
+      "radiusSizes": [
+        {
+          "name": "Sm",
+          "size": "0.375rem",
+          "slug": "sm"
+        },
+        {
+          "name": "Md",
+          "size": "0.75rem",
+          "slug": "md"
+        },
+        {
+          "name": "Lg",
+          "size": "1.25rem",
+          "slug": "lg"
+        }
+      ]
+    },
+    "color": {
+      "defaultPalette": false,
+      "palette": [
+        {
+          "color": "#155dfc",
+          "name": "Primary",
+          "slug": "primary"
+        },
+        {
+          "color": "#ffffff",
+          "name": "Surface",
+          "slug": "surface"
+        },
+        {
+          "color": "#101828",
+          "name": "Foreground",
+          "slug": "foreground"
+        },
+        {
+          "color": "#64748b",
+          "name": "Muted",
+          "slug": "muted"
+        },
+        {
+          "color": "#06b6d4",
+          "name": "Accent",
+          "slug": "accent"
+        }
+      ]
+    },
+    "custom": {
+      "blixis": {
+        "layout": {
+          "gutter": "1.5rem"
+        },
+        "motion": {
+          "durationBase": "200ms",
+          "durationFast": "120ms",
+          "durationSlow": "320ms",
+          "easing": "cubic-bezier(0.4, 0, 0.2, 1)"
+        }
+      }
+    },
+    "layout": {
+      "contentSize": "42rem",
+      "wideSize": "72rem"
+    },
+    "shadow": {
+      "defaultPresets": false,
+      "presets": [
+        {
+          "name": "Sm",
+          "shadow": "0 1px 2px 0 #0000001a",
+          "slug": "sm"
+        },
+        {
+          "name": "Md",
+          "shadow": "0 4px 6px -1px #0000001a, 0 2px 4px -2px #0000001a",
+          "slug": "md"
+        },
+        {
+          "name": "Lg",
+          "shadow": "none",
+          "slug": "lg"
+        }
+      ]
+    },
+    "spacing": {
+      "defaultSpacingSizes": false,
+      "spacingSizes": [
+        {
+          "name": "Xs",
+          "size": "0.5rem",
+          "slug": "xs"
+        },
+        {
+          "name": "Sm",
+          "size": "0.75rem",
+          "slug": "sm"
+        },
+        {
+          "name": "Md",
+          "size": "1rem",
+          "slug": "md"
+        },
+        {
+          "name": "Lg",
+          "size": "1.5rem",
+          "slug": "lg"
+        },
+        {
+          "name": "Xl",
+          "size": "2.5rem",
+          "slug": "xl"
+        }
+      ]
+    },
+    "typography": {
+      "defaultFontSizes": false,
+      "fontFamilies": [
+        {
+          "fontFamily": "system-ui",
+          "name": "Body",
+          "slug": "body"
+        },
+        {
+          "fontFamily": "serif",
+          "name": "Heading",
+          "slug": "heading"
+        },
+        {
+          "fontFamily": "ui-monospace",
+          "name": "Mono",
+          "slug": "mono"
+        }
+      ],
+      "fontSizes": [
+        {
+          "fluid": false,
+          "name": "Xs",
+          "size": "0.75rem",
+          "slug": "xs"
+        },
+        {
+          "fluid": false,
+          "name": "Sm",
+          "size": "0.875rem",
+          "slug": "sm"
+        },
+        {
+          "fluid": false,
+          "name": "Base",
+          "size": "1rem",
+          "slug": "base"
+        },
+        {
+          "fluid": false,
+          "name": "Lg",
+          "size": "1.125rem",
+          "slug": "lg"
+        },
+        {
+          "fluid": false,
+          "name": "Xl",
+          "size": "1.25rem",
+          "slug": "xl"
+        },
+        {
+          "fluid": false,
+          "name": "2xl",
+          "size": "1.5rem",
+          "slug": "2xl"
+        },
+        {
+          "fluid": false,
+          "name": "3xl",
+          "size": "2rem",
+          "slug": "3xl"
+        }
+      ]
+    }
+  },
+  "styles": {
+    "color": {
+      "background": "var:preset|color|surface",
+      "text": "var:preset|color|foreground"
+    }
+  },
+  "version": 3
+}

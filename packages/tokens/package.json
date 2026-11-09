@@ -2,14 +2,14 @@
   "name": "@blixis/tokens",
   "version": "0.0.0",
   "private": true,
-  "description": "BlixisThemeConfig v1 validator and preview properties for the admin. The PHP validator in Blixis Blocks stays authoritative.",
+  "description": "BlixisThemeConfig v2 validator, v1 migration, colour and contrast helpers, and preview properties for the admin. The PHP validator in Blixis Blocks stays authoritative.",
   "license": "GPL-2.0-or-later",
   "type": "module",
   "exports": "./src/index.ts",
   "scripts": {
     "test": "node --test \"test/**/*.test.ts\"",
-    "lint": "oxlint --deny-warnings --type-aware --type-check src test",
-    "format:check": "oxfmt --check src/*.ts test package.json tsconfig.json",
+    "lint": "oxlint --deny-warnings --type-aware --type-check src test scripts",
+    "format:check": "oxfmt --check src/*.ts test scripts package.json tsconfig.json",
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {

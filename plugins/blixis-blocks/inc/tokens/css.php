@@ -74,16 +74,18 @@ function font_stack( string $key, string $family ): string {
  * Maps a normalized config to CSS custom properties.
  *
  * @param array<string, mixed> $config Normalized config.
+ * @param bool                 $dark   Use the dark palette for the colours, when the config has one.
  * @return array<string, string>
  */
-function css_variables( array $config ): array {
+function css_variables( array $config, bool $dark = false ): array {
 	$out = array();
 	foreach ( token_map()['sections'] as $section ) {
 		if ( ! empty( $section['buildOnly'] ) ) {
 			continue;
 		}
+		$source = 'colors' === $section['section'] && $dark && isset( $config['colorsDark'] ) ? 'colorsDark' : $section['section'];
 		foreach ( $section['tokens'] as $key => $name ) {
-			$value        = $config[ $section['section'] ][ $key ];
+			$value        = $config[ $source ][ $key ];
 			$out[ $name ] = 'font' === $section['kind'] ? font_stack( (string) $key, $value ) : $value;
 		}
 	}
@@ -91,21 +93,71 @@ function css_variables( array $config ): array {
 }
 
 /**
- * Generates the token stylesheet.
+ * Only the colour custom properties of a palette.
  *
  * @param array<string, mixed> $config Normalized config.
+ * @param bool                 $dark   Dark palette.
+ * @return array<string, string>
+ */
+function color_variables( array $config, bool $dark ): array {
+	$out = array();
+	foreach ( token_map()['sections'] as $section ) {
+		if ( 'colors' !== $section['section'] ) {
+			continue;
+		}
+		foreach ( $section['tokens'] as $key => $name ) {
+			$out[ $name ] = $config[ $dark && isset( $config['colorsDark'] ) ? 'colorsDark' : 'colors' ][ $key ];
+		}
+	}
+	return $out;
+}
+
+/**
+ * Normalizes a colour scheme setting; anything unknown is the default.
+ *
+ * @param mixed $scheme Candidate.
+ * @return string system, light, or dark.
+ */
+function normalize_scheme( $scheme ): string {
+	$setting = token_map()['colorScheme'];
+	return is_string( $scheme ) && in_array( $scheme, $setting['values'], true ) ? $scheme : $setting['default'];
+}
+
+/**
+ * Generates the token stylesheet.
+ *
+ * Without a dark palette the scheme setting changes nothing. With one, "system" follows
+ * the visitor's prefers-color-scheme, "light" ignores the dark palette, and "dark"
+ * always uses it.
+ *
+ * @param array<string, mixed> $config Normalized config.
+ * @param string               $scheme system, light, or dark.
  * @return string
  */
-function generate_css( array $config ): string {
-	$map   = token_map();
-	$lines = array(
+function generate_css( array $config, string $scheme = 'system' ): string {
+	$map      = token_map();
+	$scheme   = normalize_scheme( $scheme );
+	$has_dark = isset( $config['colorsDark'] );
+	$lines    = array(
 		'/* Blixis tokens: contract ' . $map['contractVersion'] . ', generator ' . $map['generatorVersion'] . ', config ' . config_hash( $config ) . ' */',
 		':root {',
 	);
-	foreach ( css_variables( $config ) as $name => $value ) {
+	foreach ( css_variables( $config, $has_dark && 'dark' === $scheme ) as $name => $value ) {
 		$lines[] = '  ' . $name . ': ' . $value . ';';
 	}
+	if ( $has_dark ) {
+		$lines[] = '  color-scheme: ' . ( 'system' === $scheme ? 'light dark' : $scheme ) . ';';
+	}
 	$lines[] = '}';
+	if ( $has_dark && 'system' === $scheme ) {
+		$lines[] = '@media (prefers-color-scheme: dark) {';
+		$lines[] = '  :root {';
+		foreach ( color_variables( $config, true ) as $name => $value ) {
+			$lines[] = '    ' . $name . ': ' . $value . ';';
+		}
+		$lines[] = '  }';
+		$lines[] = '}';
+	}
 	$lines[] = '@media (prefers-reduced-motion: reduce) {';
 	$lines[] = '  :root {';
 	foreach ( $map['sections'] as $section ) {
@@ -127,10 +179,15 @@ function generate_css( array $config ): string {
 /**
  * Cache key of the generated stylesheet.
  *
+ * The colour scheme setting is part of the key only when it changes the output.
+ *
  * @param array<string, mixed> $config Normalized config.
+ * @param string               $scheme system, light, or dark.
  * @return string
  */
-function css_cache_key( array $config ): string {
-	$map = token_map();
-	return 'blixis:css:c' . $map['contractVersion'] . ':g' . $map['generatorVersion'] . ':' . config_hash( $config );
+function css_cache_key( array $config, string $scheme = 'system' ): string {
+	$map    = token_map();
+	$scheme = normalize_scheme( $scheme );
+	$key    = 'blixis:css:c' . $map['contractVersion'] . ':g' . $map['generatorVersion'] . ':' . config_hash( $config );
+	return isset( $config['colorsDark'] ) && 'system' !== $scheme ? $key . ':s' . $scheme : $key;
 }

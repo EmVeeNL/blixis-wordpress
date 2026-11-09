@@ -4,7 +4,7 @@
  *
  * One autoloaded option, blixis_theme_config, holds JSON: revision, hash, config,
  * previous. Writes use a compare-and-swap UPDATE on the exact stored bytes, so two
- * writers cannot silently overwrite each other. Reads revalidate and check the hash.
+ * writers cannot silently overwrite each other. Reads revalidate, migrate an older schema version, and check the hash.
  *
  * This file stores configuration only. Applying it to a site (theme.json data, the
  * token stylesheet, cache invalidation) and rollback belong to task 03-05.
@@ -51,13 +51,21 @@ function store_read(): ?array {
 	if ( ! is_array( $record ) || ! is_int( $record['revision'] ?? null ) || ! is_array( $record['config'] ?? null ) ) {
 		return null;
 	}
+	// A stored older config is read under its own rules and migrated (task 03-06). The stored hash
+	// belongs to the config as written, so it is checked at the stored version; the returned hash
+	// belongs to the migrated config.
 	$checked = validate_bytes( canonical_json( $record['config'] ) );
-	if ( ! $checked['ok'] || config_hash( $checked['config'] ) !== ( $record['hash'] ?? '' ) ) {
+	if ( ! $checked['ok'] ) {
+		return null;
+	}
+	$as_stored                  = $checked['config'];
+	$as_stored['schemaVersion'] = $record['config']['schemaVersion'];
+	if ( config_hash( $as_stored ) !== ( $record['hash'] ?? '' ) ) {
 		return null;
 	}
 	return array(
 		'revision' => $record['revision'],
-		'hash'     => (string) $record['hash'],
+		'hash'     => config_hash( $checked['config'] ),
 		'config'   => $checked['config'],
 		'previous' => is_array( $record['previous'] ?? null ) ? $record['previous'] : null,
 	);
@@ -93,11 +101,18 @@ function store_write( string $bytes, int $expected_revision ): array|WP_Error {
 		return new WP_Error( 'blixis_config_conflict', __( 'The configuration was changed elsewhere. Review the current values and save again.', 'blixis-blocks' ), array( 'status' => 409 ) );
 	}
 
+	// The replaced config is kept as the rollback target, migrated when it is valid, so a save
+	// leaves no older schema version behind. A row that no longer validates is kept as it is.
+	$previous = null;
+	if ( is_array( $old ) && is_array( $old['config'] ?? null ) ) {
+		$migrated = validate_bytes( canonical_json( $old['config'] ) );
+		$previous = $migrated['ok'] ? $migrated['config'] : $old['config'];
+	}
 	$record = array(
 		'revision' => $stored + 1,
 		'hash'     => config_hash( $config ),
 		'config'   => $config,
-		'previous' => is_array( $old ) && is_array( $old['config'] ?? null ) ? $old['config'] : null,
+		'previous' => $previous,
 	);
 	$json   = canonical_json( $record );
 

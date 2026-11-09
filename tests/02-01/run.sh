@@ -44,7 +44,7 @@ cleanup() { docker compose --profile run down --remove-orphans >/dev/null 2>&1 |
 trap cleanup EXIT
 
 bundle() {
-  COPYFILE_DISABLE=1 tar -cf - check.php run-combo.sh -C "$repo/tests/02-02" assets.php run-assets.sh -C "$repo/docs/contracts/tokens/v1/golden" default.theme.json -C "$repo/themes" blixis-base -C "$repo/plugins" blixis-blocks
+  COPYFILE_DISABLE=1 tar -cf - check.php run-combo.sh -C "$repo/tests/02-02" assets.php run-assets.sh -C "$repo/docs/contracts/tokens/v2/golden" default.theme.json -C "$repo/themes" blixis-base -C "$repo/plugins" blixis-blocks
 }
 
 if ! docker compose up -d --wait db >/dev/null; then

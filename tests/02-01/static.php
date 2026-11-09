@@ -64,7 +64,7 @@ if (is_array($tj)) {
     $palette = array_column($tj['settings']['color']['palette'] ?? [], 'slug');
     $check('palette slugs are unique', count($palette) === count(array_unique($palette)));
     $check('default palette disabled', ($tj['settings']['color']['defaultPalette'] ?? true) === false);
-    $golden = json_decode((string) @file_get_contents("$repo/docs/contracts/tokens/v1/golden/default.theme.json"), true);
+    $golden = json_decode((string) @file_get_contents("$repo/docs/contracts/tokens/v2/golden/default.theme.json"), true);
     $wanted = array_column($golden['settings']['color']['palette'] ?? [], 'slug');
     $check('token-contract golden palette readable', $wanted !== []);
     $check('palette contains every token-contract colour slug', !array_diff($wanted, $palette), 'missing: ' . implode(',', array_diff($wanted, $palette)));
