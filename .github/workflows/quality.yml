@@ -137,6 +137,8 @@ jobs:
         run: bash tests/02-01/run.sh
       - name: Verify token projection against WordPress editor and frontend
         run: bash tests/02-03/run.sh
+      - name: Verify the child theme generator, its permissions, and a parent upgrade
+        run: bash tests/03-01/run.sh
       - name: Report results and fail on any unmet expectation
         if: ${{ !cancelled() }}
         run: python3 spikes/01-02-compatibility/results/show.py "$RUNNER_TEMP/wordpress-matrix.jsonl"

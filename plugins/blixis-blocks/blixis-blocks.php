@@ -17,5 +17,7 @@ if (!defined('ABSPATH')) {
 }
 
 require_once __DIR__ . '/inc/tokens/theme-json.php';
+require_once __DIR__ . '/inc/child-theme/generator.php';
+require_once __DIR__ . '/inc/child-theme/rest.php';
 
 // Editor features are introduced with their implementation; see docs/architecture/EDITOR.md.

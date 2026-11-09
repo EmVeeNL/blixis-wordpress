@@ -1,0 +1,27 @@
+# Disposable stack for task 03-01 tests. Not the local site's stack: the database is
+# in tmpfs, no host port is published, nothing is bind-mounted, and the project name
+# is set per run by run.sh (blixis-0301-<random>), never `blixis`.
+name: blixis-0301-tests
+
+services:
+  db:
+    image: mariadb:11.4.13@sha256:d1891ede5a559f1086f55053bb8cc1569b0298338c4d72d71725a7f74f6ba620
+    environment:
+      MARIADB_ROOT_PASSWORD: "${T0301_DB_ROOT_PASSWORD:?run through run.sh}"
+    tmpfs:
+      - /var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 3s
+      timeout: 3s
+      retries: 30
+
+  runner:
+    image: "${T0301_CLI_IMAGE:?run through run.sh}"
+    profiles: ["run"]
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      T0301_DB_ROOT_PASSWORD: "${T0301_DB_ROOT_PASSWORD:?run through run.sh}"
+      WP_CLI_CACHE_DIR: /tmp/wp-cli-cache
