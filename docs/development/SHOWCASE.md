@@ -70,7 +70,7 @@ Image rights are recorded only in [`docs/assets/README.md`](../assets/README.md)
 
 ## Status copy
 
-The Design tokens card states exactly what exists: the `theme.json` token bridge is implemented (task 02-03); the token setup UI is planned. Header and hero links point only to sections of the page (`#showcase-features`, `#showcase-status`) and the home page. The concept image's call-to-action and card links are not reproduced because their destinations do not exist.
+The Design tokens card states exactly what exists: validated tokens with the setup screens under Appearance, preview, and rollback are implemented (phase 03); the Blocks card says the editor is planned. Header and hero links point only to sections of the page (`#showcase-features`, `#showcase-status`) and the home page. The concept image's call-to-action and card links are not reproduced because their destinations do not exist.
 
 ## Integration evidence (2026-11-08)
 

@@ -12,7 +12,7 @@ These replace the location-specific wording in the earlier repository notes. ADR
 | ADR | Status | Accepted direction or open proposal | Evidence and follow-up |
 |---|---|---|---|
 | [001](decisions/ADR-001-modular-wordpress-architecture.md) | Accepted design | Separately versioned Base, child theme, Blocks, and API boundaries | Registry, renderer, tokens, and compiled utilities ship together inside Blocks |
-| [002](decisions/ADR-002-tailwind-token-model.md) | Accepted design | Tailwind v4 build names, validated runtime values, fixed breakpoints | PHP generates; Site Editor is not a token source |
+| [002](decisions/ADR-002-tailwind-token-model.md) | Accepted and implemented (02-02, 02-03, 03-02 to 03-05) | Tailwind v4 build names, validated runtime values, fixed breakpoints | PHP generates; Site Editor is not a token source |
 | [003](decisions/ADR-003-versioned-content-schema.md) | Accepted design | Versioned protected document plus safe `post_content` projection | Guarded writes, revision and migration contracts; `documentId` stays non-authoritative in v1 |
 | [004](decisions/ADR-004-server-rendering.md) | Accepted design | PHP public rendering; React admin editor | Password guard, late content hook, parity fixtures |
 | [005](decisions/ADR-005-review-security.md) | Accepted design | Authenticated preview only for MVP | External links require a later decision |

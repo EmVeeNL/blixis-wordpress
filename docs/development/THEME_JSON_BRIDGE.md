@@ -1,6 +1,6 @@
 # Base theme.json bridge
 
-**Status:** Task [02-03](../roadmap/phases/02-blixis-base-theme/03-theme-json-bridge.md) establishes Base's contract mapping and a pure PHP projection in Blocks. Editable token validation, persistence, and a live theme-data filter are planned in Phase 03. No user configuration is accepted or stored by this task.
+**Status:** Task [02-03](../roadmap/phases/02-blixis-base-theme/03-theme-json-bridge.md) establishes Base's contract mapping and a pure PHP projection in Blocks. Phase 03 added validation (03-02), storage through the setup wizard (03-03), and the live theme-data filter that applies a stored configuration (03-05); see [token validation](TOKENS.md). This task itself accepts and stores no configuration.
 
 ## Ownership and source of truth
 
