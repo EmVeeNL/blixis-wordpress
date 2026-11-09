@@ -6,7 +6,7 @@ status: Done
 priority: P0
 owner: "EmVeeNL"
 created_at: "2026-11-06"
-updated_at: "2026-11-07"
+updated_at: "2026-11-09"
 depends_on: ["02-03"]
 branch: "feat/02-04-semantic-template-integration"
 pr_number: 24
@@ -35,10 +35,13 @@ Add page, single, archive, search, and 404 templates with header/footer parts, l
 
 ## Acceptance criteria
 
-- [x] The described capability works in the intended WordPress and browser environments.
-- [x] Relevant security, accessibility, and performance requirements are verified.
-- [x] Tests and documentation are included with the implementation.
+- [x] Page, single, archive, search, and 404 templates with header and footer parts render on disposable WordPress 7.1.4/PHP 8.3 and 7.0.8/PHP 8.5 in Chromium and Firefox.
+- [x] Every route has one header, main, and footer landmark, one h1, and a working skip link; keyboard order, visible focus, target size, and reflow at three widths pass, and axe-core reports no violations.
+- [x] Strings are translatable; Dutch and Arabic (right-to-left) variants render without layout failures.
+- [x] Semantic snapshots and 11 static negative controls guard regressions, and the `semantic-templates` CI job runs them on every pull request.
 - [x] A reviewed PR is merged, with evidence and metadata recorded here.
+
+Automated checks do not replace screen-reader or user testing ([06-01](../06-hardening-beta/01-accessibility-audit.md)). No page-performance measurement is claimed; that belongs to [06-03](../06-hardening-beta/03-performance-optimization.md).
 
 ## Testing requirements
 
@@ -61,10 +64,9 @@ Template snapshots, keyboard checks, and automated accessibility audit. Include 
 | 2026-11-06 | Initial planning → Backlog | Downloaded project plan; no implementation evidence |
 | 2026-11-07 | Backlog → Ready | Dependency 02-03 completed in [PR #22](https://github.com/EmVeeNL/blixis-wordpress/pull/22), merge `da659327`; semantic-template scope, testing requirements, and owner are recorded. |
 | 2026-11-07 | Ready → Busy | Integrated template, part, and test contributions on `feat/02-04-semantic-template-integration`; reviewed and corrected landmark, navigation, focus, target-size, and reflow defects. |
-
 | 2026-11-07 | Busy → In Review | [PR #24](https://github.com/EmVeeNL/blixis-wordpress/pull/24), integration `d11f059`, 1,062 passing browser assertions and static/build/PHP/docs checks. |
-
 | 2026-11-07 | In Review → Done | [PR #24](https://github.com/EmVeeNL/blixis-wordpress/pull/24) merged as `7e722a4630a91b1b490ffea725e71be4df8ec16f`; fresh integration review and all 18 CI checks passed at head `5f2594d`. |
+| 2026-11-09 | Done, criteria clarified | The generic planning criteria were replaced with the concrete criteria above, each traced to the recorded evidence. Page-performance measurement was never part of this task's evidence and is now assigned to [06-03](../06-hardening-beta/03-performance-optimization.md); status is unchanged. |
 
 ## Validation evidence
 
