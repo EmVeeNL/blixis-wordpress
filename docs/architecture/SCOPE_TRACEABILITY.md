@@ -25,7 +25,7 @@ The PRD groups requirements under ID ranges, with seven capabilities in FR-04–
 |---|---|---|---|---|---|---|---|
 | FR-01 | Stable, neutral Base parent theme | Site builder, developer | J1 | 02-01, 02-04, 02-05 | MVP-0 | P0 | Base installs without site branding and its templates pass landmark and keyboard checks |
 | FR-02 | Configurable child theme | Site builder | J1 | 03-01, 03-03 | MVP-0 | P0 | The wizard produces an installable child theme and never writes to the parent |
-| FR-03 | Validated tokens and Tailwind CSS v4 | Site builder | J1 | 02-02, 02-03, 03-02, 03-04, 03-05 | MVP-0 | P0 | Invalid tokens are rejected on server and client; valid tokens match in the wizard preview and public page, and can be rolled back. Editor parity is verified in MVP-1 |
+| FR-03 | Validated tokens and Tailwind CSS v4 | Site builder | J1 | 02-02, 02-03, 03-02, 03-04, 03-05, 03-06 | MVP-0 | P0 | Invalid tokens are rejected on server and client; valid tokens match in the wizard preview and public page, and can be rolled back. Editor parity is verified in MVP-1 |
 | FR-04 | Canvas, tree, drag/drop, and context actions | Content editor | J2 | 04-01, 04-03, 04-05 | MVP-1 | P0 | Elements can be added and reordered by pointer and keyboard; invalid nesting is refused |
 | FR-05 | Undo and redo | Content editor | J2 | 04-02 | MVP-1 | P0 | Each document change can be undone and redone with selection and dirty state intact |
 | FR-06 | Schema-driven free elements | Content editor, developer | J2 | 05-01, 05-02, 05-03 | MVP-1 | P0 | Every element validates against a versioned schema and renders through the allowlisted PHP renderer |
@@ -50,7 +50,7 @@ The four [MVP milestones](../roadmap/MVP.md) are build checkpoints. The first re
 | Milestone | Phases | Requirements | Exit task |
 |---|---|---|---|
 | Prerequisite | 01 | Foundation | 01-05 |
-| MVP-0 | 02, 03 | FR-01–03 | 03-05 |
+| MVP-0 | 02, 03 | FR-01–03 | 03-06 |
 | MVP-1 | 04, 05, 06 | FR-04–11 | 06-05 |
 | MVP-2 | 07 | FR-12 | 07-05 |
 | MVP-3 | 08 | FR-13 | 08-05 |
@@ -98,7 +98,7 @@ On 2026-11-06 the delegated architecture review walked the planned journeys agai
 
 | Role and journey | Planning result | Limit |
 |---|---|---|
-| Site builder (J1) | FR-01–03 and phases 02–03 cover child-theme setup, token validation, preview, and public output. | Implemented in phases 02 and 03 (setup wizard, validation, preview, rollback); editor parity waits for MVP-1. Phase 03 exit awaits owner acceptance. |
+| Site builder (J1) | FR-01–03 and phases 02–03 cover child-theme setup, token validation, preview, and public output. | Implemented in phases 02 and 03 (setup wizard, validation, preview, rollback). 03-06 makes Base and child themes use the tokens visibly; editor parity waits for MVP-1. Phase 03 exit awaits 03-06 and owner acceptance. |
 | Editor (J2) | FR-04–09 and FR-11 cover draft creation, edit, reordering, responsive controls, save, and reopen. | No editor or usability test exists. |
 | Reviewer (J3) | FR-10 covers authenticated draft preview and negative access tests. | Q06 sets authenticated-only preview for MVP; external share links require a later scope decision. |
 | Publisher (J4) | FR-09–10 and the PRD keep publish explicit; autosave and preview cannot publish. | WordPress role and capability behavior needs implementation tests. |
