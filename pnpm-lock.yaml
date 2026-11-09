@@ -166,6 +166,31 @@ importers:
 
   .: {}
 
+  packages/setup-wizard:
+    dependencies:
+      '@blixis/tokens':
+        specifier: workspace:*
+        version: link:../tokens
+    devDependencies:
+      '@types/node':
+        specifier: 26.6.6
+        version: 26.6.6
+      oxfmt:
+        specifier: 0.77.0
+        version: 0.77.0
+      oxlint:
+        specifier: 1.92.0
+        version: 1.92.0(oxlint-tsgolint@7.0.2006)
+      oxlint-tsgolint:
+        specifier: 7.0.2006
+        version: 7.0.2006
+      typescript:
+        specifier: 7.0.2
+        version: 7.0.2
+      vite:
+        specifier: 8.3.6
+        version: 8.3.6(@types/node@26.6.6)(jiti@2.7.0)
+
   packages/tokens:
     devDependencies:
       '@types/node':

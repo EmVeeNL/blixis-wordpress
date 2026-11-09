@@ -1,10 +1,23 @@
 /* Blixis setup wizard (task 03-03). Uses logical properties so right-to-left admin works. */
 .blixis-setup-intro { max-inline-size: 48rem; }
-.blixis-setup-progress ol { display: flex; flex-wrap: wrap; gap: 0.5rem 1.25rem; margin: 1rem 0; padding: 0; list-style: none; }
-.blixis-setup-progress li { margin: 0; }
+.blixis-setup-progress ol { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 1rem 0; padding: 0; list-style: none; counter-reset: setup-step; }
+.blixis-setup-progress li { flex: 1 1 10rem; min-inline-size: 0; margin: 0; counter-increment: setup-step; }
 .blixis-setup-progress a,
-.blixis-setup-progress span[aria-current] { display: inline-block; padding-block: 0.6rem; }
-.blixis-setup-progress span[aria-current] { font-weight: 600; border-block-end: 3px solid currentColor; }
+.blixis-setup-progress span:not(.blixis-setup-state) { display: block; padding: 0.65rem 0.75rem; border: 1px solid #8c8f94; border-radius: 4px; text-decoration: none; overflow-wrap: anywhere; }
+.blixis-setup-progress a::before,
+.blixis-setup-progress li > span::before { content: counter(setup-step); display: inline-grid; place-items: center; inline-size: 1.65rem; block-size: 1.65rem; margin-inline-end: 0.5rem; border: 1px solid currentColor; border-radius: 50%; font-weight: 700; }
+.blixis-setup-progress li.is-current > a { color: #fff; background: #135e96; border-color: #135e96; font-weight: 700; outline: 2px solid #135e96; outline-offset: 2px; }
+.blixis-setup-progress li.is-done > a::before { content: "✓"; }
+.blixis-setup-progress .blixis-setup-state { font-size: 0.875em; font-weight: 600; }
+.blixis-setup-progress a:focus-visible { outline: 3px solid #135e96; outline-offset: 2px; }
+.blixis-setup-button-label { display: none; }
+.blixis-setup-button-label.is-current-label { display: inline; }
+.blixis-setup-new-theme { display: block; }
+@supports selector(.x:has(input:checked)) {
+	.blixis-setup-form:not(:has(#blixis-theme-choice-new:checked)) .blixis-setup-new-theme:not(.has-errors) { display: none; }
+	.blixis-setup-form:has(#blixis-theme-choice-new:checked) button[data-label-create] .blixis-setup-button-label.is-current-label { display: none; }
+	.blixis-setup-form:has(#blixis-theme-choice-new:checked) button[data-label-create] .blixis-setup-button-label[data-label-value="create"] { display: inline; }
+}
 .blixis-setup-summary { margin: 1rem 0; padding: 0.75rem 1rem; border: 2px solid #b32d2e; border-inline-start-width: 6px; background: #fff; }
 .blixis-setup-summary:focus { outline: 2px solid #2271b1; outline-offset: 2px; }
 .blixis-setup-summary h2 { margin-block: 0 0.5rem; font-size: 1.1em; }

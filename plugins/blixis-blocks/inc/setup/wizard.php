@@ -22,6 +22,9 @@ use function Blixis\Blocks\ChildTheme\create as create_child_theme;
 use function Blixis\Blocks\Fonts\installed_families;
 use function Blixis\Blocks\Fonts\usable_names;
 use function Blixis\Blocks\Tokens\canonical_json;
+use function Blixis\Blocks\Tokens\color_valid;
+use function Blixis\Blocks\Tokens\scheme_get;
+use function Blixis\Blocks\Tokens\scheme_save;
 use function Blixis\Blocks\Tokens\store_read;
 use function Blixis\Blocks\Tokens\store_rollback;
 use function Blixis\Blocks\Tokens\store_write;
@@ -97,9 +100,9 @@ function hint( string $kind, string $key ): string {
 		$kind = 'easing' === $key ? 'easing' : 'duration';
 	}
 	return match ( $kind ) {
-		'color'    => __( 'A hex colour, such as #155dfc.', 'blixis-blocks' ),
+		'color'    => __( 'A colour as hex, rgb(), hsl(), or oklch(), such as #155dfc or oklch(0.55 0.2 260).', 'blixis-blocks' ),
 		'font'     => __( 'A font family name, or a generic family such as system-ui.', 'blixis-blocks' ),
-		'length'   => __( 'A length in rem or px, such as 1rem.', 'blixis-blocks' ),
+		'length'   => __( 'A length, such as 1rem.', 'blixis-blocks' ),
 		'shadow'   => __( 'none, or a shadow such as 0 1px 2px 0 #0000001a.', 'blixis-blocks' ),
 		'duration' => __( 'A duration in milliseconds, such as 200ms.', 'blixis-blocks' ),
 		'easing'   => __( 'linear, ease, ease-in, ease-out, ease-in-out, or cubic-bezier().', 'blixis-blocks' ),
@@ -115,9 +118,9 @@ function hint( string $kind, string $key ): string {
 function error_message( string $code ): string {
 	return match ( $code ) {
 		'field.required'        => __( 'This field is required.', 'blixis-blocks' ),
-		'token.color.invalid'   => __( 'Enter a hex colour such as #155dfc.', 'blixis-blocks' ),
+		'token.color.invalid'   => __( 'Enter a colour as hex, rgb(), hsl(), or oklch(), such as #155dfc or oklch(0.55 0.2 260).', 'blixis-blocks' ),
 		'token.font.invalid'    => __( 'Use letters, digits, spaces, and hyphens, or a generic family such as system-ui.', 'blixis-blocks' ),
-		'token.length.invalid'  => __( 'Enter a length in rem or px, such as 1rem.', 'blixis-blocks' ),
+		'token.length.invalid'  => __( 'Enter a length such as 1rem, with a unit this field allows.', 'blixis-blocks' ),
 		'token.shadow.invalid'  => __( 'Enter none, or a shadow such as 0 1px 2px 0 #0000001a.', 'blixis-blocks' ),
 		'token.duration.invalid' => __( 'Enter a duration in milliseconds, such as 200ms.', 'blixis-blocks' ),
 		'token.easing.invalid'  => __( 'Enter linear, ease, ease-in, ease-out, ease-in-out, or a cubic-bezier() value.', 'blixis-blocks' ),
@@ -234,6 +237,25 @@ add_action(
 				'admin_print_styles-' . $hook,
 				static function (): void {
 					wp_enqueue_style( 'blixis-setup', plugins_url( 'assets/setup.css', dirname( __DIR__ ) ), array(), (string) filemtime( dirname( __DIR__, 2 ) . '/assets/setup.css' ) );
+					wp_enqueue_style( 'blixis-setup-controls', plugins_url( 'assets/setup-controls.css', dirname( __DIR__ ) ), array( 'blixis-setup' ), (string) filemtime( dirname( __DIR__, 2 ) . '/assets/setup-controls.css' ) );
+				}
+			);
+			// The controls script enhances the plain fields; the wizard works without it (task 03-06).
+			add_action(
+				'admin_enqueue_scripts',
+				static function ( string $suffix ) use ( $hook ): void {
+					if ( $suffix === $hook ) {
+						wp_enqueue_script(
+							'blixis-setup',
+							plugins_url( 'assets/setup.js', dirname( __DIR__ ) ),
+							array(),
+							(string) filemtime( dirname( __DIR__, 2 ) . '/assets/setup.js' ),
+							array(
+								'in_footer' => true,
+								'strategy'  => 'defer',
+							)
+						);
+					}
 				}
 			);
 		}
@@ -281,12 +303,10 @@ function render(): void {
 		$reachable = 'theme' === $key || '' !== ( $draft['config']['theme']['slug'] ?? '' );
 		/* translators: 1: step number, 2: number of steps, 3: step name. */
 		$label = sprintf( __( 'Step %1$d of %2$d: %3$s', 'blixis-blocks' ), $index + 1, count( $keys ), $steps[ $key ] );
-		$state = $done ? ' <span class="blixis-setup-state">' . esc_html__( '(completed)', 'blixis-blocks' ) . '</span>' : '';
+		$state = $done ? ' <span class="blixis-setup-state screen-reader-text">' . esc_html__( '(completed)', 'blixis-blocks' ) . '</span>' : '';
 		echo '<li class="' . ( $key === $step ? 'is-current' : '' ) . ( $done ? ' is-done' : '' ) . '">';
-		if ( $key === $step ) {
-			echo '<span aria-current="step">' . esc_html( $label ) . $state . '</span>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $state is built from escaped parts.
-		} elseif ( $reachable ) {
-			echo '<a href="' . esc_url( step_url( $key ) ) . '">' . esc_html( $label ) . $state . '</a>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $state is built from escaped parts.
+		if ( $reachable ) {
+			echo '<a href="' . esc_url( step_url( $key ) ) . '"' . ( $key === $step ? ' aria-current="step"' : '' ) . '>' . esc_html( $label ) . $state . '</a>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $state is built from escaped parts.
 		} else {
 			echo '<span>' . esc_html( $label ) . '</span>';
 		}
@@ -320,24 +340,46 @@ function render(): void {
 	} elseif ( 'review' === $step ) {
 		render_review( $draft );
 	} else {
-		foreach ( step_sections()[ $step ] as $section ) {
-			render_section( $section, $draft['config'][ $section ] ?? array(), $errors, (array) ( $values[ $section ] ?? array() ) );
-		}
+		render_step_sections( $step, $draft, $errors, $values );
 	}
+	if ( in_array( $step, array( 'colors', 'typography', 'layout' ), true ) ) {
+		render_preview( $draft );
+	}
+	render_enhancement_data( $draft, $step );
 
 	echo '<div class="blixis-setup-actions">';
 	if ( $position > 0 ) {
 		echo '<a class="button" href="' . esc_url( step_url( $keys[ $position - 1 ] ) ) . '">' . esc_html__( 'Back', 'blixis-blocks' ) . '</a> ';
 	}
 	if ( 'review' === $step ) {
-		echo '<button type="submit" name="intent" value="save" class="button button-primary">' . esc_html__( 'Save configuration', 'blixis-blocks' ) . '</button> ';
+		$labels    = array(
+			'continue' => __( 'Continue', 'blixis-blocks' ),
+			'save'     => __( 'Save and continue', 'blixis-blocks' ),
+			'create'   => __( 'Create theme and continue', 'blixis-blocks' ),
+		);
+		$label_key = submit_label_key( $step, $draft, $values );
+		echo '<button type="submit" name="intent" value="save" class="button button-primary" data-label-continue="' . esc_attr( $labels['continue'] ) . '" data-label-save="' . esc_attr( $labels['save'] ) . '" data-label-create="' . esc_attr( $labels['create'] ) . '">';
+		foreach ( $labels as $key => $label ) {
+			echo '<span class="blixis-setup-button-label' . ( $key === $label_key ? ' is-current-label' : '' ) . '" data-label-value="' . esc_attr( $key ) . '">' . esc_html( $label ) . '</span>';
+		}
+		echo '</button> ';
 		echo '<button type="submit" name="intent" value="reset" class="button">' . esc_html__( 'Discard draft and load saved values', 'blixis-blocks' ) . '</button>';
 		$stored = store_read();
 		if ( $stored && is_array( $stored['previous'] ) ) {
 			echo ' <button type="submit" name="intent" value="rollback" class="button">' . esc_html__( 'Roll back to the previous saved configuration', 'blixis-blocks' ) . '</button>';
 		}
 	} else {
-		echo '<button type="submit" name="intent" value="next" class="button button-primary">' . esc_html__( 'Save and continue', 'blixis-blocks' ) . '</button>';
+		$labels    = array(
+			'continue' => __( 'Continue', 'blixis-blocks' ),
+			'save'     => __( 'Save and continue', 'blixis-blocks' ),
+			'create'   => __( 'Create theme and continue', 'blixis-blocks' ),
+		);
+		$label_key = submit_label_key( $step, $draft, $values );
+		echo '<button type="submit" name="intent" value="next" class="button button-primary" data-label-continue="' . esc_attr( $labels['continue'] ) . '" data-label-save="' . esc_attr( $labels['save'] ) . '" data-label-create="' . esc_attr( $labels['create'] ) . '">';
+		foreach ( $labels as $key => $label ) {
+			echo '<span class="blixis-setup-button-label' . ( $key === $label_key ? ' is-current-label' : '' ) . '" data-label-value="' . esc_attr( $key ) . '">' . esc_html( $label ) . '</span>';
+		}
+		echo '</button>';
 	}
 	echo '</div></form></div>';
 
@@ -348,6 +390,33 @@ function render(): void {
 }
 
 /**
+ * Pick the no-JavaScript submit label from the currently selected theme and draft state.
+ *
+ * @param string $step   Current step.
+ * @param array  $draft  Draft.
+ * @param array  $values Rejected values from the current request.
+ * @return 'continue'|'save'|'create'
+ */
+function submit_label_key( string $step, array $draft, array $values = array() ): string {
+	if ( 'theme' === $step ) {
+		$choice = (string) ( $values['choice'] ?? $draft['config']['theme']['slug'] ?? '' );
+		return NEW_THEME === $choice ? 'create' : 'continue';
+	}
+	$stored   = store_read();
+	$baseline = $stored['config'] ?? defaults();
+	$sections = 'review' === $step ? array_keys( (array) $draft['config'] ) : ( step_sections()[ $step ] ?? array() );
+	foreach ( $sections as $section ) {
+		if ( ( $draft['config'][ $section ] ?? null ) !== ( $baseline[ $section ] ?? null ) ) {
+			return 'save';
+		}
+	}
+	if ( in_array( $step, array( 'colors', 'review' ), true ) && ( $draft['config']['colorsDark'] ?? null ) !== ( $baseline['colorsDark'] ?? null ) ) {
+		return 'save';
+	}
+	return 'continue';
+}
+
+/**
  * Human name of a contract path for the error summary.
  *
  * @param string $path Contract path such as /colors/primary.
@@ -355,8 +424,9 @@ function render(): void {
 function field_name( string $path ): string {
 	$parts  = explode( '/', trim( $path, '/' ) );
 	$labels = section_labels() + array(
-		'theme' => __( 'Child theme', 'blixis-blocks' ),
-		'name'  => __( 'Theme name', 'blixis-blocks' ),
+		'colorsDark' => __( 'Dark colours', 'blixis-blocks' ),
+		'theme'      => __( 'Child theme', 'blixis-blocks' ),
+		'name'       => __( 'Theme name', 'blixis-blocks' ),
 	);
 	if ( 'theme' === ( $parts[0] ?? '' ) ) {
 		return match ( $parts[1] ?? '' ) {
@@ -377,8 +447,9 @@ function field_name( string $path ): string {
  * @param string      $hint  Hint.
  * @param string|null $code  Error code.
  * @param string      $extra Escaped extra markup after the input.
+ * @param array       $data  Data attributes for the controls script (section, key, kind).
  */
-function render_field( string $path, string $label, string $value, string $hint, ?string $code, string $extra = '' ): void {
+function render_field( string $path, string $label, string $value, string $hint, ?string $code, string $extra = '', array $data = array() ): void {
 	$id        = field_id( $path );
 	$described = $id . '-hint' . ( $code ? ' ' . $id . '-error' : '' );
 	echo '<div class="blixis-setup-field' . ( $code ? ' has-error' : '' ) . '">';
@@ -392,7 +463,11 @@ function render_field( string $path, string $label, string $value, string $hint,
 	if ( 'theme' === $parts[0] ) {
 		$name = 'new_' . ( $parts[1] ?? '' );
 	}
-	echo '<div class="blixis-setup-control"><input type="text" id="' . esc_attr( $id ) . '" name="' . esc_attr( $name ) . '" value="' . esc_attr( $value ) . '" aria-describedby="' . esc_attr( $described ) . '"' . ( $code ? ' aria-invalid="true"' : '' ) . ' autocomplete="off" spellcheck="false"' . ( '/theme/name' === $path ? '' : ' dir="ltr"' ) . '>';
+	$attributes = '';
+	foreach ( $data as $attribute => $attribute_value ) {
+		$attributes .= ' data-' . esc_attr( (string) $attribute ) . '="' . esc_attr( (string) $attribute_value ) . '"';
+	}
+	echo '<div class="blixis-setup-control"><input type="text" id="' . esc_attr( $id ) . '" name="' . esc_attr( $name ) . '" value="' . esc_attr( $value ) . '" aria-describedby="' . esc_attr( $described ) . '"' . ( $code ? ' aria-invalid="true"' : '' ) . ' autocomplete="off" spellcheck="false"' . ( '/theme/name' === $path ? '' : ' dir="ltr"' ) . $attributes . '>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $attributes is built from escaped parts.
 	echo $extra; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Callers pass escaped markup.
 	echo '</div></div>';
 }
@@ -400,22 +475,29 @@ function render_field( string $path, string $label, string $value, string $hint,
 /**
  * Fields of one token section.
  *
- * @param string               $section Section name.
- * @param array<string, mixed> $current Current values.
- * @param array<string, string> $errors Errors by path.
+ * @param string               $section   Section name; "colorsDark" is the optional dark palette.
+ * @param array<string, mixed> $current   Current values.
+ * @param array<string, string> $errors   Errors by path.
  * @param array<string, mixed> $submitted Rejected submitted values to show again.
  */
 function render_section( string $section, array $current, array $errors, array $submitted ): void {
+	$dark       = 'colorsDark' === $section;
 	$definition = null;
+	$lookup     = $dark ? 'colors' : $section;
 	foreach ( token_map()['sections'] as $candidate ) {
-		if ( $candidate['section'] === $section ) {
+		if ( $lookup === $candidate['section'] ) {
 			$definition = $candidate;
 		}
 	}
 	if ( ! $definition ) {
 		return;
 	}
-	echo '<fieldset class="blixis-setup-section"><legend>' . esc_html( section_labels()[ $section ] ?? $section ) . '</legend>';
+	$legend = $dark ? __( 'Dark colours (optional)', 'blixis-blocks' ) : ( section_labels()[ $section ] ?? $section );
+	echo '<fieldset class="blixis-setup-section blixis-setup-section--' . esc_attr( strtolower( $section ) ) . '"><legend>' . esc_html( $legend ) . '</legend>';
+	if ( $dark ) {
+		echo '<p class="blixis-setup-hint">' . esc_html__( 'Fill in all five to use a dark palette, or leave all five empty. Without one, dark mode uses the light colours.', 'blixis-blocks' ) . '</p>';
+		echo '<p class="blixis-ctl-tools"><button type="button" class="button" data-blixis-copy-light hidden>' . esc_html__( 'Start from the light colours', 'blixis-blocks' ) . '</button></p>';
+	}
 	foreach ( array_keys( $definition['tokens'] ) as $key ) {
 		$key   = (string) $key;
 		$path  = '/' . $section . '/' . $key;
@@ -425,15 +507,235 @@ function render_section( string $section, array $current, array $errors, array $
 			continue;
 		}
 		$extra = '';
-		if ( 'color' === $definition['kind'] && preg_match( '/^#[0-9a-f]{6}([0-9a-f]{2})?$/D', $value ) ) {
+		if ( 'color' === $definition['kind'] && '' !== $value && color_valid( $value ) ) {
 			$extra = '<span class="blixis-setup-swatch" aria-hidden="true" style="background-color:' . esc_attr( $value ) . '"></span>';
 		}
-		render_field( $path, key_label( $key ), $value, hint( $definition['kind'], $key ), $errors[ $path ] ?? null, $extra );
+		$kind = match ( $definition['kind'] ) {
+			'color'  => 'color',
+			'length' => 'length',
+			'shadow' => 'shadow',
+			'motion' => 'easing' === $key ? 'easing' : 'duration',
+			default  => '',
+		};
+		$label = 'motion' === $section ? motion_label( $key ) : key_label( $key );
+		if ( $dark ) {
+			/* translators: %s: colour name such as Primary. */
+			$label = sprintf( __( '%s (dark)', 'blixis-blocks' ), $label );
+		}
+		$hint = $dark ? __( 'Optional. Same formats as the light colour.', 'blixis-blocks' ) : hint( $definition['kind'], $key );
+		if ( 'length' === $definition['kind'] ) {
+			$units = token_map()['fields'][ $section ][ $key ]['units'] ?? array();
+			/* translators: %s: list of units such as px, rem, em. */
+			$hint = sprintf( __( 'A length such as 1rem. Units: %s.', 'blixis-blocks' ), implode( ', ', (array) $units ) );
+		}
+		render_field(
+			$path,
+			$label,
+			$value,
+			$hint,
+			$errors[ $path ] ?? null,
+			$extra,
+			array(
+				'blixis-kind' => $kind,
+				'section'     => $section,
+				'key'         => $key,
+			)
+		);
 	}
 	echo '</fieldset>';
+	$slot = array(
+		'typeScale' => 'typeScale',
+		'spacing'   => 'spacing',
+		'radius'    => 'radius',
+		'layout'    => 'layout',
+		'shadows'   => 'shadows',
+		'motion'    => 'motion',
+	)[ $section ] ?? '';
+	if ( '' !== $slot ) {
+		echo '<div class="blixis-spec-slot" data-specimen="' . esc_attr( $slot ) . '"></div>';
+	}
 	if ( 'fonts' === $section ) {
 		render_installed_fonts();
 	}
+}
+
+/**
+ * Name of a motion token: the three speeds and the easing.
+ *
+ * @param string $key Token key.
+ */
+function motion_label( string $key ): string {
+	return match ( $key ) {
+		'durationFast' => __( 'Fast', 'blixis-blocks' ),
+		'durationBase' => __( 'Normal', 'blixis-blocks' ),
+		'durationSlow' => __( 'Slow', 'blixis-blocks' ),
+		'easing'       => __( 'Easing', 'blixis-blocks' ),
+		default        => key_label( $key ),
+	};
+}
+
+/**
+ * The sections of one step.
+ *
+ * @param string $step   Step key.
+ * @param array  $draft  Draft.
+ * @param array  $errors Errors by path.
+ * @param array  $values Rejected submitted values.
+ */
+function render_step_sections( string $step, array $draft, array $errors, array $values ): void {
+	if ( 'colors' === $step ) {
+		render_colors_step( $draft, $errors, $values );
+		return;
+	}
+	foreach ( step_sections()[ $step ] as $section ) {
+		render_section( $section, $draft['config'][ $section ] ?? array(), $errors, (array) ( $values[ $section ] ?? array() ) );
+	}
+}
+
+/**
+ * Colours step: light and dark palettes side by side, then the site colour scheme.
+ *
+ * @param array $draft  Draft.
+ * @param array $errors Errors by path.
+ * @param array $values Rejected submitted values.
+ */
+function render_colors_step( array $draft, array $errors, array $values ): void {
+	echo '<div class="blixis-setup-palettes"><div class="blixis-setup-palette">';
+	render_section( 'colors', $draft['config']['colors'] ?? array(), $errors, (array) ( $values['colors'] ?? array() ) );
+	echo '<div class="blixis-spec-slot" data-specimen="colors-light"></div></div><div class="blixis-setup-palette">';
+	render_section( 'colorsDark', (array) ( $draft['config']['colorsDark'] ?? array() ), $errors, (array) ( $values['colorsDark'] ?? array() ) );
+	echo '<div class="blixis-spec-slot" data-specimen="colors-dark"></div></div></div>';
+
+	$scheme = (string) ( $values['scheme'] ?? '' );
+	if ( ! in_array( $scheme, token_map()['colorScheme']['values'], true ) ) {
+		$scheme = scheme_get();
+	}
+	$options = array(
+		'system' => __( 'Follow the visitor\'s system setting', 'blixis-blocks' ),
+		'light'  => __( 'Always light', 'blixis-blocks' ),
+		'dark'   => __( 'Always dark', 'blixis-blocks' ),
+	);
+	echo '<fieldset class="blixis-setup-section" id="blixis-colors-scheme" tabindex="-1"><legend>' . esc_html__( 'Colour scheme of the site', 'blixis-blocks' ) . '</legend>';
+	echo '<p class="blixis-setup-hint" id="blixis-colors-scheme-hint">' . esc_html__( 'Matters only when a dark palette is set. This is a site setting: it is saved when you continue, not with the draft.', 'blixis-blocks' ) . '</p>';
+	if ( isset( $errors['/colors/scheme'] ) ) {
+		echo '<p class="blixis-setup-error" id="blixis-colors-scheme-error">' . esc_html__( 'Choose one of the three options.', 'blixis-blocks' ) . '</p>';
+	}
+	foreach ( $options as $value => $text ) {
+		$id = 'blixis-colors-scheme-' . $value;
+		echo '<p class="blixis-setup-choice"><input type="radio" name="scheme" id="' . esc_attr( $id ) . '" value="' . esc_attr( $value ) . '"' . checked( $scheme, $value, false ) . ' aria-describedby="blixis-colors-scheme-hint"> ';
+		echo '<label for="' . esc_attr( $id ) . '">' . esc_html( $text ) . '</label></p>';
+	}
+	echo '</fieldset>';
+}
+
+/**
+ * Data for the controls script: the token map (ranges, units, grammars), the draft, and the
+ * translated strings. The script is optional; the fields above work without it.
+ *
+ * @param array  $draft Draft.
+ * @param string $step  Step key.
+ */
+function render_enhancement_data( array $draft, string $step ): void {
+	$data = array(
+		'tokenMap' => token_map(),
+		'config'   => $draft['config'],
+		'step'     => $step,
+		'strings'  => script_strings(),
+	);
+	echo '<script type="application/json" id="blixis-setup-data">' . wp_json_encode( $data, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT ) . '</script>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- JSON with HTML-significant characters escaped.
+}
+
+/**
+ * Translated strings for the controls script.
+ *
+ * @return array<string, string>
+ */
+function script_strings(): array {
+	return array(
+		'format'              => __( 'Format', 'blixis-blocks' ),
+		/* translators: %s: colour name. */
+		'formatFor'           => __( 'Colour format for %s', 'blixis-blocks' ),
+		/* translators: %s: colour name. */
+		'pickFor'             => __( 'Pick colour for %s', 'blixis-blocks' ),
+		'formatHex'           => __( 'Hex', 'blixis-blocks' ),
+		'formatRgb'           => __( 'RGB', 'blixis-blocks' ),
+		'formatHsl'           => __( 'HSL', 'blixis-blocks' ),
+		'formatOklch'         => __( 'OKLCH', 'blixis-blocks' ),
+		/* translators: %s: field name. */
+		'unitFor'             => __( 'Unit for %s', 'blixis-blocks' ),
+		'contrastSurface'     => __( 'The other colours are checked against this one.', 'blixis-blocks' ),
+		'contrastKind_text'   => __( 'Text on surface', 'blixis-blocks' ),
+		'contrastKind_link'   => __( 'Link on surface', 'blixis-blocks' ),
+		'contrastKind_button' => __( 'Button label (surface colour on this colour)', 'blixis-blocks' ),
+		'contrastKind_ui'     => __( 'Interface part on surface', 'blixis-blocks' ),
+		/* translators: %s: what is checked, such as "Text on surface". */
+		'contrastInvalid'     => __( '%s: enter a valid colour to check contrast.', 'blixis-blocks' ),
+		/* translators: 1: what is checked, 2: contrast ratio such as 12.63. */
+		'contrastPass'        => __( '%1$s: %2$s:1. Passes.', 'blixis-blocks' ),
+		/* translators: 1: what is checked, 2: contrast ratio, 3: required ratio. */
+		'contrastWarn'        => __( 'Warning. %1$s: %2$s:1, below the %3$s:1 needed.', 'blixis-blocks' ),
+		'passes'              => __( 'passes', 'blixis-blocks' ),
+		'fails'               => __( 'below the required contrast', 'blixis-blocks' ),
+		'keepProportions'     => __( 'Keep proportions', 'blixis-blocks' ),
+		'keepHint'            => __( 'When on, changing Base scales every other size by the same ratio.', 'blixis-blocks' ),
+		'shadowPreset_none'   => __( 'None', 'blixis-blocks' ),
+		'shadowPreset_subtle' => __( 'Subtle', 'blixis-blocks' ),
+		'shadowPreset_soft'   => __( 'Soft', 'blixis-blocks' ),
+		'shadowPreset_medium' => __( 'Medium', 'blixis-blocks' ),
+		'shadowPreset_strong' => __( 'Strong', 'blixis-blocks' ),
+		'shadowCustom'        => __( 'Custom shadow. Pick a card to replace it.', 'blixis-blocks' ),
+		'adjust'              => __( 'Adjust', 'blixis-blocks' ),
+		'editCss'             => __( 'Edit as CSS', 'blixis-blocks' ),
+		'shadowX'             => __( 'Horizontal offset', 'blixis-blocks' ),
+		'shadowY'             => __( 'Vertical offset', 'blixis-blocks' ),
+		'shadowBlur'          => __( 'Blur', 'blixis-blocks' ),
+		'shadowSpread'        => __( 'Spread', 'blixis-blocks' ),
+		'shadowOpacity'       => __( 'Opacity', 'blixis-blocks' ),
+		'shadowColor'         => __( 'Shadow colour', 'blixis-blocks' ),
+		/* translators: %d: number of shadow layers. */
+		'shadowLayers'        => __( 'This shadow has %d layers. Adjusting changes the first layer only; edit as CSS to change the others.', 'blixis-blocks' ),
+		'easing_smooth'       => __( 'Smooth', 'blixis-blocks' ),
+		'easing_gentle-start' => __( 'Gentle start', 'blixis-blocks' ),
+		'easing_gentle-stop'  => __( 'Gentle stop', 'blixis-blocks' ),
+		'easing_linear'       => __( 'Linear', 'blixis-blocks' ),
+		'easing_springy'      => __( 'Springy', 'blixis-blocks' ),
+		'easingCustom'        => __( 'Custom easing. Pick a card to replace it.', 'blixis-blocks' ),
+		'speed_fast'          => __( 'Fast', 'blixis-blocks' ),
+		'speed_normal'        => __( 'Normal', 'blixis-blocks' ),
+		'speed_slow'          => __( 'Slow', 'blixis-blocks' ),
+		'play'                => __( 'Play', 'blixis-blocks' ),
+		/* translators: 1-3: durations such as 120ms for Fast, Normal, Slow; 4: easing name. */
+		'motionStill'         => __( 'Your system asks for reduced motion, so the sample does not move. Fast takes %1$s, Normal %2$s, and Slow %3$s, with %4$s easing.', 'blixis-blocks' ),
+		'specimenLight'       => __( 'Light colours', 'blixis-blocks' ),
+		'specimenDark'        => __( 'Dark colours', 'blixis-blocks' ),
+		'specimenType'        => __( 'Type specimen', 'blixis-blocks' ),
+		'specimenSpacing'     => __( 'Spacing ruler', 'blixis-blocks' ),
+		'specimenRadius'      => __( 'Corner radius samples', 'blixis-blocks' ),
+		'specimenLayout'      => __( 'Layout widths', 'blixis-blocks' ),
+		'specimenShadows'     => __( 'Shadow cards', 'blixis-blocks' ),
+		'specimenMotion'      => __( 'Motion sample', 'blixis-blocks' ),
+		'sampleText'          => __( 'Body text on the surface colour.', 'blixis-blocks' ),
+		'sampleLink'          => __( 'A link', 'blixis-blocks' ),
+		'sampleMuted'         => __( 'Muted text', 'blixis-blocks' ),
+		'sampleButton'        => __( 'Button', 'blixis-blocks' ),
+		'sampleAccent'        => __( 'Accent', 'blixis-blocks' ),
+		'sampleH1'            => __( 'Heading one', 'blixis-blocks' ),
+		'sampleH2'            => __( 'Heading two', 'blixis-blocks' ),
+		'sampleH3'            => __( 'Heading three', 'blixis-blocks' ),
+		'sampleH4'            => __( 'Heading four', 'blixis-blocks' ),
+		'sampleBody'          => __( 'Body text sets the reading size for paragraphs and lists.', 'blixis-blocks' ),
+		'sampleSmall'         => __( 'Small text for captions and notes.', 'blixis-blocks' ),
+		'sampleXs'            => __( 'Extra small text for fine print.', 'blixis-blocks' ),
+		'sampleWide'          => __( 'Wide width', 'blixis-blocks' ),
+		'sampleContent'       => __( 'Content width', 'blixis-blocks' ),
+		'noDark'              => __( 'No dark palette is set, so dark mode uses the light colours.', 'blixis-blocks' ),
+		'previewColours'      => __( 'Preview colours', 'blixis-blocks' ),
+		'light'               => __( 'Light', 'blixis-blocks' ),
+		'dark'                => __( 'Dark', 'blixis-blocks' ),
+		'describe'            => __( 'Describe the preview', 'blixis-blocks' ),
+		/* translators: 1: Light or Dark, 2: text colour, 3: surface colour, 4: contrast ratio, 5: link colour, 6: heading font, 7: body font, 8: base size. */
+		'describeText'        => __( 'Preview in %1$s colours. Text %2$s on surface %3$s, contrast %4$s to 1. Links %5$s. Headings in %6$s, body text in %7$s at %8$s.', 'blixis-blocks' ),
+	);
 }
 
 /**
@@ -550,7 +852,8 @@ function render_theme_step( array $draft, array $errors, array $values ): void {
 	}
 	echo '</fieldset>';
 	if ( $can_new ) {
-		echo '<fieldset class="blixis-setup-section"><legend>' . esc_html__( 'New child theme', 'blixis-blocks' ) . '</legend>';
+		$has_theme_errors = isset( $errors['/theme/name'] ) || isset( $errors['/theme/slug'] ) || isset( $errors['/theme/starter'] );
+		echo '<fieldset class="blixis-setup-section blixis-setup-new-theme' . ( $has_theme_errors ? ' has-errors' : '' ) . '"><legend>' . esc_html__( 'New child theme', 'blixis-blocks' ) . '</legend>';
 		render_field( '/theme/name', __( 'Theme name', 'blixis-blocks' ), (string) ( $values['new_name'] ?? '' ), __( 'Shown under Appearance → Themes, for example Acme Site.', 'blixis-blocks' ), $errors['/theme/name'] ?? null );
 		render_field( '/theme/slug', __( 'Theme slug', 'blixis-blocks' ), (string) ( $values['new_slug'] ?? '' ), __( 'Folder name: lowercase letters, digits, and single hyphens, for example acme-site.', 'blixis-blocks' ), $errors['/theme/slug'] ?? null );
 		$starter = (string) ( $values['new_starter'] ?? 'none' );
@@ -735,6 +1038,20 @@ function handle(): void {
 	}
 
 	$errors = step_errors( $config, $step );
+	// The site colour scheme (system, light, or dark) is a site setting, not part of the draft.
+	// It is checked here and saved with scheme_save() once the step is valid.
+	$scheme = null;
+	if ( 'colors' === $step && isset( $_POST['scheme'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- Verified above.
+		$scheme = is_string( $_POST['scheme'] ) ? sanitize_key( wp_unslash( $_POST['scheme'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing
+		if ( ! in_array( $scheme, token_map()['colorScheme']['values'], true ) ) {
+			$errors[]            = array(
+				'code' => 'scheme.invalid',
+				'path' => '/colors/scheme',
+			);
+			$submitted['scheme'] = $scheme;
+			$scheme              = null;
+		}
+	}
 	if ( 'typography' === $step ) {
 		$allowed = array_merge( usable_names(), token_map()['fontGenerics'] );
 		foreach ( (array) $config['fonts'] as $key => $font ) {
@@ -758,6 +1075,21 @@ function handle(): void {
 		);
 		wp_safe_redirect( step_url( $step ) );
 		exit;
+	}
+	if ( null !== $scheme ) {
+		$saved = scheme_save( $scheme );
+		if ( is_wp_error( $saved ) ) {
+			flash(
+				$user,
+				$step,
+				array(
+					'failure' => $saved->get_error_message(),
+					'values'  => $submitted,
+				)
+			);
+			wp_safe_redirect( step_url( $step ) );
+			exit;
+		}
 	}
 	$checked         = validate_bytes( canonical_json( $config ) );
 	$draft['config'] = $checked['ok'] ? $checked['config'] : $config;
