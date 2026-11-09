@@ -2,7 +2,7 @@
 id: "03-01"
 title: "Generate a child theme"
 phase: "03"
-status: In Review
+status: Done
 priority: P0
 owner: "EmVeeNL"
 created_at: "2026-11-06"
@@ -12,10 +12,10 @@ branch: "feat/03-01-child-theme-generator"
 pr_number: 32
 pr_url: "https://github.com/EmVeeNL/blixis-wordpress/pull/32"
 commit_sha: "f7aea6f"
-merged_at: null
-merge_commit_sha: null
+merged_at: "2026-11-09T09:27:19Z"
+merge_commit_sha: "963fcc3b9d22c686f3c40da477f0e9a12d5a5f4b"
 started_at: "2026-11-09"
-completed_at: null
+completed_at: "2026-11-09"
 closed_at: null
 blocked_reason: null
 blocked_by: []
@@ -39,7 +39,7 @@ Create metadata, parent relation, safe overrides, and installable scaffold; prot
 - [x] Generation requires `edit_theme_options` and a valid nonce, validates the slug and every field, refuses an existing directory, and never writes into Base or WordPress Core; each refusal has a negative test.
 - [x] The child inherits Base templates and the compiled stylesheet, and only approved override files are generated; a Base upgrade in the fixture leaves the child working.
 - [x] Tests and documentation ship with the change, and required CI runs them.
-- [ ] A reviewed PR is merged, with evidence and metadata recorded here.
+- [x] A reviewed PR is merged, with evidence and metadata recorded here.
 
 ## Testing requirements
 
@@ -57,10 +57,10 @@ Activate child theme and verify behavior across a parent upgrade. Include negati
 - **Priority:** P0
 - **Dependencies:** `02-05`
 - **Branch:** `feat/03-01-child-theme-generator`.
-- **Commit references:** `f7aea6f` (implementation).
+- **Commit references:** `f7aea6f` (implementation); merge `963fcc3b9d22c686f3c40da477f0e9a12d5a5f4b`.
 - **PR number and URL:** [#32](https://github.com/EmVeeNL/blixis-wordpress/pull/32).
-- **Started / completed / closed:** Started 2026-11-09; not completed.
-- **Status:** In Review. Michael confirmed the criteria and started the task on 2026-11-09. The first four criteria are met by the evidence below; the last needs review and merge. Update frontmatter and history on every transition; follow [status workflow](../../../development/STATUS_WORKFLOW.md).
+- **Started / completed / closed:** Started and completed 2026-11-09; not released.
+- **Status:** Done. PR #32 merged after all 18 required checks passed. Follow [status workflow](../../../development/STATUS_WORKFLOW.md).
 
 ## Status history
 
@@ -70,3 +70,4 @@ Activate child theme and verify behavior across a parent upgrade. Include negati
 | 2026-11-09 | Backlog → Ready | Dependency `02-05` completed in [PR #26](https://github.com/EmVeeNL/blixis-wordpress/pull/26), merge `b2d43dc`, with follow-ups #28 and #29; generic criteria replaced with concrete criteria; owner EmVeeNL. |
 | 2026-11-09 | Ready → Busy | Michael confirmed the criteria and started the task; branch `feat/03-01-child-theme-generator` from `73b76e3`. |
 | 2026-11-09 | Busy → In Review | [PR #32](https://github.com/EmVeeNL/blixis-wordpress/pull/32), commit `f7aea6f`; evidence above. |
+| 2026-11-09 | In Review → Done | [PR #32](https://github.com/EmVeeNL/blixis-wordpress/pull/32) squash-merged as `963fcc3b9d22c686f3c40da477f0e9a12d5a5f4b` at 09:27:19 UTC after all 18 required checks passed, including 114 generator checks in `wordpress-integration`. |
