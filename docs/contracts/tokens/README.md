@@ -1,6 +1,6 @@
 # Token and renderer contract, version 1
 
-**Status: accepted design baseline from task 01-05; not implemented in a product package.** The fixtures here passed against the throwaway proof in [`spikes/01-05-contracts/tokens`](../../../spikes/01-05-contracts/tokens/). Task 03-02 (tokens) and task 05-01 (elements) implement it. See the [review note](../../architecture/reviews/01-05-tokens.md) for evidence and gaps.
+**Status: accepted design baseline from task 01-05. The validator and stylesheet generator are implemented in Blixis Blocks and `packages/tokens` (task 03-02), and the theme.json projection in task 02-03; persistence and the renderer are not.** The fixtures here passed against the throwaway proof in [`spikes/01-05-contracts/tokens`](../../../spikes/01-05-contracts/tokens/). Task 03-02 (tokens) and task 05-01 (elements) implement it. See the [review note](../../architecture/reviews/01-05-tokens.md) for evidence and gaps.
 
 ## Files
 
