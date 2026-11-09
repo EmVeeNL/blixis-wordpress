@@ -2,11 +2,11 @@
 id: "03-01"
 title: "Generate a child theme"
 phase: "03"
-status: Backlog
+status: Ready
 priority: P0
 owner: "EmVeeNL"
 created_at: "2026-11-06"
-updated_at: "2026-11-06"
+updated_at: "2026-11-09"
 depends_on: ["02-05"]
 branch: null
 pr_number: null
@@ -35,9 +35,10 @@ Create metadata, parent relation, safe overrides, and installable scaffold; prot
 
 ## Acceptance criteria
 
-- [ ] The described capability works in the intended WordPress and browser environments.
-- [ ] Relevant security, accessibility, and performance requirements are verified.
-- [ ] Tests and documentation are included with the implementation.
+- [ ] A generated child theme has valid metadata (`Template: blixis-base`, name, slug, version, WordPress 7.0 and PHP 8.3 floors) and activates on disposable WordPress 7.0 and 7.1.
+- [ ] Generation requires `edit_theme_options` and a valid nonce, validates the slug and every field, refuses an existing directory, and never writes into Base or WordPress Core; each refusal has a negative test.
+- [ ] The child inherits Base templates and the compiled stylesheet, and only approved override files are generated; a Base upgrade in the fixture leaves the child working.
+- [ ] Tests and documentation ship with the change, and required CI runs them.
 - [ ] A reviewed PR is merged, with evidence and metadata recorded here.
 
 ## Testing requirements
@@ -52,10 +53,11 @@ Activate child theme and verify behavior across a parent upgrade. Include negati
 - **Commit references:** None.
 - **PR number and URL:** None.
 - **Started / completed / closed:** Not recorded.
-- **Status:** Backlog. Update frontmatter and history on every transition; follow [status workflow](../../../development/STATUS_WORKFLOW.md).
+- **Status:** Ready. Dependency `02-05` is Done and the criteria above are concrete; the owner should confirm them before work starts. Update frontmatter and history on every transition; follow [status workflow](../../../development/STATUS_WORKFLOW.md).
 
 ## Status history
 
 | Date | Transition | Evidence |
 |---|---|---|
 | 2026-11-06 | Initial planning → Backlog | Downloaded project plan; no implementation evidence |
+| 2026-11-09 | Backlog → Ready | Dependency `02-05` completed in [PR #26](https://github.com/EmVeeNL/blixis-wordpress/pull/26), merge `b2d43dc`, with follow-ups #28 and #29; generic criteria replaced with concrete criteria; owner EmVeeNL. |

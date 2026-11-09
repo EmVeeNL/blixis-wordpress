@@ -1,8 +1,8 @@
 # Blixis Base and child themes
 
-**Implemented:** `themes/blixis-base` is a neutral block parent theme with WordPress 7.0/PHP 8.3 headers, bootstrap hooks, token-aligned default presets, and a singular template that prints published post content. Its Tailwind CSS v4 package compiles CSS-first sources into a committed production stylesheet; WordPress hosts do not need Node. The local installation links the theme but does not activate it. There is no child-theme generator or runtime token editor yet.
+**Implemented:** `themes/blixis-base` is a neutral block parent theme with WordPress 7.0/PHP 8.3 headers, bootstrap hooks, token-aligned default presets, and a singular template that prints published post content. Its Tailwind CSS v4 package compiles CSS-first sources into a committed production stylesheet; WordPress hosts do not need Node. Page, single, archive, search, and 404 templates with header and footer parts and a skip link were added in task 02-04. The local installation links Base and the optional showcase child, and runs the showcase. There is no child-theme generator or runtime token editor yet.
 
-**Planned:** A site child theme owns branding, fonts, variants, and overrides. Never write site-specific changes into Base through the setup UI. Later Base template work adds page, single, archive, search, and 404 layouts, header/footer parts, and a skip link. The present singular template and compiled CSS do not claim a full visual or accessibility audit. Base should still load safely when Blocks is inactive.
+**Planned:** A site child theme owns branding, fonts, variants, and overrides. Never write site-specific changes into Base through the setup UI. The templates have automated semantic, keyboard, and axe checks; they do not claim a full visual or accessibility audit, which belongs to phase 06. Base should still load safely when Blocks is inactive.
 
 ## Production CSS
 

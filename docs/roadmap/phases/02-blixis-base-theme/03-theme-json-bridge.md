@@ -6,7 +6,7 @@ status: Done
 priority: P0
 owner: "EmVeeNL"
 created_at: "2026-11-06"
-updated_at: "2026-11-07"
+updated_at: "2026-11-09"
 depends_on: ["02-02"]
 branch: "feat/02-03-theme-json-bridge"
 pr_number: 22
@@ -35,10 +35,13 @@ Map validated colors, typography, and layout tokens to WordPress theme.json; doc
 
 ## Acceptance criteria
 
-- [x] The described capability works in the intended WordPress and browser environments.
-- [x] Relevant security, accessibility, and performance requirements are verified.
-- [x] Tests and documentation are included with the implementation.
+- [x] Validated colour, typography, and layout tokens map to theme.json through one closed inline contract; every valid and invalid fixture produces its golden result, and invalid input fails strictly without partial output.
+- [x] Parent and child theme.json inheritance and precedence are documented and proven on disposable WordPress 7.1.4/PHP 8.3 and 7.0.8/PHP 8.5, with matching public and editor global styles in Chromium.
+- [x] No production option, filter, REST route, or UI is added, so no new permission surface exists; parent files and the shared local site are untouched. Site Editor ownership enforcement stays in 03-05.
+- [x] Tests and documentation ship with the change: the [proof guide](../../../development/THEME_JSON_BRIDGE.md), required CI coverage, and a mutation that makes the golden assertions fail.
 - [x] A reviewed PR is merged, with evidence and metadata recorded here.
+
+No accessibility audit or page-performance measurement is claimed for this task; those belong to [06-01](../06-hardening-beta/01-accessibility-audit.md) and [06-03](../06-hardening-beta/03-performance-optimization.md).
 
 ## Testing requirements
 
@@ -73,3 +76,4 @@ The final randomized-login browser replay on `126725c` also passed 310 WordPress
 | 2026-11-07 | Ready → Busy | Integration branch `feat/02-03-theme-json-bridge` started from synchronized `origin/main` at `a6e5022`; isolated worktrees own the mapping, WordPress proof, and documentation. |
 | 2026-11-07 | Busy → In Review | [PR #22](https://github.com/EmVeeNL/blixis-wordpress/pull/22); integrated proof `5c2128c`, independent contract/security/inheritance review and validation recorded above. |
 | 2026-11-07 | In Review → Done | Independent integration review, all 16 required checks green, and [PR #22](https://github.com/EmVeeNL/blixis-wordpress/pull/22) merged as `da659327335024c8370b81511a91efcbb51f6677` at 16:29:17 UTC. |
+| 2026-11-09 | Done, criteria clarified | The generic planning criteria were replaced with the concrete criteria above, each traced to the recorded evidence. Page-performance measurement was never part of this task's evidence and is now assigned to [06-03](../06-hardening-beta/03-performance-optimization.md); status is unchanged. |

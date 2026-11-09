@@ -1,6 +1,6 @@
 # 02 Blixis Base Theme
 
-**Status:** Busy. All five implementation tasks are Done. Phase exit remains pending release evidence and owner acceptance.
+**Status:** Busy. All five implementation tasks are Done; the showcase received follow-up fixes in PRs #28 and #29. Phase exit remains pending release evidence and owner acceptance. Accessibility audits and page-performance budgets for Base are verified in phase 06, not here.
 
 | ID | Task | Status | Priority |
 |---|---|---|---|
