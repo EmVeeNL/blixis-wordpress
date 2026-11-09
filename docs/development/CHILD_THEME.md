@@ -1,6 +1,6 @@
 # Child theme generator
 
-Task [03-01](../roadmap/phases/03-child-theme-setup-wizard/01-child-theme-generator.md) adds a generator to Blixis Blocks that creates an installable child theme of Blixis Base. It has no admin screen yet; the setup wizard in task 03-03 will call it. It never activates the theme it creates.
+The Blixis Blocks generator creates an installable child theme of Blixis Base. The setup wizard can create one during its theme step. It never activates the theme it creates.
 
 ## Route
 
@@ -13,13 +13,14 @@ Task [03-01](../roadmap/phases/03-child-theme-setup-wizard/01-child-theme-genera
 | `description` | Optional. Up to 200 characters |
 | `author` | Optional. Up to 64 characters |
 | `version` | Optional. `major.minor.patch`; defaults to `0.1.0` |
+| `starter` | Optional. `none` (default) or `neutral`; selects whether to include a neutral front-page template and editable patterns |
 
 Text fields may not contain control characters, `<`, `>`, or `*/`, because they become one-line theme header values. Unknown fields are refused.
 
 | Response | Meaning |
 |---|---|
 | `201` | Created. Body: `slug`, `name`, `version`. No server paths |
-| `400 blixis_child_invalid` | `data.errors` lists `{field, code}`: `unknown_field`, `invalid_type`, `required`, `too_long`, `invalid_characters`, `invalid_slug`, `reserved_slug`, or `invalid_version` |
+| `400 blixis_child_invalid` | `data.errors` lists `{field, code}`: `unknown_field`, `invalid_type`, `required`, `too_long`, `invalid_characters`, `invalid_slug`, `reserved_slug`, or `invalid_version`. Unknown `starter` values are rejected by REST argument validation as `rest_invalid_param` |
 | `401` | Not logged in |
 | `403` | Missing `edit_theme_options` or `install_themes`, or no valid `wp_rest` nonce in `X-WP-Nonce`. Application passwords are refused because they carry no nonce |
 | `409 blixis_child_exists` | A theme, directory, or file with that slug already exists |
@@ -30,11 +31,12 @@ Text fields may not contain control characters, `<`, `>`, or `*/`, because they 
 
 ## What it writes
 
-A new directory `<theme root>/<slug>/` with exactly three files:
+A new directory `<theme root>/<slug>/` containing:
 
 - `style.css`: the theme header with `Template: blixis-base`, `Requires at least: 7.0`, `Requires PHP: 8.3`, GPLv2 or later, and the slug as text domain.
-- `theme.json`: version 3 with no settings, so everything is inherited from Base until tokens arrive in tasks 03-02 and 03-05.
+- `theme.json`: version 3 with no settings or styles. The child inherits Base's token-driven styles and adds no fixed token values.
 - `functions.php`: enqueues the child stylesheet after Base's `blixis-base` handle.
+- With `starter: neutral`, `templates/front-page.html` and two PHP patterns provide an editable, unbranded welcome section and three feature columns. With `starter: none`, these files are omitted.
 
 Files are written to a hidden staging directory in the theme root and moved into place in one step, so a failure leaves no partial theme. WordPress ignores hidden directories when it lists themes. Templates, parts, and the compiled Tailwind stylesheet are inherited from Base, so a Base upgrade reaches the child without regenerating it.
 

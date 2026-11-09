@@ -69,6 +69,26 @@ foreach ($cases as $name => [$input, $want]) {
 $files = build_files(validate($ok_input)['values']);
 $check('generator writes only approved files', array_keys($files) === ['style.css', 'theme.json', 'functions.php'], implode(',', array_keys($files)));
 $check('generated theme.json is valid JSON version 3', (json_decode($files['theme.json'], true)['version'] ?? 0) === 3);
+$decoded_theme = json_decode($files['theme.json'], true);
+$check('generated theme.json inherits token styles without fixed theme values', array_keys($decoded_theme) === ['$schema', 'version'] && !isset($decoded_theme['settings'], $decoded_theme['styles']));
+$base_theme = json_decode((string) file_get_contents($parent_dir . '/theme.json'), true);
+$preset_lists = [
+    'color' => array_column($base_theme['settings']['color']['palette'], 'slug'),
+    'font-family' => array_column($base_theme['settings']['typography']['fontFamilies'], 'slug'),
+    'font-size' => array_column($base_theme['settings']['typography']['fontSizes'], 'slug'),
+    'spacing' => array_column($base_theme['settings']['spacing']['spacingSizes'], 'slug'),
+    'border-radius' => array_column($base_theme['settings']['border']['radiusSizes'], 'slug'),
+];
+$style_json = (string) wp_json_encode($base_theme['styles']);
+preg_match_all('/var:preset\\|([a-z-]+)\\|([a-z0-9-]+)/', $style_json, $preset_refs, PREG_SET_ORDER);
+$missing_presets = array_filter($preset_refs, static fn (array $ref): bool => !in_array($ref[2], $preset_lists[$ref[1]] ?? [], true));
+$check('every Base style preset reference exists in Base theme.json', !$missing_presets, wp_json_encode($missing_presets));
+$neutral = build_files(validate($ok_input + ['starter' => 'neutral'])['values']);
+$check('neutral starter writes a front page and two patterns', isset($neutral['templates/front-page.html'], $neutral['patterns/intro.php'], $neutral['patterns/features.php']));
+$check('neutral starter uses child-scoped pattern names', str_contains($neutral['templates/front-page.html'], 'acme-site/intro') && str_contains($neutral['templates/front-page.html'], 'acme-site/features'));
+$check('neutral starter marks visible text for child-theme translation', str_contains($neutral['patterns/intro.php'], "esc_html_e( 'Welcome', 'acme-site' )") && str_contains($neutral['patterns/features.php'], "esc_html_e( 'What we offer', 'acme-site' )") && str_contains($neutral['patterns/intro.php'], "esc_attr_e( 'Explore the feature highlights', 'acme-site' )"));
+$invalid_starter = validate(['name' => 'A', 'slug' => 'abc', 'starter' => 'branded']);
+$check('unknown starter is rejected', in_array(['field' => 'starter', 'code' => 'invalid_starter'], $invalid_starter['errors'], true));
 
 // ---- 2. Authentication helpers for real HTTP requests.
 $make_user = static function (string $login, string $role): int {
@@ -110,7 +130,7 @@ $post = static function (array $body, ?array $session = null, ?string $nonce = n
 $exists = static fn (string $slug): bool => file_exists(get_theme_root() . '/' . $slug);
 
 $admin_session = $session($admin);
-$request = ['name' => 'Acme Site', 'slug' => 'acme-site', 'description' => 'Site theme for Acme.', 'author' => 'Acme', 'version' => '1.0.0'];
+$request = ['name' => 'Acme Site', 'slug' => 'acme-site', 'description' => 'Site theme for Acme.', 'author' => 'Acme', 'version' => '1.0.0', 'starter' => 'neutral'];
 
 // ---- 3. Refusals: none of these may create anything.
 [$s] = $post($request);
@@ -141,6 +161,8 @@ $check('no theme directory was created by refused requests', !$exists('acme-site
 $check('traversal slug over HTTP returns 400 with a field error', $s === 400 && in_array(['field' => 'slug', 'code' => 'invalid_slug'], $j['data']['errors'] ?? [], true), $s . ' ' . wp_json_encode($j));
 [$s, $j] = $post(['name' => 'Bad', 'slug' => 'blixis-base'], $admin_session, $admin_session['nonce']);
 $check('parent slug over HTTP returns 400 reserved_slug', $s === 400 && in_array(['field' => 'slug', 'code' => 'reserved_slug'], $j['data']['errors'] ?? [], true), $s . ' ' . wp_json_encode($j));
+[$s, $j] = $post(['name' => 'Bad', 'slug' => 'bad-site', 'starter' => 'branded'], $admin_session, $admin_session['nonce']);
+$check('REST starter enum rejects unknown values before creating a theme', $s === 400 && ($j['code'] ?? '') === 'rest_invalid_param' && !$exists('bad-site'), $s . ' ' . wp_json_encode($j));
 [$s] = $post(['name' => 'Twenty', 'slug' => 'twentytwentyfive'], $admin_session, $admin_session['nonce']);
 $check('existing theme slug returns 409', $s === 409, (string) $s);
 
@@ -158,7 +180,8 @@ $check('generated header: Requires PHP 8.3', $child->get('RequiresPHP') === '8.3
 $check('generated header: Version and Text Domain', $child->get('Version') === '1.0.0' && $child->get('TextDomain') === 'acme-site');
 $generated = is_dir($root . '/acme-site') ? array_values(array_diff(scandir($root . '/acme-site'), ['.', '..'])) : [];
 sort($generated);
-$check('generated directory holds only the approved files', $generated === ['functions.php', 'style.css', 'theme.json'], implode(',', $generated));
+$check('generated directory holds only the approved files', $generated === ['functions.php', 'patterns', 'style.css', 'templates', 'theme.json'], implode(',', $generated));
+$check('REST starter selection writes the neutral front page and patterns', is_file($root . '/acme-site/templates/front-page.html') && is_file($root . '/acme-site/patterns/intro.php') && is_file($root . '/acme-site/patterns/features.php'));
 $check('generator did not activate the theme', get_stylesheet() === 'blixis-base', get_stylesheet());
 
 [$s] = $post($request, $admin_session, $admin_session['nonce']);

@@ -47,6 +47,9 @@ const tokens = (frameOrPage) =>
     return {
       blixis: root.getPropertyValue('--blixis-color-primary').trim().toLowerCase(),
       preset: root.getPropertyValue('--wp--preset--color--primary').trim().toLowerCase(),
+      bodyFont: getComputedStyle(document.body).fontFamily,
+      headingFont: getComputedStyle(document.querySelector('h1')).fontFamily,
+      spacing: root.getPropertyValue('--wp--preset--spacing--md').trim(),
       robots: document.querySelector('meta[name="robots"]')?.content ?? '',
     };
   });
@@ -62,14 +65,48 @@ async function publicTokens(browser) {
     await document.fonts.ready;
     return [...document.fonts].some((f) => f.family.replace(/"/g, '') === 'Liberation Sans');
   });
+  const starter = await page.evaluate(() => ({
+    mainCount: document.querySelectorAll('main').length,
+    headingCount: document.querySelectorAll('main h1').length,
+    hasIntro: document.querySelector('main')?.innerText.includes('Welcome') ?? false,
+  }));
   await context.close();
-  return { ...values, font, external: requests.filter((u) => !u.startsWith(BASE) && !u.startsWith('data:') && !u.startsWith(`blob:${BASE}`)) };
+  return { ...values, font, starter, external: requests.filter((u) => !u.startsWith(BASE) && !u.startsWith('data:') && !u.startsWith(`blob:${BASE}`)) };
+}
+
+async function capturePublicPage(browser, url, width, filename) {
+  const context = await browser.newContext({ viewport: { width, height: 900 }, reducedMotion: 'reduce' });
+  const page = await context.newPage();
+  await page.goto(url, { waitUntil: 'load' });
+  await page.screenshot({ path: `shots/${filename}`, fullPage: true });
+  await context.close();
+}
+
+async function starterResponsive(browser) {
+  for (const width of [320, 1280]) {
+    const context = await browser.newContext({ viewport: { width, height: 900 }, reducedMotion: 'reduce' });
+    const page = await context.newPage();
+    await page.goto(`${BASE}/`, { waitUntil: 'load' });
+    const result = await page.evaluate(() => ({
+      mainCount: document.querySelectorAll('main').length,
+      headingCount: document.querySelectorAll('main h1').length,
+      overflow: document.documentElement.scrollWidth > document.documentElement.clientWidth,
+      reducedMotion: matchMedia('(prefers-reduced-motion: reduce)').matches,
+    }));
+    check(`neutral starter has semantic content and fits at ${width}px with reduced motion`, result.mainCount === 1 && result.headingCount === 1 && !result.overflow && result.reducedMotion, JSON.stringify(result));
+    await context.close();
+  }
 }
 
 async function fullFlow(browser) {
   let pub = await publicTokens(browser);
   check('visitors get the stored colour in the token stylesheet', pub.blixis === GREEN, JSON.stringify(pub));
   check('visitors get the stored colour as the WordPress preset, despite a Site Editor override', pub.preset === GREEN, JSON.stringify(pub));
+  check('fresh generated child renders its neutral starter', pub.starter.mainCount === 1 && pub.starter.headingCount === 1 && pub.starter.hasIntro, JSON.stringify(pub.starter));
+  check('the generated child renders the configured body font', pub.bodyFont.includes('Liberation Sans'), pub.bodyFont);
+  check('the generated child renders the configured heading font', pub.headingFont.includes('Georgia'), pub.headingFont);
+  check('the generated child receives the configured spacing preset', pub.spacing === '2rem', pub.spacing);
+  await starterResponsive(browser);
   check('the stored Font Library font is declared for visitors', pub.font);
   check('no visitor request leaves the site', pub.external.length === 0, pub.external.join(' '));
 
@@ -135,6 +172,9 @@ async function fullFlow(browser) {
   check('saving reports revision 6', (await page.locator('.blixis-setup-notice').innerText()).includes('revision 6'));
   pub = await publicTokens(browser);
   check('visitors see the new colour at once after saving', pub.blixis === RED && pub.preset === RED, JSON.stringify(pub));
+  await capturePublicPage(browser, `${BASE}/`, 1280, 'child-neutral-starter-tokens-1280.png');
+  await capturePublicPage(browser, `${BASE}/`, 320, 'child-neutral-starter-tokens-320.png');
+  await capturePublicPage(browser, `${BASE}/?t0305_no_tokens=1`, 1280, 'child-neutral-starter-default-1280.png');
   const rollback = page.locator('button[value="rollback"]');
   check('a rollback button is offered when a previous config exists', (await rollback.count()) === 1);
   await rollback.click();

@@ -17,16 +17,21 @@ Template: blixis-base
  * insets its content with the same --showcase-inset, so all left edges line up at every width.
  */
 :root {
-	--showcase-ink: #111827;
-	--showcase-paper: #ffffff;
-	--showcase-blue: #0645f5;
-	--showcase-cyan: #08c7dc;
+	--showcase-ink: var(--blixis-color-foreground, #111827);
+	--showcase-paper: var(--blixis-color-surface, #ffffff);
+	--showcase-blue: var(--blixis-color-primary, #0645f5);
+	--showcase-cyan: var(--blixis-color-accent, #08c7dc);
+	--showcase-blue-hover: var(--blixis-color-primary, #0030bd);
 	--showcase-line: #dce3f0;
-	--showcase-muted: #465675;
+	--showcase-muted: var(--blixis-color-muted, #465675);
 	--showcase-radius: 0.85rem;
-	--showcase-font: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-	--showcase-gutter: clamp(1.25rem, 5vw, 5rem);
-	--showcase-max: 90rem;
+	--showcase-font: var(--blixis-font-body, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif);
+	--showcase-heading-font: var(--blixis-font-heading, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif);
+	--showcase-space-sm: var(--blixis-spacing-sm, 0.75rem);
+	--showcase-space-md: var(--blixis-spacing-md, 1rem);
+	--showcase-space-lg: var(--blixis-spacing-lg, 1.5rem);
+	--showcase-gutter: var(--blixis-layout-gutter, clamp(1.25rem, 5vw, 5rem));
+	--showcase-max: var(--blixis-layout-wide-width, 90rem);
 	--showcase-inset: max(var(--showcase-gutter), calc((100% - var(--showcase-max)) / 2 + var(--showcase-gutter)));
 }
 
@@ -42,7 +47,7 @@ a {
 }
 
 a:hover {
-	color: #0030bd;
+	color: var(--showcase-blue-hover);
 }
 
 :focus-visible {
@@ -181,7 +186,7 @@ a:hover {
 .blixis-showcase-hero h1 {
 	max-width: 15ch;
 	margin: 0 0 1.5rem;
-	font-family: var(--showcase-font);
+	font-family: var(--showcase-heading-font);
 	font-size: clamp(2.6rem, 4.35vw, 4.4rem);
 	font-weight: 750;
 	letter-spacing: -0.02em;
@@ -219,7 +224,7 @@ a:hover {
 
 .blixis-showcase-hero .showcase-hero-actions a:hover {
 	background: #fff;
-	color: #0030bd;
+	color: var(--showcase-blue-hover);
 }
 
 .blixis-showcase-hero .is-style-outline a {
@@ -383,7 +388,7 @@ a:hover {
 .blixis-showcase-status > h2 {
 	max-width: none;
 	margin: 0 0 1.25rem;
-	font-family: var(--showcase-font);
+	font-family: var(--showcase-heading-font);
 	font-size: 1.05rem;
 	font-weight: 700;
 	letter-spacing: 0.04em;
@@ -393,7 +398,7 @@ a:hover {
 .blixis-showcase-grid {
 	display: grid;
 	grid-template-columns: repeat(3, minmax(0, 1fr));
-	gap: 1rem;
+	gap: var(--showcase-space-md);
 	max-width: none;
 	margin: 0;
 	padding: 0;
@@ -413,7 +418,7 @@ a:hover {
 
 .blixis-showcase-card h3 {
 	margin-top: 0;
-	font-family: var(--showcase-font);
+	font-family: var(--showcase-heading-font);
 	font-size: 1.35rem;
 	font-weight: 700;
 	letter-spacing: -0.01em;
