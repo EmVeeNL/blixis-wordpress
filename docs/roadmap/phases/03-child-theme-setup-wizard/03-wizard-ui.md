@@ -2,7 +2,7 @@
 id: "03-03"
 title: "Build the theme setup wizard"
 phase: "03"
-status: In Review
+status: Done
 priority: P0
 owner: "EmVeeNL"
 created_at: "2026-11-06"
@@ -12,10 +12,10 @@ branch: "feat/03-03-setup-wizard"
 pr_number: 35
 pr_url: "https://github.com/EmVeeNL/blixis-wordpress/pull/35"
 commit_sha: "7ee1997"
-merged_at: null
-merge_commit_sha: null
+merged_at: "2026-11-09T10:27:03Z"
+merge_commit_sha: "9c732b03a6e2814fbae1af5dd7dae77bf5be88df"
 started_at: "2026-11-09"
-completed_at: null
+completed_at: "2026-11-09"
 closed_at: null
 blocked_reason: null
 blocked_by: []
@@ -41,7 +41,7 @@ Provide accessible forms, progress, defaults, validation, save, and recovery for
 - [x] Drafts survive a reload, a new session, and a failed save; saving uses compare-and-swap, refuses a stale or concurrent save with a conflict message, and can discard the draft.
 - [x] Only users with `edit_theme_options` (and `install_themes` to create a theme) can open or submit the wizard, every step needs its nonce, and Blixis Base is never modified.
 - [x] Tests and documentation ship with the change, and CI runs them.
-- [ ] A reviewed PR is merged, with evidence and metadata recorded here.
+- [x] A reviewed PR is merged, with evidence and metadata recorded here.
 
 ## Testing requirements
 
@@ -60,10 +60,10 @@ Keyboard, locale, error-state, and end-to-end save tests. Include negative permi
 - **Priority:** P0
 - **Dependencies:** `03-02`
 - **Branch:** `feat/03-03-setup-wizard`.
-- **Commit references:** `7ee1997` (implementation).
+- **Commit references:** `7ee1997` (implementation); merge `9c732b03a6e2814fbae1af5dd7dae77bf5be88df`.
 - **PR number and URL:** [#35](https://github.com/EmVeeNL/blixis-wordpress/pull/35).
-- **Started / completed / closed:** Started 2026-11-09; not completed.
-- **Status:** In Review. The last criterion needs review and merge. Update frontmatter and history on every transition; follow [status workflow](../../../development/STATUS_WORKFLOW.md).
+- **Started / completed / closed:** Started and completed 2026-11-09; not released.
+- **Status:** Done. PR #35 merged after all required checks passed; `setup-wizard` then passed on `main` and became a required check. Update frontmatter and history on every transition; follow [status workflow](../../../development/STATUS_WORKFLOW.md).
 
 ## Status history
 
@@ -73,3 +73,4 @@ Keyboard, locale, error-state, and end-to-end save tests. Include negative permi
 | 2026-11-09 | Backlog → Ready | Dependency `03-02` completed in [PR #34](https://github.com/EmVeeNL/blixis-wordpress/pull/34), merge `00d2bd8`; concrete criteria written; Michael asked to continue. |
 | 2026-11-09 | Ready → Busy | Branch `feat/03-03-setup-wizard` from `00d2bd8`. |
 | 2026-11-09 | Busy → In Review | [PR #35](https://github.com/EmVeeNL/blixis-wordpress/pull/35), commit `7ee1997`; evidence above. |
+| 2026-11-09 | In Review → Done | [PR #35](https://github.com/EmVeeNL/blixis-wordpress/pull/35) squash-merged as `9c732b03a6e2814fbae1af5dd7dae77bf5be88df` at 10:27:03 UTC; `setup-wizard` passed in CI (19 + 85 + 9 checks per stack) and on `main` ([run](https://github.com/EmVeeNL/blixis-wordpress/actions/runs/42600961918)), then became the 19th required check. |

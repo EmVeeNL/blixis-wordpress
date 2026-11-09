@@ -30,3 +30,7 @@
 	.blixis-setup-review { grid-template-columns: 1fr; }
 	.blixis-setup-review dd { margin-block-end: 0.5rem; }
 }
+.blixis-setup-fonts { overflow-x: auto; }
+.blixis-setup-fonts table { min-inline-size: 32rem; }
+.blixis-setup-control select { inline-size: 100%; max-inline-size: 24rem; min-block-size: 2.5rem; }
+.blixis-setup .blixis-setup-fonts a.blixis-setup-license-link { text-decoration: underline; }

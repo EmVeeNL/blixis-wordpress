@@ -28,7 +28,7 @@ async function login(browser, user, viewport = { width: 1280, height: 900 }) {
   await page.goto(`${BASE}/wp-login.php?redirect_to=${encodeURIComponent(WIZARD)}`);
   await page.fill('#user_login', user);
   await page.fill('#user_pass', PASSWORD);
-  await Promise.all([page.waitForURL((url) => url.pathname.startsWith('/wp-admin/'), { timeout: 60000 }), page.click('#wp-submit')]);
+  await Promise.all([page.waitForURL((url) => url.pathname.startsWith('/wp-admin/'), { timeout: 60000, waitUntil: 'commit' }), page.click('#wp-submit')]);
   return { context, page };
 }
 

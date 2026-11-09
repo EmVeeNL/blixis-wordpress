@@ -19,6 +19,8 @@ declare(strict_types=1);
 namespace Blixis\Blocks\Setup;
 
 use function Blixis\Blocks\ChildTheme\create as create_child_theme;
+use function Blixis\Blocks\Fonts\installed_families;
+use function Blixis\Blocks\Fonts\usable_names;
 use function Blixis\Blocks\Tokens\canonical_json;
 use function Blixis\Blocks\Tokens\store_read;
 use function Blixis\Blocks\Tokens\store_write;
@@ -122,6 +124,7 @@ function error_message( string $code ): string {
 		'required'              => __( 'This field is required.', 'blixis-blocks' ),
 		'too_long'              => __( 'This value is too long.', 'blixis-blocks' ),
 		'invalid_characters'    => __( 'Remove line breaks and the characters <, >, and */.', 'blixis-blocks' ),
+		'font.not_installed'    => __( 'Choose a generic family or a font installed under Appearance → Fonts that passed the checks below.', 'blixis-blocks' ),
 		default                 => __( 'This value is not allowed.', 'blixis-blocks' ),
 	};
 }
@@ -229,7 +232,7 @@ add_action(
 			add_action(
 				'admin_print_styles-' . $hook,
 				static function (): void {
-					wp_enqueue_style( 'blixis-setup', plugins_url( 'assets/setup.css', dirname( __DIR__ ) ), array(), '0.1.0' );
+					wp_enqueue_style( 'blixis-setup', plugins_url( 'assets/setup.css', dirname( __DIR__ ) ), array(), (string) filemtime( dirname( __DIR__, 2 ) . '/assets/setup.css' ) );
 				}
 			);
 		}
@@ -412,6 +415,10 @@ function render_section( string $section, array $current, array $errors, array $
 		$key   = (string) $key;
 		$path  = '/' . $section . '/' . $key;
 		$value = (string) ( $submitted[ $key ] ?? $current[ $key ] ?? '' );
+		if ( 'font' === $definition['kind'] ) {
+			render_font_select( $path, key_label( $key ), $value, $errors[ $path ] ?? null );
+			continue;
+		}
 		$extra = '';
 		if ( 'color' === $definition['kind'] && preg_match( '/^#[0-9a-f]{6}([0-9a-f]{2})?$/D', $value ) ) {
 			$extra = '<span class="blixis-setup-swatch" aria-hidden="true" style="background-color:' . esc_attr( $value ) . '"></span>';
@@ -419,6 +426,95 @@ function render_section( string $section, array $current, array $errors, array $
 		render_field( $path, key_label( $key ), $value, hint( $definition['kind'], $key ), $errors[ $path ] ?? null, $extra );
 	}
 	echo '</fieldset>';
+	if ( 'fonts' === $section ) {
+		render_installed_fonts();
+	}
+}
+
+/**
+ * Font family choice: generic families plus usable fonts from the Font Library.
+ *
+ * @param string      $path  Contract path.
+ * @param string      $label Label.
+ * @param string      $value Current value.
+ * @param string|null $code  Error code.
+ */
+function render_font_select( string $path, string $label, string $value, ?string $code ): void {
+	$id        = field_id( $path );
+	$described = $id . '-hint' . ( $code ? ' ' . $id . '-error' : '' );
+	$installed = usable_names();
+	echo '<div class="blixis-setup-field' . ( $code ? ' has-error' : '' ) . '">';
+	echo '<label for="' . esc_attr( $id ) . '">' . esc_html( $label ) . '</label>';
+	echo '<p class="blixis-setup-hint" id="' . esc_attr( $id ) . '-hint">' . esc_html__( 'A generic family, or a font installed under Appearance → Fonts.', 'blixis-blocks' ) . '</p>';
+	if ( $code ) {
+		echo '<p class="blixis-setup-error" id="' . esc_attr( $id ) . '-error">' . esc_html( error_message( $code ) ) . '</p>';
+	}
+	$parts = explode( '/', trim( $path, '/' ) );
+	echo '<div class="blixis-setup-control"><select id="' . esc_attr( $id ) . '" name="' . esc_attr( 'config[' . $parts[0] . '][' . $parts[1] . ']' ) . '" aria-describedby="' . esc_attr( $described ) . '"' . ( $code ? ' aria-invalid="true"' : '' ) . '>';
+	$groups = array(
+		__( 'Installed fonts', 'blixis-blocks' )  => $installed,
+		__( 'Generic families', 'blixis-blocks' ) => token_map()['fontGenerics'],
+	);
+	$known  = array_merge( $installed, token_map()['fontGenerics'] );
+	if ( '' !== $value && ! in_array( $value, $known, true ) ) {
+		/* translators: %s: font family name. */
+		$groups[ __( 'Current value', 'blixis-blocks' ) ] = array( $value );
+	}
+	foreach ( $groups as $group => $names ) {
+		if ( ! $names ) {
+			continue;
+		}
+		echo '<optgroup label="' . esc_attr( $group ) . '">';
+		foreach ( $names as $name ) {
+			echo '<option value="' . esc_attr( $name ) . '"' . selected( $value, $name, false ) . '>' . esc_html( $name ) . '</option>';
+		}
+		echo '</optgroup>';
+	}
+	echo '</select></div></div>';
+}
+
+/**
+ * Installed Font Library families with their checks and licence metadata.
+ */
+function render_installed_fonts(): void {
+	$families = installed_families();
+	echo '<section class="blixis-setup-section blixis-setup-fonts" aria-labelledby="blixis-installed-fonts"><h3 id="blixis-installed-fonts">' . esc_html__( 'Installed fonts', 'blixis-blocks' ) . '</h3>';
+	if ( ! $families ) {
+		echo '<p>' . esc_html__( 'No fonts are installed. Add font files under Appearance → Fonts; Blixis never loads fonts from another site.', 'blixis-blocks' ) . '</p></section>';
+		return;
+	}
+	$problems = array(
+		'name'     => __( 'The family name uses characters a token cannot hold.', 'blixis-blocks' ),
+		'no_faces' => __( 'The family has no font files.', 'blixis-blocks' ),
+		'face'     => __( 'A font file is missing, not local, too large, or not the format its name says.', 'blixis-blocks' ),
+	);
+	echo '<table class="widefat striped"><caption class="screen-reader-text">' . esc_html__( 'Installed fonts and their checks', 'blixis-blocks' ) . '</caption><thead><tr>';
+	foreach ( array( __( 'Family', 'blixis-blocks' ), __( 'Files', 'blixis-blocks' ), __( 'Licence', 'blixis-blocks' ), __( 'Status', 'blixis-blocks' ) ) as $heading ) {
+		echo '<th scope="col">' . esc_html( $heading ) . '</th>';
+	}
+	echo '</tr></thead><tbody>';
+	foreach ( $families as $family ) {
+		$formats = array();
+		foreach ( $family['faces'] as $face ) {
+			$formats[] = $face['weight'] . ' ' . $face['style'] . ( isset( $face['format'] ) ? ' (' . $face['format'] . ')' : '' );
+		}
+		$license = '' !== $family['license'] ? $family['license'] : __( 'Not found in the font files. WOFF2 files cannot be read here; check the licence before you use the font.', 'blixis-blocks' );
+		echo '<tr><th scope="row">' . esc_html( $family['name'] ) . '</th>';
+		echo '<td>' . esc_html( implode( ', ', $formats ) ) . '</td>';
+		echo '<td><span class="blixis-setup-license">' . esc_html( wp_html_excerpt( $license, 160, '…' ) ) . '</span>';
+		if ( '' !== $family['license_url'] && wp_http_validate_url( $family['license_url'] ) ) {
+			echo '<br><a class="blixis-setup-license-link" href="' . esc_url( $family['license_url'] ) . '" rel="noopener noreferrer">' . esc_html__( 'Licence text', 'blixis-blocks' ) . '</a>';
+		}
+		echo '</td><td>';
+		if ( $family['usable'] ) {
+			echo esc_html__( 'Can be used', 'blixis-blocks' );
+		} else {
+			$reasons = array_map( static fn ( $p ) => $problems[ $p ] ?? $p, $family['problems'] );
+			echo esc_html( __( 'Cannot be used:', 'blixis-blocks' ) . ' ' . implode( ' ', $reasons ) );
+		}
+		echo '</td></tr>';
+	}
+	echo '</tbody></table></section>';
 }
 
 /**
@@ -563,6 +659,18 @@ function handle(): void {
 	}
 
 	$errors = step_errors( $config, $step );
+	if ( 'typography' === $step ) {
+		$allowed = array_merge( usable_names(), token_map()['fontGenerics'] );
+		foreach ( (array) $config['fonts'] as $key => $font ) {
+			$path = '/fonts/' . $key;
+			if ( ! in_array( $font, $allowed, true ) && ! in_array( $path, array_column( $errors, 'path' ), true ) ) {
+				$errors[] = array(
+					'code' => 'font.not_installed',
+					'path' => $path,
+				);
+			}
+		}
+	}
 	if ( $errors ) {
 		flash(
 			$user,
