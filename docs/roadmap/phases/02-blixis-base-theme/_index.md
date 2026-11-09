@@ -1,6 +1,6 @@
 # 02 Blixis Base Theme
 
-**Status:** Busy. All five implementation tasks are Done; the showcase received follow-up fixes in PRs #28 and #29. Phase exit remains pending release evidence and owner acceptance. Accessibility audits and page-performance budgets for Base are verified in phase 06, not here.
+**Status:** Done. All five implementation tasks are Done, with showcase follow-ups in PRs #28 and #29. Michael accepted the phase on 2026-11-09. No release is claimed: the Base theme ships as part of MVP-0 after phase 03, and accessibility audits and page-performance budgets are verified in phase 06.
 
 | ID | Task | Status | Priority |
 |---|---|---|---|
