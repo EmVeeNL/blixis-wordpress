@@ -2,16 +2,16 @@
 id: "03-02"
 title: "Define the token schema and CSS export"
 phase: "03"
-status: Busy
+status: In Review
 priority: P0
 owner: "EmVeeNL"
 created_at: "2026-11-06"
 updated_at: "2026-11-09"
 depends_on: ["03-01"]
 branch: "feat/03-02-token-schema"
-pr_number: null
-pr_url: null
-commit_sha: null
+pr_number: 34
+pr_url: "https://github.com/EmVeeNL/blixis-wordpress/pull/34"
+commit_sha: "66262cb"
 merged_at: null
 merge_commit_sha: null
 started_at: "2026-11-09"
@@ -59,10 +59,10 @@ Property-based validation, malformed-value cases, and CSS injection fixtures. In
 - **Priority:** P0
 - **Dependencies:** `03-01`
 - **Branch:** `feat/03-02-token-schema`.
-- **Commit references:** None.
-- **PR number and URL:** None.
+- **Commit references:** `66262cb` (implementation).
+- **PR number and URL:** [#34](https://github.com/EmVeeNL/blixis-wordpress/pull/34).
 - **Started / completed / closed:** Started 2026-11-09; not completed.
-- **Status:** Busy. Update frontmatter and history on every transition; follow [status workflow](../../../development/STATUS_WORKFLOW.md).
+- **Status:** In Review. The last criterion needs review and merge. Update frontmatter and history on every transition; follow [status workflow](../../../development/STATUS_WORKFLOW.md).
 
 ## Status history
 
@@ -71,3 +71,4 @@ Property-based validation, malformed-value cases, and CSS injection fixtures. In
 | 2026-11-06 | Initial planning → Backlog | Downloaded project plan; no implementation evidence |
 | 2026-11-09 | Backlog → Ready | Dependency `03-01` completed in [PR #32](https://github.com/EmVeeNL/blixis-wordpress/pull/32), merge `963fcc3`; concrete criteria written from token contract v1; Michael asked to continue with the next task. |
 | 2026-11-09 | Ready → Busy | Branch `feat/03-02-token-schema` from `4440a97`. |
+| 2026-11-09 | Busy → In Review | [PR #34](https://github.com/EmVeeNL/blixis-wordpress/pull/34), commit `66262cb`; evidence above. |
