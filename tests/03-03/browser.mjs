@@ -61,8 +61,14 @@ async function submit(page) {
 
 async function keyboardThemeStep(page) {
   await page.goto(WIZARD);
-  await page.locator('body').focus();
-  const order = [];
+  const existing = page.locator('.blixis-setup-progress a[aria-current="step"]');
+  check('current progress item remains a step link', (await existing.count()) === 1);
+  check('new-theme fields start hidden for an existing selection', !(await page.locator('.blixis-setup-new-theme').isVisible()));
+  check('hidden new-theme controls are absent from the form accessibility tree', (await page.locator('.blixis-setup-form').getByRole('textbox', { name: 'Theme name' }).count()) === 0);
+  await page.locator('#blixis-theme-choice-new').check();
+  check('new-theme fields appear when the new-theme radio is selected', await page.locator('.blixis-setup-new-theme').isVisible());
+  await page.locator('#blixis-theme-choice-new').focus();
+  const order = ['blixis-theme-choice-new'];
   let unfocusedVisible = '';
   for (let i = 0; i < 120 && order.at(-1) !== 'submit'; i++) {
     await page.keyboard.press('Tab');
@@ -80,20 +86,26 @@ async function keyboardThemeStep(page) {
   }
   check('keyboard reaches the theme choice, name, slug, starter, and submit in order', /blixis-theme-choice-[a-z0-9-]+ blixis-theme-name blixis-theme-slug blixis-new-starter submit/.test(order.join(' ')), order.join(' '));
   check('every focused wizard control shows a focus indicator', unfocusedVisible === '', unfocusedVisible);
+  const existingRadio = page.locator('input[name="choice"]:not(#blixis-theme-choice-new)').first();
+  if (await existingRadio.count()) await existingRadio.check();
 }
 
 async function fullFlow(browser) {
   const { context, page } = await login(browser, 'fixture_admin');
   await page.goto(WIZARD);
   check('wizard opens on step 1, the child theme', (await currentStep(page)).startsWith('Step 1 of 5'));
-  check('later steps are not links before a theme is chosen', (await page.locator('.blixis-setup-progress a').count()) === 0);
+  check('only the current step is linked before a theme is chosen', (await page.locator('.blixis-setup-progress a').count()) === 1 && (await page.locator('.blixis-setup-progress a[aria-current="step"]').count()) === 1);
   await axe(page, 'theme step');
-  await page.screenshot({ path: 'shots/theme-step-1280.png', fullPage: true });
+  await page.screenshot({ path: 'shots/c1-theme-existing-1280.png', fullPage: true });
+  check('existing-theme action says Continue', (await page.locator('button[value="next"]').innerText()) === 'Continue');
+  check('button exposes all translated label values', (await page.getAttribute('button[value="next"]', 'data-label-create')) === 'Create theme and continue' && (await page.getAttribute('button[value="next"]', 'data-label-save')) === 'Save and continue');
 
   // Keyboard only: choose "new", type an invalid slug, submit with Enter.
   await keyboardThemeStep(page);
   await page.focus('#blixis-theme-choice-new');
   await page.keyboard.press('Space');
+  await page.screenshot({ path: 'shots/c1-theme-new-1280.png', fullPage: true });
+  check('CSS switches the action label for the selected new-theme radio', (await page.locator('button[value="next"]').innerText()) === 'Create theme and continue');
   await page.keyboard.press('Tab');
   await page.keyboard.type('Acme Site');
   await page.keyboard.press('Tab');
@@ -103,7 +115,9 @@ async function fullFlow(browser) {
   check('an invalid slug shows the error summary', await page.locator('#blixis-setup-errors').isVisible());
   check('focus moves to the error summary', (await page.evaluate(() => document.activeElement?.id)) === 'blixis-setup-errors');
   check('the invalid field is marked and described', (await page.getAttribute('#blixis-theme-slug', 'aria-invalid')) === 'true' && (await page.getAttribute('#blixis-theme-slug', 'aria-describedby')).includes('blixis-theme-slug-error'));
+  check('validation errors force the new-theme fieldset visible', await page.locator('.blixis-setup-new-theme.has-errors').isVisible());
   check('typed values are kept after an error', (await value(page, 'blixis-theme-slug')) === 'Bad Slug' && (await value(page, 'blixis-theme-name')) === 'Acme Site');
+  check('server selects Create theme and continue after a rejected new-theme submit', (await page.locator('button[value="next"]').innerText()) === 'Create theme and continue');
   await axe(page, 'theme step with errors');
   await page.keyboard.press('Tab');
   await page.keyboard.press('Enter');
@@ -129,6 +143,12 @@ async function fullFlow(browser) {
   await page.fill('#blixis-colors-primary', '#123456');
   await submit(page);
   check('a valid colour moves on to typography', (await currentStep(page)).startsWith('Step 3 of 5'));
+  await page.click('.blixis-setup-progress a:has-text("Step 2 of 5")');
+  check('changed step action says Save and continue', (await page.locator('button[value="next"]').innerText()) === 'Save and continue');
+  await page.waitForLoadState('load');
+  await page.waitForTimeout(500);
+  await page.screenshot({ path: 'shots/c1-changes-save.png', fullPage: true });
+  await page.goto(`${WIZARD}&step=typography`);
 
   // Recovery: reload, go back, and a new session.
   await page.reload();
@@ -145,9 +165,11 @@ async function fullFlow(browser) {
   await submit(page2);
   check('the review step is reached', (await currentStep(page2)).startsWith('Step 5 of 5'));
   check('review says nothing is saved yet', (await page2.locator('.blixis-setup-form').innerText()).includes('Nothing is saved yet'));
+  check('review action names the unsaved draft', (await page2.locator('button[value="save"]').innerText()) === 'Save and continue');
   await axe(page2, 'review step');
   await submit(page2);
   check('saving reports revision 1', (await page2.locator('.blixis-setup-notice').innerText()).includes('revision 1'));
+  check('review action says Continue after saving the unchanged draft', (await page2.locator('button[value="save"]').innerText()) === 'Continue');
 
   // Conflict: this administrator edits, another saves first.
   await page2.goto(`${WIZARD}&step=colors`);
@@ -197,6 +219,8 @@ async function readOnlyChecks(browser, label) {
     await noOverflow(narrow.page, `${step} at 320px`);
     await axe(narrow.page, `${step} step at 320px (${label})`);
   }
+  await narrow.page.goto(WIZARD);
+  await narrow.page.screenshot({ path: 'shots/c1-progress-320.png', fullPage: true });
   await narrow.page.screenshot({ path: `shots/review-320-${label}.png`, fullPage: true });
   await narrow.context.close();
 
@@ -207,12 +231,15 @@ async function readOnlyChecks(browser, label) {
   await dutch.context.close();
 
   const arabic = await login(browser, 'fixture_ar', { width: 320, height: 800 });
-  await arabic.page.goto(`${WIZARD}&step=colors`);
+  await arabic.page.goto(WIZARD);
   check('Arabic admin renders the wizard right to left', (await arabic.page.getAttribute('html', 'dir')) === 'rtl');
+  await arabic.page.goto(`${WIZARD}&step=colors`);
   check('token values stay left to right inside the right-to-left page', (await arabic.page.getAttribute('#blixis-colors-primary', 'dir')) === 'ltr');
   await noOverflow(arabic.page, 'Arabic at 320px');
   await axe(arabic.page, `colours step in Arabic (${label})`);
-  await arabic.page.screenshot({ path: `shots/colors-ar-320-${label}.png`, fullPage: true });
+  await arabic.page.goto(WIZARD);
+  await noOverflow(arabic.page, 'Arabic theme progress at 320px');
+  await arabic.page.screenshot({ path: 'shots/c1-progress-ar-rtl.png', fullPage: true });
   await arabic.context.close();
 
   for (const user of ['fixture_editor', 'fixture_subscriber']) {
@@ -227,6 +254,20 @@ async function readOnlyChecks(browser, label) {
   const anon = await anonymous.request.post(`${BASE}/wp-admin/admin-post.php`, { form: { action: 'blixis_setup', step: 'theme', choice: '__new', new_name: 'Evil', new_slug: 'evil-site' }, maxRedirects: 0 });
   check('an anonymous submission does nothing', anon.status() !== 200 || !(await anon.text()).includes('blixis-setup'), String(anon.status()));
   await anonymous.close();
+
+  const nojs = await browser.newContext({ viewport: { width: 1280, height: 900 }, javaScriptEnabled: false });
+  const nojsPage = await nojs.newPage();
+  await nojsPage.goto(`${BASE}/wp-login.php?redirect_to=${encodeURIComponent(WIZARD)}`);
+  await nojsPage.fill('#user_login', 'fixture_admin');
+  await nojsPage.fill('#user_pass', PASSWORD);
+  await Promise.all([nojsPage.waitForURL((url) => url.pathname.startsWith('/wp-admin/'), { timeout: 60000, waitUntil: 'commit' }), nojsPage.click('#wp-submit')]);
+  await nojsPage.goto(WIZARD);
+  check('without JavaScript, existing-theme fields are hidden and the step is usable', !(await nojsPage.locator('.blixis-setup-new-theme').isVisible()) && (await nojsPage.locator('button[value="next"]').innerText()) === 'Continue');
+  await nojsPage.locator('#blixis-theme-choice-new').check();
+  check('without JavaScript, CSS reveals the new-theme fields', await nojsPage.locator('.blixis-setup-new-theme').isVisible());
+  check('without JavaScript, the new-theme action label changes', (await nojsPage.locator('button[value="next"]').innerText()) === 'Create theme and continue');
+  await nojsPage.screenshot({ path: 'shots/c1-js-off.png', fullPage: true });
+  await nojs.close();
 }
 
 const names = (process.env.T0303_BROWSERS || 'chromium').split(',').filter(Boolean);
