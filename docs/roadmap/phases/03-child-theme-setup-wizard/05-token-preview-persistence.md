@@ -2,16 +2,16 @@
 id: "03-05"
 title: "Preview and persist design tokens"
 phase: "03"
-status: Busy
+status: In Review
 priority: P0
 owner: "EmVeeNL"
 created_at: "2026-11-06"
 updated_at: "2026-11-09"
 depends_on: ["03-04"]
 branch: "feat/03-05-token-preview"
-pr_number: null
-pr_url: null
-commit_sha: null
+pr_number: 37
+pr_url: "https://github.com/EmVeeNL/blixis-wordpress/pull/37"
+commit_sha: "d05e02b"
 merged_at: null
 merge_commit_sha: null
 started_at: "2026-11-09"
@@ -62,10 +62,10 @@ Breakpoint snapshots and integration tests for save, stale state, and rollback. 
 - **Priority:** P0
 - **Dependencies:** `03-04`
 - **Branch:** `feat/03-05-token-preview`.
-- **Commit references:** None.
-- **PR number and URL:** None.
+- **Commit references:** `d05e02b` (implementation).
+- **PR number and URL:** [#37](https://github.com/EmVeeNL/blixis-wordpress/pull/37).
 - **Started / completed / closed:** Started 2026-11-09; not completed.
-- **Status:** Busy. Update frontmatter and history on every transition; follow [status workflow](../../../development/STATUS_WORKFLOW.md).
+- **Status:** In Review. The last criterion needs review and merge. Update frontmatter and history on every transition; follow [status workflow](../../../development/STATUS_WORKFLOW.md).
 
 ## Status history
 
@@ -74,3 +74,4 @@ Breakpoint snapshots and integration tests for save, stale state, and rollback. 
 | 2026-11-06 | Initial planning → Backlog | Downloaded project plan; no implementation evidence |
 | 2026-11-09 | Backlog → Ready | Dependency `03-04` completed in [PR #36](https://github.com/EmVeeNL/blixis-wordpress/pull/36), merge `8e3ee32`; concrete criteria written; Michael asked to start. |
 | 2026-11-09 | Ready → Busy | Branch `feat/03-05-token-preview` from `8e3ee32`. |
+| 2026-11-09 | Busy → In Review | [PR #37](https://github.com/EmVeeNL/blixis-wordpress/pull/37), commit `d05e02b`; evidence above. |
