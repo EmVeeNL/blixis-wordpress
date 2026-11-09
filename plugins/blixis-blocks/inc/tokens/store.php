@@ -115,6 +115,13 @@ function store_write( string $bytes, int $expected_revision ): array|WP_Error {
 	if ( ! $ok ) {
 		return new WP_Error( 'blixis_config_conflict', __( 'The configuration was changed elsewhere. Review the current values and save again.', 'blixis-blocks' ), array( 'status' => 409 ) );
 	}
+	/**
+	 * Fires after a configuration was stored. Task 03-05 clears caches here.
+	 *
+	 * @param int    $revision New revision.
+	 * @param string $hash     Config hash.
+	 */
+	do_action( 'blixis_tokens_saved', $record['revision'], $record['hash'] );
 	return array(
 		'revision' => $record['revision'],
 		'hash'     => $record['hash'],
