@@ -2,16 +2,16 @@
 id: "03-03"
 title: "Build the theme setup wizard"
 phase: "03"
-status: Busy
+status: In Review
 priority: P0
 owner: "EmVeeNL"
 created_at: "2026-11-06"
 updated_at: "2026-11-09"
 depends_on: ["03-02"]
 branch: "feat/03-03-setup-wizard"
-pr_number: null
-pr_url: null
-commit_sha: null
+pr_number: 35
+pr_url: "https://github.com/EmVeeNL/blixis-wordpress/pull/35"
+commit_sha: "7ee1997"
 merged_at: null
 merge_commit_sha: null
 started_at: "2026-11-09"
@@ -60,10 +60,10 @@ Keyboard, locale, error-state, and end-to-end save tests. Include negative permi
 - **Priority:** P0
 - **Dependencies:** `03-02`
 - **Branch:** `feat/03-03-setup-wizard`.
-- **Commit references:** None.
-- **PR number and URL:** None.
+- **Commit references:** `7ee1997` (implementation).
+- **PR number and URL:** [#35](https://github.com/EmVeeNL/blixis-wordpress/pull/35).
 - **Started / completed / closed:** Started 2026-11-09; not completed.
-- **Status:** Busy. Update frontmatter and history on every transition; follow [status workflow](../../../development/STATUS_WORKFLOW.md).
+- **Status:** In Review. The last criterion needs review and merge. Update frontmatter and history on every transition; follow [status workflow](../../../development/STATUS_WORKFLOW.md).
 
 ## Status history
 
@@ -72,3 +72,4 @@ Keyboard, locale, error-state, and end-to-end save tests. Include negative permi
 | 2026-11-06 | Initial planning → Backlog | Downloaded project plan; no implementation evidence |
 | 2026-11-09 | Backlog → Ready | Dependency `03-02` completed in [PR #34](https://github.com/EmVeeNL/blixis-wordpress/pull/34), merge `00d2bd8`; concrete criteria written; Michael asked to continue. |
 | 2026-11-09 | Ready → Busy | Branch `feat/03-03-setup-wizard` from `00d2bd8`. |
+| 2026-11-09 | Busy → In Review | [PR #35](https://github.com/EmVeeNL/blixis-wordpress/pull/35), commit `7ee1997`; evidence above. |
