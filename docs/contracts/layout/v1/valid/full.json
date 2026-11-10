@@ -1,0 +1,62 @@
+{
+  "schemaVersion": 1,
+  "theme": {
+    "slug": "acme-site"
+  },
+  "layout": "landing",
+  "header": {
+    "sticky": true,
+    "usp": {
+      "enabled": true,
+      "items": [
+        "Free delivery",
+        "30 day returns",
+        "Support in your language"
+      ]
+    },
+    "logo": "center",
+    "cta": {
+      "enabled": true,
+      "text": "Get a quote",
+      "url": "https://example.com/quote?ref=header#form"
+    },
+    "search": true,
+    "mobileMenu": "always"
+  },
+  "footer": {
+    "stickToBottom": true,
+    "columns": 4,
+    "contact": "Example Street 1\n1000 AA Example\ninfo@example.com",
+    "social": [
+      {
+        "service": "facebook",
+        "url": "https://www.facebook.com/example"
+      },
+      {
+        "service": "instagram",
+        "url": "https://www.instagram.com/example/"
+      },
+      {
+        "service": "linkedin",
+        "url": "https://www.linkedin.com/company/example"
+      },
+      {
+        "service": "x",
+        "url": "https://x.com/example"
+      },
+      {
+        "service": "mastodon",
+        "url": "https://mastodon.example/@example"
+      },
+      {
+        "service": "other",
+        "url": "https://example.com:8443/feed?format=rss"
+      }
+    ],
+    "copyright": {
+      "enabled": true,
+      "text": "© {year} {site}. All rights reserved."
+    },
+    "backToTop": true
+  }
+}

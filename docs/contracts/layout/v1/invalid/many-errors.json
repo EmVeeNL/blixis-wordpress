@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "theme": {
+    "slug": "blixis-starter"
+  },
+  "layout": "shop",
+  "header": {
+    "sticky": false,
+    "usp": {
+      "enabled": false,
+      "items": []
+    },
+    "logo": "left",
+    "cta": {
+      "enabled": true,
+      "text": "",
+      "url": "javascript:x"
+    },
+    "search": false,
+    "mobileMenu": "mobile"
+  },
+  "footer": {
+    "stickToBottom": true,
+    "columns": 9,
+    "contact": "<p>",
+    "social": [],
+    "copyright": {
+      "enabled": true,
+      "text": "© {year} {site}"
+    },
+    "backToTop": false
+  },
+  "extra": true
+}

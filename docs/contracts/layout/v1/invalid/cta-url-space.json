@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "theme": {
+    "slug": "blixis-starter"
+  },
+  "layout": "blank",
+  "header": {
+    "sticky": false,
+    "usp": {
+      "enabled": false,
+      "items": []
+    },
+    "logo": "start",
+    "cta": {
+      "enabled": true,
+      "text": "Go",
+      "url": "/a b"
+    },
+    "search": false,
+    "mobileMenu": "mobile"
+  },
+  "footer": {
+    "stickToBottom": true,
+    "columns": 1,
+    "contact": "",
+    "social": [],
+    "copyright": {
+      "enabled": true,
+      "text": "© {year} {site}"
+    },
+    "backToTop": false
+  }
+}

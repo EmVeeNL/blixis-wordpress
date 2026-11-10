@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "theme": {
+    "slug": "blixis-starter"
+  },
+  "layout": "blank",
+  "header": {
+    "sticky": false,
+    "usp": {
+      "enabled": true,
+      "items": [
+        "  padded  ",
+        "\nlead and trail\n"
+      ]
+    },
+    "logo": "start",
+    "cta": {
+      "enabled": true,
+      "text": " Buy now ",
+      "url": "/shop"
+    },
+    "search": false,
+    "mobileMenu": "mobile"
+  },
+  "footer": {
+    "stickToBottom": true,
+    "columns": 1,
+    "contact": "\n\n Line one\nLine two \n\n",
+    "social": [],
+    "copyright": {
+      "enabled": true,
+      "text": "  © {year} {site}  "
+    },
+    "backToTop": false
+  }
+}

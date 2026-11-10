@@ -1,0 +1,109 @@
+{
+  "contractVersion": 1,
+  "limits": {
+    "maxBytes": 32768,
+    "maxDepth": 8,
+    "urlLength": 2048,
+    "uspItems": 3,
+    "uspItemLength": 60,
+    "ctaTextLength": 30,
+    "contactLength": 200,
+    "copyrightLength": 120,
+    "socialItems": 6,
+    "columnsMin": 1,
+    "columnsMax": 4
+  },
+  "grammars": {
+    "slug": "^[a-z][a-z0-9-]{0,62}$",
+    "url": "^(?:https?://[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?(?:\\.[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?)*(?::[0-9]{1,5})?(?:[/?#](?:%[0-9A-Fa-f]{2}|[A-Za-z0-9\\-._~:/?#\\[\\]@!$&'()*+,;=])*)?|/(?!/)(?:%[0-9A-Fa-f]{2}|[A-Za-z0-9\\-._~:/?#\\[\\]@!$&'()*+,;=])*)$",
+    "urlHttps": "^https://[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?(?:\\.[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?)*(?::[0-9]{1,5})?(?:[/?#](?:%[0-9A-Fa-f]{2}|[A-Za-z0-9\\-._~:/?#\\[\\]@!$&'()*+,;=])*)?$"
+  },
+  "enums": {
+    "layout": [
+      "blank",
+      "business",
+      "portfolio",
+      "blog",
+      "landing"
+    ],
+    "logo": [
+      "start",
+      "center"
+    ],
+    "mobileMenu": [
+      "mobile",
+      "always"
+    ],
+    "service": [
+      "facebook",
+      "instagram",
+      "linkedin",
+      "x",
+      "youtube",
+      "tiktok",
+      "mastodon",
+      "bluesky",
+      "github",
+      "other"
+    ]
+  },
+  "placeholders": [
+    "year",
+    "site"
+  ],
+  "errorCodes": [
+    "config.invalid_json",
+    "config.not_object",
+    "config.too_deep",
+    "config.too_large",
+    "field.required",
+    "field.unknown",
+    "field.wrong_type",
+    "footer.columns.invalid",
+    "footer.social.service_invalid",
+    "footer.social.too_many",
+    "header.logo.invalid",
+    "header.mobile_menu.invalid",
+    "header.usp.empty",
+    "header.usp.too_many",
+    "layout.invalid",
+    "schema.version_unsupported",
+    "text.control_char",
+    "text.empty",
+    "text.markup",
+    "text.placeholder_unknown",
+    "text.too_long",
+    "theme.slug.invalid",
+    "url.empty",
+    "url.invalid"
+  ],
+  "defaults": {
+    "layout": "blank",
+    "header": {
+      "sticky": false,
+      "usp": {
+        "enabled": false,
+        "items": []
+      },
+      "logo": "start",
+      "cta": {
+        "enabled": false,
+        "text": "",
+        "url": ""
+      },
+      "search": false,
+      "mobileMenu": "mobile"
+    },
+    "footer": {
+      "stickToBottom": true,
+      "columns": 1,
+      "contact": "",
+      "social": [],
+      "copyright": {
+        "enabled": true,
+        "text": "© {year} {site}"
+      },
+      "backToTop": false
+    }
+  }
+}
