@@ -28,7 +28,7 @@
 .blixis-setup-field label { display: block; font-weight: 600; }
 .blixis-setup-hint { margin: 0.15rem 0 0.35rem; color: #50575e; }
 .blixis-setup-error { margin: 0 0 0.35rem; color: #b32d2e; font-weight: 600; }
-.blixis-setup-field.has-error input { border-color: #b32d2e; box-shadow: 0 0 0 1px #b32d2e; }
+.blixis-setup-field.has-error input { border-color: #b32d2e; }
 .blixis-setup-control { display: flex; align-items: center; gap: 0.5rem; }
 .blixis-setup-control input { inline-size: 100%; max-inline-size: 24rem; min-block-size: 2.5rem; }
 .blixis-setup-swatch { flex: none; inline-size: 1.75rem; block-size: 1.75rem; border: 1px solid #8c8f94; border-radius: 4px; }

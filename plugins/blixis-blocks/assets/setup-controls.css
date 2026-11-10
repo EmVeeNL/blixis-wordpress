@@ -52,13 +52,13 @@
 @container (min-width: 560px) { .blixis-row__help { grid-column: 2; } }
 .blixis-setup .blixis-row .blixis-setup-error { margin: 0; }
 .blixis-row .blixis-setup-control { display: flex; flex-wrap: wrap; align-items: center; gap: 0.6rem; min-inline-size: 0; }
-.blixis-setup-field.has-error .blixis-group { border-color: #b32d2e; box-shadow: 0 0 0 1px #b32d2e; }
+.blixis-setup-field.has-error .blixis-group { border-color: #b32d2e; }
 .blixis-choices { display: flex; flex-wrap: wrap; gap: 0.35rem 1.25rem; margin: 0; padding: 0; border: 0; }
 .blixis-choice { display: inline-flex; align-items: center; gap: 0.4rem; min-block-size: 2rem; }
 
 /* ---------- Joined groups: [ value | UNIT ] ---------- */
 .blixis-group { display: flex; flex: 1 1 14rem; min-inline-size: 0; max-inline-size: 28rem; background: #fff; border: 1px solid var(--blixis-field); border-radius: 6px; overflow: hidden; }
-.blixis-group:focus-within { border-color: var(--blixis-accent); box-shadow: 0 0 0 1px var(--blixis-accent); }
+.blixis-group:focus-within { border-color: var(--blixis-accent); background: var(--blixis-tint); }
 .blixis-group--narrow { flex: 0 0 auto; }
 .blixis-card .blixis-group .blixis-group__value { flex: 1 1 auto; min-inline-size: 0; min-block-size: 2.4rem; margin: 0; padding: 0.4rem 0.65rem; border: 0; border-radius: 0; box-shadow: none; background: transparent; font-size: 0.875rem; color: var(--blixis-ink); max-inline-size: none; inline-size: auto; }
 .blixis-card .blixis-group--narrow .blixis-group__value { flex: 0 0 5.75rem; inline-size: 5.75rem; text-align: center; font-variant-numeric: tabular-nums; }
@@ -118,7 +118,7 @@
 .blixis-combo__input[aria-expanded="true"] ~ .blixis-combo__chevron { rotate: 180deg; }
 .blixis-card .blixis-combo .blixis-combo__input { inline-size: 100%; max-inline-size: none; min-block-size: 2.4rem; padding: 0.4rem 2.2rem; border: 1px solid var(--blixis-field); border-radius: 6px; background: #fff; box-shadow: none; font-size: 0.875rem; color: var(--blixis-ink); }
 .blixis-card .blixis-combo .blixis-combo__input:focus,
-.blixis-card .blixis-combo .blixis-combo__input[aria-expanded="true"] { border-color: var(--blixis-accent); box-shadow: 0 0 0 1px var(--blixis-accent); outline: none; }
+.blixis-card .blixis-combo .blixis-combo__input[aria-expanded="true"] { border-color: var(--blixis-accent); background-color: var(--blixis-tint); box-shadow: none; outline: none; }
 .blixis-combo__list { position: absolute; z-index: 20; inset-inline: 0; inset-block-start: calc(100% + 4px); max-block-size: 15rem; margin: 0; padding: 0.3rem 0; overflow: auto; list-style: none; background: #fff; border: 1px solid var(--blixis-line); border-radius: 8px; box-shadow: 0 8px 24px rgb(0 0 0 / 0.14); }
 .blixis-combo__list li[role="option"] { position: relative; display: flex; justify-content: space-between; gap: 0.5rem; margin: 0; padding: 0.5rem 0.75rem 0.5rem 2.1rem; font-size: 0.875rem; cursor: pointer; color: var(--blixis-ink); }
 .blixis-combo__list li[role="option"]:dir(rtl) { padding: 0.5rem 2.1rem 0.5rem 0.75rem; }
@@ -131,7 +131,7 @@
 
 /* ---------- Dark rows, shadow and easing cards, panels ---------- */
 .blixis-dark-rows[hidden] { display: none !important; }
-[data-invalid] { border-color: #b32d2e !important; box-shadow: 0 0 0 1px #b32d2e !important; }
+[data-invalid] { border-color: #b32d2e !important; }
 .blixis-ctl-row { margin-block: 0.6rem; }
 .blixis-ctl-row > label { display: block; margin-block-end: 0.25rem; font-weight: 600; }
 .blixis-ctl-host { display: grid; gap: 0.4rem; inline-size: 100%; min-inline-size: 0; }
@@ -228,3 +228,85 @@
 .blixis-setup .blixis-setup-progress li > span > span.blixis-setup-progress-dot { box-sizing: border-box; border: 2px solid #8c8f94; border-radius: 50%; background: #fff; color: #50575e; }
 .blixis-setup .blixis-setup-progress li.is-done a > span.blixis-setup-progress-dot { border-color: #008a20; background: #008a20; color: #fff; }
 .blixis-setup .blixis-setup-progress li.is-current a > span.blixis-setup-progress-dot { border-color: var(--blixis-accent); background: var(--blixis-accent); color: #fff; }
+
+/* ---------- Header and footer step (task 03-07) ---------- */
+.blixis-text,
+.blixis-textarea { inline-size: 100%; max-inline-size: 28rem; min-block-size: 2.4rem; margin: 0; border-color: var(--blixis-field); border-radius: 6px; }
+.blixis-textarea { min-block-size: 5rem; resize: vertical; }
+.blixis-text[aria-invalid="true"],
+.blixis-textarea[aria-invalid="true"],
+.blixis-select[aria-invalid="true"] { border-color: #b32d2e; }
+.blixis-row__control > .blixis-seg { justify-self: start; max-inline-size: 100%; }
+.blixis-row__control > .blixis-switch { justify-self: start; }
+.blixis-row .blixis-seg__opt { min-block-size: 2.4rem; padding-inline: 1rem; font-size: 0.8125rem; }
+.blixis-usp-fields,
+.blixis-social__list { display: grid; gap: 0.5rem; margin: 0; padding: 0; list-style: none; }
+.blixis-usp-field { display: grid; gap: 0.25rem; }
+.blixis-social__item { display: grid; grid-template-columns: minmax(7rem, 10rem) minmax(0, 1fr) auto; align-items: start; gap: 0.5rem; margin: 0; }
+.blixis-social__item .blixis-setup-error { grid-column: 1 / -1; }
+.blixis-social__item .blixis-select { max-inline-size: none; }
+.blixis-social__item .blixis-text { max-inline-size: none; }
+.blixis-social__actions { margin-block-start: 0.5rem; }
+@media (max-width: 559px) {
+	.blixis-social__item { grid-template-columns: minmax(0, 1fr) auto; }
+	.blixis-social__item .blixis-social__service { grid-column: 1 / -1; }
+}
+.blixis-setup-review--layout ul { margin: 0; padding-inline-start: 1.1rem; list-style: disc; }
+
+/* ---------- Field focus and shadows ----------
+   No field has a shadow, at rest or focused (this also overrides WordPress core's focus ring).
+   A focused text field shows the accent border and a light tint; keyboard focus on the other
+   controls keeps a 2px outline. An error keeps its red border while focused. */
+.blixis-setup :is(input, select, textarea) { box-shadow: none; }
+.blixis-setup :is(input:not([type="checkbox"], [type="radio"], [type="range"], [type="color"]), select, textarea):focus { border-color: var(--blixis-accent); background-color: var(--blixis-tint); box-shadow: none; outline: 2px solid transparent; }
+.blixis-setup :is(input[type="checkbox"], input[type="radio"], input[type="range"]):focus { box-shadow: none; }
+.blixis-setup :is(input[type="checkbox"], input[type="radio"], input[type="range"]):focus-visible { outline: 2px solid var(--blixis-accent); outline-offset: 2px; }
+.blixis-setup :is(input, select, textarea)[aria-invalid="true"]:focus,
+.blixis-setup .has-error input:focus { border-color: #b32d2e; }
+
+/* ---------- Six progress tabs on one row (task 03-07) ----------
+   From 640 px the six tabs share the row in equal tracks. "Step N" stays on one line; the step
+   name may wrap to a second line, and is never cut off with an ellipsis. */
+@media (min-width: 640px) {
+	.blixis-setup .blixis-setup-progress ol { grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 0.25rem; }
+	.blixis-setup .blixis-setup-progress a,
+	.blixis-setup .blixis-setup-progress .blixis-setup-progress-unavailable { grid-template-columns: 1.625rem minmax(0, 1fr); column-gap: 0.4rem; padding: 0.25rem; }
+	.blixis-setup .blixis-setup-progress .blixis-setup-progress-dot { inline-size: 1.625rem; block-size: 1.625rem; font-size: 0.8125rem; }
+	.blixis-setup .blixis-setup-progress a .blixis-setup-progress-name,
+	.blixis-setup .blixis-setup-progress .blixis-setup-progress-unavailable .blixis-setup-progress-name { overflow: visible; font-size: 0.8125rem; line-height: 1.2; text-overflow: clip; white-space: normal; overflow-wrap: break-word; }
+	.blixis-setup .blixis-setup-progress .blixis-setup-progress-number { font-size: 0.625rem; letter-spacing: 0.04em; }
+}
+
+/* ---------- Social link remove button ---------- */
+.blixis-social__item > .blixis-btn { display: inline-grid; place-items: center; inline-size: 2.4rem; block-size: 2.4rem; min-block-size: 2.4rem; margin: 0; padding: 0; font-size: 1.25rem; line-height: 1; }
+.blixis-social__item > .blixis-btn:focus-visible { outline: 2px solid var(--blixis-accent); outline-offset: 2px; }
+
+/* ---------- Layout and style cards on step 1 (task 03-07) ----------
+   Native radios inside labels. The radio is hidden but stays focusable and in the accessibility
+   tree; the card shows the checked state with the accent border and tint, and keyboard focus
+   with a 2px outline. */
+.blixis-opt-group { margin: 0 0 1.25rem; padding: 0; border: 0; min-inline-size: 0; }
+.blixis-opt-group > legend { padding: 0; margin-block-end: 0.25rem; font-size: 0.875rem; font-weight: 700; color: var(--blixis-ink); }
+.blixis-opt-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 7.5rem), 1fr)); gap: 0.6rem; margin-block-start: 0.5rem; }
+.blixis-opt-card { position: relative; display: grid; align-content: start; gap: 0.3rem; min-inline-size: 0; margin: 0; padding: 0.5rem; border: 1px solid var(--blixis-line); border-radius: 8px; background: #fff; cursor: pointer; }
+.blixis-opt-card input { position: absolute; inset: 0; inline-size: 100%; block-size: 100%; margin: 0; opacity: 0; cursor: pointer; }
+.blixis-opt-card:hover { border-color: var(--blixis-field); }
+.blixis-opt-card:has(input:checked) { border-color: var(--blixis-accent); background: var(--blixis-tint); box-shadow: inset 0 0 0 1px var(--blixis-accent); }
+.blixis-opt-card:has(input:focus-visible) { outline: 2px solid var(--blixis-accent); outline-offset: 2px; }
+.blixis-opt-card__thumb { display: block; inline-size: 100%; block-size: auto; border: 1px solid var(--blixis-line); border-radius: 4px; }
+.blixis-opt-card__title { font-size: 0.875rem; font-weight: 700; color: var(--blixis-ink); }
+.blixis-opt-card__line { font-size: 0.75rem; line-height: 1.35; color: var(--blixis-sub); }
+.blixis-opt-card__sample { display: grid; gap: 0.4rem; padding: 0.5rem 0.6rem; border: 1px solid var(--blixis-line); border-radius: 4px; }
+.blixis-opt-card__aa { font-size: 1.5rem; font-weight: 700; line-height: 1.1; }
+.blixis-opt-card__swatches { display: flex; gap: 0.3rem; }
+.blixis-opt-card__swatch { flex: 1 1 0; block-size: 0.9rem; border: 1px solid rgb(0 0 0 / 0.15); border-radius: 3px; }
+
+.blixis-opt-cards--presets { grid-template-columns: repeat(auto-fill, minmax(min(100%, 11rem), 1fr)); }
+
+/* Steps that cannot be opened yet (before a theme is chosen) look like the links, without borders. */
+.blixis-setup .blixis-setup-progress .blixis-setup-progress-unavailable .blixis-setup-progress-label,
+.blixis-setup .blixis-setup-progress .blixis-setup-progress-unavailable .blixis-setup-progress-label > span { padding: 0; border: 0; border-radius: 0; background: transparent; }
+.blixis-setup .blixis-setup-progress .blixis-setup-progress-unavailable .blixis-setup-progress-label { display: grid; }
+.blixis-setup .blixis-setup-progress .blixis-setup-progress-unavailable .blixis-setup-progress-label > span { display: block; }
+.blixis-setup .blixis-setup-progress .blixis-setup-progress-unavailable { color: #50575e; }
+.blixis-setup .blixis-setup-progress .blixis-setup-progress-unavailable > .blixis-setup-progress-dot { box-sizing: border-box; padding: 0; line-height: 1; }
