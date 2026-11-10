@@ -1,6 +1,6 @@
 # Child theme generator
 
-The Blixis Blocks generator creates an installable child theme of Blixis Base. The setup wizard can create one during its theme step. It never activates the theme it creates.
+The Blixis Blocks generator creates an installable child theme of Blixis Base. The setup wizard can create one during its theme step, sending the chosen `layout` (it no longer sends `starter`) and then filling its token draft from the chosen style preset; see [new theme: layout and style](SETUP_WIZARD.md#new-theme-layout-and-style). It never activates the theme it creates.
 
 ## Route
 

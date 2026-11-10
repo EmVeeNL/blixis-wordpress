@@ -34,6 +34,10 @@ Changing the configuration needs the `edit_theme_options` capability. The store 
 
 Texts (USP items, button text, contact, copyright) are plain text. They are stored trimmed, not escaped, and every output site must escape them for its context (`esc_html()` for text nodes, `esc_attr()` for attributes). Links (the button, the social links) are validated by the contract and must still pass `esc_url()` on output. Copyright text has two placeholders: Base will replace `{year}` with the current year and `{site}` with the site title after escaping the rest.
 
+## How the setup wizard writes the draft
+
+The wizard keeps a full layout config in the user's draft (user meta `blixis_setup_draft`, keys `layout` and `layout_base_revision`), with `theme.slug` equal to the token theme of the draft. Without a saved layout it starts from `defaults( $slug )`. Choosing a layout for a new theme sets `layout.layout`; the Header and footer step edits `header` and `footer`; the preview endpoint `blixis_setup_layout_preview` stores a validated layout in the draft. Saving on the review step writes the tokens, then the layout with `store_write( bytes, layout_base_revision )`, and only when it differs from the saved layout, belongs to another theme, or is a first save after the owner has used the step. Details: [Header and footer step](SETUP_WIZARD.md#header-and-footer-step).
+
 ## How the next step will render it (planned)
 
 Base renders the settings through its header and footer parts and a small amount of CSS, so changing a setting needs no file writes. The intended mapping, to be confirmed when it is built:

@@ -1,7 +1,7 @@
 // Entry point. Reads the JSON the page prints (token map, draft, translated strings), then
 // enhances the server-rendered fields. Without this script the wizard still works with plain
 // fields and server validation.
-import type { Config, TokenMap } from "@blixis/tokens";
+import type { Config, LayoutConfig, TokenMap } from "@blixis/tokens";
 import { type ColorField, enhanceColor, refreshContrast } from "./color-control.ts";
 import { previewConfig, isValidValue } from "./config.ts";
 import { type Context, el, makeSwitch, t } from "./dom.ts";
@@ -11,6 +11,7 @@ import { enhanceFontSelect } from "./font-combo.ts";
 import { enhanceLength } from "./length-control.ts";
 import { scaleScale } from "./length.ts";
 import { buildMotionSample, enhanceDuration, enhanceEasing } from "./motion-control.ts";
+import { type LayoutPreview, setupLayoutStep } from "./layout-step.ts";
 import { setupPreview } from "./preview.ts";
 import { enhanceShadow } from "./shadow-control.ts";
 import { buildSpecimens, updateSpecimens } from "./specimen.ts";
@@ -20,6 +21,8 @@ type PageData = {
   config: Config;
   step: string;
   strings: Record<string, string>;
+  layout?: LayoutConfig;
+  layoutPreview?: LayoutPreview;
 };
 
 function readData(): PageData | null {
@@ -33,7 +36,7 @@ function readData(): PageData | null {
 }
 
 // Fields whose change makes the main button say "Save and continue".
-const TRACKED = /^(config\[|scheme$|choice$|new_)/;
+const TRACKED = /^(config\[|layout\[|scheme$|choice$|new_)/;
 
 function snapshot(form: HTMLFormElement): Map<string, string> {
   const out = new Map<string, string>();
@@ -293,6 +296,9 @@ function start(): void {
     copy.hidden = false;
   }
   refresh();
+
+  if (data.step === "header" && data.layout !== undefined)
+    setupLayoutStep(ctx, data.layout, data.layoutPreview);
 }
 
 if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", start);

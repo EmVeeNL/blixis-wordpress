@@ -19,10 +19,15 @@ declare(strict_types=1);
 namespace Blixis\Blocks\Setup;
 
 use function Blixis\Blocks\ChildTheme\create as create_child_theme;
+use function Blixis\Blocks\Layout\can_manage as layout_can_manage;
+use function Blixis\Blocks\Layout\store_read as layout_store_read;
+use function Blixis\Blocks\Layout\store_rollback as layout_store_rollback;
+use function Blixis\Blocks\Layout\store_write as layout_store_write;
 use function Blixis\Blocks\Fonts\installed_families;
 use function Blixis\Blocks\Fonts\usable_names;
 use function Blixis\Blocks\Tokens\canonical_json;
 use function Blixis\Blocks\Tokens\color_valid;
+use function Blixis\Blocks\Tokens\config_hash;
 use function Blixis\Blocks\Tokens\scheme_get;
 use function Blixis\Blocks\Tokens\scheme_save;
 use function Blixis\Blocks\Tokens\store_read;
@@ -41,6 +46,9 @@ const DRAFT_META = 'blixis_setup_draft';
 const FLASH_META = 'blixis_setup_flash';
 const NEW_THEME  = '__new';
 
+require_once __DIR__ . '/header-footer.php';
+require_once __DIR__ . '/new-theme.php';
+
 /**
  * Wizard steps in order.
  *
@@ -52,6 +60,7 @@ function steps(): array {
 		'colors'     => __( 'Colours', 'blixis-blocks' ),
 		'typography' => __( 'Typography', 'blixis-blocks' ),
 		'layout'     => __( 'Spacing and layout', 'blixis-blocks' ),
+		'header'     => __( 'Header and footer', 'blixis-blocks' ),
 		'review'     => __( 'Review and save', 'blixis-blocks' ),
 	);
 }
@@ -67,6 +76,7 @@ function step_sections(): array {
 		'colors'     => array( 'colors' ),
 		'typography' => array( 'fonts', 'typeScale' ),
 		'layout'     => array( 'spacing', 'radius', 'layout', 'shadows', 'motion' ),
+		'header'     => array(),
 		'review'     => array(),
 	);
 }
@@ -158,23 +168,26 @@ function defaults(): array {
 }
 
 /**
- * The user's draft: config, the stored revision it started from, and completed steps.
+ * The user's draft: config, the stored revision it started from, completed steps, and the
+ * layout config with the layout revision it started from (task 03-07).
  *
  * @param int $user User ID.
- * @return array{config: array<string, mixed>, base_revision: int, done: list<string>}
+ * @return array{config: array<string, mixed>, base_revision: int, done: list<string>, layout: array<string, mixed>, layout_base_revision: int}
  */
 function draft( int $user ): array {
 	$raw   = get_user_meta( $user, DRAFT_META, true );
 	$draft = is_string( $raw ) ? json_decode( $raw, true, 32 ) : null;
 	if ( is_array( $draft ) && is_array( $draft['config'] ?? null ) && is_int( $draft['base_revision'] ?? null ) ) {
 		$draft['done'] = array_values( array_intersect( (array) ( $draft['done'] ?? array() ), array_keys( steps() ) ) );
-		return $draft;
+		return with_layout( $draft );
 	}
 	$stored = store_read();
-	return array(
-		'config'        => $stored ? $stored['config'] : defaults(),
-		'base_revision' => $stored ? $stored['revision'] : 0,
-		'done'          => $stored ? array_keys( steps() ) : array(),
+	return with_layout(
+		array(
+			'config'        => $stored ? $stored['config'] : defaults(),
+			'base_revision' => $stored ? $stored['revision'] : 0,
+			'done'          => $stored ? array_keys( steps() ) : array(),
+		)
 	);
 }
 
@@ -365,6 +378,8 @@ function render(): void {
 		render_theme_step( $draft, $errors, $values );
 	} elseif ( 'review' === $step ) {
 		render_review( $draft );
+	} elseif ( 'header' === $step ) {
+		render_header_step( $draft, $errors, $values );
 	} else {
 		render_step_sections( $step, $draft, $errors, $values );
 	}
@@ -389,7 +404,11 @@ function render(): void {
 		echo '<button type="submit" name="intent" value="reset" class="button blixis-btn blixis-btn--secondary">' . esc_html__( 'Discard draft and load saved values', 'blixis-blocks' ) . '</button>';
 		$stored = store_read();
 		if ( $stored && is_array( $stored['previous'] ) ) {
-			echo ' <button type="submit" name="intent" value="rollback" class="button blixis-btn blixis-btn--secondary">' . esc_html__( 'Roll back to the previous saved configuration', 'blixis-blocks' ) . '</button>';
+			echo ' <button type="submit" name="intent" value="rollback" class="button blixis-btn blixis-btn--secondary">' . esc_html__( 'Roll back the design tokens to the previous saved configuration', 'blixis-blocks' ) . '</button>';
+		}
+		$stored_layout = layout_store_read();
+		if ( $stored_layout && is_array( $stored_layout['previous'] ) ) {
+			echo ' <button type="submit" name="intent" value="rollback_layout" class="button blixis-btn blixis-btn--secondary">' . esc_html__( 'Roll back the header and footer to the previous saved settings', 'blixis-blocks' ) . '</button>';
 		}
 	} else {
 		$labels    = array(
@@ -405,7 +424,7 @@ function render(): void {
 		echo '</button>';
 	}
 	echo '</div></form>';
-	if ( in_array( $step, array( 'colors', 'typography', 'layout', 'review' ), true ) ) {
+	if ( in_array( $step, array( 'colors', 'typography', 'layout', 'header', 'review' ), true ) ) {
 		echo '</div><aside class="blixis-setup-layout__preview" aria-label="' . esc_attr__( 'Preview', 'blixis-blocks' ) . '">';
 		render_preview( $draft );
 		echo '</aside></div>';
@@ -443,6 +462,9 @@ function submit_label_key( string $step, array $draft, array $values = array() )
 	if ( in_array( $step, array( 'colors', 'review' ), true ) && ( $draft['config']['colorsDark'] ?? null ) !== ( $baseline['colorsDark'] ?? null ) ) {
 		return 'save';
 	}
+	if ( in_array( $step, array( 'header', 'review' ), true ) && layout_should_write( $draft ) ) {
+		return 'save';
+	}
 	return 'continue';
 }
 
@@ -458,10 +480,15 @@ function field_name( string $path ): string {
 		'theme'      => __( 'Child theme', 'blixis-blocks' ),
 		'name'       => __( 'Theme name', 'blixis-blocks' ),
 	);
+	if ( in_array( $parts[0] ?? '', array( 'header', 'footer' ), true ) ) {
+		return layout_field_name( $path );
+	}
 	if ( 'theme' === ( $parts[0] ?? '' ) ) {
 		return match ( $parts[1] ?? '' ) {
 			'name'   => __( 'Theme name', 'blixis-blocks' ),
 			'choice' => __( 'Child theme', 'blixis-blocks' ),
+			'layout' => __( 'Layout', 'blixis-blocks' ),
+			'preset' => __( 'Style', 'blixis-blocks' ),
 			default  => __( 'Theme slug', 'blixis-blocks' ),
 		};
 	}
@@ -486,6 +513,8 @@ function card_icon( string $icon ): string {
 		'motion'  => '<circle cx="12" cy="12" r="9"/><path d="m10 8 6 4-6 4z"/>',
 		'eye'     => '<path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',
 		'font'    => '<path d="M5 20 11 4h2l6 16M7.5 14h9"/>',
+		'header'  => '<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18"/>',
+		'footer'  => '<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 15h18"/>',
 	);
 	$body  = $paths[ $icon ] ?? $paths['layers'];
 	return '<svg class="blixis-card__icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' . $body . '</svg>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Static markup from the map above.
@@ -811,8 +840,16 @@ function render_enhancement_data( array $draft, string $step ): void {
 		'tokenMap' => token_map(),
 		'config'   => $draft['config'],
 		'step'     => $step,
-		'strings'  => script_strings(),
+		'strings'  => script_strings() + layout_error_strings(),
+		'layout'   => $draft['layout'],
 	);
+	if ( 'header' === $step ) {
+		$data['layoutPreview'] = array(
+			'url'    => admin_url( 'admin-post.php' ),
+			'action' => LAYOUT_PREVIEW_ACTION,
+			'nonce'  => wp_create_nonce( LAYOUT_PREVIEW_ACTION ),
+		);
+	}
 	echo '<script type="application/json" id="blixis-setup-data">' . wp_json_encode( $data, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT ) . '</script>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- JSON with HTML-significant characters escaped.
 }
 
@@ -910,6 +947,10 @@ function script_strings(): array {
 		'light'               => __( 'Light', 'blixis-blocks' ),
 		'dark'                => __( 'Dark', 'blixis-blocks' ),
 		'describe'            => __( 'Describe the preview', 'blixis-blocks' ),
+		'addLink'             => __( 'Add another link', 'blixis-blocks' ),
+		/* translators: %d: number of the link. */
+		'removeLink'          => __( 'Remove link %d', 'blixis-blocks' ),
+		'previewFailed'       => __( 'The preview could not be updated. Your settings are still in the form.', 'blixis-blocks' ),
 		/* translators: 1: Light or Dark, 2: text colour, 3: surface colour, 4: contrast ratio, 5: link colour, 6: heading font, 7: body font, 8: base size. */
 		'describeText'        => __( 'Preview in %1$s colours. Text %2$s on surface %3$s, contrast %4$s to 1. Links %5$s. Headings in %6$s, body text in %7$s at %8$s.', 'blixis-blocks' ),
 	);
@@ -1038,18 +1079,11 @@ function render_theme_step( array $draft, array $errors, array $values ): void {
 	}
 	echo '</fieldset></div></section>';
 	if ( $can_new ) {
-		$has_theme_errors = isset( $errors['/theme/name'] ) || isset( $errors['/theme/slug'] ) || isset( $errors['/theme/starter'] );
+		$has_theme_errors = isset( $errors['/theme/name'] ) || isset( $errors['/theme/slug'] ) || isset( $errors['/theme/layout'] ) || isset( $errors['/theme/preset'] );
 		echo '<section class="blixis-card blixis-setup-theme-card blixis-setup-new-theme' . ( $has_theme_errors ? ' has-errors' : '' ) . '"><header class="blixis-card__head"><svg class="blixis-card__wave" viewBox="0 0 400 60" preserveAspectRatio="none" aria-hidden="true"><path fill="currentColor" d="M0 60C80 60 120 10 220 18S340 50 400 0v60Z"/></svg><svg class="blixis-card__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg><h3 class="blixis-card__title">' . esc_html__( 'New child theme', 'blixis-blocks' ) . '</h3></header><div class="blixis-card__body"><div class="blixis-setup-section' . ( $has_theme_errors ? ' has-errors' : '' ) . '">';
 		render_field( '/theme/name', __( 'Theme name', 'blixis-blocks' ), (string) ( $values['new_name'] ?? '' ), __( 'Shown under Appearance → Themes, for example Acme Site.', 'blixis-blocks' ), $errors['/theme/name'] ?? null );
 		render_field( '/theme/slug', __( 'Theme slug', 'blixis-blocks' ), (string) ( $values['new_slug'] ?? '' ), __( 'Folder name: lowercase letters, digits, and single hyphens, for example acme-site.', 'blixis-blocks' ), $errors['/theme/slug'] ?? null );
-		$starter = (string) ( $values['new_starter'] ?? 'none' );
-		echo '<div class="blixis-row"><label class="blixis-row__label" for="blixis-new-starter">' . esc_html__( 'Starting content', 'blixis-blocks' ) . '</label><div class="blixis-row__control"><select id="blixis-new-starter" name="new_starter">';
-		echo '<option value="none"' . selected( $starter, 'none', false ) . '>' . esc_html__( 'Blank theme', 'blixis-blocks' ) . '</option>';
-		echo '<option value="neutral"' . selected( $starter, 'neutral', false ) . '>' . esc_html__( 'Neutral front page with editable sections', 'blixis-blocks' ) . '</option>';
-		echo '</select></div></div>';
-		if ( isset( $errors['/theme/starter'] ) ) {
-			echo '<p class="blixis-setup-error" role="alert">' . esc_html__( 'Choose a valid starting option.', 'blixis-blocks' ) . '</p>';
-		}
+		render_new_theme_choices( (string) ( $values['new_layout'] ?? DEFAULT_LAYOUT ), (string) ( $values['new_preset'] ?? DEFAULT_PRESET ), $errors );
 		echo '<p class="blixis-setup-hint">' . esc_html__( 'Fill these in only when you create a new child theme. The theme is not activated.', 'blixis-blocks' ) . '</p>';
 		echo '</div></div></section>';
 	}
@@ -1080,6 +1114,7 @@ function render_review( array $draft ): void {
 		echo '<dt>' . esc_html( $label ) . '</dt><dd>' . esc_html( implode( '; ', $parts ) ) . '</dd>';
 	}
 	echo '</dl>';
+	render_review_layout( $draft );
 }
 
 /**
@@ -1158,37 +1193,13 @@ function handle(): void {
 		exit;
 	}
 
+	if ( 'header' === $step ) {
+		handle_header_step( $user, $draft, $next );
+		return;
+	}
+
 	if ( 'review' === $step ) {
-		if ( 'rollback' === $intent ) {
-			$stored = store_read();
-			$result = $stored ? store_rollback( $stored['revision'] ) : new \WP_Error( 'blixis_config_no_previous', __( 'There is no previous configuration to roll back to.', 'blixis-blocks' ) );
-			if ( is_wp_error( $result ) ) {
-				flash( $user, 'review', array( 'failure' => $result->get_error_message() ) );
-			} else {
-				delete_user_meta( $user, DRAFT_META );
-				/* translators: %d: revision number. */
-				flash( $user, 'review', array( 'notice' => sprintf( __( 'Rolled back to the previous configuration as revision %d.', 'blixis-blocks' ), $result['revision'] ) ) );
-			}
-			wp_safe_redirect( step_url( 'review' ) );
-			exit;
-		}
-		if ( 'reset' === $intent ) {
-			delete_user_meta( $user, DRAFT_META );
-			flash( $user, 'review', array( 'notice' => __( 'The draft was discarded. These are the saved values.', 'blixis-blocks' ) ) );
-			wp_safe_redirect( step_url( 'review' ) );
-			exit;
-		}
-		$result = store_write( canonical_json( $draft['config'] ), $draft['base_revision'] );
-		if ( is_wp_error( $result ) ) {
-			// The draft stays, so nothing typed is lost.
-			flash( $user, 'review', array( 'failure' => $result->get_error_message() ) );
-		} else {
-			delete_user_meta( $user, DRAFT_META );
-			/* translators: %d: revision number. */
-			flash( $user, 'review', array( 'notice' => sprintf( __( 'Configuration saved as revision %d.', 'blixis-blocks' ), $result['revision'] ) ) );
-		}
-		wp_safe_redirect( step_url( 'review' ) );
-		exit;
+		handle_review( $user, $draft, $intent );
 	}
 
 	$config    = $draft['config'];
@@ -1281,6 +1292,7 @@ function handle(): void {
 	$checked         = validate_bytes( canonical_json( $config ) );
 	$draft['config'] = $checked['ok'] ? $checked['config'] : $config;
 	$draft['done']   = array_values( array_unique( array_merge( $draft['done'], array( $step ) ) ) );
+	unset( $draft['tokens_written'] );
 	save_draft( $user, $draft );
 	wp_safe_redirect( step_url( $next ) );
 	exit;
@@ -1320,26 +1332,51 @@ function handle_theme( int $user, array $draft, string $next ): void {
 	// phpcs:disable WordPress.Security.NonceVerification.Missing -- Verified by the caller.
 	$choice = isset( $_POST['choice'] ) ? sanitize_key( wp_unslash( $_POST['choice'] ) ) : '';
 	// The generator validates both fields strictly, so they are passed on unchanged.
-	$name    = isset( $_POST['new_name'] ) && is_string( $_POST['new_name'] ) ? wp_unslash( $_POST['new_name'] ) : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-	$slug    = isset( $_POST['new_slug'] ) && is_string( $_POST['new_slug'] ) ? wp_unslash( $_POST['new_slug'] ) : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-	$starter = isset( $_POST['new_starter'] ) && is_string( $_POST['new_starter'] ) ? sanitize_key( wp_unslash( $_POST['new_starter'] ) ) : 'none';
+	$name   = isset( $_POST['new_name'] ) && is_string( $_POST['new_name'] ) ? wp_unslash( $_POST['new_name'] ) : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+	$slug   = isset( $_POST['new_slug'] ) && is_string( $_POST['new_slug'] ) ? wp_unslash( $_POST['new_slug'] ) : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+	$layout = isset( $_POST['new_layout'] ) && is_string( $_POST['new_layout'] ) ? sanitize_key( wp_unslash( $_POST['new_layout'] ) ) : DEFAULT_LAYOUT;
+	$preset = isset( $_POST['new_preset'] ) && is_string( $_POST['new_preset'] ) ? sanitize_key( wp_unslash( $_POST['new_preset'] ) ) : DEFAULT_PRESET;
 	// phpcs:enable
 
+	$new_theme = NEW_THEME === $choice;
 	if ( NEW_THEME === $choice ) {
 		if ( ! current_user_can( 'install_themes' ) ) {
 			wp_die( esc_html__( 'Sorry, you are not allowed to create themes.', 'blixis-blocks' ), '', array( 'response' => 403 ) );
 		}
+		if ( ! isset( presets()[ $preset ] ) ) {
+			flash(
+				$user,
+				'theme',
+				array(
+					'errors' => array(
+						array(
+							'code' => 'required',
+							'path' => '/theme/preset',
+						),
+					),
+					'values' => array(
+						'choice'     => NEW_THEME,
+						'new_name'   => $name,
+						'new_slug'   => $slug,
+						'new_layout' => $layout,
+						'new_preset' => $preset,
+					),
+				)
+			);
+			wp_safe_redirect( step_url( 'theme' ) );
+			exit;
+		}
 		$created = create_child_theme(
 			array(
-				'name'    => $name,
-				'slug'    => $slug,
-				'starter' => $starter,
+				'name'   => $name,
+				'slug'   => $slug,
+				'layout' => $layout,
 			)
 		);
 		if ( is_wp_error( $created ) ) {
 			$errors = array();
 			foreach ( (array) ( $created->get_error_data()['errors'] ?? array() ) as $error ) {
-				if ( in_array( $error['field'], array( 'name', 'slug', 'starter' ), true ) ) {
+				if ( in_array( $error['field'], array( 'name', 'slug', 'layout' ), true ) ) {
 					$errors[] = array(
 						'code' => $error['code'],
 						'path' => '/theme/' . $error['field'],
@@ -1358,10 +1395,11 @@ function handle_theme( int $user, array $draft, string $next ): void {
 				array(
 					'errors' => $errors,
 					'values' => array(
-						'choice'      => NEW_THEME,
-						'new_name'    => $name,
-						'new_slug'    => $slug,
-						'new_starter' => $starter,
+						'choice'     => NEW_THEME,
+						'new_name'   => $name,
+						'new_slug'   => $slug,
+						'new_layout' => $layout,
+						'new_preset' => $preset,
 					),
 				)
 			);
@@ -1390,8 +1428,119 @@ function handle_theme( int $user, array $draft, string $next ): void {
 		'slug'   => $choice,
 		'parent' => 'blixis-base',
 	);
-	$draft['done']            = array_values( array_unique( array_merge( $draft['done'], array( 'theme' ) ) ) );
+	if ( $new_theme ) {
+		// A new theme starts from the chosen style and layout; both stay editable in later steps.
+		$draft['config']               = preset_config( $preset, $choice ) ?? $draft['config'];
+		$draft['layout']['layout']     = $layout;
+		$draft['layout_base_revision'] = $draft['layout_base_revision'] ?? 0;
+	}
+	$draft['done'] = array_values( array_unique( array_merge( $draft['done'], array( 'theme' ) ) ) );
+	unset( $draft['tokens_written'] );
+	$draft['layout']['theme']['slug'] = $choice;
 	save_draft( $user, $draft );
 	wp_safe_redirect( step_url( $next ) );
+	exit;
+}
+
+/**
+ * Handle the review step: save, discard the draft, or one of the two rollbacks.
+ *
+ * Saving writes the tokens, then the layout. The layout write needs `edit_theme_options` like
+ * everything else here. If the tokens are saved and the layout hits a conflict, the draft keeps
+ * the layout, its token base moves to the new revision (so a retry does not write the same
+ * tokens twice), and the message says which half was saved.
+ *
+ * @param int    $user   User ID.
+ * @param array  $draft  Draft.
+ * @param string $intent save, reset, rollback, or rollback_layout.
+ */
+function handle_review( int $user, array $draft, string $intent ): void {
+	if ( 'rollback' === $intent ) {
+		$stored = store_read();
+		$result = $stored ? store_rollback( $stored['revision'] ) : new \WP_Error( 'blixis_config_no_previous', __( 'There is no previous configuration to roll back to.', 'blixis-blocks' ) );
+		if ( is_wp_error( $result ) ) {
+			flash( $user, 'review', array( 'failure' => $result->get_error_message() ) );
+		} else {
+			// The token half of the draft is reloaded from the store; a pending layout edit stays.
+			delete_user_meta( $user, DRAFT_META );
+			$fresh = draft( $user );
+			if ( layout_differs( $draft ) ) {
+				$fresh['layout']               = $draft['layout'];
+				$fresh['layout_base_revision'] = $draft['layout_base_revision'];
+				save_draft( $user, $fresh );
+			}
+			/* translators: %d: revision number. */
+			flash( $user, 'review', array( 'notice' => sprintf( __( 'Rolled back to the previous configuration as revision %d.', 'blixis-blocks' ), $result['revision'] ) ) );
+		}
+		wp_safe_redirect( step_url( 'review' ) );
+		exit;
+	}
+	if ( 'rollback_layout' === $intent ) {
+		$stored = layout_can_manage() ? layout_store_read() : null;
+		$result = $stored ? layout_store_rollback( $stored['revision'] ) : new \WP_Error( 'blixis_layout_no_previous', __( 'There is no previous layout configuration to roll back to.', 'blixis-blocks' ) );
+		if ( is_wp_error( $result ) ) {
+			flash( $user, 'review', array( 'failure' => $result->get_error_message() ) );
+		} else {
+			// The layout half of the draft is reloaded from the store; pending token edits stay.
+			delete_user_meta( $user, DRAFT_META );
+			$reloaded      = draft( $user );
+			$stored_tokens = store_read();
+			if ( ! $stored_tokens || config_hash( $stored_tokens['config'] ) !== config_hash( $draft['config'] ) || $stored_tokens['revision'] !== $draft['base_revision'] ) {
+				$reloaded['config']        = $draft['config'];
+				$reloaded['base_revision'] = $draft['base_revision'];
+				$reloaded['done']          = $draft['done'];
+				save_draft( $user, $reloaded );
+			}
+			/* translators: %d: revision number. */
+			flash( $user, 'review', array( 'notice' => sprintf( __( 'Rolled back the header and footer to the previous settings as revision %d.', 'blixis-blocks' ), $result['revision'] ) ) );
+		}
+		wp_safe_redirect( step_url( 'review' ) );
+		exit;
+	}
+	if ( 'reset' === $intent ) {
+		delete_user_meta( $user, DRAFT_META );
+		flash( $user, 'review', array( 'notice' => __( 'The draft was discarded. These are the saved values.', 'blixis-blocks' ) ) );
+		wp_safe_redirect( step_url( 'review' ) );
+		exit;
+	}
+
+	$notices = array();
+	$failure = '';
+	// A retry after a layout conflict must not write the same tokens again.
+	$skip_tokens = ! empty( $draft['tokens_written'] ) && ( store_read()['revision'] ?? -1 ) === $draft['base_revision'];
+	if ( ! $skip_tokens ) {
+		$result = store_write( canonical_json( $draft['config'] ), $draft['base_revision'] );
+		if ( is_wp_error( $result ) ) {
+			// The draft stays, so nothing typed is lost. The layout is not written either.
+			flash( $user, 'review', array( 'failure' => $result->get_error_message() ) );
+			wp_safe_redirect( step_url( 'review' ) );
+			exit;
+		}
+		/* translators: %d: revision number. */
+		$notices[]               = sprintf( __( 'Configuration saved as revision %d.', 'blixis-blocks' ), $result['revision'] );
+		$draft['base_revision']  = $result['revision'];
+		$draft['tokens_written'] = true;
+	}
+	if ( layout_should_write( $draft ) ) {
+		$layout_result = layout_can_manage() ? layout_store_write( canonical_json( $draft['layout'] ), $draft['layout_base_revision'] ) : new \WP_Error( 'blixis_layout_forbidden', __( 'You are not allowed to change the header and footer.', 'blixis-blocks' ) );
+		if ( is_wp_error( $layout_result ) ) {
+			$failure = $layout_result->get_error_message();
+		} else {
+			/* translators: %d: revision number. */
+			$notices[] = sprintf( __( 'Header and footer saved as revision %d.', 'blixis-blocks' ), $layout_result['revision'] );
+		}
+	}
+	if ( '' !== $failure ) {
+		save_draft( $user, $draft );
+		if ( $notices ) {
+			/* translators: 1: why the header and footer were not saved, 2: what was saved. */
+			$failure = sprintf( __( 'The header and footer were not saved. %1$s %2$s', 'blixis-blocks' ), $failure, implode( ' ', $notices ) );
+		}
+		flash( $user, 'review', array( 'failure' => $failure ) );
+	} else {
+		delete_user_meta( $user, DRAFT_META );
+		flash( $user, 'review', array( 'notice' => $notices ? implode( ' ', $notices ) : __( 'Nothing new to save.', 'blixis-blocks' ) ) );
+	}
+	wp_safe_redirect( step_url( 'review' ) );
 	exit;
 }
