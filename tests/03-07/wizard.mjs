@@ -159,6 +159,41 @@ async function refusals(browser, engine) {
   await editor.context.close();
 }
 
+// The live preview on the Header and footer step shows the rendered draft, for its owner only.
+async function previewFlow(browser, engine) {
+  const { context, page } = await login(browser, USERS.en, { viewport: { width: 1400, height: 1100 } });
+  await go(page, 'theme');
+  await page.check('input[name="choice"][value="acme-site"]');
+  await submit(page);
+  await go(page, 'header');
+  const text = `Draft only ${engine}`;
+  const posted = page.waitForResponse((r) => r.url().includes('admin-post.php') && r.request().method() === 'POST' && (r.request().postData() || '').includes('blixis_setup_layout_preview'), { timeout: 20000 });
+  await page.getByRole('switch', { name: 'Show a bar of short selling points above the header' }).setChecked(true);
+  await page.getByLabel('USP text 1').fill(text);
+  await page.getByRole('switch', { name: 'Keep the header at the top while scrolling' }).setChecked(true);
+  check((await posted).status() === 200, 'the draft is sent to the preview endpoint');
+  const frame = page.frameLocator('.blixis-setup-preview iframe');
+  await frame.locator('.blixis-usp__item', { hasText: text }).waitFor({ timeout: 20000 });
+  check(await frame.locator('.blixis-usp__item', { hasText: text }).isVisible(), 'the preview iframe shows the USP bar from the draft');
+  check((await frame.locator('.blixis-header.is-sticky').count()) === 1, 'the preview iframe renders the sticky header setting from the draft');
+  await page.getByRole('switch', { name: 'Show a call-to-action button in the header' }).setChecked(true);
+  await page.getByLabel('Button text').fill('Preview CTA');
+  await page.getByLabel('Button link').fill('/contact');
+  await frame.locator('.blixis-header__cta', { hasText: 'Preview CTA' }).waitFor({ timeout: 20000 });
+  check(true, 'a changed setting reaches the preview without leaving the step');
+  const others = [['a visitor who is not signed in', null], ['another administrator', 'fixture_admin2'], ['an editor', 'fixture_editor']];
+  for (const [label, user] of others) {
+    let other;
+    if (user) other = await login(browser, user);
+    else { const ctx = await browser.newContext(); other = { context: ctx, page: await ctx.newPage() }; }
+    await other.page.goto(`${BASE}/`, { waitUntil: 'networkidle' });
+    const seen = await other.page.locator('.blixis-usp__item', { hasText: text }).count();
+    check(seen === 0, `${label} does not see the draft on the front page`, String(seen));
+    await other.context.close();
+  }
+  await context.close();
+}
+
 async function a11y(browser, engine) {
   for (const [locale, user] of Object.entries(USERS)) {
     for (const width of [1280, 320]) {
@@ -193,6 +228,7 @@ for (const name of browsersToRun) {
     await presetFlow(browser, name);
     await noJavaScript(browser, name);
     await refusals(browser, name);
+    await previewFlow(browser, name);
     await a11y(browser, name);
   } catch (error) {
     check(false, 'wizard flow completed without an exception', error.stack || error.message);

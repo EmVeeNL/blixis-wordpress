@@ -1,6 +1,6 @@
 # Layout configuration
 
-**Implemented (task [03-07](../roadmap/phases/03-child-theme-setup-wizard/07-theme-layouts-and-style-presets.md) Part A):** the versioned `BlixisLayoutConfig` contract, its PHP and TypeScript validators, and its stored option. **Planned, not implemented:** Base rendering the settings through its header and footer parts, and the wizard step that edits them. This page says what exists and how the planned parts will use it.
+**Implemented (task [03-07](../roadmap/phases/03-child-theme-setup-wizard/07-theme-layouts-and-style-presets.md) Parts A and C):** the versioned `BlixisLayoutConfig` contract, its PHP and TypeScript validators, stored option, and Blixis Blocks rendering for Base header and footer parts. The wizard step that edits the settings is Part D.
 
 ## What the configuration is
 
@@ -38,22 +38,23 @@ Texts (USP items, button text, contact, copyright) are plain text. They are stor
 
 The wizard keeps a full layout config in the user's draft (user meta `blixis_setup_draft`, keys `layout` and `layout_base_revision`), with `theme.slug` equal to the token theme of the draft. Without a saved layout it starts from `defaults( $slug )`. Choosing a layout for a new theme sets `layout.layout`; the Header and footer step edits `header` and `footer`; the preview endpoint `blixis_setup_layout_preview` stores a validated layout in the draft. Saving on the review step writes the tokens, then the layout with `store_write( bytes, layout_base_revision )`, and only when it differs from the saved layout, belongs to another theme, or is a first save after the owner has used the step. Details: [Header and footer step](SETUP_WIZARD.md#header-and-footer-step).
 
-## How the next step will render it (planned)
+## Rendering
 
-Base renders the settings through its header and footer parts and a small amount of CSS, so changing a setting needs no file writes. The intended mapping, to be confirmed when it is built:
+Blixis Blocks filters Base's rendered header and footer template parts and loads `assets/layout.css` only when a valid configuration applies. The parent theme remains neutral and keeps its original parts when Blocks is inactive or no matching child-theme configuration is stored. A valid `blixis_preview` request uses only the requesting editor's validated layout draft; other requests use the validated stored configuration whose `theme.slug` matches the active stylesheet. Preview responses retain the token preview path's no-store and noindex headers.
 
 | Setting | Rendering |
 |---|---|
-| `header.sticky` | A class on the header that sets `position: sticky` below the admin bar, with `scroll-padding-top` on the root so focused elements and anchor targets are not hidden; no motion, so it needs no reduced-motion rule |
-| `header.usp` | A `ul` above the `header` landmark with a check icon (inline SVG, decorative) per item; still one `banner` landmark |
-| `header.logo` | A class that centres the logo row |
-| `header.cta` | A core button block in the header with the validated URL |
-| `header.search` | The core search block |
-| `header.mobileMenu` | The core navigation block's `overlayMenu` attribute: `mobile` for small screens only, `always` for every width |
+| `header.sticky` | `blixis-header is-sticky` sets `position: sticky` below the admin bar; root `scroll-padding-top` keeps focused elements and anchor targets visible |
+| `header.usp` | A thin full-width bar above the header landmark: a `ul` in one centred row (foreground background, surface text, small size) with an `aria-hidden` check icon per item, wrapping on small screens; it adds no landmark and scrolls away |
+| `header.logo` | `start`: site title, navigation, search and button on one row. `center`: a three-column grid, navigation at the start, site title in the middle, search and button at the end. Below 600 px both are one flex row: title, button, menu button, with the search under them |
+| `header.cta` | A core button rendered with the validated URL and `blixis-header__cta` class, at the end of the row (smaller on small screens) |
+| `header.search` | The core search block, compact (13rem, icon button inside, label for screen readers only) |
+| `header.mobileMenu` | The header navigation is a core navigation block over the site's pages; the `overlayMenu` attribute is `mobile` for small screens only, `always` for every width |
 | `footer.stickToBottom` | The page wrapper is a column flexbox with `min-height: 100dvh` and the content area growing; no fixed positioning and no overflow at 320 px |
-| `footer.columns`, `contact`, `social`, `copyright`, `backToTop` | Footer part with up to four columns in the fixed order, a list of labelled social links, the copyright paragraph, and an in-page link to the top |
+| `footer.columns`, `contact`, `social`, `copyright`, `backToTop` | A tinted band with a top border, a grid of up to four columns in the fixed order (Site with title and tagline, Menu with a labelled page list, Contact with line breaks kept, Follow us with core social links: inline icons and the correct service names, no requests; stacked below 600 px), each with a small `h2`, and a bottom row with a top border: copyright at the start, Back to top at the end |
+| Header row | Opaque surface background, a muted bottom border, content at the wide width. Sticky: `position: sticky` below the admin bar, a subtle shadow, `z-index` above content; only the header row sticks, the USP bar scrolls away; `--blixis-header-height` follows the header for `scroll-padding-top` (a few lines of inline script, no motion) |
 
-The wizard's **Header and footer** step will edit a draft, preview it with the 03-06 live preview, save with the revision the page was loaded at, and offer rollback, in the same way the token steps do.
+Config text is escaped in its output context and URLs pass through `esc_url()`. The wizard's **Header and footer** step edits a draft, previews it with the live preview, saves with the revision the page was loaded at, and offers rollback.
 
 ## Tests
 

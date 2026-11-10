@@ -112,7 +112,7 @@ const built = await page.evaluate(() => {
     ],
   };
 
-  const faq = (question, answer) => b('core/group', { style: { border: { width: '1px', style: 'solid', color: 'var:preset|color|muted', radius: 'var:preset|border-radius|md' }, spacing: { padding: { top: SP('md'), bottom: SP('md'), left: SP('md'), right: SP('md') } } }, layout: { type: 'constrained' } }, [b('core/details', { summary: t(question) }, [p(answer)])]);
+  const faq = (question, answer) => b('core/group', { style: { border: { width: '1px', style: 'solid', color: 'var:preset|color|muted', radius: 'var:preset|border-radius|md' }, spacing: { padding: { top: SP('md'), bottom: SP('md'), left: SP('md'), right: SP('md') }, blockGap: SP('sm') } }, layout: { type: 'constrained' } }, [b('core/details', { summary: t(question) }, [p(answer)])]);
   layouts.landing = {
     title: 'Landing page', description: 'A one-page layout with anchored sections and FAQs.',
     blocks: [

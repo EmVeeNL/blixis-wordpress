@@ -1,0 +1,88 @@
+/* Header and footer settings (task 03-07 Part C). Neutral: Base presets only, logical properties
+   throughout. Bands cross Base's root gutter with negative margins and take it back as padding. */
+:root { --blixis-gutter: var(--blixis-spacing-md, 1rem); --blixis-line: color-mix(in srgb, var(--wp--preset--color--foreground, #101828) 14%, transparent); }
+@supports not (color: color-mix(in srgb, red, red)) { :root { --blixis-line: #d7dae0; } }
+
+/* ---- USP bar: a list above the header landmark ---- */
+.blixis-usp { margin-inline: calc(-1 * var(--blixis-gutter)); padding: var(--wp--preset--spacing--xs, 0.5rem) var(--blixis-gutter); background: var(--wp--preset--color--foreground, #101828); color: var(--wp--preset--color--surface, #fff); font-size: var(--wp--preset--font-size--sm, 0.875rem); line-height: 1.4; }
+.wp-site-blocks > .blixis-usp { margin-block-start: 0; }
+.blixis-usp__list { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 0.25rem 1.5rem; max-inline-size: var(--wp--style--global--wide-size, 72rem); margin: 0 auto; padding: 0; list-style: none; }
+.blixis-usp__item { display: inline-flex; align-items: center; gap: 0.4rem; margin: 0; }
+.blixis-usp__icon { flex: none; inline-size: 1em; block-size: 1em; }
+@media (max-width: 30rem) { .blixis-usp { font-size: var(--wp--preset--font-size--xs, 0.75rem); } .blixis-usp__list { gap: 0.125rem 1rem; } }
+
+/* ---- Header row ---- */
+.blixis-header { margin-inline: calc(-1 * var(--blixis-gutter)); padding-inline: var(--blixis-gutter); background: var(--wp--preset--color--surface, #fff); border-block-end: 1px solid var(--blixis-line); }
+.wp-site-blocks > .blixis-header { margin-block-start: 0; }
+.blixis-header__bar { display: flex; align-items: center; gap: var(--wp--preset--spacing--md, 1rem); max-inline-size: var(--wp--style--global--wide-size, 72rem); min-block-size: 4rem; margin-inline: auto; padding-block: var(--wp--preset--spacing--sm, 0.75rem); }
+.blixis-header__brand { flex: none; }
+.blixis-header .wp-block-site-title { margin: 0; font-size: var(--wp--preset--font-size--lg, 1.125rem); font-weight: 700; line-height: 1.2; }
+.blixis-header .wp-block-site-title a { color: inherit; text-decoration: none; }
+.blixis-header__bar > .wp-block-navigation { margin-inline-end: auto; min-inline-size: 0; }
+.blixis-header .wp-block-navigation a { text-decoration: none; }
+.blixis-header .wp-block-navigation a:hover { text-decoration: underline; }
+.blixis-header .wp-block-navigation__container { gap: var(--wp--preset--spacing--sm, 0.75rem); }
+.blixis-header__actions { display: flex; align-items: center; gap: var(--wp--preset--spacing--sm, 0.75rem); flex: none; margin-inline-start: auto; }
+.blixis-header__bar > .wp-block-navigation + .blixis-header__actions { margin-inline-start: 0; }
+.blixis-header .wp-block-search { margin: 0; }
+.blixis-header .wp-block-search__inside-wrapper { inline-size: 13rem; max-inline-size: 100%; }
+.blixis-header .wp-block-search__input { min-inline-size: 0; padding: 0.4rem 0.6rem; font-size: var(--wp--preset--font-size--sm, 0.875rem); }
+.blixis-header .wp-block-search__button { padding: 0.25rem; }
+.blixis-header__cta-wrap { margin: 0; }
+.blixis-header__cta { display: inline-flex; align-items: center; white-space: nowrap; font-size: var(--wp--preset--font-size--sm, 0.875rem); }
+
+/* Logo centred: navigation at the start, the site title in the middle, search and button at the end. */
+.blixis-header.logo-center .blixis-header__bar { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); }
+.blixis-header.logo-center .blixis-header__bar > .wp-block-navigation { grid-column: 1; grid-row: 1; margin-inline-end: 0; justify-self: start; }
+.blixis-header.logo-center .blixis-header__brand { grid-column: 2; grid-row: 1; text-align: center; }
+.blixis-header.logo-center .blixis-header__actions { grid-column: 3; grid-row: 1; justify-self: end; margin-inline-start: 0; }
+
+/* Small screens: the site title and the menu button share a row with the button; the search wraps
+   under them, never wider than the row. */
+@media (max-width: 37.5rem) {
+	.blixis-header__bar, .blixis-header.logo-center .blixis-header__bar { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+	.blixis-header__brand, .blixis-header.logo-center .blixis-header__brand { flex: 1 1 auto; min-inline-size: 0; text-align: start; order: 1; }
+	.blixis-header__bar > .wp-block-navigation, .blixis-header.logo-center .blixis-header__bar > .wp-block-navigation { order: 3; margin-inline-end: 0; }
+	.blixis-header__actions, .blixis-header.logo-center .blixis-header__actions { display: contents; }
+	.blixis-header__cta-wrap { order: 2; }
+	.blixis-header .wp-block-search { order: 4; flex: 1 1 100%; }
+	.blixis-header .wp-block-search__inside-wrapper { inline-size: 100% !important; }
+	.blixis-header__cta { padding: 0.35rem 0.75rem; }
+}
+
+/* The overlay menu: padded, readable links. */
+.blixis-header .wp-block-navigation__responsive-container.is-menu-open { padding: var(--wp--preset--spacing--lg, 1.5rem); }
+.blixis-header .wp-block-navigation__responsive-container.is-menu-open .wp-block-navigation-item { font-size: var(--wp--preset--font-size--lg, 1.125rem); }
+
+/* ---- Sticky: only the header row sticks; the USP bar scrolls away ---- */
+.blixis-header.is-sticky { position: sticky; inset-block-start: var(--wp-admin--admin-bar--height, 0px); z-index: 100; box-shadow: 0 1px 6px rgb(16 24 40 / 0.1); }
+html:has(.blixis-header.is-sticky) { scroll-padding-top: calc(var(--wp-admin--admin-bar--height, 0px) + var(--blixis-header-height, 4.5rem)); }
+
+/* ---- Footer ---- */
+.blixis-footer { margin-inline: calc(-1 * var(--blixis-gutter)); padding: var(--wp--preset--spacing--xl, 2.5rem) var(--blixis-gutter) var(--wp--preset--spacing--lg, 1.5rem); background: var(--wp--preset--color--surface, #fff); border-block-start: 1px solid var(--blixis-line); font-size: var(--wp--preset--font-size--sm, 0.875rem); }
+@supports (color: color-mix(in srgb, red, red)) { .blixis-footer { background: color-mix(in srgb, var(--wp--preset--color--foreground, #101828) 4%, var(--wp--preset--color--surface, #fff)); } }
+.blixis-footer__inner { max-inline-size: var(--wp--style--global--wide-size, 72rem); margin-inline: auto; }
+.blixis-footer__columns { display: grid; grid-template-columns: repeat(var(--blixis-footer-columns, 1), minmax(0, 1fr)); gap: var(--wp--preset--spacing--lg, 1.5rem) var(--wp--preset--spacing--xl, 2.5rem); }
+.blixis-footer.cols-1 { --blixis-footer-columns: 1; } .blixis-footer.cols-2 { --blixis-footer-columns: 2; } .blixis-footer.cols-3 { --blixis-footer-columns: 3; } .blixis-footer.cols-4 { --blixis-footer-columns: 4; }
+.blixis-footer__columns > * { min-inline-size: 0; }
+.blixis-footer__heading { margin: 0 0 var(--wp--preset--spacing--sm, 0.75rem); font-size: var(--wp--preset--font-size--xs, 0.75rem); font-weight: 700; letter-spacing: 0.06em; line-height: 1.3; text-transform: uppercase; }
+.blixis-footer .wp-block-site-title { margin: 0; font-size: var(--wp--preset--font-size--lg, 1.125rem); font-weight: 700; }
+.blixis-footer .wp-block-site-title a { color: inherit; text-decoration: none; }
+.blixis-footer .wp-block-site-tagline, .blixis-footer__contact p { margin: 0.25rem 0 0; }
+.blixis-footer .wp-block-page-list { display: grid; gap: 0.25rem; margin: 0; padding: 0; list-style: none; }
+.blixis-footer .wp-block-page-list a, .blixis-footer__top { display: inline-flex; align-items: center; min-block-size: 24px; }
+.blixis-footer .wp-block-social-links { gap: 0.5rem; margin: 0; padding: 0; }
+.blixis-footer .wp-block-social-links.is-style-logos-only .wp-social-link { background: transparent; color: var(--wp--preset--color--foreground, #101828); }
+.blixis-footer .wp-block-social-links.is-style-logos-only .wp-social-link:hover { color: var(--wp--preset--color--primary, #155dfc); }
+.blixis-footer .wp-block-social-links .wp-social-link a { padding: 0.25rem; color: var(--wp--preset--color--foreground, #101828); }
+.blixis-footer .wp-block-social-links .wp-social-link a:hover { color: var(--wp--preset--color--primary, #155dfc); }
+.blixis-footer__bottom { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--wp--preset--spacing--sm, 0.75rem); margin-block-start: var(--wp--preset--spacing--lg, 1.5rem); padding-block-start: var(--wp--preset--spacing--md, 1rem); border-block-start: 1px solid var(--blixis-line); }
+.blixis-footer__bottom p { margin: 0; }
+.blixis-footer__totop { margin-inline-start: auto !important; }
+@media (max-width: 37.5rem) { .blixis-footer__columns { grid-template-columns: minmax(0, 1fr); } .blixis-footer__totop { margin-inline-start: 0 !important; } }
+
+/* ---- Footer at the bottom of short pages (never fixed) ---- */
+body.blixis-footer-bottom .wp-site-blocks { display: flex; flex-direction: column; min-block-size: calc(100vh - var(--wp-admin--admin-bar--height, 0px)); min-block-size: calc(100dvh - var(--wp-admin--admin-bar--height, 0px)); }
+body.blixis-footer-bottom .wp-site-blocks > main { flex: 1 0 auto; inline-size: 100%; box-sizing: border-box; }
+
+@media (prefers-reduced-motion: reduce) { .blixis-header, .blixis-header * { animation: none !important; transition: none !important; scroll-behavior: auto !important; } }
