@@ -95,6 +95,18 @@
   text-underline-offset: 0.2em;
 }
 
+.landing-page-navigation .wp-block-navigation__container {
+  gap: var(--blixis-spacing-sm, 0.5rem);
+}
+
+.landing-page-navigation .wp-block-navigation-item__content {
+  padding-inline: var(--blixis-spacing-xs, 0.25rem);
+}
+
+.landing-page-navigation {
+  padding-inline: var(--blixis-spacing-md, 1rem);
+}
+
 #faq .wp-block-details {
   margin-block: 0;
   padding: var(--wp--preset--spacing--md);
@@ -111,6 +123,13 @@
 }
 
 .landing-tinted-section {
+  padding-inline: var(--blixis-spacing-md, 1rem);
+  padding-block: var(--wp--preset--spacing--xl, 4rem);
   color: var(--wp--preset--color--foreground);
   background-color: color-mix(in srgb, var(--wp--preset--color--primary) 6%, var(--wp--preset--color--surface));
+}
+
+.wp-site-blocks main > .alignfull > :where(h1, h2, h3, p, ul, ol, details, .wp-block-buttons) {
+  width: min(calc(100vw - 2 * var(--blixis-spacing-md, 1rem)), var(--wp--style--global--wide-size, 72rem));
+  margin-inline: auto;
 }

@@ -8,6 +8,7 @@ let failures = 0;
 const check = (ok, label, detail = '') => { console.log(`${ok ? 'PASS' : 'FAIL'} ${label}${detail ? `: ${detail}` : ''}`); if (!ok) failures++; };
 const layouts = ['blank', 'business', 'portfolio', 'blog', 'landing'];
 const bandSelectors = { business: ['main > .alignfull'], landing: ['main > .alignfull'] };
+const blurForScreenshot = async (page) => page.evaluate(() => { if (document.activeElement instanceof HTMLElement) document.activeElement.blur(); });
 for (const name of browsers) {
   const type = name === 'firefox' ? firefox : chromium;
   const browser = await type.launch({ headless: true });
@@ -42,9 +43,13 @@ for (const name of browsers) {
         await page.keyboard.press('Tab');
       }
       check(await page.locator('nav[aria-label="On this page"] a').first().evaluate((el) => getComputedStyle(el).outlineStyle !== 'none' && parseFloat(getComputedStyle(el).outlineWidth) >= 2), `${name} landing navigation visible keyboard focus ring`);
+      const ctaColors = await page.locator('main > .alignfull .wp-block-button__link').first().evaluate((el) => ({ button: getComputedStyle(el).backgroundColor, band: getComputedStyle(el.closest('.alignfull')).backgroundColor, text: getComputedStyle(el).color }));
+      check(ctaColors.button !== ctaColors.band, `${name} landing hero CTA has button background`, JSON.stringify(ctaColors));
+      check(ctaColors.button !== 'rgba(0, 0, 0, 0)' && ctaColors.text !== ctaColors.button, `${name} landing hero CTA contrast colors`, JSON.stringify(ctaColors));
     }
     if (layout === 'blog') {
       check(await page.getByText('No posts yet. Check back soon for the latest stories.').count() === 1, `${name} blog no-results message`);
+      await blurForScreenshot(page);
       await page.screenshot({ path: `${out}/layout-blog-empty-1280.png`, fullPage: true });
       await page.goto('http://127.0.0.1:8080/?t0307_layout=blog&t0307_posts=1', { waitUntil: 'networkidle' });
       const queries = page.locator('main .wp-block-query');
@@ -53,6 +58,7 @@ for (const name of browsers) {
       check(featuredCount === 1, `${name} blog featured card with posts`, `titles=${featuredCount}`);
       const cardCounts = await Promise.all([grid.locator('.wp-block-post-title').count(), grid.locator('time').count(), grid.locator('.wp-block-post-excerpt').count()]);
       check(cardCounts.every((count) => count === 1), `${name} blog secondary post card title/date/excerpt`, cardCounts.join('/'));
+      await blurForScreenshot(page);
       await page.screenshot({ path: `${out}/layout-blog-1280.png`, fullPage: true });
       await page.goto('http://127.0.0.1:8080/?t0307_layout=blog', { waitUntil: 'networkidle' });
     }
@@ -63,10 +69,12 @@ for (const name of browsers) {
       const bounds = await page.locator(bandSelectors[layout].join(',')).evaluateAll((els) => els.map((el) => { const r = el.getBoundingClientRect(); return { left: Math.round(r.left), right: Math.round(r.right), width: Math.round(r.width) }; }));
       check(bounds.every((r) => r.left === 0 && r.right === 1280 && r.width === 1280), `${name} ${layout} full bleed 1280`, JSON.stringify(bounds));
     }
-    if (layout !== 'blog') await page.screenshot({ path: `${out}/layout-${layout}-1280.png`, fullPage: true });
+    if (layout !== 'blog') { await blurForScreenshot(page); await page.screenshot({ path: `${out}/layout-${layout}-1280.png`, fullPage: true }); }
     await page.setViewportSize({ width: 320, height: 760 });
     await page.waitForTimeout(100);
     check(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), `${name} ${layout} no overflow 320`);
+    const edgeViolations = await page.locator('main').evaluate((main) => Array.from(main.querySelectorAll('h1,h2,h3,h4,h5,h6,p,a,button,summary,li,blockquote,figcaption,label')).filter((el) => el.textContent?.trim() && el.checkVisibility()).map((el) => ({ tag: el.tagName.toLowerCase(), text: el.textContent.trim().slice(0, 40), left: Math.round(el.getBoundingClientRect().left), right: Math.round(el.getBoundingClientRect().right) })).filter((r) => r.left < 8 || r.right > innerWidth - 8));
+    check(edgeViolations.length === 0, `${name} ${layout} text blocks inset 8px at 320`, JSON.stringify(edgeViolations));
     if (bandSelectors[layout]) {
       for (const selector of bandSelectors[layout]) {
         const bounds = await page.locator(selector).evaluateAll((els) => els.map((el) => { const r = el.getBoundingClientRect(); return { left: Math.round(r.left), right: Math.round(r.right), width: Math.round(r.width) }; }));
@@ -75,6 +83,7 @@ for (const name of browsers) {
     }
     violations = await page.evaluate(async () => (await axe.run(document)).violations.map((v) => `${v.id}:${v.nodes.map((n) => n.target.join(' ')).join('|')}`));
     check(violations.length === 0, `${name} ${layout} axe 320`, violations.join(','));
+    await blurForScreenshot(page);
     await page.screenshot({ path: `${out}/layout-${layout}-320.png`, fullPage: true });
     check(external.length === 0, `${name} ${layout} no external requests`, external.join(','));
     await page.close();
@@ -83,7 +92,7 @@ for (const name of browsers) {
   for (const layout of ['business', 'landing']) {
     await arabic.goto(`http://127.0.0.1:8080/?t0307_layout=${layout}&t0307_locale=ar`, { waitUntil: 'networkidle' });
     check((await arabic.locator('html').getAttribute('dir')) === 'rtl', `${name} ${layout} Arabic direction`);
-    if (layout === 'landing') await arabic.screenshot({ path: `${out}/layout-landing-1280-ar.png`, fullPage: true });
+    if (layout === 'landing') { await blurForScreenshot(arabic); await arabic.screenshot({ path: `${out}/layout-landing-1280-ar.png`, fullPage: true }); }
     for (const width of [1280, 320]) {
       await arabic.setViewportSize({ width, height: width === 320 ? 760 : 900 });
       const bounds = await arabic.locator('main > .alignfull').evaluateAll((els) => els.map((el) => { const r = el.getBoundingClientRect(); return { left: Math.round(r.left), right: Math.round(r.right), width: Math.round(r.width) }; }));
