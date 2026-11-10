@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Task 03-06 harness: wizard controls and live previews against a real WordPress in a disposable Compose
+# Task 03-07 harness: wizard controls and live previews against a real WordPress in a disposable Compose
 # project (random name, tmpfs database, no published ports, no bind mounts). It cannot reach
 # ~/Sites/blixis, its database, links, or the `blixis` project; only this run's project is removed.
 #
@@ -78,6 +78,7 @@ for combo in "${COMBOS[@]}"; do
   if ! docker compose up -d --wait db runner >/dev/null 2>&1; then echo "HARNESS FAULT: stack did not start"; harness_fault=1; continue; fi
   docker compose exec -T runner sh -c 'mkdir -p /tmp/t && tar -xf - -C /tmp/t' < <(COPYFILE_DISABLE=1 tar -cf - -C "$stage" .)
   result="$(docker compose exec -T runner sh -c 'exec sh /tmp/t/run-wp.sh "$0"' "$wp" 2>&1)"
+  mkdir -p "$out/wp-$wp-php-$php" && printf '%s\n' "$result" > "$out/wp-$wp-php-$php/run-wp.log"
   printf '%s\n' "$result" | grep -E '^(FAIL|NOTE|HARNESS) ' || true
   printf '%s\n' "$result" | grep -q '^FAIL ' && product_fail=1
   echo "-- in-process: $(printf '%s\n' "$result" | grep -c '^PASS ') passed"
@@ -85,8 +86,8 @@ for combo in "${COMBOS[@]}"; do
   if ! printf '%s\n' "$result" | grep -q '^DONE '; then echo "HARNESS FAULT: no DONE marker"; printf '%s\n' "$result" | tail -15; harness_fault=1; continue; fi
 
   if ! docker compose --profile browser up -d browser >/dev/null 2>&1; then echo "HARNESS FAULT: browser container did not start"; harness_fault=1; continue; fi
-  docker compose exec -T browser sh -c 'rm -rf /work && mkdir -p /work && cd /work && tar -xf -' < <(COPYFILE_DISABLE=1 tar -cf - -C "$stage" browser.mjs node_modules vendor)
-  bres="$(docker compose exec -T -e T0307_BROWSERS="$browsers" -e T0307_ADMIN_PASSWORD="$T0307_ADMIN_PASSWORD" -e T0307_LAYOUTS="${T0307_LAYOUTS:-blank,business,portfolio,blog,landing}" browser sh -c 'cd /work && node browser.mjs' 2>&1)"
+  docker compose exec -T browser sh -c 'rm -rf /work && mkdir -p /work/shots && cd /work && tar -xf -' < <(COPYFILE_DISABLE=1 tar -cf - -C "$stage" browser.mjs node_modules vendor)
+  bres="$(docker compose exec -T -e T0307_BROWSERS="$browsers" -e T0307_ADMIN_PASSWORD="$T0307_ADMIN_PASSWORD" -e T0307_LAYOUTS="${T0307_LAYOUTS:-blank,business,portfolio,blog,landing}" -e T0307_OUT="/work/shots" browser sh -c 'cd /work && node browser.mjs' 2>&1)"
   brc=$?
   mkdir -p "$out/wp-$wp-php-$php" && printf '%s\n' "$bres" > "$out/wp-$wp-php-$php/browser.log"
   printf '%s\n' "$bres" | grep -E '^(PASS|FAIL|NOTE|HARNESS) ' | grep -v '^PASS ' || true
@@ -96,7 +97,7 @@ for combo in "${COMBOS[@]}"; do
   elif ! printf '%s\n' "$bres" | grep -q '^DONE-BROWSER '; then echo "HARNESS FAULT: browser script ended without DONE-BROWSER (exit $brc)"; printf '%s\n' "$bres" | tail -25; harness_fault=1
   elif [[ $failn -ne 0 ]]; then product_fail=1; fi
   mkdir -p "$out/wp-$wp-php-$php"
-  docker compose cp browser:/work/shots/. "$out/wp-$wp-php-$php/" >/dev/null 2>&1 && echo "NOTE artifacts copied to $out/wp-$wp-php-$php"
+  docker compose cp browser:/work/shots/. "$out/" >/dev/null 2>&1 && echo "NOTE artifacts copied to $out/wp-$wp-php-$php"
 done
 
 if [[ $harness_fault -ne 0 ]]; then echo "RESULT: harness fault"; exit 2; fi

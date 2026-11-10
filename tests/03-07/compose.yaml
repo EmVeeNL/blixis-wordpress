@@ -1,4 +1,4 @@
-# Disposable stack for task 03-06 tests. Not the local site's stack: the database is in
+# Disposable stack for task 03-07 tests. Not the local site's stack: the database is in
 # tmpfs, no host port is published, nothing is bind-mounted, and run.sh sets a random
 # project name (blixis-0307-<random>), never `blixis`.
 name: blixis-0307-tests

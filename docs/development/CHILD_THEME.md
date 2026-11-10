@@ -37,9 +37,9 @@ A new directory `<theme root>/<slug>/` containing:
 - `style.css`: the theme header with `Template: blixis-base`, `Requires at least: 7.0`, `Requires PHP: 8.3`, GPLv2 or later, and the slug as text domain.
 - `theme.json`: version 3 with no settings or styles. The child inherits Base's token-driven styles and adds no fixed token values.
 - `functions.php`: enqueues the child stylesheet after Base's `blixis-base` handle.
-- With `layout: blank`, the generated child inherits Base's front page. Every other layout writes `templates/front-page.html` and a PHP pattern in `patterns/`: Business has an introduction, three feature columns, and a call to action; Portfolio has an introduction and editable project cards; Blog uses a latest-posts Query Loop; Landing has anchored sections and in-page navigation. All use core blocks, system fonts, Base token presets, and the generated theme's text domain. No images or remote assets are included. Inline-safe neutral SVG wireframes live in `plugins/blixis-blocks/assets/layouts/` for the wizard.
+- With `layout: blank`, the generated child inherits Base's front page. Every other layout writes `templates/front-page.html` and one editable PHP pattern in `patterns/<layout>.php`. Source markup lives in `plugins/blixis-blocks/inc/child-theme/layouts/<layout>.php`, with the front-page template alongside it as `<layout>.html`; the generator binds the generated theme slug as the pattern text domain. Business is a full-width hero with two buttons, three raised feature cards, a CTA band, and contact section. Portfolio has a short intro and six responsive project cards in a grid. Blog has a featured post card, latest-post grid, and an explicit no-results message. Landing has an in-page navigation, three anchored sections with alternating surfaces, native Details FAQs, and a final CTA. These use core blocks and Base colour, spacing, font-size, radius, and shadow presets. No images, branding, or remote assets are included. Inline-safe neutral SVG wireframes live in `plugins/blixis-blocks/assets/layouts/` for the wizard. Legacy `starter: none` maps to Blank; `starter: neutral` maps to the exact Business file set.
 
-Files are written to a hidden staging directory in the theme root and moved into place in one step, so a failure leaves no partial theme. WordPress ignores hidden directories when it lists themes. Templates, parts, and the compiled Tailwind stylesheet are inherited from Base, so a Base upgrade reaches the child without regenerating it.
+A `blank` theme writes only `style.css`, `theme.json`, and `functions.php`; Business, Portfolio, Blog, and Landing also write `templates/front-page.html` and `patterns/<layout>.php`. Files are written to a hidden staging directory in the theme root and moved into place in one step, so a failure leaves no partial theme. WordPress ignores hidden directories when it lists themes. Templates, parts, and the compiled Tailwind stylesheet are inherited from Base, so a Base upgrade reaches the child without regenerating it.
 
 ## Tests
 
@@ -50,5 +50,7 @@ Files are written to a hidden staging directory in the theme root and moved into
 - WordPress recognises the generated theme with Base as parent and the expected headers. Base's files are byte-identical afterwards, and no staging directory remains.
 - The activated child renders a page with one `main` and one `h1` and loads its stylesheet after Base's. After a simulated Base upgrade (new version and a changed footer part), the child still renders and shows the new part.
 - No PHP errors, warnings, notices, or deprecations are logged.
+
+The 03-07 layout harness saves Chromium full-page screenshots at 1280 and 320 px for all layouts, plus an Arabic Landing screenshot, in its `--out` directory.
 
 See also the [layout configuration](LAYOUT.md): the header and footer settings of a child theme are stored as a versioned contract, separate from the files this generator writes.
