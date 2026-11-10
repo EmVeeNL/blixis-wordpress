@@ -20,6 +20,8 @@ require_once __DIR__ . '/inc/tokens/validate.php';
 require_once __DIR__ . '/inc/tokens/css.php';
 require_once __DIR__ . '/inc/tokens/theme-json.php';
 require_once __DIR__ . '/inc/tokens/store.php';
+require_once __DIR__ . '/inc/layout/validate.php';
+require_once __DIR__ . '/inc/layout/store.php';
 require_once __DIR__ . '/inc/child-theme/generator.php';
 require_once __DIR__ . '/inc/child-theme/rest.php';
 require_once __DIR__ . '/inc/fonts/library.php';

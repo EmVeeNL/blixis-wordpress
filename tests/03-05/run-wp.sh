@@ -62,6 +62,8 @@ done
 wp eval-file /tmp/t/check.php 2>&1 | grep -E '^(PASS|FAIL|NOTE|HARNESS) ' || fault "check.php produced no result"
 # Token contract v2 (03-06 Part B): migration, colour formats, dark mode, scheme setting. Restores the stored row.
 wp eval-file /tmp/t/check-v2.php 2>&1 | grep -E '^(PASS|FAIL|NOTE|HARNESS) ' || fault "check-v2.php produced no result"
+# Layout configuration store (03-07 Part A): compare-and-swap, hash check, fallback, rollback, capabilities. Removes its option.
+wp eval-file /tmp/t/check-layout.php 2>&1 | grep -E '^(PASS|FAIL|NOTE|HARNESS) ' || fault "check-layout.php produced no result"
 
 # Browsers keep several connections open; enough workers keep one idle connection from blocking the next page.
 PHP_CLI_SERVER_WORKERS=8 wp server --host=127.0.0.1 --port=8080 >/tmp/server.log 2>&1 &
