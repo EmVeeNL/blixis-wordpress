@@ -2,7 +2,7 @@
 id: "03-07"
 title: "Create a theme from layouts, header and footer settings, and style presets"
 phase: "03"
-status: Backlog
+status: Ready
 priority: P0
 owner: "EmVeeNL"
 created_at: "2026-11-10"
@@ -38,14 +38,14 @@ Michael asked for this on 2026-11-10. Planned work; no implementation or PR is c
 
 ## Owner decisions
 
-Michael chose these on 2026-11-10:
+Michael chose these on 2026-11-10 and confirmed the scope below the same day:
 
 1. **Header and footer settings can be changed at any time.** They are stored as a versioned layout configuration, validated like the tokens, with preview and rollback in the wizard. The layout's page content (front page and patterns) is written once into the child theme and edited afterwards in the Site Editor.
 2. **"Footer at the bottom"** means the footer sits at the bottom of the window on short pages and scrolls normally on long pages. It is not a fixed footer.
 3. **Style presets are token sets in the wizard.** Choosing one fills the wizard draft, and every value can still be adjusted. They are not WordPress style variations, because the Site Editor policy from 03-05 removes user presets while a Blixis configuration applies.
 4. **Priority P0.** Phase 03 exit (MVP-0) waits for this task.
 
-## Proposal (to confirm)
+## Confirmed scope
 
 **Layouts.** A list of cards with a thumbnail and one line each, as a radio group:
 
@@ -104,10 +104,11 @@ Extend the 03-06 harness: create a theme for each layout and preset in a disposa
 - **Commit references:** None.
 - **PR number and URL:** None.
 - **Started / completed / closed:** Not recorded.
-- **Status:** Backlog. The owner decisions are recorded; the proposed layouts, settings, and presets await Michael's confirmation before Ready. Follow [status workflow](../../../development/STATUS_WORKFLOW.md).
+- **Status:** Ready. Michael confirmed the scope and the owner decisions on 2026-11-10; dependency `03-06` is Done. Phase 03 exit (MVP-0) waits for this task. Follow [status workflow](../../../development/STATUS_WORKFLOW.md).
 
 ## Status history
 
 | Date | Transition | Evidence |
 |---|---|---|
 | 2026-11-10 | New → Backlog | Michael asked for theme creation from layouts, header and footer settings, and style presets, and chose owner decisions 1 to 4. The proposal awaits his confirmation. |
+| 2026-11-10 | Backlog → Ready | Michael confirmed the proposed layouts, header and footer settings, presets, and wizard changes; dependency `03-06` is Done ([PR #47](https://github.com/EmVeeNL/blixis-wordpress/pull/47)); owner recorded. |
