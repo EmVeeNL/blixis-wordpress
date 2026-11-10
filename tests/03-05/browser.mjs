@@ -78,7 +78,7 @@ async function publicTokens(browser) {
   const starter = await page.evaluate(() => ({
     mainCount: document.querySelectorAll('main').length,
     headingCount: document.querySelectorAll('main h1').length,
-    hasIntro: document.querySelector('main')?.innerText.includes('Welcome') ?? false,
+    hasIntro: document.querySelector('main')?.innerText.includes('A better way to do business') ?? false,
   }));
   await context.close();
   return { ...values, font, starter, external: requests.filter((u) => !u.startsWith(BASE) && !u.startsWith('data:') && !u.startsWith(`blob:${BASE}`)) };
@@ -112,7 +112,7 @@ async function fullFlow(browser) {
   let pub = await publicTokens(browser);
   check('visitors get the stored colour in the token stylesheet', pub.blixis === GREEN, JSON.stringify(pub));
   check('visitors get the stored colour as the WordPress preset, despite a Site Editor override', pub.preset === GREEN, JSON.stringify(pub));
-  check('fresh generated child renders its neutral starter', pub.starter.mainCount === 1 && pub.starter.headingCount === 1 && pub.starter.hasIntro, JSON.stringify(pub.starter));
+  check('fresh generated child renders the Business layout (starter neutral)', pub.starter.mainCount === 1 && pub.starter.headingCount === 1 && pub.starter.hasIntro, JSON.stringify(pub.starter));
   check('the generated child renders the configured body font', pub.bodyFont.includes('Liberation Sans'), pub.bodyFont);
   check('the generated child renders the configured heading font', pub.headingFont.includes('Georgia'), pub.headingFont);
   check('the generated child receives the configured spacing preset', pub.spacing === '2rem', pub.spacing);
