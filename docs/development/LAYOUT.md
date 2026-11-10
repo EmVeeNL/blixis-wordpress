@@ -1,6 +1,6 @@
 # Layout configuration
 
-**Implemented (task [03-07](../roadmap/phases/03-child-theme-setup-wizard/07-theme-layouts-and-style-presets.md) Part A):** the versioned `BlixisLayoutConfig` contract, its PHP and TypeScript validators, and its stored option. **Planned, not implemented:** Base rendering the settings through its header and footer parts, and the wizard step that edits them. This page says what exists and how the planned parts will use it.
+**Implemented (task [03-07](../roadmap/phases/03-child-theme-setup-wizard/07-theme-layouts-and-style-presets.md) Parts A and C):** the versioned `BlixisLayoutConfig` contract, its PHP and TypeScript validators, stored option, and Blixis Blocks rendering for Base header and footer parts. The wizard step that edits the settings is Part D.
 
 ## What the configuration is
 
@@ -34,22 +34,22 @@ Changing the configuration needs the `edit_theme_options` capability. The store 
 
 Texts (USP items, button text, contact, copyright) are plain text. They are stored trimmed, not escaped, and every output site must escape them for its context (`esc_html()` for text nodes, `esc_attr()` for attributes). Links (the button, the social links) are validated by the contract and must still pass `esc_url()` on output. Copyright text has two placeholders: Base will replace `{year}` with the current year and `{site}` with the site title after escaping the rest.
 
-## How the next step will render it (planned)
+## Rendering
 
-Base renders the settings through its header and footer parts and a small amount of CSS, so changing a setting needs no file writes. The intended mapping, to be confirmed when it is built:
+Blixis Blocks filters Base's rendered header and footer template parts and loads `assets/layout.css` only when a valid configuration applies. The parent theme remains neutral and keeps its original parts when Blocks is inactive or no matching child-theme configuration is stored. A valid `blixis_preview` request uses only the requesting editor's validated layout draft; other requests use the validated stored configuration whose `theme.slug` matches the active stylesheet. Preview responses retain the token preview path's no-store and noindex headers.
 
 | Setting | Rendering |
 |---|---|
-| `header.sticky` | A class on the header that sets `position: sticky` below the admin bar, with `scroll-padding-top` on the root so focused elements and anchor targets are not hidden; no motion, so it needs no reduced-motion rule |
-| `header.usp` | A `ul` above the `header` landmark with a check icon (inline SVG, decorative) per item; still one `banner` landmark |
+| `header.sticky` | `blixis-header is-sticky` sets `position: sticky` below the admin bar; root `scroll-padding-top` keeps focused elements and anchor targets visible |
+| `header.usp` | A `ul` above the header landmark with decorative checks and plain-text items; it adds no landmark |
 | `header.logo` | A class that centres the logo row |
-| `header.cta` | A core button block in the header with the validated URL |
+| `header.cta` | A core button rendered with the validated URL and `blixis-header__cta` class |
 | `header.search` | The core search block |
 | `header.mobileMenu` | The core navigation block's `overlayMenu` attribute: `mobile` for small screens only, `always` for every width |
 | `footer.stickToBottom` | The page wrapper is a column flexbox with `min-height: 100dvh` and the content area growing; no fixed positioning and no overflow at 320 px |
 | `footer.columns`, `contact`, `social`, `copyright`, `backToTop` | Footer part with up to four columns in the fixed order, a list of labelled social links, the copyright paragraph, and an in-page link to the top |
 
-The wizard's **Header and footer** step will edit a draft, preview it with the 03-06 live preview, save with the revision the page was loaded at, and offer rollback, in the same way the token steps do.
+Config text is escaped in its output context and URLs pass through `esc_url()`. The wizard's **Header and footer** step edits a draft, previews it with the live preview, saves with the revision the page was loaded at, and offers rollback.
 
 ## Tests
 

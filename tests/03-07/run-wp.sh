@@ -95,6 +95,67 @@ add_action('rest_api_init', static function (): void {
     ));
 });
 PHP
+cat > wp-content/mu-plugins/t0307-render-fixture.php <<'PHP'
+<?php
+if (isset($_GET['t0307_base']) && '1' === $_GET['t0307_base']) {
+    add_action('plugins_loaded', static function (): void { switch_theme('blixis-base'); }, 0);
+}
+if (isset($_GET['t0307_no_layout']) && '1' === $_GET['t0307_no_layout']) {
+    add_action('init', static function (): void { delete_option(Blixis\Blocks\Layout\STORE_OPTION); }, 0);
+}
+if (isset($_GET['t0307_render_settings']) && '1' === $_GET['t0307_render_settings']) {
+    add_action('init', static function (): void {
+        delete_option(Blixis\Blocks\Layout\STORE_OPTION);
+        $config = Blixis\Blocks\Layout\defaults(get_stylesheet());
+        $config['header']['sticky'] = true;
+        $config['header']['usp'] = array('enabled' => true, 'items' => array('Clear advice', 'Thoughtful delivery', 'Lasting support'));
+        $config['header']['logo'] = 'center';
+        $config['header']['cta'] = array('enabled' => true, 'text' => 'Get in touch', 'url' => '/#contact');
+        $config['header']['search'] = true;
+        $config['header']['mobileMenu'] = 'always';
+        $config['footer']['columns'] = 4;
+        $config['footer']['contact'] = "hello@example.test\n+31 20 555 0100";
+        $config['footer']['social'] = array(
+            array('service' => 'linkedin', 'url' => 'https://example.test/linkedin'),
+            array('service' => 'instagram', 'url' => 'https://example.test/instagram'),
+            array('service' => 'youtube', 'url' => 'https://example.test/youtube'),
+        );
+        $config['footer']['backToTop'] = true;
+        $config['footer']['copyright'] = array('enabled' => true, 'text' => '© {year} {site}');
+        $result = Blixis\Blocks\Layout\store_write(Blixis\Blocks\Tokens\canonical_json($config), 0);
+        update_option('t0307_layout_write_result', is_wp_error($result) ? $result->get_error_code() : 'saved');
+    }, 0);
+}
+if (isset($_GET['t0307_preview_seed']) && '1' === $_GET['t0307_preview_seed']) {
+    add_action('init', static function (): void {
+        if (!is_user_logged_in() || !current_user_can('edit_theme_options')) return;
+        $config = Blixis\Blocks\Layout\defaults(get_stylesheet());
+        $config['header']['usp'] = array('enabled' => true, 'items' => array('Owner private draft'));
+        $tokens = Blixis\Blocks\Setup\defaults();
+        $tokens['theme']['slug'] = get_stylesheet();
+        update_user_meta(get_current_user_id(), Blixis\Blocks\Tokens\DRAFT_META, wp_slash(wp_json_encode(array(
+            'config' => $tokens,
+            'base_revision' => 0,
+            'layout' => $config,
+            'layout_base_revision' => 0,
+            'done' => array(),
+        ))));
+    }, 1);
+}
+add_action('wp_head', static function (): void {
+    if (isset($_GET['t0307_render_settings']) && '1' === $_GET['t0307_render_settings']) {
+        echo '<meta name="t0307-layout-write" content="' . esc_attr((string) get_option('t0307_layout_write_result')) . '">' . "\n";
+    }
+    if (isset($_GET['t0307_preview_nonce']) && '1' === $_GET['t0307_preview_nonce']) {
+        echo '<meta name="t0307-preview-nonce" content="' . esc_attr(wp_create_nonce('blixis_preview')) . '">' . "\n";
+    }
+});
+add_action('send_headers', static function (): void {
+    if (isset($_GET['t0307_preview_nonce']) && '1' === $_GET['t0307_preview_nonce']) {
+        header('X-T0307-Preview-Nonce: ' . wp_create_nonce('blixis_preview'));
+    }
+});
+PHP
 # Create one theme for every layout through the real authenticated REST route.
 # shellcheck disable=SC2016 # PHP is literal source passed to wp eval.
 wp eval '
