@@ -224,20 +224,31 @@ async function readOnlyChecks(browser, label) {
   await noOverflow(page, `tabs and two-column shell at 1280px (${label})`);
   const desktopShell = await page.evaluate(() => {
     const links = [...document.querySelectorAll('.blixis-setup-progress li a')];
-    const oneLine = links.every((link) => ['.blixis-setup-progress-number', '.blixis-setup-progress-name'].every((selector) => {
-      const el = link.querySelector(selector);
-      return getComputedStyle(el).whiteSpace === 'nowrap';
-    }));
+    // "Step N" stays on one line; the name may wrap but is never cut off.
+    const oneLine = links.every((link) => {
+      const number = link.querySelector('.blixis-setup-progress-number');
+      const name = link.querySelector('.blixis-setup-progress-name');
+      return getComputedStyle(number).whiteSpace === 'nowrap' && getComputedStyle(name).textOverflow !== 'ellipsis' && name.scrollWidth <= name.clientWidth + 1;
+    });
+    const tops = new Set(links.map((link) => Math.round(link.getBoundingClientRect().top)));
+    const rows = tops.size;
     const aside = document.querySelector('.blixis-setup-layout__preview');
     const form = document.querySelector('.blixis-setup-layout__form');
-    return { linkCount: links.length, oneLine, sticky: getComputedStyle(aside).position === 'sticky', beside: aside.getBoundingClientRect().left >= form.getBoundingClientRect().right - 1 };
+    return { linkCount: links.length, oneLine, rows, sticky: getComputedStyle(aside).position === 'sticky', beside: aside.getBoundingClientRect().left >= form.getBoundingClientRect().right - 1 };
   });
-  check(`six progress links keep each line to one line at 1280px (${label})`, desktopShell.linkCount === 6 && desktopShell.oneLine, JSON.stringify(desktopShell));
+  check(`six progress tabs share one row, with Step N on one line and no cut-off names at 1280px (${label})`, desktopShell.linkCount === 6 && desktopShell.oneLine && desktopShell.rows === 1, JSON.stringify(desktopShell));
   check(`preview is sticky beside the form at 1280px (${label})`, desktopShell.sticky && desktopShell.beside, JSON.stringify(desktopShell));
   for (const step of ['colors', 'typography', 'layout', 'header', 'review']) {
     await page.goto(`${WIZARD}&step=${step}`);
     await axe(page, `${step} step at 1280px (${label})`);
   }
+  await page.setViewportSize({ width: 960, height: 900 });
+  await page.goto(`${WIZARD}&step=colors`);
+  const at960 = await page.evaluate(() => {
+    const links = [...document.querySelectorAll('.blixis-setup-progress li a')];
+    return { rows: new Set(links.map((link) => Math.round(link.getBoundingClientRect().top))).size, cut: links.some((link) => { const name = link.querySelector('.blixis-setup-progress-name'); return name.scrollWidth > name.clientWidth + 1; }) };
+  });
+  check(`all six progress tabs share one row at 960px, names not cut off (${label})`, at960.rows === 1 && !at960.cut, JSON.stringify(at960));
   await context.close();
 
   const narrow = await login(browser, 'fixture_admin', { width: 320, height: 800 });

@@ -730,6 +730,9 @@ async function headerFlow(browser) {
   await page.getByLabel('Address of link 2').fill('http://insecure.example');
   await page.waitForSelector('[data-client-error]', { timeout: 5000 });
   check('a social link must be https', (await page.getByLabel('Address of link 2').getAttribute('aria-invalid')) === 'true');
+  const removeBox = await page.getByRole('button', { name: 'Remove link 2' }).boundingBox();
+  const urlBox = await page.getByLabel('Address of link 2').boundingBox();
+  check('the remove button is a 2.4rem square level with its field', removeBox.width >= 37 && removeBox.height >= 37 && Math.abs(removeBox.width - removeBox.height) < 2 && Math.abs(removeBox.y - urlBox.y) < 3, JSON.stringify([removeBox, urlBox]));
   await page.getByRole('button', { name: 'Remove link 2' }).click();
   check('removing a link hides its row and clears the error', (await social.count()) === 5 && (await page.locator('[data-client-error]').count()) === 0);
   await frameLoaded(page);
