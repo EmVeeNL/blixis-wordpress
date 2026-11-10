@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "theme": {
+    "slug": "blixis-starter"
+  },
+  "layout": "blank",
+  "header": [],
+  "footer": {
+    "stickToBottom": true,
+    "columns": 1,
+    "contact": "",
+    "social": [],
+    "copyright": {
+      "enabled": true,
+      "text": "© {year} {site}"
+    },
+    "backToTop": false
+  }
+}

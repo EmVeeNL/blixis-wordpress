@@ -1,0 +1,78 @@
+{
+  "schemaVersion": 1,
+  "theme": {
+    "slug": "blixis-starter"
+  },
+  "layout": "blank",
+  "header": {
+    "sticky": false,
+    "usp": {
+      "enabled": false,
+      "items": []
+    },
+    "logo": "start",
+    "cta": {
+      "enabled": false,
+      "text": "",
+      "url": ""
+    },
+    "search": false,
+    "mobileMenu": "mobile"
+  },
+  "footer": {
+    "stickToBottom": true,
+    "columns": 1,
+    "contact": "",
+    "social": [
+      {
+        "service": "other",
+        "url": "https://a.example/"
+      },
+      {
+        "service": "other",
+        "url": "https://a.example/"
+      },
+      {
+        "service": "other",
+        "url": "http://a.example/"
+      },
+      {
+        "service": "other",
+        "url": "https://a.example/"
+      },
+      {
+        "service": "other",
+        "url": "https://a.example/"
+      },
+      {
+        "service": "other",
+        "url": "https://a.example/"
+      },
+      {
+        "service": "other",
+        "url": "https://a.example/"
+      },
+      {
+        "service": "other",
+        "url": "https://a.example/"
+      },
+      {
+        "service": "other",
+        "url": "https://a.example/"
+      },
+      {
+        "service": "other",
+        "url": "https://a.example/"
+      },
+      {
+        "service": "other",
+        "url": "http://a.example/"
+      }
+    ],
+    "copyright": {
+      "enabled": true,
+      "text": "© {year} {site}"
+    },
+    "backToTop": false
+  }
+}

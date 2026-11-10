@@ -1,0 +1,1682 @@
+{
+  "version-missing.json": {
+    "errors": [
+      {
+        "code": "field.required",
+        "path": "/schemaVersion"
+      }
+    ]
+  },
+  "version-string.json": {
+    "errors": [
+      {
+        "code": "field.wrong_type",
+        "path": "/schemaVersion"
+      }
+    ]
+  },
+  "version-null.json": {
+    "errors": [
+      {
+        "code": "field.wrong_type",
+        "path": "/schemaVersion"
+      }
+    ]
+  },
+  "version-2.json": {
+    "errors": [
+      {
+        "code": "schema.version_unsupported",
+        "path": "/schemaVersion"
+      }
+    ]
+  },
+  "version-0.json": {
+    "errors": [
+      {
+        "code": "schema.version_unsupported",
+        "path": "/schemaVersion"
+      }
+    ]
+  },
+  "version-fractional.json": {
+    "errors": [
+      {
+        "code": "schema.version_unsupported",
+        "path": "/schemaVersion"
+      }
+    ]
+  },
+  "root-unknown-key.json": {
+    "errors": [
+      {
+        "code": "field.unknown",
+        "path": "/extra"
+      }
+    ]
+  },
+  "root-token-section.json": {
+    "errors": [
+      {
+        "code": "field.unknown",
+        "path": "/colors"
+      }
+    ]
+  },
+  "theme-missing.json": {
+    "errors": [
+      {
+        "code": "field.required",
+        "path": "/theme"
+      }
+    ]
+  },
+  "theme-array.json": {
+    "errors": [
+      {
+        "code": "field.wrong_type",
+        "path": "/theme"
+      }
+    ]
+  },
+  "theme-string.json": {
+    "errors": [
+      {
+        "code": "field.wrong_type",
+        "path": "/theme"
+      }
+    ]
+  },
+  "theme-parent-is-a-token-field.json": {
+    "errors": [
+      {
+        "code": "field.unknown",
+        "path": "/theme/parent"
+      }
+    ]
+  },
+  "theme-slug-missing.json": {
+    "errors": [
+      {
+        "code": "field.required",
+        "path": "/theme/slug"
+      }
+    ]
+  },
+  "theme-slug-number.json": {
+    "errors": [
+      {
+        "code": "field.wrong_type",
+        "path": "/theme/slug"
+      }
+    ]
+  },
+  "theme-slug-uppercase.json": {
+    "errors": [
+      {
+        "code": "theme.slug.invalid",
+        "path": "/theme/slug"
+      }
+    ]
+  },
+  "theme-slug-empty.json": {
+    "errors": [
+      {
+        "code": "theme.slug.invalid",
+        "path": "/theme/slug"
+      }
+    ]
+  },
+  "theme-slug-leading-digit.json": {
+    "errors": [
+      {
+        "code": "theme.slug.invalid",
+        "path": "/theme/slug"
+      }
+    ]
+  },
+  "theme-slug-64-characters.json": {
+    "errors": [
+      {
+        "code": "theme.slug.invalid",
+        "path": "/theme/slug"
+      }
+    ]
+  },
+  "theme-slug-trailing-newline.json": {
+    "errors": [
+      {
+        "code": "theme.slug.invalid",
+        "path": "/theme/slug"
+      }
+    ]
+  },
+  "theme-slug-path.json": {
+    "errors": [
+      {
+        "code": "theme.slug.invalid",
+        "path": "/theme/slug"
+      }
+    ]
+  },
+  "layout-missing.json": {
+    "errors": [
+      {
+        "code": "field.required",
+        "path": "/layout"
+      }
+    ]
+  },
+  "layout-unknown.json": {
+    "errors": [
+      {
+        "code": "layout.invalid",
+        "path": "/layout"
+      }
+    ]
+  },
+  "layout-uppercase.json": {
+    "errors": [
+      {
+        "code": "layout.invalid",
+        "path": "/layout"
+      }
+    ]
+  },
+  "layout-empty.json": {
+    "errors": [
+      {
+        "code": "layout.invalid",
+        "path": "/layout"
+      }
+    ]
+  },
+  "layout-old-starter-value.json": {
+    "errors": [
+      {
+        "code": "layout.invalid",
+        "path": "/layout"
+      }
+    ]
+  },
+  "layout-number.json": {
+    "errors": [
+      {
+        "code": "field.wrong_type",
+        "path": "/layout"
+      }
+    ]
+  },
+  "layout-null.json": {
+    "errors": [
+      {
+        "code": "field.wrong_type",
+        "path": "/layout"
+      }
+    ]
+  },
+  "layout-array.json": {
+    "errors": [
+      {
+        "code": "field.wrong_type",
+        "path": "/layout"
+      }
+    ]
+  },
+  "header-missing.json": {
+    "errors": [
+      {
+        "code": "field.required",
+        "path": "/header"
+      }
+    ]
+  },
+  "header-array.json": {
+    "errors": [
+      {
+        "code": "field.wrong_type",
+        "path": "/header"
+      }
+    ]
+  },
+  "header-unknown-key.json": {
+    "errors": [
+      {
+        "code": "field.unknown",
+        "path": "/header/logoSize"
+      }
+    ]
+  },
+  "header-sticky-missing.json": {
+    "errors": [
+      {
+        "code": "field.required",
+        "path": "/header/sticky"
+      }
+    ]
+  },
+  "header-sticky-string.json": {
+    "errors": [
+      {
+        "code": "field.wrong_type",
+        "path": "/header/sticky"
+      }
+    ]
+  },
+  "header-sticky-number.json": {
+    "errors": [
+      {
+        "code": "field.wrong_type",
+        "path": "/header/sticky"
+      }
+    ]
+  },
+  "header-search-null.json": {
+    "errors": [
+      {
+        "code": "field.wrong_type",
+        "path": "/header/search"
+      }
+    ]
+  },
+  "header-logo-missing.json": {
+    "errors": [
+      {
+        "code": "field.required",
+        "path": "/header/logo"
+      }
+    ]
+  },
+  "header-logo-left.json": {
+    "errors": [
+      {
+        "code": "header.logo.invalid",
+        "path": "/header/logo"
+      }
+    ]
+  },
+  "header-logo-uppercase.json": {
+    "errors": [
+      {
+        "code": "header.logo.invalid",
+        "path": "/header/logo"
+      }
+    ]
+  },
+  "header-logo-number.json": {
+    "errors": [
+      {
+        "code": "field.wrong_type",
+        "path": "/header/logo"
+      }
+    ]
+  },
+  "header-mobile-menu-missing.json": {
+    "errors": [
+      {
+        "code": "field.required",
+        "path": "/header/mobileMenu"
+      }
+    ]
+  },
+  "header-mobile-menu-never.json": {
+    "errors": [
+      {
+        "code": "header.mobile_menu.invalid",
+        "path": "/header/mobileMenu"
+      }
+    ]
+  },
+  "header-mobile-menu-snake-case-key.json": {
+    "errors": [
+      {
+        "code": "field.required",
+        "path": "/header/mobileMenu"
+      },
+      {
+        "code": "field.unknown",
+        "path": "/header/mobile_menu"
+      }
+    ]
+  },
+  "usp-missing.json": {
+    "errors": [
+      {
+        "code": "field.required",
+        "path": "/header/usp"
+      }
+    ]
+  },
+  "usp-string.json": {
+    "errors": [
+      {
+        "code": "field.wrong_type",
+        "path": "/header/usp"
+      }
+    ]
+  },
+  "usp-enabled-missing.json": {
+    "errors": [
+      {
+        "code": "field.required",
+        "path": "/header/usp/enabled"
+      }
+    ]
+  },
+  "usp-enabled-string.json": {
+    "errors": [
+      {
+        "code": "field.wrong_type",
+        "path": "/header/usp/enabled"
+      }
+    ]
+  },
+  "usp-items-missing.json": {
+    "errors": [
+      {
+        "code": "field.required",
+        "path": "/header/usp/items"
+      }
+    ]
+  },
+  "usp-items-object.json": {
+    "errors": [
+      {
+        "code": "field.wrong_type",
+        "path": "/header/usp/items"
+      }
+    ]
+  },
+  "usp-items-string.json": {
+    "errors": [
+      {
+        "code": "field.wrong_type",
+        "path": "/header/usp/items"
+      }
+    ]
+  },
+  "usp-unknown-key.json": {
+    "errors": [
+      {
+        "code": "field.unknown",
+        "path": "/header/usp/icon"
+      }
+    ]
+  },
+  "usp-enabled-without-items.json": {
+    "errors": [
+      {
+        "code": "header.usp.empty",
+        "path": "/header/usp/items"
+      }
+    ]
+  },
+  "usp-four-items.json": {
+    "errors": [
+      {
+        "code": "header.usp.too_many",
+        "path": "/header/usp/items"
+      }
+    ]
+  },
+  "usp-four-items-disabled.json": {
+    "errors": [
+      {
+        "code": "header.usp.too_many",
+        "path": "/header/usp/items"
+      }
+    ]
+  },
+  "usp-four-items-with-a-bad-one.json": {
+    "errors": [
+      {
+        "code": "header.usp.too_many",
+        "path": "/header/usp/items"
+      },
+      {
+        "code": "text.empty",
+        "path": "/header/usp/items/1"
+      }
+    ]
+  },
+  "usp-item-number.json": {
+    "errors": [
+      {
+        "code": "field.wrong_type",
+        "path": "/header/usp/items/0"
+      }
+    ]
+  },
+  "usp-item-null.json": {
+    "errors": [
+      {
+        "code": "field.wrong_type",
+        "path": "/header/usp/items/0"
+      }
+    ]
+  },
+  "usp-item-object.json": {
+    "errors": [
+      {
+        "code": "field.wrong_type",
+        "path": "/header/usp/items/0"
+      }
+    ]
+  },
+  "usp-item-empty.json": {
+    "errors": [
+      {
+        "code": "text.empty",
+        "path": "/header/usp/items/0"
+      }
+    ]
+  },
+  "usp-item-spaces-only.json": {
+    "errors": [
+      {
+        "code": "text.empty",
+        "path": "/header/usp/items/0"
+      }
+    ]
+  },
+  "usp-item-newline-only.json": {
+    "errors": [
+      {
+        "code": "text.empty",
+        "path": "/header/usp/items/0"
+      }
+    ]
+  },
+  "usp-item-61-characters.json": {
+    "errors": [
+      {
+        "code": "text.too_long",
+        "path": "/header/usp/items/0"
+      }
+    ]
+  },
+  "usp-item-61-code-points.json": {
+    "errors": [
+      {
+        "code": "text.too_long",
+        "path": "/header/usp/items/0"
+      }
+    ]
+  },
+  "usp-item-markup.json": {
+    "errors": [
+      {
+        "code": "text.markup",
+        "path": "/header/usp/items/0"
+      }
+    ]
+  },
+  "usp-item-script.json": {
+    "errors": [
+      {
+        "code": "text.markup",
+        "path": "/header/usp/items/0"
+      }
+    ]
+  },
+  "usp-item-only-closing-bracket.json": {
+    "errors": [
+      {
+        "code": "text.markup",
+        "path": "/header/usp/items/0"
+      }
+    ]
+  },
+  "usp-item-inner-newline.json": {
+    "errors": [
+      {
+        "code": "text.control_char",
+        "path": "/header/usp/items/0"
+      }
+    ]
+  },
+  "usp-item-tab.json": {
+    "errors": [
+      {
+        "code": "text.control_char",
+        "path": "/header/usp/items/0"
+      }
+    ]
+  },
+  "usp-item-carriage-return.json": {
+    "errors": [
+      {
+        "code": "text.control_char",
+        "path": "/header/usp/items/0"
+      }
+    ]
+  },
+  "usp-item-nul.json": {
+    "errors": [
+      {
+        "code": "text.control_char",
+        "path": "/header/usp/items/0"
+      }
+    ]
+  },
+  "usp-item-escape.json": {
+    "errors": [
+      {
+        "code": "text.control_char",
+        "path": "/header/usp/items/0"
+      }
+    ]
+  },
+  "usp-item-delete.json": {
+    "errors": [
+      {
+        "code": "text.control_char",
+        "path": "/header/usp/items/0"
+      }
+    ]
+  },
+  "usp-item-c1-next-line.json": {
+    "errors": [
+      {
+        "code": "text.control_char",
+        "path": "/header/usp/items/0"
+      }
+    ]
+  },
+  "usp-item-line-separator.json": {
+    "errors": [
+      {
+        "code": "text.control_char",
+        "path": "/header/usp/items/0"
+      }
+    ]
+  },
+  "usp-item-paragraph-separator.json": {
+    "errors": [
+      {
+        "code": "text.control_char",
+        "path": "/header/usp/items/0"
+      }
+    ]
+  },
+  "usp-item-bidi-override.json": {
+    "errors": [
+      {
+        "code": "text.control_char",
+        "path": "/header/usp/items/0"
+      }
+    ]
+  },
+  "usp-item-bidi-isolate.json": {
+    "errors": [
+      {
+        "code": "text.control_char",
+        "path": "/header/usp/items/0"
+      }
+    ]
+  },
+  "usp-item-byte-order-mark.json": {
+    "errors": [
+      {
+        "code": "text.control_char",
+        "path": "/header/usp/items/0"
+      }
+    ]
+  },
+  "usp-two-bad-items-in-order.json": {
+    "errors": [
+      {
+        "code": "text.markup",
+        "path": "/header/usp/items/1"
+      },
+      {
+        "code": "text.too_long",
+        "path": "/header/usp/items/2"
+      }
+    ]
+  },
+  "cta-missing.json": {
+    "errors": [
+      {
+        "code": "field.required",
+        "path": "/header/cta"
+      }
+    ]
+  },
+  "cta-array.json": {
+    "errors": [
+      {
+        "code": "field.wrong_type",
+        "path": "/header/cta"
+      }
+    ]
+  },
+  "cta-unknown-key.json": {
+    "errors": [
+      {
+        "code": "field.unknown",
+        "path": "/header/cta/target"
+      }
+    ]
+  },
+  "cta-enabled-missing.json": {
+    "errors": [
+      {
+        "code": "field.required",
+        "path": "/header/cta/enabled"
+      }
+    ]
+  },
+  "cta-enabled-string.json": {
+    "errors": [
+      {
+        "code": "field.wrong_type",
+        "path": "/header/cta/enabled"
+      }
+    ]
+  },
+  "cta-text-missing.json": {
+    "errors": [
+      {
+        "code": "field.required",
+        "path": "/header/cta/text"
+      }
+    ]
+  },
+  "cta-text-number.json": {
+    "errors": [
+      {
+        "code": "field.wrong_type",
+        "path": "/header/cta/text"
+      }
+    ]
+  },
+  "cta-url-missing.json": {
+    "errors": [
+      {
+        "code": "field.required",
+        "path": "/header/cta/url"
+      }
+    ]
+  },
+  "cta-url-number.json": {
+    "errors": [
+      {
+        "code": "field.wrong_type",
+        "path": "/header/cta/url"
+      }
+    ]
+  },
+  "cta-enabled-empty-text.json": {
+    "errors": [
+      {
+        "code": "text.empty",
+        "path": "/header/cta/text"
+      }
+    ]
+  },
+  "cta-enabled-spaces-text.json": {
+    "errors": [
+      {
+        "code": "text.empty",
+        "path": "/header/cta/text"
+      }
+    ]
+  },
+  "cta-enabled-empty-url.json": {
+    "errors": [
+      {
+        "code": "url.empty",
+        "path": "/header/cta/url"
+      }
+    ]
+  },
+  "cta-enabled-everything-empty.json": {
+    "errors": [
+      {
+        "code": "text.empty",
+        "path": "/header/cta/text"
+      },
+      {
+        "code": "url.empty",
+        "path": "/header/cta/url"
+      }
+    ]
+  },
+  "cta-text-31-characters.json": {
+    "errors": [
+      {
+        "code": "text.too_long",
+        "path": "/header/cta/text"
+      }
+    ]
+  },
+  "cta-text-markup.json": {
+    "errors": [
+      {
+        "code": "text.markup",
+        "path": "/header/cta/text"
+      }
+    ]
+  },
+  "cta-text-newline.json": {
+    "errors": [
+      {
+        "code": "text.control_char",
+        "path": "/header/cta/text"
+      }
+    ]
+  },
+  "cta-disabled-text-too-long.json": {
+    "errors": [
+      {
+        "code": "text.too_long",
+        "path": "/header/cta/text"
+      }
+    ]
+  },
+  "cta-disabled-url-invalid.json": {
+    "errors": [
+      {
+        "code": "url.invalid",
+        "path": "/header/cta/url"
+      }
+    ]
+  },
+  "cta-url-javascript.json": {
+    "errors": [
+      {
+        "code": "url.invalid",
+        "path": "/header/cta/url"
+      }
+    ]
+  },
+  "cta-url-javascript-uppercase.json": {
+    "errors": [
+      {
+        "code": "url.invalid",
+        "path": "/header/cta/url"
+      }
+    ]
+  },
+  "cta-url-javascript-entity.json": {
+    "errors": [
+      {
+        "code": "url.invalid",
+        "path": "/header/cta/url"
+      }
+    ]
+  },
+  "cta-url-data.json": {
+    "errors": [
+      {
+        "code": "url.invalid",
+        "path": "/header/cta/url"
+      }
+    ]
+  },
+  "cta-url-vbscript.json": {
+    "errors": [
+      {
+        "code": "url.invalid",
+        "path": "/header/cta/url"
+      }
+    ]
+  },
+  "cta-url-mailto.json": {
+    "errors": [
+      {
+        "code": "url.invalid",
+        "path": "/header/cta/url"
+      }
+    ]
+  },
+  "cta-url-tel.json": {
+    "errors": [
+      {
+        "code": "url.invalid",
+        "path": "/header/cta/url"
+      }
+    ]
+  },
+  "cta-url-ftp.json": {
+    "errors": [
+      {
+        "code": "url.invalid",
+        "path": "/header/cta/url"
+      }
+    ]
+  },
+  "cta-url-protocol-relative.json": {
+    "errors": [
+      {
+        "code": "url.invalid",
+        "path": "/header/cta/url"
+      }
+    ]
+  },
+  "cta-url-slash-backslash.json": {
+    "errors": [
+      {
+        "code": "url.invalid",
+        "path": "/header/cta/url"
+      }
+    ]
+  },
+  "cta-url-no-scheme.json": {
+    "errors": [
+      {
+        "code": "url.invalid",
+        "path": "/header/cta/url"
+      }
+    ]
+  },
+  "cta-url-relative-no-slash.json": {
+    "errors": [
+      {
+        "code": "url.invalid",
+        "path": "/header/cta/url"
+      }
+    ]
+  },
+  "cta-url-fragment-only.json": {
+    "errors": [
+      {
+        "code": "url.invalid",
+        "path": "/header/cta/url"
+      }
+    ]
+  },
+  "cta-url-query-only.json": {
+    "errors": [
+      {
+        "code": "url.invalid",
+        "path": "/header/cta/url"
+      }
+    ]
+  },
+  "cta-url-scheme-only.json": {
+    "errors": [
+      {
+        "code": "url.invalid",
+        "path": "/header/cta/url"
+      }
+    ]
+  },
+  "cta-url-userinfo.json": {
+    "errors": [
+      {
+        "code": "url.invalid",
+        "path": "/header/cta/url"
+      }
+    ]
+  },
+  "cta-url-userinfo-lookalike.json": {
+    "errors": [
+      {
+        "code": "url.invalid",
+        "path": "/header/cta/url"
+      }
+    ]
+  },
+  "cta-url-backslash-host.json": {
+    "errors": [
+      {
+        "code": "url.invalid",
+        "path": "/header/cta/url"
+      }
+    ]
+  },
+  "cta-url-uppercase-scheme.json": {
+    "errors": [
+      {
+        "code": "url.invalid",
+        "path": "/header/cta/url"
+      }
+    ]
+  },
+  "cta-url-ipv6-literal.json": {
+    "errors": [
+      {
+        "code": "url.invalid",
+        "path": "/header/cta/url"
+      }
+    ]
+  },
+  "cta-url-unicode-host.json": {
+    "errors": [
+      {
+        "code": "url.invalid",
+        "path": "/header/cta/url"
+      }
+    ]
+  },
+  "cta-url-unicode-path.json": {
+    "errors": [
+      {
+        "code": "url.invalid",
+        "path": "/header/cta/url"
+      }
+    ]
+  },
+  "cta-url-underscore-host.json": {
+    "errors": [
+      {
+        "code": "url.invalid",
+        "path": "/header/cta/url"
+      }
+    ]
+  },
+  "cta-url-empty-label.json": {
+    "errors": [
+      {
+        "code": "url.invalid",
+        "path": "/header/cta/url"
+      }
+    ]
+  },
+  "cta-url-trailing-dot.json": {
+    "errors": [
+      {
+        "code": "url.invalid",
+        "path": "/header/cta/url"
+      }
+    ]
+  },
+  "cta-url-hyphen-edge.json": {
+    "errors": [
+      {
+        "code": "url.invalid",
+        "path": "/header/cta/url"
+      }
+    ]
+  },
+  "cta-url-port-six-digits.json": {
+    "errors": [
+      {
+        "code": "url.invalid",
+        "path": "/header/cta/url"
+      }
+    ]
+  },
+  "cta-url-empty-port.json": {
+    "errors": [
+      {
+        "code": "url.invalid",
+        "path": "/header/cta/url"
+      }
+    ]
+  },
+  "cta-url-space.json": {
+    "errors": [
+      {
+        "code": "url.invalid",
+        "path": "/header/cta/url"
+      }
+    ]
+  },
+  "cta-url-leading-space.json": {
+    "errors": [
+      {
+        "code": "url.invalid",
+        "path": "/header/cta/url"
+      }
+    ]
+  },
+  "cta-url-trailing-newline.json": {
+    "errors": [
+      {
+        "code": "url.invalid",
+        "path": "/header/cta/url"
+      }
+    ]
+  },
+  "cta-url-tab.json": {
+    "errors": [
+      {
+        "code": "url.invalid",
+        "path": "/header/cta/url"
+      }
+    ]
+  },
+  "cta-url-nul.json": {
+    "errors": [
+      {
+        "code": "url.invalid",
+        "path": "/header/cta/url"
+      }
+    ]
+  },
+  "cta-url-double-quote.json": {
+    "errors": [
+      {
+        "code": "url.invalid",
+        "path": "/header/cta/url"
+      }
+    ]
+  },
+  "cta-url-angle-bracket.json": {
+    "errors": [
+      {
+        "code": "url.invalid",
+        "path": "/header/cta/url"
+      }
+    ]
+  },
+  "cta-url-backtick.json": {
+    "errors": [
+      {
+        "code": "url.invalid",
+        "path": "/header/cta/url"
+      }
+    ]
+  },
+  "cta-url-braces.json": {
+    "errors": [
+      {
+        "code": "url.invalid",
+        "path": "/header/cta/url"
+      }
+    ]
+  },
+  "cta-url-bad-percent.json": {
+    "errors": [
+      {
+        "code": "url.invalid",
+        "path": "/header/cta/url"
+      }
+    ]
+  },
+  "cta-url-truncated-percent.json": {
+    "errors": [
+      {
+        "code": "url.invalid",
+        "path": "/header/cta/url"
+      }
+    ]
+  },
+  "cta-url-2049-characters.json": {
+    "errors": [
+      {
+        "code": "url.invalid",
+        "path": "/header/cta/url"
+      }
+    ]
+  },
+  "footer-missing.json": {
+    "errors": [
+      {
+        "code": "field.required",
+        "path": "/footer"
+      }
+    ]
+  },
+  "footer-array.json": {
+    "errors": [
+      {
+        "code": "field.wrong_type",
+        "path": "/footer"
+      }
+    ]
+  },
+  "footer-unknown-key.json": {
+    "errors": [
+      {
+        "code": "field.unknown",
+        "path": "/footer/fixed"
+      }
+    ]
+  },
+  "footer-stick-missing.json": {
+    "errors": [
+      {
+        "code": "field.required",
+        "path": "/footer/stickToBottom"
+      }
+    ]
+  },
+  "footer-stick-string.json": {
+    "errors": [
+      {
+        "code": "field.wrong_type",
+        "path": "/footer/stickToBottom"
+      }
+    ]
+  },
+  "footer-back-to-top-missing.json": {
+    "errors": [
+      {
+        "code": "field.required",
+        "path": "/footer/backToTop"
+      }
+    ]
+  },
+  "footer-back-to-top-number.json": {
+    "errors": [
+      {
+        "code": "field.wrong_type",
+        "path": "/footer/backToTop"
+      }
+    ]
+  },
+  "footer-columns-missing.json": {
+    "errors": [
+      {
+        "code": "field.required",
+        "path": "/footer/columns"
+      }
+    ]
+  },
+  "footer-columns-string.json": {
+    "errors": [
+      {
+        "code": "field.wrong_type",
+        "path": "/footer/columns"
+      }
+    ]
+  },
+  "footer-columns-null.json": {
+    "errors": [
+      {
+        "code": "field.wrong_type",
+        "path": "/footer/columns"
+      }
+    ]
+  },
+  "footer-columns-bool.json": {
+    "errors": [
+      {
+        "code": "field.wrong_type",
+        "path": "/footer/columns"
+      }
+    ]
+  },
+  "footer-columns-zero.json": {
+    "errors": [
+      {
+        "code": "footer.columns.invalid",
+        "path": "/footer/columns"
+      }
+    ]
+  },
+  "footer-columns-five.json": {
+    "errors": [
+      {
+        "code": "footer.columns.invalid",
+        "path": "/footer/columns"
+      }
+    ]
+  },
+  "footer-columns-negative.json": {
+    "errors": [
+      {
+        "code": "footer.columns.invalid",
+        "path": "/footer/columns"
+      }
+    ]
+  },
+  "footer-columns-fractional.json": {
+    "errors": [
+      {
+        "code": "footer.columns.invalid",
+        "path": "/footer/columns"
+      }
+    ]
+  },
+  "footer-columns-just-above-four.json": {
+    "errors": [
+      {
+        "code": "footer.columns.invalid",
+        "path": "/footer/columns"
+      }
+    ]
+  },
+  "footer-contact-missing.json": {
+    "errors": [
+      {
+        "code": "field.required",
+        "path": "/footer/contact"
+      }
+    ]
+  },
+  "footer-contact-number.json": {
+    "errors": [
+      {
+        "code": "field.wrong_type",
+        "path": "/footer/contact"
+      }
+    ]
+  },
+  "footer-contact-201-characters.json": {
+    "errors": [
+      {
+        "code": "text.too_long",
+        "path": "/footer/contact"
+      }
+    ]
+  },
+  "footer-contact-newlines-count.json": {
+    "errors": [
+      {
+        "code": "text.too_long",
+        "path": "/footer/contact"
+      }
+    ]
+  },
+  "footer-contact-markup.json": {
+    "errors": [
+      {
+        "code": "text.markup",
+        "path": "/footer/contact"
+      }
+    ]
+  },
+  "footer-contact-tab.json": {
+    "errors": [
+      {
+        "code": "text.control_char",
+        "path": "/footer/contact"
+      }
+    ]
+  },
+  "footer-contact-carriage-return.json": {
+    "errors": [
+      {
+        "code": "text.control_char",
+        "path": "/footer/contact"
+      }
+    ]
+  },
+  "footer-contact-nul.json": {
+    "errors": [
+      {
+        "code": "text.control_char",
+        "path": "/footer/contact"
+      }
+    ]
+  },
+  "footer-contact-line-separator.json": {
+    "errors": [
+      {
+        "code": "text.control_char",
+        "path": "/footer/contact"
+      }
+    ]
+  },
+  "social-missing.json": {
+    "errors": [
+      {
+        "code": "field.required",
+        "path": "/footer/social"
+      }
+    ]
+  },
+  "social-object.json": {
+    "errors": [
+      {
+        "code": "field.wrong_type",
+        "path": "/footer/social"
+      }
+    ]
+  },
+  "social-string.json": {
+    "errors": [
+      {
+        "code": "field.wrong_type",
+        "path": "/footer/social"
+      }
+    ]
+  },
+  "social-item-string.json": {
+    "errors": [
+      {
+        "code": "field.wrong_type",
+        "path": "/footer/social/0"
+      }
+    ]
+  },
+  "social-item-array.json": {
+    "errors": [
+      {
+        "code": "field.wrong_type",
+        "path": "/footer/social/0"
+      }
+    ]
+  },
+  "social-item-unknown-key.json": {
+    "errors": [
+      {
+        "code": "field.unknown",
+        "path": "/footer/social/0/label"
+      }
+    ]
+  },
+  "social-item-service-missing.json": {
+    "errors": [
+      {
+        "code": "field.required",
+        "path": "/footer/social/0/service"
+      }
+    ]
+  },
+  "social-item-url-missing.json": {
+    "errors": [
+      {
+        "code": "field.required",
+        "path": "/footer/social/0/url"
+      }
+    ]
+  },
+  "social-service-number.json": {
+    "errors": [
+      {
+        "code": "field.wrong_type",
+        "path": "/footer/social/0/service"
+      }
+    ]
+  },
+  "social-service-unknown.json": {
+    "errors": [
+      {
+        "code": "footer.social.service_invalid",
+        "path": "/footer/social/0/service"
+      }
+    ]
+  },
+  "social-service-uppercase.json": {
+    "errors": [
+      {
+        "code": "footer.social.service_invalid",
+        "path": "/footer/social/0/service"
+      }
+    ]
+  },
+  "social-service-empty.json": {
+    "errors": [
+      {
+        "code": "footer.social.service_invalid",
+        "path": "/footer/social/0/service"
+      }
+    ]
+  },
+  "social-url-number.json": {
+    "errors": [
+      {
+        "code": "field.wrong_type",
+        "path": "/footer/social/0/url"
+      }
+    ]
+  },
+  "social-url-empty.json": {
+    "errors": [
+      {
+        "code": "url.empty",
+        "path": "/footer/social/0/url"
+      }
+    ]
+  },
+  "social-url-http.json": {
+    "errors": [
+      {
+        "code": "url.invalid",
+        "path": "/footer/social/0/url"
+      }
+    ]
+  },
+  "social-url-relative.json": {
+    "errors": [
+      {
+        "code": "url.invalid",
+        "path": "/footer/social/0/url"
+      }
+    ]
+  },
+  "social-url-protocol-relative.json": {
+    "errors": [
+      {
+        "code": "url.invalid",
+        "path": "/footer/social/0/url"
+      }
+    ]
+  },
+  "social-url-javascript.json": {
+    "errors": [
+      {
+        "code": "url.invalid",
+        "path": "/footer/social/0/url"
+      }
+    ]
+  },
+  "social-url-userinfo.json": {
+    "errors": [
+      {
+        "code": "url.invalid",
+        "path": "/footer/social/0/url"
+      }
+    ]
+  },
+  "social-url-space.json": {
+    "errors": [
+      {
+        "code": "url.invalid",
+        "path": "/footer/social/0/url"
+      }
+    ]
+  },
+  "social-url-2049-characters.json": {
+    "errors": [
+      {
+        "code": "url.invalid",
+        "path": "/footer/social/0/url"
+      }
+    ]
+  },
+  "social-seven.json": {
+    "errors": [
+      {
+        "code": "footer.social.too_many",
+        "path": "/footer/social"
+      }
+    ]
+  },
+  "social-eleven-with-two-bad-ones.json": {
+    "errors": [
+      {
+        "code": "footer.social.too_many",
+        "path": "/footer/social"
+      },
+      {
+        "code": "url.invalid",
+        "path": "/footer/social/10/url"
+      },
+      {
+        "code": "url.invalid",
+        "path": "/footer/social/2/url"
+      }
+    ]
+  },
+  "copyright-missing.json": {
+    "errors": [
+      {
+        "code": "field.required",
+        "path": "/footer/copyright"
+      }
+    ]
+  },
+  "copyright-string.json": {
+    "errors": [
+      {
+        "code": "field.wrong_type",
+        "path": "/footer/copyright"
+      }
+    ]
+  },
+  "copyright-unknown-key.json": {
+    "errors": [
+      {
+        "code": "field.unknown",
+        "path": "/footer/copyright/holder"
+      }
+    ]
+  },
+  "copyright-enabled-missing.json": {
+    "errors": [
+      {
+        "code": "field.required",
+        "path": "/footer/copyright/enabled"
+      }
+    ]
+  },
+  "copyright-enabled-number.json": {
+    "errors": [
+      {
+        "code": "field.wrong_type",
+        "path": "/footer/copyright/enabled"
+      }
+    ]
+  },
+  "copyright-text-missing.json": {
+    "errors": [
+      {
+        "code": "field.required",
+        "path": "/footer/copyright/text"
+      }
+    ]
+  },
+  "copyright-text-number.json": {
+    "errors": [
+      {
+        "code": "field.wrong_type",
+        "path": "/footer/copyright/text"
+      }
+    ]
+  },
+  "copyright-enabled-empty-text.json": {
+    "errors": [
+      {
+        "code": "text.empty",
+        "path": "/footer/copyright/text"
+      }
+    ]
+  },
+  "copyright-text-121-characters.json": {
+    "errors": [
+      {
+        "code": "text.too_long",
+        "path": "/footer/copyright/text"
+      }
+    ]
+  },
+  "copyright-unknown-placeholder.json": {
+    "errors": [
+      {
+        "code": "text.placeholder_unknown",
+        "path": "/footer/copyright/text"
+      }
+    ]
+  },
+  "copyright-placeholder-uppercase.json": {
+    "errors": [
+      {
+        "code": "text.placeholder_unknown",
+        "path": "/footer/copyright/text"
+      }
+    ]
+  },
+  "copyright-placeholder-nested.json": {
+    "errors": [
+      {
+        "code": "text.placeholder_unknown",
+        "path": "/footer/copyright/text"
+      }
+    ]
+  },
+  "copyright-placeholder-built-by-removal.json": {
+    "errors": [
+      {
+        "code": "text.placeholder_unknown",
+        "path": "/footer/copyright/text"
+      }
+    ]
+  },
+  "copyright-placeholder-unclosed.json": {
+    "errors": [
+      {
+        "code": "text.placeholder_unknown",
+        "path": "/footer/copyright/text"
+      }
+    ]
+  },
+  "copyright-lone-closing-brace.json": {
+    "errors": [
+      {
+        "code": "text.placeholder_unknown",
+        "path": "/footer/copyright/text"
+      }
+    ]
+  },
+  "copyright-placeholder-with-space.json": {
+    "errors": [
+      {
+        "code": "text.placeholder_unknown",
+        "path": "/footer/copyright/text"
+      }
+    ]
+  },
+  "copyright-markup.json": {
+    "errors": [
+      {
+        "code": "text.markup",
+        "path": "/footer/copyright/text"
+      }
+    ]
+  },
+  "copyright-newline.json": {
+    "errors": [
+      {
+        "code": "text.control_char",
+        "path": "/footer/copyright/text"
+      }
+    ]
+  },
+  "copyright-disabled-bad-placeholder.json": {
+    "errors": [
+      {
+        "code": "text.placeholder_unknown",
+        "path": "/footer/copyright/text"
+      }
+    ]
+  },
+  "many-errors.json": {
+    "errors": [
+      {
+        "code": "field.unknown",
+        "path": "/extra"
+      },
+      {
+        "code": "footer.columns.invalid",
+        "path": "/footer/columns"
+      },
+      {
+        "code": "text.markup",
+        "path": "/footer/contact"
+      },
+      {
+        "code": "text.empty",
+        "path": "/header/cta/text"
+      },
+      {
+        "code": "url.invalid",
+        "path": "/header/cta/url"
+      },
+      {
+        "code": "header.logo.invalid",
+        "path": "/header/logo"
+      },
+      {
+        "code": "layout.invalid",
+        "path": "/layout"
+      }
+    ]
+  }
+}

@@ -1,0 +1,266 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://blixis.invalid/contracts/layout/v1/blixis-layout-config.schema.json",
+  "title": "BlixisLayoutConfig v1",
+  "description": "Generated from layout-map.json by packages/tokens/scripts/layout-contract.ts. Patterns use ECMA-262 semantics; a PCRE implementation must add the D modifier, or $ accepts a trailing newline. The schema describes the normalized form: the validators trim a text value (space and line feed) before they check it, and a CTA url may be empty only while the CTA is off. Length counts Unicode code points.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "theme",
+    "layout",
+    "header",
+    "footer"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": 1
+    },
+    "theme": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "slug"
+      ],
+      "properties": {
+        "slug": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]{0,62}$"
+        }
+      }
+    },
+    "layout": {
+      "enum": [
+        "blank",
+        "business",
+        "portfolio",
+        "blog",
+        "landing"
+      ]
+    },
+    "header": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "sticky",
+        "usp",
+        "logo",
+        "cta",
+        "search",
+        "mobileMenu"
+      ],
+      "properties": {
+        "sticky": {
+          "type": "boolean"
+        },
+        "usp": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "enabled",
+            "items"
+          ],
+          "properties": {
+            "enabled": {
+              "type": "boolean"
+            },
+            "items": {
+              "type": "array",
+              "maxItems": 3,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 60,
+                "pattern": "^(?:(?![ \\n])[^\\u0000-\\u001F\\u007F-\\u009F\\u2028\\u2029\\u202A-\\u202E\\u2066-\\u2069\\uFEFF<>]*(?<![ \\n]))?$"
+              }
+            }
+          },
+          "if": {
+            "properties": {
+              "enabled": {
+                "const": true
+              }
+            },
+            "required": [
+              "enabled"
+            ]
+          },
+          "then": {
+            "properties": {
+              "items": {
+                "minItems": 1
+              }
+            }
+          }
+        },
+        "logo": {
+          "enum": [
+            "start",
+            "center"
+          ]
+        },
+        "cta": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "enabled",
+            "text",
+            "url"
+          ],
+          "properties": {
+            "enabled": {
+              "type": "boolean"
+            },
+            "text": {
+              "type": "string",
+              "minLength": 0,
+              "maxLength": 30,
+              "pattern": "^(?:(?![ \\n])[^\\u0000-\\u001F\\u007F-\\u009F\\u2028\\u2029\\u202A-\\u202E\\u2066-\\u2069\\uFEFF<>]*(?<![ \\n]))?$"
+            },
+            "url": {
+              "type": "string",
+              "maxLength": 2048,
+              "pattern": "^(?:https?://[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?(?:\\.[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?)*(?::[0-9]{1,5})?(?:[/?#](?:%[0-9A-Fa-f]{2}|[A-Za-z0-9\\-._~:/?#\\[\\]@!$&'()*+,;=])*)?|/(?!/)(?:%[0-9A-Fa-f]{2}|[A-Za-z0-9\\-._~:/?#\\[\\]@!$&'()*+,;=])*)$|^$"
+            }
+          },
+          "if": {
+            "properties": {
+              "enabled": {
+                "const": true
+              }
+            },
+            "required": [
+              "enabled"
+            ]
+          },
+          "then": {
+            "properties": {
+              "text": {
+                "minLength": 1
+              },
+              "url": {
+                "minLength": 1
+              }
+            }
+          }
+        },
+        "search": {
+          "type": "boolean"
+        },
+        "mobileMenu": {
+          "enum": [
+            "mobile",
+            "always"
+          ]
+        }
+      }
+    },
+    "footer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "stickToBottom",
+        "columns",
+        "contact",
+        "social",
+        "copyright",
+        "backToTop"
+      ],
+      "properties": {
+        "stickToBottom": {
+          "type": "boolean"
+        },
+        "columns": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 4
+        },
+        "contact": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 200,
+          "pattern": "^(?:(?![ \\n])[^\\u0000-\\u0009\\u000B-\\u001F\\u007F-\\u009F\\u2028\\u2029\\u202A-\\u202E\\u2066-\\u2069\\uFEFF<>]*(?<![ \\n]))?$"
+        },
+        "social": {
+          "type": "array",
+          "maxItems": 6,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "service",
+              "url"
+            ],
+            "properties": {
+              "service": {
+                "enum": [
+                  "facebook",
+                  "instagram",
+                  "linkedin",
+                  "x",
+                  "youtube",
+                  "tiktok",
+                  "mastodon",
+                  "bluesky",
+                  "github",
+                  "other"
+                ]
+              },
+              "url": {
+                "type": "string",
+                "maxLength": 2048,
+                "pattern": "^https://[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?(?:\\.[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?)*(?::[0-9]{1,5})?(?:[/?#](?:%[0-9A-Fa-f]{2}|[A-Za-z0-9\\-._~:/?#\\[\\]@!$&'()*+,;=])*)?$"
+              }
+            }
+          }
+        },
+        "copyright": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "enabled",
+            "text"
+          ],
+          "properties": {
+            "enabled": {
+              "type": "boolean"
+            },
+            "text": {
+              "allOf": [
+                {
+                  "type": "string",
+                  "minLength": 0,
+                  "maxLength": 120,
+                  "pattern": "^(?:(?![ \\n])[^\\u0000-\\u001F\\u007F-\\u009F\\u2028\\u2029\\u202A-\\u202E\\u2066-\\u2069\\uFEFF<>]*(?<![ \\n]))?$"
+                },
+                {
+                  "pattern": "^(?:[^{}]|\\{year\\}|\\{site\\})*$"
+                }
+              ]
+            }
+          },
+          "if": {
+            "properties": {
+              "enabled": {
+                "const": true
+              }
+            },
+            "required": [
+              "enabled"
+            ]
+          },
+          "then": {
+            "properties": {
+              "text": {
+                "minLength": 1
+              }
+            }
+          }
+        },
+        "backToTop": {
+          "type": "boolean"
+        }
+      }
+    }
+  }
+}

@@ -2,19 +2,19 @@
 id: "03-07"
 title: "Create a theme from layouts, header and footer settings, and style presets"
 phase: "03"
-status: Ready
+status: Busy
 priority: P0
 owner: "EmVeeNL"
 created_at: "2026-11-10"
 updated_at: "2026-11-10"
 depends_on: ["03-06"]
-branch: null
+branch: "feat/03-07-layout-contract"
 pr_number: null
 pr_url: null
 commit_sha: null
 merged_at: null
 merge_commit_sha: null
-started_at: null
+started_at: "2026-11-10"
 completed_at: null
 closed_at: null
 blocked_reason: null
@@ -100,11 +100,11 @@ Extend the 03-06 harness: create a theme for each layout and preset in a disposa
 
 - **Priority:** P0
 - **Dependencies:** `03-06`
-- **Branch:** Not created.
+- **Branches:** `feat/03-07-layout-contract` (Part A, layout configuration contract), `feat/03-07-layouts-presets` (Part B, layouts and style presets); wave 2 follows.
 - **Commit references:** None.
 - **PR number and URL:** None.
-- **Started / completed / closed:** Not recorded.
-- **Status:** Ready. Michael confirmed the scope and the owner decisions on 2026-11-10; dependency `03-06` is Done. Phase 03 exit (MVP-0) waits for this task. Follow [status workflow](../../../development/STATUS_WORKFLOW.md).
+- **Started / completed / closed:** Started 2026-11-10.
+- **Status:** Busy (wave 1 of 2). Michael confirmed the scope and the owner decisions on 2026-11-10; dependency `03-06` is Done. Phase 03 exit (MVP-0) waits for this task. Follow [status workflow](../../../development/STATUS_WORKFLOW.md).
 
 ## Status history
 
@@ -112,3 +112,4 @@ Extend the 03-06 harness: create a theme for each layout and preset in a disposa
 |---|---|---|
 | 2026-11-10 | New → Backlog | Michael asked for theme creation from layouts, header and footer settings, and style presets, and chose owner decisions 1 to 4. The proposal awaits his confirmation. |
 | 2026-11-10 | Backlog → Ready | Michael confirmed the proposed layouts, header and footer settings, presets, and wizard changes; dependency `03-06` is Done ([PR #47](https://github.com/EmVeeNL/blixis-wordpress/pull/47)); owner recorded. |
+| 2026-11-10 | Ready → Busy | Wave 1 started from `c8fe8e9`: branches `feat/03-07-layout-contract` (Claude Sonnet 5.5) and `feat/03-07-layouts-presets` (Codex gpt-6-luna). |

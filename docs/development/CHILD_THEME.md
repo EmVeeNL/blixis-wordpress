@@ -50,3 +50,5 @@ Files are written to a hidden staging directory in the theme root and moved into
 - WordPress recognises the generated theme with Base as parent and the expected headers. Base's files are byte-identical afterwards, and no staging directory remains.
 - The activated child renders a page with one `main` and one `h1` and loads its stylesheet after Base's. After a simulated Base upgrade (new version and a changed footer part), the child still renders and shows the new part.
 - No PHP errors, warnings, notices, or deprecations are logged.
+
+See also the [layout configuration](LAYOUT.md): the header and footer settings of a child theme are stored as a versioned contract, separate from the files this generator writes.

@@ -53,7 +53,7 @@ stage="$(mktemp -d)"
 trap 'rm -rf "$stage"; cleanup' EXIT
 
 # Stage the bundle in a temp dir (bsdtar on macOS has no --transform).
-cp -R run-wp.sh check.php check-v2.php verify.php browser.mjs "$stage/"
+cp -R run-wp.sh check.php check-v2.php check-layout.php verify.php browser.mjs "$stage/"
 # Fixture fonts: Liberation Sans (SIL OFL 1.1) from the pinned Playwright image. Used only in
 # the throwaway site and never committed.
 image="${T0305_BROWSER_IMAGE:-mcr.microsoft.com/playwright:v1.65.0-noble@sha256:6e3fb709361521eb27161606e6da6d2674e5e89fa16516cb37d6fdd91372273d}"

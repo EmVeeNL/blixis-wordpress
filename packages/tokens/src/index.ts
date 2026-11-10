@@ -21,3 +21,13 @@ export {
   shadowColors,
   toSrgb,
 } from "./color.ts";
+export { type LayoutMap, layoutMap } from "./layout-map.ts";
+export {
+  type LayoutConfig,
+  type LayoutError,
+  type LayoutResult,
+  layoutDefaults,
+  migrateLayoutConfig,
+  validateLayoutBytes,
+  validateLayoutText,
+} from "./layout.ts";

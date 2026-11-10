@@ -1,0 +1,166 @@
+{
+  "contact-200-characters": {
+    "canonical": "{\"footer\":{\"backToTop\":false,\"columns\":1,\"contact\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\\nbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\",\"copyright\":{\"enabled\":true,\"text\":\"© {year} {site}\"},\"social\":[],\"stickToBottom\":true},\"header\":{\"cta\":{\"enabled\":false,\"text\":\"\",\"url\":\"\"},\"logo\":\"start\",\"mobileMenu\":\"mobile\",\"search\":false,\"sticky\":false,\"usp\":{\"enabled\":false,\"items\":[]}},\"layout\":\"blank\",\"schemaVersion\":1,\"theme\":{\"slug\":\"blixis-starter\"}}",
+    "hash": "9fdec40229ad2f13"
+  },
+  "contact-multiline": {
+    "canonical": "{\"footer\":{\"backToTop\":false,\"columns\":1,\"contact\":\"Line one\\n\\nLine three\\nأحمد\",\"copyright\":{\"enabled\":true,\"text\":\"© {year} {site}\"},\"social\":[],\"stickToBottom\":true},\"header\":{\"cta\":{\"enabled\":false,\"text\":\"\",\"url\":\"\"},\"logo\":\"start\",\"mobileMenu\":\"mobile\",\"search\":false,\"sticky\":false,\"usp\":{\"enabled\":false,\"items\":[]}},\"layout\":\"blank\",\"schemaVersion\":1,\"theme\":{\"slug\":\"blixis-starter\"}}",
+    "hash": "85d43990508c3849"
+  },
+  "copyright-120-characters": {
+    "canonical": "{\"footer\":{\"backToTop\":false,\"columns\":1,\"contact\":\"\",\"copyright\":{\"enabled\":true,\"text\":\"cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc\"},\"social\":[],\"stickToBottom\":true},\"header\":{\"cta\":{\"enabled\":false,\"text\":\"\",\"url\":\"\"},\"logo\":\"start\",\"mobileMenu\":\"mobile\",\"search\":false,\"sticky\":false,\"usp\":{\"enabled\":false,\"items\":[]}},\"layout\":\"blank\",\"schemaVersion\":1,\"theme\":{\"slug\":\"blixis-starter\"}}",
+    "hash": "91c656a37d12b444"
+  },
+  "copyright-disabled-empty": {
+    "canonical": "{\"footer\":{\"backToTop\":false,\"columns\":1,\"contact\":\"\",\"copyright\":{\"enabled\":false,\"text\":\"\"},\"social\":[],\"stickToBottom\":true},\"header\":{\"cta\":{\"enabled\":false,\"text\":\"\",\"url\":\"\"},\"logo\":\"start\",\"mobileMenu\":\"mobile\",\"search\":false,\"sticky\":false,\"usp\":{\"enabled\":false,\"items\":[]}},\"layout\":\"blank\",\"schemaVersion\":1,\"theme\":{\"slug\":\"blixis-starter\"}}",
+    "hash": "8af9213bd43be16b"
+  },
+  "copyright-disabled-with-text": {
+    "canonical": "{\"footer\":{\"backToTop\":false,\"columns\":1,\"contact\":\"\",\"copyright\":{\"enabled\":false,\"text\":\"© {year}\"},\"social\":[],\"stickToBottom\":true},\"header\":{\"cta\":{\"enabled\":false,\"text\":\"\",\"url\":\"\"},\"logo\":\"start\",\"mobileMenu\":\"mobile\",\"search\":false,\"sticky\":false,\"usp\":{\"enabled\":false,\"items\":[]}},\"layout\":\"blank\",\"schemaVersion\":1,\"theme\":{\"slug\":\"blixis-starter\"}}",
+    "hash": "abaf3ce0ab096076"
+  },
+  "copyright-placeholders-only": {
+    "canonical": "{\"footer\":{\"backToTop\":false,\"columns\":1,\"contact\":\"\",\"copyright\":{\"enabled\":true,\"text\":\"{year}{site}{year}\"},\"social\":[],\"stickToBottom\":true},\"header\":{\"cta\":{\"enabled\":false,\"text\":\"\",\"url\":\"\"},\"logo\":\"start\",\"mobileMenu\":\"mobile\",\"search\":false,\"sticky\":false,\"usp\":{\"enabled\":false,\"items\":[]}},\"layout\":\"blank\",\"schemaVersion\":1,\"theme\":{\"slug\":\"blixis-starter\"}}",
+    "hash": "aa6a66f07e843d0e"
+  },
+  "copyright-plain": {
+    "canonical": "{\"footer\":{\"backToTop\":false,\"columns\":1,\"contact\":\"\",\"copyright\":{\"enabled\":true,\"text\":\"Made with care.\"},\"social\":[],\"stickToBottom\":true},\"header\":{\"cta\":{\"enabled\":false,\"text\":\"\",\"url\":\"\"},\"logo\":\"start\",\"mobileMenu\":\"mobile\",\"search\":false,\"sticky\":false,\"usp\":{\"enabled\":false,\"items\":[]}},\"layout\":\"blank\",\"schemaVersion\":1,\"theme\":{\"slug\":\"blixis-starter\"}}",
+    "hash": "f94c8e9ec43ff1cd"
+  },
+  "cta-disabled-with-values": {
+    "canonical": "{\"footer\":{\"backToTop\":false,\"columns\":1,\"contact\":\"\",\"copyright\":{\"enabled\":true,\"text\":\"© {year} {site}\"},\"social\":[],\"stickToBottom\":true},\"header\":{\"cta\":{\"enabled\":false,\"text\":\"Not shown\",\"url\":\"https://example.com/\"},\"logo\":\"start\",\"mobileMenu\":\"mobile\",\"search\":false,\"sticky\":false,\"usp\":{\"enabled\":false,\"items\":[]}},\"layout\":\"blank\",\"schemaVersion\":1,\"theme\":{\"slug\":\"blixis-starter\"}}",
+    "hash": "c9081bd31f1ddbda"
+  },
+  "cta-http": {
+    "canonical": "{\"footer\":{\"backToTop\":false,\"columns\":1,\"contact\":\"\",\"copyright\":{\"enabled\":true,\"text\":\"© {year} {site}\"},\"social\":[],\"stickToBottom\":true},\"header\":{\"cta\":{\"enabled\":true,\"text\":\"Visit\",\"url\":\"http://example.com\"},\"logo\":\"start\",\"mobileMenu\":\"mobile\",\"search\":false,\"sticky\":false,\"usp\":{\"enabled\":false,\"items\":[]}},\"layout\":\"blank\",\"schemaVersion\":1,\"theme\":{\"slug\":\"blixis-starter\"}}",
+    "hash": "0f87dc2ff8c5ca17"
+  },
+  "cta-https-port-path": {
+    "canonical": "{\"footer\":{\"backToTop\":false,\"columns\":1,\"contact\":\"\",\"copyright\":{\"enabled\":true,\"text\":\"© {year} {site}\"},\"social\":[],\"stickToBottom\":true},\"header\":{\"cta\":{\"enabled\":true,\"text\":\"Visit\",\"url\":\"https://shop.example.co.uk:8443/a/b%20c?x=1&y=2#z\"},\"logo\":\"start\",\"mobileMenu\":\"mobile\",\"search\":false,\"sticky\":false,\"usp\":{\"enabled\":false,\"items\":[]}},\"layout\":\"blank\",\"schemaVersion\":1,\"theme\":{\"slug\":\"blixis-starter\"}}",
+    "hash": "f1076ec3302b38c8"
+  },
+  "cta-punycode-host": {
+    "canonical": "{\"footer\":{\"backToTop\":false,\"columns\":1,\"contact\":\"\",\"copyright\":{\"enabled\":true,\"text\":\"© {year} {site}\"},\"social\":[],\"stickToBottom\":true},\"header\":{\"cta\":{\"enabled\":true,\"text\":\"Visit\",\"url\":\"https://xn--exmple-cua.test/\"},\"logo\":\"start\",\"mobileMenu\":\"mobile\",\"search\":false,\"sticky\":false,\"usp\":{\"enabled\":false,\"items\":[]}},\"layout\":\"blank\",\"schemaVersion\":1,\"theme\":{\"slug\":\"blixis-starter\"}}",
+    "hash": "29b298542da876d8"
+  },
+  "cta-relative": {
+    "canonical": "{\"footer\":{\"backToTop\":false,\"columns\":1,\"contact\":\"\",\"copyright\":{\"enabled\":true,\"text\":\"© {year} {site}\"},\"social\":[],\"stickToBottom\":true},\"header\":{\"cta\":{\"enabled\":true,\"text\":\"Contact\",\"url\":\"/contact\"},\"logo\":\"start\",\"mobileMenu\":\"mobile\",\"search\":false,\"sticky\":false,\"usp\":{\"enabled\":false,\"items\":[]}},\"layout\":\"blank\",\"schemaVersion\":1,\"theme\":{\"slug\":\"blixis-starter\"}}",
+    "hash": "727f486735f50052"
+  },
+  "cta-relative-query-fragment": {
+    "canonical": "{\"footer\":{\"backToTop\":false,\"columns\":1,\"contact\":\"\",\"copyright\":{\"enabled\":true,\"text\":\"© {year} {site}\"},\"social\":[],\"stickToBottom\":true},\"header\":{\"cta\":{\"enabled\":true,\"text\":\"Book\",\"url\":\"/book/?room=2&lang=nl#top\"},\"logo\":\"start\",\"mobileMenu\":\"mobile\",\"search\":false,\"sticky\":false,\"usp\":{\"enabled\":false,\"items\":[]}},\"layout\":\"blank\",\"schemaVersion\":1,\"theme\":{\"slug\":\"blixis-starter\"}}",
+    "hash": "35fa04ada9fa244b"
+  },
+  "cta-relative-root": {
+    "canonical": "{\"footer\":{\"backToTop\":false,\"columns\":1,\"contact\":\"\",\"copyright\":{\"enabled\":true,\"text\":\"© {year} {site}\"},\"social\":[],\"stickToBottom\":true},\"header\":{\"cta\":{\"enabled\":true,\"text\":\"Home\",\"url\":\"/\"},\"logo\":\"start\",\"mobileMenu\":\"mobile\",\"search\":false,\"sticky\":false,\"usp\":{\"enabled\":false,\"items\":[]}},\"layout\":\"blank\",\"schemaVersion\":1,\"theme\":{\"slug\":\"blixis-starter\"}}",
+    "hash": "4c573a1d1336f3de"
+  },
+  "cta-text-30-characters": {
+    "canonical": "{\"footer\":{\"backToTop\":false,\"columns\":1,\"contact\":\"\",\"copyright\":{\"enabled\":true,\"text\":\"© {year} {site}\"},\"social\":[],\"stickToBottom\":true},\"header\":{\"cta\":{\"enabled\":true,\"text\":\"yyyyyyyyyyyyyyyyyyyyyyyyyyyyyy\",\"url\":\"/go\"},\"logo\":\"start\",\"mobileMenu\":\"mobile\",\"search\":false,\"sticky\":false,\"usp\":{\"enabled\":false,\"items\":[]}},\"layout\":\"blank\",\"schemaVersion\":1,\"theme\":{\"slug\":\"blixis-starter\"}}",
+    "hash": "b4075d41b4421d9c"
+  },
+  "default": {
+    "canonical": "{\"footer\":{\"backToTop\":false,\"columns\":1,\"contact\":\"\",\"copyright\":{\"enabled\":true,\"text\":\"© {year} {site}\"},\"social\":[],\"stickToBottom\":true},\"header\":{\"cta\":{\"enabled\":false,\"text\":\"\",\"url\":\"\"},\"logo\":\"start\",\"mobileMenu\":\"mobile\",\"search\":false,\"sticky\":false,\"usp\":{\"enabled\":false,\"items\":[]}},\"layout\":\"blank\",\"schemaVersion\":1,\"theme\":{\"slug\":\"blixis-starter\"}}",
+    "hash": "e41421085ce5a37a"
+  },
+  "footer-columns-2": {
+    "canonical": "{\"footer\":{\"backToTop\":false,\"columns\":2,\"contact\":\"\",\"copyright\":{\"enabled\":true,\"text\":\"© {year} {site}\"},\"social\":[],\"stickToBottom\":true},\"header\":{\"cta\":{\"enabled\":false,\"text\":\"\",\"url\":\"\"},\"logo\":\"start\",\"mobileMenu\":\"mobile\",\"search\":false,\"sticky\":false,\"usp\":{\"enabled\":false,\"items\":[]}},\"layout\":\"blank\",\"schemaVersion\":1,\"theme\":{\"slug\":\"blixis-starter\"}}",
+    "hash": "ecc4864e9207419f"
+  },
+  "footer-columns-3": {
+    "canonical": "{\"footer\":{\"backToTop\":false,\"columns\":3,\"contact\":\"\",\"copyright\":{\"enabled\":true,\"text\":\"© {year} {site}\"},\"social\":[],\"stickToBottom\":true},\"header\":{\"cta\":{\"enabled\":false,\"text\":\"\",\"url\":\"\"},\"logo\":\"start\",\"mobileMenu\":\"mobile\",\"search\":false,\"sticky\":false,\"usp\":{\"enabled\":false,\"items\":[]}},\"layout\":\"blank\",\"schemaVersion\":1,\"theme\":{\"slug\":\"blixis-starter\"}}",
+    "hash": "855debf59480ebf0"
+  },
+  "footer-columns-4": {
+    "canonical": "{\"footer\":{\"backToTop\":false,\"columns\":4,\"contact\":\"\",\"copyright\":{\"enabled\":true,\"text\":\"© {year} {site}\"},\"social\":[],\"stickToBottom\":true},\"header\":{\"cta\":{\"enabled\":false,\"text\":\"\",\"url\":\"\"},\"logo\":\"start\",\"mobileMenu\":\"mobile\",\"search\":false,\"sticky\":false,\"usp\":{\"enabled\":false,\"items\":[]}},\"layout\":\"blank\",\"schemaVersion\":1,\"theme\":{\"slug\":\"blixis-starter\"}}",
+    "hash": "1191984274c18027"
+  },
+  "footer-not-stuck-back-to-top": {
+    "canonical": "{\"footer\":{\"backToTop\":true,\"columns\":1,\"contact\":\"\",\"copyright\":{\"enabled\":true,\"text\":\"© {year} {site}\"},\"social\":[],\"stickToBottom\":false},\"header\":{\"cta\":{\"enabled\":false,\"text\":\"\",\"url\":\"\"},\"logo\":\"start\",\"mobileMenu\":\"mobile\",\"search\":false,\"sticky\":false,\"usp\":{\"enabled\":false,\"items\":[]}},\"layout\":\"blank\",\"schemaVersion\":1,\"theme\":{\"slug\":\"blixis-starter\"}}",
+    "hash": "9c8bbadab427b6b7"
+  },
+  "full": {
+    "canonical": "{\"footer\":{\"backToTop\":true,\"columns\":4,\"contact\":\"Example Street 1\\n1000 AA Example\\ninfo@example.com\",\"copyright\":{\"enabled\":true,\"text\":\"© {year} {site}. All rights reserved.\"},\"social\":[{\"service\":\"facebook\",\"url\":\"https://www.facebook.com/example\"},{\"service\":\"instagram\",\"url\":\"https://www.instagram.com/example/\"},{\"service\":\"linkedin\",\"url\":\"https://www.linkedin.com/company/example\"},{\"service\":\"x\",\"url\":\"https://x.com/example\"},{\"service\":\"mastodon\",\"url\":\"https://mastodon.example/@example\"},{\"service\":\"other\",\"url\":\"https://example.com:8443/feed?format=rss\"}],\"stickToBottom\":true},\"header\":{\"cta\":{\"enabled\":true,\"text\":\"Get a quote\",\"url\":\"https://example.com/quote?ref=header#form\"},\"logo\":\"center\",\"mobileMenu\":\"always\",\"search\":true,\"sticky\":true,\"usp\":{\"enabled\":true,\"items\":[\"Free delivery\",\"30 day returns\",\"Support in your language\"]}},\"layout\":\"landing\",\"schemaVersion\":1,\"theme\":{\"slug\":\"acme-site\"}}",
+    "hash": "5d79661157cde2a8"
+  },
+  "header-logo-center": {
+    "canonical": "{\"footer\":{\"backToTop\":false,\"columns\":1,\"contact\":\"\",\"copyright\":{\"enabled\":true,\"text\":\"© {year} {site}\"},\"social\":[],\"stickToBottom\":true},\"header\":{\"cta\":{\"enabled\":false,\"text\":\"\",\"url\":\"\"},\"logo\":\"center\",\"mobileMenu\":\"mobile\",\"search\":false,\"sticky\":false,\"usp\":{\"enabled\":false,\"items\":[]}},\"layout\":\"blank\",\"schemaVersion\":1,\"theme\":{\"slug\":\"blixis-starter\"}}",
+    "hash": "15b9b82fd3d0ae84"
+  },
+  "header-sticky-search-always": {
+    "canonical": "{\"footer\":{\"backToTop\":false,\"columns\":1,\"contact\":\"\",\"copyright\":{\"enabled\":true,\"text\":\"© {year} {site}\"},\"social\":[],\"stickToBottom\":true},\"header\":{\"cta\":{\"enabled\":false,\"text\":\"\",\"url\":\"\"},\"logo\":\"start\",\"mobileMenu\":\"always\",\"search\":true,\"sticky\":true,\"usp\":{\"enabled\":false,\"items\":[]}},\"layout\":\"blank\",\"schemaVersion\":1,\"theme\":{\"slug\":\"blixis-starter\"}}",
+    "hash": "93c37452cda22b3d"
+  },
+  "key-order-reversed": {
+    "canonical": "{\"footer\":{\"backToTop\":false,\"columns\":1,\"contact\":\"\",\"copyright\":{\"enabled\":true,\"text\":\"© {year} {site}\"},\"social\":[],\"stickToBottom\":true},\"header\":{\"cta\":{\"enabled\":false,\"text\":\"\",\"url\":\"\"},\"logo\":\"start\",\"mobileMenu\":\"mobile\",\"search\":false,\"sticky\":false,\"usp\":{\"enabled\":false,\"items\":[]}},\"layout\":\"blank\",\"schemaVersion\":1,\"theme\":{\"slug\":\"blixis-starter\"}}",
+    "hash": "e41421085ce5a37a"
+  },
+  "layout-blog": {
+    "canonical": "{\"footer\":{\"backToTop\":false,\"columns\":1,\"contact\":\"\",\"copyright\":{\"enabled\":true,\"text\":\"© {year} {site}\"},\"social\":[],\"stickToBottom\":true},\"header\":{\"cta\":{\"enabled\":false,\"text\":\"\",\"url\":\"\"},\"logo\":\"start\",\"mobileMenu\":\"mobile\",\"search\":false,\"sticky\":false,\"usp\":{\"enabled\":false,\"items\":[]}},\"layout\":\"blog\",\"schemaVersion\":1,\"theme\":{\"slug\":\"blixis-starter\"}}",
+    "hash": "923cee6cb291763d"
+  },
+  "layout-business": {
+    "canonical": "{\"footer\":{\"backToTop\":false,\"columns\":1,\"contact\":\"\",\"copyright\":{\"enabled\":true,\"text\":\"© {year} {site}\"},\"social\":[],\"stickToBottom\":true},\"header\":{\"cta\":{\"enabled\":false,\"text\":\"\",\"url\":\"\"},\"logo\":\"start\",\"mobileMenu\":\"mobile\",\"search\":false,\"sticky\":false,\"usp\":{\"enabled\":false,\"items\":[]}},\"layout\":\"business\",\"schemaVersion\":1,\"theme\":{\"slug\":\"blixis-starter\"}}",
+    "hash": "ee48ac66dc338928"
+  },
+  "layout-landing": {
+    "canonical": "{\"footer\":{\"backToTop\":false,\"columns\":1,\"contact\":\"\",\"copyright\":{\"enabled\":true,\"text\":\"© {year} {site}\"},\"social\":[],\"stickToBottom\":true},\"header\":{\"cta\":{\"enabled\":false,\"text\":\"\",\"url\":\"\"},\"logo\":\"start\",\"mobileMenu\":\"mobile\",\"search\":false,\"sticky\":false,\"usp\":{\"enabled\":false,\"items\":[]}},\"layout\":\"landing\",\"schemaVersion\":1,\"theme\":{\"slug\":\"blixis-starter\"}}",
+    "hash": "b477c091d99083de"
+  },
+  "layout-portfolio": {
+    "canonical": "{\"footer\":{\"backToTop\":false,\"columns\":1,\"contact\":\"\",\"copyright\":{\"enabled\":true,\"text\":\"© {year} {site}\"},\"social\":[],\"stickToBottom\":true},\"header\":{\"cta\":{\"enabled\":false,\"text\":\"\",\"url\":\"\"},\"logo\":\"start\",\"mobileMenu\":\"mobile\",\"search\":false,\"sticky\":false,\"usp\":{\"enabled\":false,\"items\":[]}},\"layout\":\"portfolio\",\"schemaVersion\":1,\"theme\":{\"slug\":\"blixis-starter\"}}",
+    "hash": "e8706469be4f3e8c"
+  },
+  "numbers-integral-floats": {
+    "canonical": "{\"footer\":{\"backToTop\":false,\"columns\":2,\"contact\":\"\",\"copyright\":{\"enabled\":true,\"text\":\"© {year} {site}\"},\"social\":[],\"stickToBottom\":true},\"header\":{\"cta\":{\"enabled\":false,\"text\":\"\",\"url\":\"\"},\"logo\":\"start\",\"mobileMenu\":\"mobile\",\"search\":false,\"sticky\":false,\"usp\":{\"enabled\":false,\"items\":[]}},\"layout\":\"blank\",\"schemaVersion\":1,\"theme\":{\"slug\":\"blixis-starter\"}}",
+    "hash": "ecc4864e9207419f"
+  },
+  "social-duplicate-service": {
+    "canonical": "{\"footer\":{\"backToTop\":false,\"columns\":1,\"contact\":\"\",\"copyright\":{\"enabled\":true,\"text\":\"© {year} {site}\"},\"social\":[{\"service\":\"other\",\"url\":\"https://a.example/\"},{\"service\":\"other\",\"url\":\"https://b.example/\"},{\"service\":\"bluesky\",\"url\":\"https://bsky.app/profile/example.test\"}],\"stickToBottom\":true},\"header\":{\"cta\":{\"enabled\":false,\"text\":\"\",\"url\":\"\"},\"logo\":\"start\",\"mobileMenu\":\"mobile\",\"search\":false,\"sticky\":false,\"usp\":{\"enabled\":false,\"items\":[]}},\"layout\":\"blank\",\"schemaVersion\":1,\"theme\":{\"slug\":\"blixis-starter\"}}",
+    "hash": "26c1c959be4babb9"
+  },
+  "social-six": {
+    "canonical": "{\"footer\":{\"backToTop\":false,\"columns\":1,\"contact\":\"\",\"copyright\":{\"enabled\":true,\"text\":\"© {year} {site}\"},\"social\":[{\"service\":\"facebook\",\"url\":\"https://a.example/\"},{\"service\":\"instagram\",\"url\":\"https://b.example/\"},{\"service\":\"linkedin\",\"url\":\"https://c.example/\"},{\"service\":\"youtube\",\"url\":\"https://d.example/\"},{\"service\":\"tiktok\",\"url\":\"https://e.example/\"},{\"service\":\"github\",\"url\":\"https://f.example/\"}],\"stickToBottom\":true},\"header\":{\"cta\":{\"enabled\":false,\"text\":\"\",\"url\":\"\"},\"logo\":\"start\",\"mobileMenu\":\"mobile\",\"search\":false,\"sticky\":false,\"usp\":{\"enabled\":false,\"items\":[]}},\"layout\":\"blank\",\"schemaVersion\":1,\"theme\":{\"slug\":\"blixis-starter\"}}",
+    "hash": "c8697d45997c1b5f"
+  },
+  "text-ampersand-quotes-and-braces": {
+    "canonical": "{\"footer\":{\"backToTop\":false,\"columns\":1,\"contact\":\"\",\"copyright\":{\"enabled\":true,\"text\":\"© {year} {site}\"},\"social\":[],\"stickToBottom\":true},\"header\":{\"cta\":{\"enabled\":false,\"text\":\"\",\"url\":\"\"},\"logo\":\"start\",\"mobileMenu\":\"mobile\",\"search\":false,\"sticky\":false,\"usp\":{\"enabled\":true,\"items\":[\"Fish & chips\",\"Say \\\"hello\\\"\",\"It's {fine}\"]}},\"layout\":\"blank\",\"schemaVersion\":1,\"theme\":{\"slug\":\"blixis-starter\"}}",
+    "hash": "7d19e0ffab3e12e2"
+  },
+  "text-trimmed": {
+    "canonical": "{\"footer\":{\"backToTop\":false,\"columns\":1,\"contact\":\"Line one\\nLine two\",\"copyright\":{\"enabled\":true,\"text\":\"© {year} {site}\"},\"social\":[],\"stickToBottom\":true},\"header\":{\"cta\":{\"enabled\":true,\"text\":\"Buy now\",\"url\":\"/shop\"},\"logo\":\"start\",\"mobileMenu\":\"mobile\",\"search\":false,\"sticky\":false,\"usp\":{\"enabled\":true,\"items\":[\"padded\",\"lead and trail\"]}},\"layout\":\"blank\",\"schemaVersion\":1,\"theme\":{\"slug\":\"blixis-starter\"}}",
+    "hash": "853b1ebea6d1ac6e"
+  },
+  "theme-slug-longest": {
+    "canonical": "{\"footer\":{\"backToTop\":false,\"columns\":1,\"contact\":\"\",\"copyright\":{\"enabled\":true,\"text\":\"© {year} {site}\"},\"social\":[],\"stickToBottom\":true},\"header\":{\"cta\":{\"enabled\":false,\"text\":\"\",\"url\":\"\"},\"logo\":\"start\",\"mobileMenu\":\"mobile\",\"search\":false,\"sticky\":false,\"usp\":{\"enabled\":false,\"items\":[]}},\"layout\":\"blank\",\"schemaVersion\":1,\"theme\":{\"slug\":\"abbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\"}}",
+    "hash": "f78438967f91de96"
+  },
+  "usp-arabic-and-joiners": {
+    "canonical": "{\"footer\":{\"backToTop\":false,\"columns\":1,\"contact\":\"\",\"copyright\":{\"enabled\":true,\"text\":\"© {year} {site}\"},\"social\":[],\"stickToBottom\":true},\"header\":{\"cta\":{\"enabled\":false,\"text\":\"\",\"url\":\"\"},\"logo\":\"start\",\"mobileMenu\":\"mobile\",\"search\":false,\"sticky\":false,\"usp\":{\"enabled\":true,\"items\":[\"شحن مجاني\",\"می‌خواهم\",\"a‍b\"]}},\"layout\":\"blank\",\"schemaVersion\":1,\"theme\":{\"slug\":\"blixis-starter\"}}",
+    "hash": "40c82dc4b4fd2f78"
+  },
+  "usp-disabled-keeps-items": {
+    "canonical": "{\"footer\":{\"backToTop\":false,\"columns\":1,\"contact\":\"\",\"copyright\":{\"enabled\":true,\"text\":\"© {year} {site}\"},\"social\":[],\"stickToBottom\":true},\"header\":{\"cta\":{\"enabled\":false,\"text\":\"\",\"url\":\"\"},\"logo\":\"start\",\"mobileMenu\":\"mobile\",\"search\":false,\"sticky\":false,\"usp\":{\"enabled\":false,\"items\":[\"Kept for later\"]}},\"layout\":\"blank\",\"schemaVersion\":1,\"theme\":{\"slug\":\"blixis-starter\"}}",
+    "hash": "74b05a478cf9aab9"
+  },
+  "usp-interior-spaces-and-nbsp": {
+    "canonical": "{\"footer\":{\"backToTop\":false,\"columns\":1,\"contact\":\"\",\"copyright\":{\"enabled\":true,\"text\":\"© {year} {site}\"},\"social\":[],\"stickToBottom\":true},\"header\":{\"cta\":{\"enabled\":false,\"text\":\"\",\"url\":\"\"},\"logo\":\"start\",\"mobileMenu\":\"mobile\",\"search\":false,\"sticky\":false,\"usp\":{\"enabled\":true,\"items\":[\"Two  spaces\",\"No break\"]}},\"layout\":\"blank\",\"schemaVersion\":1,\"theme\":{\"slug\":\"blixis-starter\"}}",
+    "hash": "da9c5e7fc5fdc7f0"
+  },
+  "usp-item-60-characters": {
+    "canonical": "{\"footer\":{\"backToTop\":false,\"columns\":1,\"contact\":\"\",\"copyright\":{\"enabled\":true,\"text\":\"© {year} {site}\"},\"social\":[],\"stickToBottom\":true},\"header\":{\"cta\":{\"enabled\":false,\"text\":\"\",\"url\":\"\"},\"logo\":\"start\",\"mobileMenu\":\"mobile\",\"search\":false,\"sticky\":false,\"usp\":{\"enabled\":true,\"items\":[\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\"]}},\"layout\":\"blank\",\"schemaVersion\":1,\"theme\":{\"slug\":\"blixis-starter\"}}",
+    "hash": "bdcea9bd5f6f801c"
+  },
+  "usp-item-60-code-points": {
+    "canonical": "{\"footer\":{\"backToTop\":false,\"columns\":1,\"contact\":\"\",\"copyright\":{\"enabled\":true,\"text\":\"© {year} {site}\"},\"social\":[],\"stickToBottom\":true},\"header\":{\"cta\":{\"enabled\":false,\"text\":\"\",\"url\":\"\"},\"logo\":\"start\",\"mobileMenu\":\"mobile\",\"search\":false,\"sticky\":false,\"usp\":{\"enabled\":true,\"items\":[\"😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀\"]}},\"layout\":\"blank\",\"schemaVersion\":1,\"theme\":{\"slug\":\"blixis-starter\"}}",
+    "hash": "be3fc469a228b7ca"
+  },
+  "usp-one": {
+    "canonical": "{\"footer\":{\"backToTop\":false,\"columns\":1,\"contact\":\"\",\"copyright\":{\"enabled\":true,\"text\":\"© {year} {site}\"},\"social\":[],\"stickToBottom\":true},\"header\":{\"cta\":{\"enabled\":false,\"text\":\"\",\"url\":\"\"},\"logo\":\"start\",\"mobileMenu\":\"mobile\",\"search\":false,\"sticky\":false,\"usp\":{\"enabled\":true,\"items\":[\"Free delivery\"]}},\"layout\":\"blank\",\"schemaVersion\":1,\"theme\":{\"slug\":\"blixis-starter\"}}",
+    "hash": "853f231406ef9009"
+  },
+  "usp-three": {
+    "canonical": "{\"footer\":{\"backToTop\":false,\"columns\":1,\"contact\":\"\",\"copyright\":{\"enabled\":true,\"text\":\"© {year} {site}\"},\"social\":[],\"stickToBottom\":true},\"header\":{\"cta\":{\"enabled\":false,\"text\":\"\",\"url\":\"\"},\"logo\":\"start\",\"mobileMenu\":\"mobile\",\"search\":false,\"sticky\":false,\"usp\":{\"enabled\":true,\"items\":[\"Free delivery\",\"30 day returns\",\"Support\"]}},\"layout\":\"blank\",\"schemaVersion\":1,\"theme\":{\"slug\":\"blixis-starter\"}}",
+    "hash": "9572839f2f6a4673"
+  }
+}

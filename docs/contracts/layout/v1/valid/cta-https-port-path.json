@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "theme": {
+    "slug": "blixis-starter"
+  },
+  "layout": "blank",
+  "header": {
+    "sticky": false,
+    "usp": {
+      "enabled": false,
+      "items": []
+    },
+    "logo": "start",
+    "cta": {
+      "enabled": true,
+      "text": "Visit",
+      "url": "https://shop.example.co.uk:8443/a/b%20c?x=1&y=2#z"
+    },
+    "search": false,
+    "mobileMenu": "mobile"
+  },
+  "footer": {
+    "stickToBottom": true,
+    "columns": 1,
+    "contact": "",
+    "social": [],
+    "copyright": {
+      "enabled": true,
+      "text": "© {year} {site}"
+    },
+    "backToTop": false
+  }
+}
