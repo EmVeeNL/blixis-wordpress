@@ -270,97 +270,28 @@ PHP;
     );
 
     $layout = $values['layout'] ?? 'blank';
-    if ('neutral' === ( $values['starter'] ?? null )) {
-		$text_domain                        = $values['slug'];
-        $files['templates/front-page.html'] = <<<HTML
-<!-- wp:template-part {"slug":"header","tagName":"header"} /-->
-<!-- wp:group {"tagName":"main","layout":{"type":"default"}} -->
-<main class="wp-block-group">
-<!-- wp:pattern {"slug":"{$values['slug']}/intro"} /-->
-<!-- wp:pattern {"slug":"{$values['slug']}/features"} /-->
-</main>
-<!-- /wp:group -->
-<!-- wp:template-part {"slug":"footer","tagName":"footer"} /-->
-HTML;
-        $files['patterns/intro.php']        = <<<PHP
-<?php
-/**
- * Title: Introduction
- * Slug: {$values['slug']}/intro
- * Categories: featured
- * Description: A neutral introduction section.
- */
-?>
-<!-- wp:group {"tagName":"section","layout":{"type":"constrained"}} -->
-<section class="wp-block-group">
-<!-- wp:heading {"level":1,"style":{"color":{"text":"var:preset|color|primary"}}} -->
-<h1 class="wp-block-heading"><?php esc_html_e( 'Welcome', '{$text_domain}' ); ?></h1>
-<!-- /wp:heading -->
-<!-- wp:paragraph -->
-<p><?php esc_html_e( 'Introduce your site and what visitors can find here.', '{$text_domain}' ); ?></p>
-<!-- /wp:paragraph -->
-<!-- wp:buttons -->
-<div class="wp-block-buttons"><!-- wp:button --><div class="wp-block-button"><a class="wp-block-button__link wp-element-button" href="#features" title="<?php esc_attr_e( 'Explore the feature highlights', '{$text_domain}' ); ?>"><?php esc_html_e( 'Explore', '{$text_domain}' ); ?></a></div><!-- /wp:button --></div>
-<!-- /wp:buttons -->
-</section>
-<!-- /wp:group -->
-PHP;
-        $files['patterns/features.php']     = <<<PHP
-<?php
-/**
- * Title: Features
- * Slug: {$values['slug']}/features
- * Categories: featured
- * Description: Three editable highlights for a site.
- */
-?>
-<!-- wp:group {"tagName":"section","anchor":"features","layout":{"type":"constrained"}} -->
-<section id="features" class="wp-block-group">
-<!-- wp:heading {"level":2} --><h2 class="wp-block-heading"><?php esc_html_e( 'What we offer', '{$text_domain}' ); ?></h2><!-- /wp:heading -->
-<!-- wp:columns -->
-<div class="wp-block-columns"><!-- wp:column --><div class="wp-block-column"><!-- wp:heading {"level":3} --><h3 class="wp-block-heading"><?php esc_html_e( 'First highlight', '{$text_domain}' ); ?></h3><!-- /wp:heading --><!-- wp:paragraph --><p><?php esc_html_e( 'Describe a useful part of your work.', '{$text_domain}' ); ?></p><!-- /wp:paragraph --></div><!-- /wp:column -->
-<!-- wp:column --><div class="wp-block-column"><!-- wp:heading {"level":3} --><h3 class="wp-block-heading"><?php esc_html_e( 'Second highlight', '{$text_domain}' ); ?></h3><!-- /wp:heading --><!-- wp:paragraph --><p><?php esc_html_e( 'Share another detail visitors should know.', '{$text_domain}' ); ?></p><!-- /wp:paragraph --></div><!-- /wp:column -->
-<!-- wp:column --><div class="wp-block-column"><!-- wp:heading {"level":3} --><h3 class="wp-block-heading"><?php esc_html_e( 'Third highlight', '{$text_domain}' ); ?></h3><!-- /wp:heading --><!-- wp:paragraph --><p><?php esc_html_e( 'Help visitors understand how to get started.', '{$text_domain}' ); ?></p><!-- /wp:paragraph --></div><!-- /wp:column --></div>
-<!-- /wp:columns -->
-</section>
-<!-- /wp:group -->
-PHP;
-    }
-
-    if ('neutral' !== ( $values['starter'] ?? null ) && 'blank' !== $layout) {
-        $files['templates/front-page.html']              = <<<HTML
-<!-- wp:template-part {"slug":"header","tagName":"header"} /-->
-<!-- wp:group {"tagName":"main","layout":{"type":"default"}} -->
-<main class="wp-block-group">
-<!-- wp:pattern {"slug":"{$values['slug']}/{$layout}-content"} /-->
-</main>
-<!-- /wp:group -->
-<!-- wp:template-part {"slug":"footer","tagName":"footer"} /-->
-HTML;
-        $files[ 'patterns/' . $layout . '-content.php' ] = layout_pattern($layout, $values['slug']);
-    }
+    if ('blank' !== $layout) {
+		$files['templates/front-page.html']      = layout_template($layout, $values['slug']);
+		$files[ 'patterns/' . $layout . '.php' ] = layout_pattern($layout, $values['slug']);
+	}
 
     return $files;
 }
 
-/** Generate an editable, unbranded core-block pattern for a layout. */
+/** Load the front-page template for a layout and bind its pattern slug. */
+function layout_template( string $layout, string $domain ): string {
+	$path = __DIR__ . '/layouts/' . $layout . '.html';
+	// phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents -- This reads a bundled local template.
+	$template = file_get_contents($path);
+	return is_string($template) ? str_replace('{{domain}}', $domain, $template) : '';
+}
+
+/** Load an editable, unbranded core-block pattern for a layout. */
 function layout_pattern( string $layout, string $domain ): string {
-    $header    = "<?php\n/**\n * Title: " . ucfirst($layout) . " page\n * Slug: {$domain}/{$layout}-content\n * Categories: featured\n * Description: Editable {$layout} page sections.\n */\n?>\n";
-    $heading   = "<!-- wp:heading {\"level\":1,\"style\":{\"color\":{\"text\":\"var:preset|color|primary\"}}} --><h1 class=\"wp-block-heading\"><?php esc_html_e( 'Welcome', '{$domain}' ); ?></h1><!-- /wp:heading -->\n";
-    $paragraph = "<!-- wp:paragraph {\"style\":{\"color\":{\"text\":\"var:preset|color|foreground\"}}} --><p><?php esc_html_e( 'A clear introduction to this site and its work.', '{$domain}' ); ?></p><!-- /wp:paragraph -->\n";
-    $feature   = "<!-- wp:columns --><div class=\"wp-block-columns\"><!-- wp:column --><div class=\"wp-block-column\"><!-- wp:heading {\"level\":2} --><h2 class=\"wp-block-heading\"><?php esc_html_e( 'First highlight', '{$domain}' ); ?></h2><!-- /wp:heading -->{$paragraph}</div><!-- /wp:column --><!-- wp:column --><div class=\"wp-block-column\"><!-- wp:heading {\"level\":2} --><h2 class=\"wp-block-heading\"><?php esc_html_e( 'Second highlight', '{$domain}' ); ?></h2><!-- /wp:heading -->{$paragraph}</div><!-- /wp:column --><!-- wp:column --><div class=\"wp-block-column\"><!-- wp:heading {\"level\":2} --><h2 class=\"wp-block-heading\"><?php esc_html_e( 'Third highlight', '{$domain}' ); ?></h2><!-- /wp:heading -->{$paragraph}</div><!-- /wp:column --></div><!-- /wp:columns -->\n";
-    if ('blog' === $layout) {
-        return $header . $heading . $paragraph . "<!-- wp:heading {\"level\":2} --><h2><?php esc_html_e( 'Featured post', '{$domain}' ); ?></h2><!-- /wp:heading --><!-- wp:query {\"queryId\":1,\"query\":{\"perPage\":1,\"pages\":0,\"offset\":0,\"postType\":\"post\",\"order\":\"desc\",\"orderBy\":\"date\",\"inherit\":false}} --><div class=\"wp-block-query\"><!-- wp:post-template --><!-- wp:post-title {\"isLink\":true} /--><!-- wp:post-excerpt /--><!-- /wp:post-template --></div><!-- /wp:query --><!-- wp:heading {\"level\":2} --><h2><?php esc_html_e( 'Latest posts', '{$domain}' ); ?></h2><!-- /wp:heading --><!-- wp:query {\"queryId\":2,\"query\":{\"perPage\":5,\"pages\":0,\"offset\":1,\"postType\":\"post\",\"order\":\"desc\",\"orderBy\":\"date\",\"inherit\":false}} --><div class=\"wp-block-query\"><!-- wp:post-template --><!-- wp:post-title {\"isLink\":true} /--><!-- wp:post-excerpt /--><!-- /wp:post-template --></div><!-- /wp:query -->";
-    }
-    if ('landing' === $layout) {
-        $navigation = "<!-- wp:navigation {\"overlayMenu\":\"never\",\"ariaLabel\":\"<?php esc_attr_e( 'On this page', '{$domain}' ); ?>\"} --><!-- wp:navigation-link {\"label\":\"<?php esc_attr_e( 'Introduction', '{$domain}' ); ?>\",\"url\":\"#introduction\"} /--><!-- wp:navigation-link {\"label\":\"<?php esc_attr_e( 'Details', '{$domain}' ); ?>\",\"url\":\"#details\"} /--><!-- /wp:navigation -->";
-        return $header . $navigation . "<!-- wp:group {\"tagName\":\"section\",\"anchor\":\"introduction\"} --><section id=\"introduction\">{$heading}{$paragraph}</section><!-- /wp:group --><!-- wp:group {\"tagName\":\"section\",\"anchor\":\"details\"} --><section id=\"details\"><!-- wp:heading {\"level\":2} --><h2 class=\"wp-block-heading\"><?php esc_html_e( 'Details', '{$domain}' ); ?></h2><!-- /wp:heading -->{$feature}</section><!-- /wp:group -->";
-    }
-    if ('portfolio' === $layout) {
-        return $header . $heading . $paragraph . "<!-- wp:group {\"tagName\":\"section\",\"anchor\":\"projects\"} --><section id=\"projects\"><!-- wp:heading {\"level\":2} --><h2 class=\"wp-block-heading\"><?php esc_html_e( 'Selected projects', '{$domain}' ); ?></h2><!-- /wp:heading -->{$feature}</section><!-- /wp:group -->";
-    }
-    $contact = "<!-- wp:group {\"tagName\":\"section\",\"anchor\":\"contact\"} --><section id=\"contact\"><!-- wp:heading {\"level\":2} --><h2 class=\"wp-block-heading\"><?php esc_html_e( 'Contact', '{$domain}' ); ?></h2><!-- /wp:heading -->{$paragraph}</section><!-- /wp:group -->";
-    return $header . $heading . $paragraph . $feature . "<!-- wp:buttons --><div class=\"wp-block-buttons\"><!-- wp:button --><div class=\"wp-block-button\"><a class=\"wp-block-button__link wp-element-button\" href=\"#contact\"><?php esc_html_e( 'Get in touch', '{$domain}' ); ?></a></div><!-- /wp:button --></div><!-- /wp:buttons -->" . $contact;
+	$path = __DIR__ . '/layouts/' . $layout . '.php';
+	// phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents -- This reads a bundled local template.
+	$pattern = file_get_contents($path);
+	return is_string($pattern) ? str_replace('{{domain}}', $domain, $pattern) : '';
 }
 
 /**
