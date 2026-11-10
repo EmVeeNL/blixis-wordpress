@@ -2,7 +2,7 @@
 id: "03-06"
 title: "Make Base and child themes use the tokens, and make the wizard friendly"
 phase: "03"
-status: In Review
+status: Done
 priority: P0
 owner: "EmVeeNL"
 created_at: "2026-11-09"
@@ -15,7 +15,7 @@ commit_sha: "fdb8b06"
 merged_at: "2026-11-10T09:03:31Z"
 merge_commit_sha: "ea7d13e36e767379504c1922025570f3165ab8c2"
 started_at: "2026-11-09"
-completed_at: null
+completed_at: "2026-11-10"
 closed_at: null
 blocked_reason: null
 blocked_by: []
@@ -109,7 +109,7 @@ These are working decisions "for now"; revisit them before Part B if anything ch
 - [x] **C:** the progress list, conditional new-theme fields, button labels, sliders with unit menus, shadow presets and editor, motion presets with a play button, and per-step live previews work as described, with JavaScript on; the wizard still works with JavaScript off.
 - [x] **D:** keyboard use, labels, contrast warnings, reduced motion, and axe-core checks pass at 1280 and 320 px in Chromium and Firefox, in English, Dutch, and Arabic.
 - [x] The owner decisions above are reflected in the contract docs where they change the contract.
-- [ ] **Owner check:** Michael tries every part on blixis.test and confirms before this task is marked Done.
+- [x] **Owner check:** Michael tries every part on blixis.test and confirms before this task is marked Done.
 - [x] Reviewed PRs for every part are merged, with evidence and metadata recorded here.
 
 ## Testing requirements
@@ -127,8 +127,8 @@ Extend the 03-05 harness (or the shared harness from [R-02](../../../development
   - [#43](https://github.com/EmVeeNL/blixis-wordpress/pull/43) as `696263b359693482d3dcea78dd6267eb09fa79cd` at 2026-11-09T23:09:51Z: Parts C and D, controls and previews.
   - [#44](https://github.com/EmVeeNL/blixis-wordpress/pull/44) as `ea7d13e36e767379504c1922025570f3165ab8c2` at 2026-11-10T09:03:31Z: visual redesign (step tabs, cards, side preview, admin accent); last branch commit `fdb8b06`.
 - **Tests:** `tests/03-06/run.sh --browsers chromium,firefox` passes on WordPress 7.1.4/PHP 8.3 and 7.0.8/PHP 8.5, including axe-core at 1280 and 320 px in English, Dutch, and Arabic with JavaScript on and off (at `fdb8b06`: 225 Chromium and 224 Firefox checks per stack, 0 failed). 03-03, 03-04, 03-05, the contract fixtures in PHP and TypeScript, and the 01-05 spike also pass. `Quality` passed on `main` at `ea7d13e` ([run](https://github.com/EmVeeNL/blixis-wordpress/actions/runs/42787509377)). From this status change on, CI runs the 03-06 harness in the `setup-wizard` job.
-- **Started / completed / closed:** Started 2026-11-09; not completed.
-- **Status:** In Review. All parts are merged; the owner check on blixis.test is open. Phase 03 exit (MVP-0) waits for this task. Follow [status workflow](../../../development/STATUS_WORKFLOW.md).
+- **Started / completed / closed:** Started 2026-11-09; completed 2026-11-10; not released.
+- **Status:** Done. All parts are merged and Michael confirmed the result on 2026-11-10. Status records merged in [#46](https://github.com/EmVeeNL/blixis-wordpress/pull/46). Follow [status workflow](../../../development/STATUS_WORKFLOW.md).
 
 ## Status history
 
@@ -139,3 +139,4 @@ Extend the 03-05 harness (or the shared harness from [R-02](../../../development
 | 2026-11-09 | Backlog → Ready | Michael accepted the recommended owner decisions; dependency `03-05` is Done; criteria and owner recorded. |
 | 2026-11-09 | Ready → Busy | Work started on the task branches above, from `22ed24e`. |
 | 2026-11-10 | Busy → In Review | PRs [#41](https://github.com/EmVeeNL/blixis-wordpress/pull/41) to [#44](https://github.com/EmVeeNL/blixis-wordpress/pull/44) merged, last as `ea7d13e`; evidence above. Done waits for Michael's check on blixis.test. |
+| 2026-11-10 | In Review → Done | Michael checked the result on blixis.test and asked to mark the task Done. PRs #41 to #44 merged; `Quality` passed on `main` at `ea7d13e`, and the 03-06 harness has run in CI since #46. |
