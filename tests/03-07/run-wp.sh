@@ -137,7 +137,7 @@ if (in_array("conflicts_with_starter", array_column($conflict["errors"], "code")
 $business = Blixis\Blocks\ChildTheme\build_files(array("name"=>"Alias", "slug"=>"same-alias", "version"=>"0.1.0", "layout"=>"business"));
 $neutral = Blixis\Blocks\ChildTheme\build_files(array("name"=>"Alias", "slug"=>"same-alias", "version"=>"0.1.0", "layout"=>"business", "starter"=>"neutral"));
 if ($business === $neutral) echo "PASS starter neutral exact business files\n"; else echo "FAIL starter neutral exact business files\n";
-add_filter("gettext", static function ($translation, $text, $domain) { return in_array($text, array("A focused partner for turning meaningful plans into real progress.", "Overview", "Approach", "FAQ", "Contact", "On this page"), true) ? "Quoted \"value\" \\\\ path <tag> 'apostrophe'" : $translation; }, 10, 3);
+add_filter("gettext", static function ($translation, $text, $domain) { return in_array($text, array("A focused partner for turning meaningful plans into real progress.", "Overview", "Approach", "FAQ", "Contact", "On this page"), true) ? "Quoted \"value\" \\\\ path <tag> \x27apostrophe\x27" : $translation; }, 10, 3);
 ob_start();
 include get_theme_root() . "/layout-landing/patterns/landing.php";
 $translated_pattern = (string) ob_get_clean();
@@ -145,7 +145,7 @@ $parsed = array_values(array_filter(parse_blocks($translated_pattern), static fn
 $expected_blocks = array("core/group", "core/group", "core/group", "core/group", "core/group", "core/group");
 $navigation = $parsed[1]["innerBlocks"][0] ?? array();
 $navigation_labels = array_map(static fn($block) => $block["attrs"]["label"] ?? null, $navigation["innerBlocks"] ?? array());
-if (array_column($parsed, "blockName") === $expected_blocks && str_contains($translated_pattern, "id=\"contact\"") && count(array_filter($navigation_labels, static fn($label) => $label === "Quoted \"value\" \\\\ path <tag> 'apostrophe'")) === 4 && ($navigation["attrs"]["ariaLabel"] ?? null) === "Quoted \"value\" \\\\ path <tag> 'apostrophe'") echo "PASS translated special characters parse generated blocks and navigation attributes\n"; else echo "FAIL translated special characters parse generated blocks: " . wp_json_encode(array_column($parsed, "blockName")) . " " . wp_json_encode($navigation_labels) . "\n";
+if (array_column($parsed, "blockName") === $expected_blocks && str_contains($translated_pattern, "id=\"contact\"") && count(array_filter($navigation_labels, static fn($label) => $label === "Quoted \"value\" \\\\ path <tag> \x27apostrophe\x27")) === 4 && ($navigation["attrs"]["ariaLabel"] ?? null) === "Quoted \"value\" \\\\ path <tag> \x27apostrophe\x27") echo "PASS translated special characters parse generated blocks and navigation attributes\n"; else echo "FAIL translated special characters parse generated blocks: " . wp_json_encode(array_column($parsed, "blockName")) . " " . wp_json_encode($navigation_labels) . "\n";
 if (count(Blixis\Blocks\Setup\presets()) === 6) echo "PASS six presets\n"; else echo "FAIL preset count\n";
 ' 2>&1 | grep -E '^(PASS|FAIL|NOTE|HARNESS) ' || fault "layout REST checks failed"
 
