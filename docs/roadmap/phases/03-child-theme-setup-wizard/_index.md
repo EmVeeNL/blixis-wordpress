@@ -1,6 +1,6 @@
 # 03 Child Theme Setup Wizard
 
-**Status:** Busy. Tasks 03-01 to 03-05 are Done (PRs #32 to #37). 03-06 was added after the owner's manual test showed that wizard choices barely change a plain Base child theme; its parts are merged (PRs #41 to #44) and it is In Review until the owner checks it on blixis.test; phase exit (MVP-0) waits for that and for owner acceptance. No release is claimed.
+**Status:** Busy. Tasks 03-01 to 03-06 are Done (PRs #32 to #37 and #41 to #44). Phase exit (MVP-0) waits for owner acceptance. No release is claimed.
 
 | ID | Task | Status | Priority |
 |---|---|---|---|
@@ -9,6 +9,6 @@
 | [03-03](03-wizard-ui.md) | Build the theme setup wizard | Done | P0 |
 | [03-04](04-font-management.md) | Manage local fonts | Done | P0 |
 | [03-05](05-token-preview-persistence.md) | Preview and persist design tokens | Done | P0 |
-| [03-06](06-token-driven-themes.md) | Make Base and child themes use the tokens, and make the wizard friendly | In Review | P0 |
+| [03-06](06-token-driven-themes.md) | Make Base and child themes use the tokens, and make the wizard friendly | Done | P0 |
 
 Complete the tasks in dependency order. Update this index only when task evidence warrants a phase status change. Phase exit requires all required work, security and accessibility checks, release evidence, and owner acceptance.

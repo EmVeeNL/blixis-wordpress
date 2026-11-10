@@ -2,7 +2,7 @@
 
 | Milestone | Scope | Phases (proposed) | Status |
 |---|---|---|---|
-| MVP-0 | Base theme, starter child theme, token setup and preview | 02, 03 | Mostly built; phase 02 accepted; phase 03 waits for the owner check of 03-06 (In Review) and owner acceptance |
+| MVP-0 | Base theme, starter child theme, token setup and preview | 02, 03 | Mostly built; phase 02 accepted; phase 03 tasks done, waiting for owner acceptance |
 | MVP-1 | Visual editor, free elements, responsive controls, save/revisions, secure preview, and hardening | 04, 05, 06 | Planned |
 | MVP-2 | Wilde Groei site, editorial flow, SEO, accessibility and handover | 07 | Planned |
 | MVP-3 | Published-content API, scoped keys, cache and operations | 08 | Planned |
