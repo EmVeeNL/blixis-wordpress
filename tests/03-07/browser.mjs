@@ -213,6 +213,7 @@ for (const name of browsers) {
     check(Math.abs(short.bottom - short.vh) <= 2 && short.doc <= short.vh + 1 && short.position !== 'fixed' && short.position !== 'sticky', `${name} footer sits at the bottom of a short page at ${width}px`, JSON.stringify(short));
     check(short.mainWidth >= short.siteWidth - 2 * 16 - 2 || short.mainWidth > 280, `${name} main keeps its width with the footer at the bottom at ${width}px`, JSON.stringify(short));
     if (width === 1280) { await blurForScreenshot(renderPage); await renderPage.screenshot({ path: `${out}/layout-business-render-short-page-1280.png` }); }
+    await renderPage.setViewportSize({ width, height: 800 });
     await renderPage.goto('http://127.0.0.1:8080/?t0307_layout=business&t0307_render_settings=1', { waitUntil: 'networkidle' });
     const long = await renderPage.evaluate(() => { const r = document.querySelector('.blixis-footer').getBoundingClientRect(); return { footerBottom: Math.round(r.bottom + scrollY), doc: document.documentElement.scrollHeight, vh: innerHeight }; });
     check(long.doc > long.vh * 1.5 && Math.abs(long.footerBottom - long.doc) <= 2, `${name} footer scrolls normally on a long page at ${width}px`, JSON.stringify(long));
