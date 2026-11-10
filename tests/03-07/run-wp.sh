@@ -109,7 +109,7 @@ if (isset($_GET['t0307_render_settings']) && '1' === $_GET['t0307_render_setting
         $config = Blixis\Blocks\Layout\defaults(get_stylesheet());
         $config['header']['sticky'] = true;
         $config['header']['usp'] = array('enabled' => true, 'items' => array('Clear advice', 'Thoughtful delivery', 'Lasting support'));
-        $config['header']['logo'] = 'center';
+        $config['header']['logo'] = (isset($_GET['t0307_logo']) && 'start' === $_GET['t0307_logo']) ? 'start' : 'center';
         $config['header']['cta'] = array('enabled' => true, 'text' => 'Get in touch', 'url' => '/#contact');
         $config['header']['search'] = true;
         $config['header']['mobileMenu'] = 'always';
@@ -212,6 +212,7 @@ if (count(Blixis\Blocks\Setup\presets()) === 6) echo "PASS six presets\n"; else 
 
 wp post create --post_type=post --post_status=publish --post_title="A featured story" --post_content="A featured post excerpt for the blog layout." --quiet >/dev/null 2>&1 || fault "first blog post not created"
 wp post create --post_type=post --post_status=publish --post_title="A later story" --post_content="A second post for the latest posts grid." --quiet >/dev/null 2>&1 || fault "second blog post not created"
+wp post create --post_type=page --post_status=publish --post_title="Short page" --post_name=short-page --post_content="<!-- wp:paragraph --><p>Only one line of content.</p><!-- /wp:paragraph -->" --quiet >/dev/null 2>&1 || fault "short page not created"
 wp post delete 1 --force --quiet >/dev/null 2>&1 || fault "default Hello World post not removed"
 cat > wp-content/mu-plugins/t0307-post-selector.php <<'PHP'
 <?php

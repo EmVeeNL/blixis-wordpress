@@ -48,32 +48,123 @@ function render_button( string $text, string $url ): string {
 	return do_blocks( serialize_block( $button ) );
 }
 
+/** The inline check icon of a USP item: decorative, no request, inherits the text colour. */
+function check_icon(): string {
+	return '<svg class="blixis-usp__icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>';
+}
+
+/** Render a core block from grammar with inner blocks, through core's own render functions. */
+function core_block_tree( string $name, array $attributes, string $before, array $children, string $after ): string {
+	$block = array(
+		'blockName'    => $name,
+		'attrs'        => $attributes,
+		'innerBlocks'  => $children,
+		'innerHTML'    => $before . $after,
+		'innerContent' => array_merge( array( $before ), array_fill( 0, count( $children ), null ), array( $after ) ),
+	);
+	return do_blocks( serialize_block( $block ) );
+}
+
+/** A dynamic core block as a parsed block, for use as an inner block. */
+function leaf( string $name, array $attributes = array() ): array {
+	return array(
+		'blockName'    => $name,
+		'attrs'        => $attributes,
+		'innerBlocks'  => array(),
+		'innerHTML'    => '',
+		'innerContent' => array(),
+	);
+}
+
+/** The header row: brand, primary navigation, then search and the call-to-action button. */
+function header_bar( array $config ): string {
+	$header  = $config['header'];
+	$nav     = core_block_tree(
+		'core/navigation',
+		array(
+			'overlayMenu' => $header['mobileMenu'],
+			'ariaLabel'   => __( 'Primary', 'blixis-blocks' ),
+			'layout'      => array(
+				'type'           => 'flex',
+				'justifyContent' => 'left',
+			),
+		),
+		'',
+		array( leaf( 'core/page-list' ) ),
+		''
+	);
+	$actions = '';
+	if ( $header['search'] ) {
+		$actions .= core_block(
+			'search',
+			array(
+				'label'          => __( 'Search', 'blixis-blocks' ),
+				'showLabel'      => false,
+				'placeholder'    => __( 'Search', 'blixis-blocks' ),
+				'buttonUseIcon'  => true,
+				'buttonPosition' => 'button-inside',
+				'width'          => 13,
+				'widthUnit'      => 'rem',
+			)
+		);
+	}
+	if ( $header['cta']['enabled'] ) {
+		$actions .= '<div class="blixis-header__cta-wrap">' . render_button( $header['cta']['text'], $header['cta']['url'] ) . '</div>';
+	}
+	return '<div class="blixis-header__bar"><div class="blixis-header__brand">' . core_block( 'site-title', array( 'level' => 0 ) ) . '</div>' . $nav
+		. ( '' !== $actions ? '<div class="blixis-header__actions">' . $actions . '</div>' : '' ) . '</div>';
+}
+
+/** Core social links for the configured services: icons and names come from core, no requests. */
+function social_links( array $links ): string {
+	$children = array();
+	foreach ( $links as $link ) {
+		$service = 'other' === $link['service'] ? 'chain' : $link['service'];
+		$attrs   = array(
+			'url'     => $link['url'],
+			'service' => $service,
+		);
+		if ( 'other' === $link['service'] ) {
+			$attrs['label'] = __( 'Other', 'blixis-blocks' );
+		}
+		$children[] = leaf( 'core/social-link', $attrs );
+	}
+	return core_block_tree(
+		'core/social-links',
+		array( 'className' => 'is-style-logos-only' ),
+		'<ul class="wp-block-social-links is-style-logos-only">',
+		$children,
+		'</ul>'
+	);
+}
+
 /** Output config text and links with the appropriate WordPress escaping. */
 function footer_html( array $config ): string {
 	$footer  = $config['footer'];
 	$columns = (int) $footer['columns'];
+	$heading = static fn( string $text ): string => '<h2 class="blixis-footer__heading">' . esc_html( $text ) . '</h2>';
+	$pages   = core_block( 'page-list', array() );
+	if ( '' === trim( wp_strip_all_tags( $pages ) ) ) {
+		$pages = '<ul class="wp-block-page-list"><li class="wp-block-pages-list__item"><a href="' . esc_url( home_url( '/' ) ) . '">' . esc_html__( 'Home', 'blixis-blocks' ) . '</a></li></ul>';
+	}
 	$parts   = array();
-	$parts[] = '<div class="blixis-footer__info">' . core_block( 'site-title', array( 'level' => 0 ) ) . core_block( 'site-tagline', array() ) . '</div>';
-	$parts[] = '<nav class="blixis-footer__menu" aria-label="' . esc_attr__( 'Footer', 'blixis-blocks' ) . '">' . core_block( 'page-list', array() ) . '</nav>';
-	if ( '' !== $footer['contact'] ) {
-		$parts[] = '<div class="blixis-footer__contact"><p>' . nl2br( esc_html( $footer['contact'] ) ) . '</p></div>';
-	} else {
-		$parts[] = '<div class="blixis-footer__contact"></div>';
-	}
-	$social = '';
-	foreach ( $footer['social'] as $link ) {
-		$social .= '<li><a href="' . esc_url( $link['url'] ) . '">' . esc_html( ucfirst( $link['service'] ) ) . '</a></li>';
-	}
-	$parts[] = '<div class="blixis-footer__social">' . ( '' !== $social ? '<ul>' . $social . '</ul>' : '' ) . '</div>';
-	$html    = '<div class="blixis-footer__columns">' . implode( '', array_slice( $parts, 0, $columns ) ) . '</div>';
+	$parts[] = '<section class="blixis-footer__info">' . $heading( __( 'Site', 'blixis-blocks' ) ) . core_block( 'site-title', array( 'level' => 0 ) ) . core_block( 'site-tagline', array() ) . '</section>';
+	$parts[] = '<nav class="blixis-footer__menu" aria-label="' . esc_attr__( 'Footer', 'blixis-blocks' ) . '">' . $heading( __( 'Menu', 'blixis-blocks' ) ) . $pages . '</nav>';
+	$parts[] = '<section class="blixis-footer__contact">' . $heading( __( 'Contact', 'blixis-blocks' ) ) . ( '' !== $footer['contact'] ? '<p>' . nl2br( esc_html( $footer['contact'] ) ) . '</p>' : '' ) . '</section>';
+	$parts[] = '<section class="blixis-footer__social">' . $heading( __( 'Follow us', 'blixis-blocks' ) ) . ( $footer['social'] ? social_links( $footer['social'] ) : '' ) . '</section>';
+	$html    = '<div class="blixis-footer__inner"><div class="blixis-footer__columns">' . implode( '', array_slice( $parts, 0, $columns ) ) . '</div>';
+	$bottom  = '';
 	if ( $footer['copyright']['enabled'] ) {
-		$text  = str_replace( array( '{year}', '{site}' ), array( gmdate( 'Y' ), get_bloginfo( 'name' ) ), $footer['copyright']['text'] );
-		$html .= '<p class="blixis-footer__copyright">' . esc_html( $text ) . '</p>';
+		$text    = str_replace( array( '{year}', '{site}' ), array( gmdate( 'Y' ), get_bloginfo( 'name' ) ), $footer['copyright']['text'] );
+		$bottom .= '<p class="blixis-footer__copyright">' . esc_html( $text ) . '</p>';
 	}
 	if ( $footer['backToTop'] ) {
-		$html .= '<p><a class="blixis-footer__top" href="#top">' . esc_html__( 'Back to top', 'blixis-blocks' ) . '</a></p>';
+		$bottom .= '<p class="blixis-footer__totop"><a class="blixis-footer__top" href="#top">' . esc_html__( 'Back to top', 'blixis-blocks' ) . '</a></p>';
 	}
-	return $html;
+	if ( '' !== $bottom ) {
+		$html .= '<div class="blixis-footer__bottom">' . $bottom . '</div>';
+	}
+	return $html . '</div>';
 }
 
 /** Modify Base's header/footer template part output only when a config applies. */
@@ -97,23 +188,14 @@ function render_template_part( string $content, array $block ): string {
 		}
 		$content = add_class( $content, implode( ' ', $classes ) );
 		$content = preg_replace( '/^(\s*<header\b)(?![^>]*\bid=)/i', '$1 id="top"', $content, 1 ) ?? $content;
+		// The header row is rebuilt from core blocks; Base's template part stays as it is.
+		$content = preg_replace( '/(<header\b[^>]*>).*?(<\/header>\s*)$/s', '$1' . str_replace( array( '\\', '$' ), array( '\\\\', '\\$' ), header_bar( $config ) ) . '$2', $content ) ?? $content;
 		if ( $header['usp']['enabled'] ) {
 			$items = '';
 			foreach ( $header['usp']['items'] as $item ) {
-				$items .= '<li class="blixis-usp__item"><span aria-hidden="true">✓</span> ' . esc_html( $item ) . '</li>';
+				$items .= '<li class="blixis-usp__item">' . check_icon() . '<span>' . esc_html( $item ) . '</span></li>';
 			}
 			$content = '<div class="blixis-usp"><ul class="blixis-usp__list">' . $items . '</ul></div>' . $content;
-		}
-		if ( $header['cta']['enabled'] ) {
-			$cta     = render_button( $header['cta']['text'], $header['cta']['url'] );
-			$content = preg_replace( '/<\/header>\s*$/', $cta . '</header>', $content ) ?? $content;
-		}
-		if ( $header['search'] ) {
-			$content = preg_replace( '/<\/header>\s*$/', core_block( 'search', array(
-				'label'      => __( 'Search', 'blixis-blocks' ),
-				'showLabel'  => true,
-				'buttonText' => __( 'Search', 'blixis-blocks' ),
-			) ) . '</header>', $content ) ?? $content;
 		}
 		return $content;
 	}
@@ -121,7 +203,7 @@ function render_template_part( string $content, array $block ): string {
 		$classes = 'blixis-footer cols-' . (int) $config['footer']['columns'];
 		$content = add_class( $content, $classes );
 		$inner   = footer_html( $config );
-		$content = preg_replace( '/(<footer\b[^>]*>).*?(<\/footer>\s*)$/s', '$1' . str_replace( '$', '\\$', $inner ) . '$2', $content ) ?? $content;
+		$content = preg_replace( '/(<footer\b[^>]*>).*?(<\/footer>\s*)$/s', '$1' . str_replace( array( '\\', '$' ), array( '\\\\', '\\$' ), $inner ) . '$2', $content ) ?? $content;
 		return $content;
 	}
 	return $content;
@@ -137,15 +219,16 @@ function navigation_attributes( array $block ): array {
 }
 
 function enqueue_layout_styles(): void {
-	if ( null === effective_config() ) {
+	$config = effective_config();
+	if ( null === $config ) {
 		return;
 	}
-	wp_enqueue_style( 'blixis-layout', plugins_url( '../../assets/layout.css', __FILE__ ), array(), '1.0.0' );
-	if ( effective_config()['header']['sticky'] ) {
-		wp_add_inline_style( 'blixis-layout', 'html{scroll-padding-top:calc(var(--wp-admin--admin-bar--height,0px) + var(--blixis-header-height,6rem))}' );
-	}
-	if ( effective_config()['footer']['stickToBottom'] ) {
-		wp_add_inline_style( 'blixis-layout', 'body{min-height:100vh}.wp-site-blocks{min-height:100vh;display:flex;flex-direction:column}.wp-site-blocks>main{flex:1}' );
+	wp_enqueue_style( 'blixis-layout', plugins_url( '../../assets/layout.css', __FILE__ ), array(), (string) filemtime( __DIR__ . '/../../assets/layout.css' ) );
+	if ( $config['header']['sticky'] ) {
+		// The header height follows its content, so anchors and focus stay below it.
+		wp_register_script( 'blixis-layout', false, array(), '1.0.0', array( 'in_footer' => true ) );
+		wp_enqueue_script( 'blixis-layout' );
+		wp_add_inline_script( 'blixis-layout', '(function(){var h=document.querySelector(".blixis-header.is-sticky");if(!h){return;}var s=function(){document.documentElement.style.setProperty("--blixis-header-height",h.offsetHeight+"px");};s();if(window.ResizeObserver){new ResizeObserver(s).observe(h);}else{window.addEventListener("resize",s);}})();' );
 	}
 }
 
