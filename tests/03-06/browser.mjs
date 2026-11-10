@@ -46,7 +46,7 @@ async function login(browser, user, { viewport = { width: 1280, height: 900 }, s
 }
 
 const go = async (page, step) => {
-  await page.goto(`${WIZARD}&step=${step}`, { waitUntil: 'load' });
+  await page.goto(`${WIZARD}&step=${step}`, { waitUntil: 'load', timeout: 60000 });
 };
 const next = async (page) => {
   await Promise.all([page.waitForLoadState('load'), page.click('.blixis-setup-actions button[name="intent"][value="next"]')]);
