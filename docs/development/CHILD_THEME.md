@@ -13,14 +13,15 @@ The Blixis Blocks generator creates an installable child theme of Blixis Base. T
 | `description` | Optional. Up to 200 characters |
 | `author` | Optional. Up to 64 characters |
 | `version` | Optional. `major.minor.patch`; defaults to `0.1.0` |
-| `starter` | Optional. `none` (default) or `neutral`; selects whether to include a neutral front-page template and editable patterns |
+| `layout` | Optional. `blank` (default), `business`, `portfolio`, `blog`, or `landing`; selects the front-page template and editable pattern |
+| `starter` | Legacy optional field accepted for compatibility: `none` maps to `blank`; `neutral` maps to `business`. If both fields are sent and disagree, the request is refused with `{field: layout, code: conflicts_with_starter}` |
 
 Text fields may not contain control characters, `<`, `>`, or `*/`, because they become one-line theme header values. Unknown fields are refused.
 
 | Response | Meaning |
 |---|---|
 | `201` | Created. Body: `slug`, `name`, `version`. No server paths |
-| `400 blixis_child_invalid` | `data.errors` lists `{field, code}`: `unknown_field`, `invalid_type`, `required`, `too_long`, `invalid_characters`, `invalid_slug`, `reserved_slug`, or `invalid_version`. Unknown `starter` values are rejected by REST argument validation as `rest_invalid_param` |
+| `400 blixis_child_invalid` | `data.errors` lists `{field, code}`: `unknown_field`, `invalid_type`, `required`, `too_long`, `invalid_characters`, `invalid_slug`, `reserved_slug`, or `invalid_version`, `invalid_layout`, or `conflicts_with_starter`. Unknown `starter` values are rejected by REST argument validation as `rest_invalid_param` |
 | `401` | Not logged in |
 | `403` | Missing `edit_theme_options` or `install_themes`, or no valid `wp_rest` nonce in `X-WP-Nonce`. Application passwords are refused because they carry no nonce |
 | `409 blixis_child_exists` | A theme, directory, or file with that slug already exists |
@@ -36,9 +37,9 @@ A new directory `<theme root>/<slug>/` containing:
 - `style.css`: the theme header with `Template: blixis-base`, `Requires at least: 7.0`, `Requires PHP: 8.3`, GPLv2 or later, and the slug as text domain.
 - `theme.json`: version 3 with no settings or styles. The child inherits Base's token-driven styles and adds no fixed token values.
 - `functions.php`: enqueues the child stylesheet after Base's `blixis-base` handle.
-- With `starter: neutral`, `templates/front-page.html` and two PHP patterns provide an editable, unbranded welcome section and three feature columns. With `starter: none`, these files are omitted.
+- With `layout: blank`, the generated child inherits Base's front page. Every other layout writes `templates/front-page.html` and one editable PHP pattern in `patterns/<layout>.php`. Source markup lives in `plugins/blixis-blocks/inc/child-theme/layouts/<layout>.php`, with the front-page template alongside it as `<layout>.html`; the generator binds the generated theme slug as the pattern text domain. Business is a full-width hero with two buttons, three raised feature cards, a CTA band, and contact section. Portfolio has a short intro and six responsive project cards in a grid. Blog has a featured post card, latest-post grid, and an explicit no-results message. Landing has an in-page navigation, three anchored sections with alternating surfaces, native Details FAQs, and a final CTA. These use core blocks and Base colour, spacing, font-size, radius, and shadow presets. No images, branding, or remote assets are included. Inline-safe neutral SVG wireframes live in `plugins/blixis-blocks/assets/layouts/` for the wizard. Legacy `starter: none` maps to Blank; `starter: neutral` maps to the exact Business file set.
 
-Files are written to a hidden staging directory in the theme root and moved into place in one step, so a failure leaves no partial theme. WordPress ignores hidden directories when it lists themes. Templates, parts, and the compiled Tailwind stylesheet are inherited from Base, so a Base upgrade reaches the child without regenerating it.
+A `blank` theme writes only `style.css`, `theme.json`, and `functions.php`; Business, Portfolio, Blog, and Landing also write `templates/front-page.html` and `patterns/<layout>.php`. Files are written to a hidden staging directory in the theme root and moved into place in one step, so a failure leaves no partial theme. WordPress ignores hidden directories when it lists themes. Templates, parts, and the compiled Tailwind stylesheet are inherited from Base, so a Base upgrade reaches the child without regenerating it.
 
 ## Tests
 
@@ -49,5 +50,7 @@ Files are written to a hidden staging directory in the theme root and moved into
 - WordPress recognises the generated theme with Base as parent and the expected headers. Base's files are byte-identical afterwards, and no staging directory remains.
 - The activated child renders a page with one `main` and one `h1` and loads its stylesheet after Base's. After a simulated Base upgrade (new version and a changed footer part), the child still renders and shows the new part.
 - No PHP errors, warnings, notices, or deprecations are logged.
+
+The 03-07 layout harness saves Chromium full-page screenshots at 1280 and 320 px for all layouts, plus an Arabic Landing screenshot, in its `--out` directory.
 
 See also the [layout configuration](LAYOUT.md): the header and footer settings of a child theme are stored as a versioned contract, separate from the files this generator writes.

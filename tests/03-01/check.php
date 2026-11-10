@@ -84,9 +84,10 @@ preg_match_all('/var:preset\\|([a-z-]+)\\|([a-z0-9-]+)/', $style_json, $preset_r
 $missing_presets = array_filter($preset_refs, static fn (array $ref): bool => !in_array($ref[2], $preset_lists[$ref[1]] ?? [], true));
 $check('every Base style preset reference exists in Base theme.json', !$missing_presets, wp_json_encode($missing_presets));
 $neutral = build_files(validate($ok_input + ['starter' => 'neutral'])['values']);
-$check('neutral starter writes a front page and two patterns', isset($neutral['templates/front-page.html'], $neutral['patterns/intro.php'], $neutral['patterns/features.php']));
-$check('neutral starter uses child-scoped pattern names', str_contains($neutral['templates/front-page.html'], 'acme-site/intro') && str_contains($neutral['templates/front-page.html'], 'acme-site/features'));
-$check('neutral starter marks visible text for child-theme translation', str_contains($neutral['patterns/intro.php'], "esc_html_e( 'Welcome', 'acme-site' )") && str_contains($neutral['patterns/features.php'], "esc_html_e( 'What we offer', 'acme-site' )") && str_contains($neutral['patterns/intro.php'], "esc_attr_e( 'Explore the feature highlights', 'acme-site' )"));
+$business = build_files(validate($ok_input + ['layout' => 'business'])['values']);
+$check('neutral starter writes the business layout file set', isset($neutral['templates/front-page.html'], $neutral['patterns/business.php']) && count(array_filter(array_keys($neutral), static fn (string $path): bool => str_starts_with($path, 'patterns/'))) === 1);
+$check('neutral starter is exactly the business layout output', $neutral === $business);
+$check('business layout uses its child-scoped pattern and translated visible text', str_contains($neutral['templates/front-page.html'], 'acme-site/business') && str_contains($neutral['patterns/business.php'], "esc_html_e( 'A better way to do business', 'acme-site' )"));
 $invalid_starter = validate(['name' => 'A', 'slug' => 'abc', 'starter' => 'branded']);
 $check('unknown starter is rejected', in_array(['field' => 'starter', 'code' => 'invalid_starter'], $invalid_starter['errors'], true));
 
@@ -181,7 +182,7 @@ $check('generated header: Version and Text Domain', $child->get('Version') === '
 $generated = is_dir($root . '/acme-site') ? array_values(array_diff(scandir($root . '/acme-site'), ['.', '..'])) : [];
 sort($generated);
 $check('generated directory holds only the approved files', $generated === ['functions.php', 'patterns', 'style.css', 'templates', 'theme.json'], implode(',', $generated));
-$check('REST starter selection writes the neutral front page and patterns', is_file($root . '/acme-site/templates/front-page.html') && is_file($root . '/acme-site/patterns/intro.php') && is_file($root . '/acme-site/patterns/features.php'));
+$check('REST starter selection writes the business layout file set', is_file($root . '/acme-site/templates/front-page.html') && is_file($root . '/acme-site/patterns/business.php') && !is_file($root . '/acme-site/patterns/intro.php') && !is_file($root . '/acme-site/patterns/features.php'));
 $check('generator did not activate the theme', get_stylesheet() === 'blixis-base', get_stylesheet());
 
 [$s] = $post($request, $admin_session, $admin_session['nonce']);
