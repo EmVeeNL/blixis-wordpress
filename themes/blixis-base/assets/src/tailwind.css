@@ -75,3 +75,42 @@
   --shadow-md: var(--blixis-shadow-md);
   --shadow-lg: var(--blixis-shadow-lg);
 }
+
+/* Let top-level full-width layout bands cross the Base root gutter while their
+   constrained block layout keeps the content aligned to the theme column. */
+.wp-site-blocks main > .alignfull {
+  width: calc(100% + 2 * var(--blixis-spacing-md, 1rem));
+  max-width: none;
+  margin-inline: calc(-1 * var(--blixis-spacing-md, 1rem));
+}
+
+.business-feature-card {
+  height: 100%;
+}
+
+.landing-page-navigation .wp-block-navigation-item__content {
+  color: var(--wp--preset--color--primary);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+#faq .wp-block-details {
+  margin-block: 0;
+  padding: var(--wp--preset--spacing--md);
+  border: 1px solid var(--wp--preset--color--muted);
+  border-radius: var(--wp--preset--border-radius--md);
+}
+
+#faq .wp-block-details + .wp-block-details {
+  margin-block-start: var(--wp--preset--spacing--sm);
+}
+
+#faq .wp-block-details summary {
+  font-weight: 600;
+}
+
+.landing-tinted-section {
+  color: var(--wp--preset--color--foreground);
+  background-color: color-mix(in srgb, var(--wp--preset--color--primary) 6%, var(--wp--preset--color--surface));
+}

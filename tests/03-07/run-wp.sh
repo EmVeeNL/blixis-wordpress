@@ -127,13 +127,14 @@ ob_start();
 include get_theme_root() . "/layout-landing/patterns/landing.php";
 $translated_pattern = (string) ob_get_clean();
 $parsed = array_values(array_filter(parse_blocks($translated_pattern), static fn($block) => !empty($block["blockName"])));
-$expected_blocks = array("core/group", "core/navigation", "core/group", "core/group", "core/group");
+$expected_blocks = array("core/group", "core/group", "core/group", "core/group", "core/group");
 if (array_column($parsed, "blockName") === $expected_blocks && str_contains($translated_pattern, "id=\"contact\"")) echo "PASS translated special characters parse generated blocks\n"; else echo "FAIL translated special characters parse generated blocks: " . wp_json_encode(array_column($parsed, "blockName")) . "\n";
 if (count(Blixis\Blocks\Setup\presets()) === 6) echo "PASS six presets\n"; else echo "FAIL preset count\n";
 ' 2>&1 | grep -E '^(PASS|FAIL|NOTE|HARNESS) ' || fault "layout REST checks failed"
 
 wp post create --post_type=post --post_status=publish --post_title="A featured story" --post_content="A featured post excerpt for the blog layout." --quiet >/dev/null 2>&1 || fault "first blog post not created"
 wp post create --post_type=post --post_status=publish --post_title="A later story" --post_content="A second post for the latest posts grid." --quiet >/dev/null 2>&1 || fault "second blog post not created"
+wp post delete 1 --force --quiet >/dev/null 2>&1 || fault "default Hello World post not removed"
 cat > wp-content/mu-plugins/t0307-post-selector.php <<'PHP'
 <?php
 if (!isset($_GET['t0307_posts']) || '1' !== $_GET['t0307_posts']) {
