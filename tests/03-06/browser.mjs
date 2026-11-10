@@ -28,10 +28,20 @@ async function login(browser, user, { viewport = { width: 1280, height: 900 }, s
   const context = await browser.newContext({ viewport, reducedMotion, javaScriptEnabled: !jsDisabled });
   if (scriptOff) await context.route('**/assets/setup.js*', (route) => route.abort());
   const page = await context.newPage();
-  await page.goto(`${BASE}/wp-login.php?redirect_to=${encodeURIComponent(WIZARD)}`);
-  await page.fill('#user_login', user);
-  await page.fill('#user_pass', PASSWORD);
-  await Promise.all([page.waitForURL((url) => url.pathname.startsWith('/wp-admin/'), { timeout: 60000, waitUntil: 'commit' }), page.click('#wp-submit')]);
+  // Wait for the full load before submitting, and retry once (a slow Firefox once submitted
+  // before wp-login.php had finished loading, so the login silently failed).
+  for (let attempt = 1; ; attempt++) {
+    await page.goto(`${BASE}/wp-login.php?redirect_to=${encodeURIComponent(WIZARD)}`, { waitUntil: 'load' });
+    await page.fill('#user_login', user);
+    await page.fill('#user_pass', PASSWORD);
+    try {
+      await Promise.all([page.waitForURL((url) => url.pathname.startsWith('/wp-admin/'), { timeout: 30000, waitUntil: 'commit' }), page.click('#wp-submit')]);
+      break;
+    } catch (error) {
+      note(`login attempt ${attempt} for ${user} did not reach wp-admin`, await page.locator('#login_error').innerText().catch(() => '(no login error shown)'));
+      if (attempt === 2) throw error;
+    }
+  }
   return { context, page };
 }
 

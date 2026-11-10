@@ -127,7 +127,8 @@ async function fullFlow(browser) {
   pub = await publicTokens(browser);
   check('visitors still see the stored colour while a draft exists', pub.blixis === GREEN && pub.preset === GREEN, JSON.stringify(pub));
 
-  const width = async () => Math.round((await handle.boundingBox()).width);
+  // The frame keeps its device width and is scaled to fit its column, so the layout width is the one to read.
+  const width = async () => (await handle.evaluate((el) => el.offsetWidth));
   check('the preview starts at the mobile width (390 px)', Math.abs((await width()) - 392) <= 3, String(await width()));
   await page.click('label[for="blixis-preview-tablet"]');
   check('the tablet width sets the frame to 820 px', Math.abs((await width()) - 822) <= 3, String(await width()));
