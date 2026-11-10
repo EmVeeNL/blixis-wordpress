@@ -59,6 +59,10 @@ async function chooseTheme(page) {
 }
 const hidden = (page, section, key) => page.inputValue(`input[name="config[${section}][${key}]"]`);
 const field = (page, section, key) => page.locator(`.blixis-setup-field:has(input[name="config[${section}][${key}]"])`);
+const saveReview = async (page) => {
+  await Promise.all([page.waitForLoadState('load'), page.click('.blixis-setup-actions button[name="intent"][value="save"]')]);
+  await page.waitForLoadState('load');
+};
 const settle = (page) => page.waitForTimeout(150);
 
 async function axe(page, label) {
@@ -371,7 +375,7 @@ async function layoutFlow(browser) {
   await sm.scrollIntoViewIfNeeded();
   await page.screenshot({ path: 'shots/c2-shadows-adjust.png', fullPage: true });
   await next(page);
-  check('the layout step submits', page.url().includes('step=review'), page.url());
+  check('the layout step submits', page.url().includes('step=header'), page.url());
   await context.close();
 }
 
@@ -594,7 +598,7 @@ async function a11yMatrix(browser, engine) {
       for (const width of [1280, 320]) {
         const { context, page } = await login(browser, user, { viewport: { width, height: 900 }, scriptOff });
         const mode = scriptOff ? 'JavaScript off' : 'JavaScript on';
-        for (const step of ['colors', 'typography', 'layout', 'review']) {
+        for (const step of ['colors', 'typography', 'layout', 'header', 'review']) {
           await go(page, step);
           if (locale === 'ar' && step === 'colors') {
             const dir = await page.evaluate(() => document.documentElement.dir);
@@ -621,6 +625,254 @@ async function a11yMatrix(browser, engine) {
   }
 }
 
+// ---------------------------------------------------------------------------
+// Task 03-07 Part D: the Header and footer step, the layout draft, saving and the two rollbacks.
+const SWITCH = {
+  sticky: 'Keep the header at the top while scrolling',
+  usp: 'Show a bar of short selling points above the header',
+  cta: 'Show a call-to-action button in the header',
+  search: 'Show a search field in the header',
+  bottom: 'Keep the footer at the bottom of the window on short pages',
+  copyright: 'Show a copyright line',
+  top: 'Show a link that returns to the top of the page',
+};
+const sw = (page, key) => page.getByRole('switch', { name: SWITCH[key] });
+const layoutRevision = async (page) => {
+  await go(page, 'review');
+  const match = /Saved header and footer revision: (\d+)/.exec(await page.locator('.blixis-setup-form').innerText());
+  return match ? Number(match[1]) : 0;
+};
+const previewPosts = (page) => page.waitForResponse((r) => r.url().includes('admin-post.php') && r.request().method() === 'POST' && (r.request().postData() || '').includes('blixis_setup_layout_preview'), { timeout: 15000 });
+
+async function headerFlow(browser) {
+  const { context, page } = await login(browser, USERS.en, { viewport: { width: 1280, height: 1000 } });
+  await chooseTheme(page);
+  const startRevision = await layoutRevision(page);
+  await go(page, 'header');
+  check('the step is the fifth of six, named Header and footer', (await page.locator('[aria-current="step"] .screen-reader-text').innerText()).startsWith('Step 5 of 6') && (await page.locator('.blixis-setup-form h2').innerText()) === 'Header and footer');
+  check('the step has a Header card and a Footer card', (await page.locator('#blixis-section-header .blixis-card__title').innerText()) === 'Header' && (await page.locator('#blixis-section-footer .blixis-card__title').innerText()) === 'Footer');
+  check('every switch is a native checkbox with role switch and a name', (await page.locator('input[type="checkbox"][role="switch"]').count()) === 7 && (await sw(page, 'sticky').count()) === 1);
+  check('the logo position and the columns are native radio groups', (await page.locator('fieldset.blixis-seg input[name="layout[header][logo]"][type="radio"]').count()) === 2 && (await page.locator('fieldset.blixis-seg input[name="layout[footer][columns]"][type="radio"]').count()) === 4);
+  check('the mobile menu is a select and the contact is a textarea', (await page.locator('select[name="layout[header][mobileMenu]"]').count()) === 1 && (await page.locator('textarea[name="layout[footer][contact]"]').count()) === 1);
+  check('the copyright hint names {year} and {site}', (await page.locator('#blixis-footer-copyright-hint').innerText()).includes('{year}') && (await page.locator('#blixis-footer-copyright-hint').innerText()).includes('{site}'));
+  check('the preview frame is on the step', (await page.locator('.blixis-setup-preview iframe').count()) === 1);
+  await frameLoaded(page);
+
+  // Dependent rows.
+  await sw(page, 'usp').setChecked(false);
+  await sw(page, 'cta').setChecked(false);
+  check('USP texts and button fields are hidden while their switches are off', !(await page.getByLabel('USP text 1').isVisible()) && !(await page.getByLabel('Button text').isVisible()) && !(await page.getByLabel('Button link').isVisible()));
+  await sw(page, 'usp').setChecked(true);
+  await sw(page, 'cta').setChecked(true);
+  check('they show when the switch is on', (await page.getByLabel('USP text 1').isVisible()) && (await page.getByLabel('Button text').isVisible()));
+  await page.getByLabel('USP text 1').fill('Free shipping');
+
+  // Keyboard: Space toggles a switch, the arrow keys move through a segmented control.
+  await sw(page, 'sticky').setChecked(false);
+  await sw(page, 'sticky').focus();
+  await page.keyboard.press('Space');
+  check('Space turns a switch on', await sw(page, 'sticky').isChecked());
+  await page.getByRole('group', { name: 'Footer columns' }).getByRole('radio', { name: '1', exact: true }).focus();
+  await page.keyboard.press('ArrowRight');
+  check('the arrow keys move through the columns', await page.getByRole('group', { name: 'Footer columns' }).getByRole('radio', { name: '2', exact: true }).isChecked());
+
+  // Client validation: an unsafe link is refused inline and nothing is sent to the preview.
+  let sent = 0;
+  const count = (request) => { if (request.method() === 'POST' && (request.postData() || '').includes('blixis_setup_layout_preview')) sent++; };
+  page.on('request', count);
+  await page.getByLabel('Button text').fill('Get a quote');
+  await page.getByLabel('Button link').fill('javascript:alert(1)');
+  await page.waitForSelector('#blixis-header-cta-url-client-error', { timeout: 5000 });
+  await page.waitForTimeout(900);
+  check('an unsafe link shows an inline error on the field', (await page.getByLabel('Button link').getAttribute('aria-invalid')) === 'true' && (await page.locator('#blixis-header-cta-url-client-error').innerText()).includes('https://'));
+  check('the invalid layout is not sent to the preview', sent === 0, String(sent));
+  check('the error is linked to the field', ((await page.getByLabel('Button link').getAttribute('aria-describedby')) || '').includes('blixis-header-cta-url-client-error'));
+
+  // A valid layout reaches the preview request as the draft, and the frame reloads.
+  await page.evaluate(() => { document.querySelector('.blixis-setup-frame iframe').contentWindow.__marker = 1; });
+  const response = previewPosts(page);
+  await page.getByLabel('Button link').fill('  /contact ');
+  const reply = await response;
+  const body = (reply.request().postData() || '');
+  check('a valid layout is sent to the preview endpoint, with the URL trimmed', reply.status() === 200 && /name="layout\[header\]\[cta\]\[url\]"\r?\n\r?\n\/contact\r?\n/.test(body), body.slice(0, 300));
+  check('the inline error is gone', (await page.locator('[data-client-error]').count()) === 0 && (await page.getByLabel('Button link').getAttribute('aria-invalid')) === null);
+  await page.waitForFunction(() => document.querySelector('.blixis-setup-frame iframe').contentWindow.__marker === undefined, null, { timeout: 15000 });
+  check('the preview frame reloads to show the draft', true);
+  page.off('request', count);
+
+  // The draft survives a reload without pressing Continue.
+  await go(page, 'header');
+  check('the previewed draft is kept on reload', (await sw(page, 'sticky').isChecked()) && (await page.getByLabel('Button link').inputValue()) === '/contact');
+
+  // USP texts, copyright and the rest.
+  await page.getByLabel('USP text 1').fill('Free shipping');
+  await page.getByLabel('USP text 2').fill('');
+  await page.getByLabel('USP text 3').fill('30 days to return');
+  await page.getByRole('group', { name: 'Logo position' }).getByRole('radio', { name: 'Centred' }).check();
+  await sw(page, 'search').setChecked(true);
+  await page.locator('select[name="layout[header][mobileMenu]"]').selectOption('always');
+  await sw(page, 'bottom').setChecked(true);
+  await page.getByRole('group', { name: 'Footer columns' }).getByRole('radio', { name: '3', exact: true }).check();
+  await page.locator('textarea[name="layout[footer][contact]"]').fill('Main Street 1\n1234 AB Town');
+  await sw(page, 'copyright').setChecked(true);
+  await page.getByLabel('Copyright text').fill('© {year} {site}. All rights reserved.');
+  await sw(page, 'top').setChecked(true);
+
+  // Social links: one empty row to start, add up to six, remove one.
+  const social = page.locator('[data-blixis-social] .blixis-social__item:not([hidden])');
+  const add = page.getByRole('button', { name: 'Add another link' });
+  const start = await social.count();
+  check('the social list shows its filled rows and one empty row, with an add button', start >= 1 && (await add.isVisible()));
+  while ((await social.count()) < 6) await add.click();
+  check('at most six links can be added', (await social.count()) === 6 && !(await add.isVisible()));
+  await page.getByLabel('Address of link 1').fill('https://mastodon.example/@acme');
+  await page.getByLabel('Service of link 1').selectOption('mastodon');
+  await page.getByLabel('Address of link 2').fill('http://insecure.example');
+  await page.waitForSelector('[data-client-error]', { timeout: 5000 });
+  check('a social link must be https', (await page.getByLabel('Address of link 2').getAttribute('aria-invalid')) === 'true');
+  await page.getByRole('button', { name: 'Remove link 2' }).click();
+  check('removing a link hides its row and clears the error', (await social.count()) === 5 && (await page.locator('[data-client-error]').count()) === 0);
+  await frameLoaded(page);
+  await page.screenshot({ path: 'shots/f-header-step-1280.png', fullPage: true });
+
+  // Continue: the step is accepted and the review lists the settings.
+  await next(page);
+  check('the step submits to the review', page.url().includes('step=review'), page.url());
+  const review = await page.locator('.blixis-setup-form').innerText();
+  for (const line of ['Layout:', 'Sticky header: on', 'USP bar: Free shipping; 30 days to return', 'Logo: centred', 'Button: Get a quote (/contact)', 'Search: on', 'Menu button: on every screen', 'Columns: 3', 'Contact: Main Street 1 / 1234 AB Town', 'Social links: Mastodon https://mastodon.example/@acme', 'Copyright: © {year} {site}. All rights reserved.', 'Back to top link: on'])
+    check(`the review lists "${line}"`, review.includes(line), review.slice(0, 400));
+  check('the primary button offers to save', (await page.locator('button[value="save"]').innerText()).trim() === 'Save and continue');
+  await page.screenshot({ path: 'shots/f-review-1280.png', fullPage: true });
+
+  // Save: tokens, then the layout.
+  await saveReview(page);
+  const notice = await page.locator('.blixis-setup-notice').innerText();
+  check('saving reports the layout revision', /Header and footer saved as revision \d+/.test(notice), notice);
+  const saved = await layoutRevision(page);
+  check('the review shows the saved layout revision', saved === startRevision + 1, `${startRevision} -> ${saved}`);
+  check('the primary button says Continue once everything is saved', (await page.locator('button[value="save"]').innerText()).trim() === 'Continue');
+  check('no layout rollback is offered while there is no earlier saved layout, or it is offered after a second save', (await page.locator('button[value="rollback_layout"]').count()) === (startRevision > 0 ? 1 : 0));
+
+  // Second save: change one thing, so a previous layout exists.
+  await go(page, 'header');
+  await sw(page, 'search').setChecked(false);
+  await next(page);
+  await saveReview(page);
+  check('a second save writes the next layout revision', (await layoutRevision(page)) === saved + 1);
+  check('the layout rollback and the token rollback are separate buttons', (await page.locator('button[value="rollback_layout"]').count()) === 1 && (await page.locator('button[value="rollback"]').count()) <= 1);
+
+  // Conflict: another administrator saves a change first.
+  await go(page, 'header');
+  await sw(page, 'sticky').setChecked(false);
+  await next(page);
+  const other = await login(browser, 'fixture_admin2');
+  await go(other.page, 'header');
+  await sw(other.page, 'search').setChecked(true);
+  await next(other.page);
+  await saveReview(other.page);
+  check('the other administrator saves the layout', (await other.page.locator('.blixis-setup-notice').count()) === 1);
+  await other.context.close();
+  await go(page, 'review');
+  await saveReview(page);
+  const failure = await page.locator('.notice-error').innerText();
+  check('a stale layout save is refused with a conflict message', failure.includes('changed elsewhere'), failure);
+  await go(page, 'header');
+  check('the refused layout draft is kept', !(await sw(page, 'sticky').isChecked()));
+  await go(page, 'review');
+  await Promise.all([page.waitForURL(/step=review/), page.click('button[value="reset"]')]);
+  await go(page, 'header');
+  check('discarding the draft loads the saved layout', await sw(page, 'search').isChecked());
+
+  // Rollback of the layout only.
+  await go(page, 'review');
+  const before = await layoutRevision(page);
+  await page.click('button[value="rollback_layout"]');
+  await page.waitForLoadState('load');
+  check('the layout rolls back as a new revision', (await page.locator('.blixis-setup-notice').innerText()).includes(`revision ${before + 1}`));
+  await go(page, 'header');
+  check('the rolled-back layout is what the step shows', !(await sw(page, 'search').isChecked()));
+  await context.close();
+}
+
+async function headerNoJavaScript(browser) {
+  const { context, page } = await login(browser, USERS.en, { jsDisabled: true, viewport: { width: 1280, height: 1000 } });
+  await chooseTheme(page);
+  await go(page, 'header');
+  check('without JavaScript every row is visible', (await page.getByLabel('USP text 1').isVisible()) && (await page.getByLabel('Button text').isVisible()) && (await page.getByLabel('Copyright text').isVisible()));
+  check('without JavaScript the social list has empty rows to fill in', (await page.locator('.blixis-social__item:visible').count()) >= 2);
+  await sw(page, 'cta').setChecked(true);
+  await page.getByLabel('Button text').fill('Contact');
+  await page.getByLabel('Button link').fill('javascript:alert(1)');
+  await page.getByLabel('Address of link 1').fill('http://insecure.example');
+  await next(page);
+  check('without JavaScript the server refuses the step and stays on it', page.url().includes('step=header') && (await page.locator('#blixis-setup-errors').count()) === 1);
+  const links = await page.locator('#blixis-setup-errors a').evaluateAll((els) => els.map((el) => [el.textContent, el.getAttribute('href')]));
+  check('the error summary names and links the fields', links.some(([text, href]) => text.startsWith('Button link') && href === '#blixis-header-cta-url') && links.some(([text, href]) => text.startsWith('Social link') && href === '#blixis-footer-social-0-url'), JSON.stringify(links));
+  check('the rejected values are shown again', (await page.getByLabel('Button link').inputValue()) === 'javascript:alert(1)' && (await page.getByLabel('Address of link 1').inputValue()) === 'http://insecure.example');
+  check('each error is tied to its field', (await page.getByLabel('Button link').getAttribute('aria-invalid')) === 'true' && ((await page.getByLabel('Button link').getAttribute('aria-describedby')) || '').includes('blixis-header-cta-url-error'));
+  await page.getByLabel('Button link').fill('/contact');
+  await page.getByLabel('Address of link 1').fill('');
+  await sw(page, 'usp').setChecked(true);
+  for (const n of [1, 2, 3]) await page.getByLabel(`USP text ${n}`).fill('');
+  await next(page);
+  const uspSummary = await page.locator('#blixis-setup-errors').innerText().catch(() => '(no summary)');
+  check('an enabled USP bar without a text is refused', page.url().includes('step=header') && uspSummary.includes('USP texts'), `${page.url()} ${uspSummary}`);
+  await sw(page, 'usp').setChecked(false);
+  await next(page);
+  check('without JavaScript a valid step moves on to the review', page.url().includes('step=review'), page.url());
+  await context.close();
+}
+
+async function headerPermissions(browser) {
+  const editor = await login(browser, 'fixture_editor');
+  const stepPost = await editor.page.request.post(POST, { form: { action: 'blixis_setup', step: 'header', 'layout[header][logo]': 'center' }, maxRedirects: 0 });
+  check('an editor cannot submit the Header and footer step', stepPost.status() === 403, String(stepPost.status()));
+  const previewPost = await editor.page.request.post(POST, { form: { action: 'blixis_setup_layout_preview', _wpnonce: 'deadbeef00' }, maxRedirects: 0 });
+  check('an editor cannot use the layout preview endpoint', previewPost.status() === 403, String(previewPost.status()));
+  await editor.context.close();
+  const sub = await login(browser, 'fixture_subscriber');
+  const subPost = await sub.page.request.post(POST, { form: { action: 'blixis_setup_layout_preview', _wpnonce: 'deadbeef00' }, maxRedirects: 0 });
+  check('a subscriber cannot use the layout preview endpoint', subPost.status() === 403, String(subPost.status()));
+  await sub.context.close();
+  const { context, page } = await login(browser, USERS.en);
+  await chooseTheme(page);
+  await go(page, 'header');
+  const stepNonce = await page.inputValue('.blixis-setup-form input[name="_wpnonce"]');
+  const forged = await page.request.post(POST, { form: { action: 'blixis_setup_layout_preview', _wpnonce: 'deadbeef00', 'layout[header][logo]': 'center' }, maxRedirects: 0 });
+  check('a forged nonce cannot use the layout preview endpoint', forged.status() === 403, String(forged.status()));
+  const noNonce = await page.request.post(POST, { form: { action: 'blixis_setup', step: 'header' }, maxRedirects: 0 });
+  check('a Header and footer submission without a nonce is refused', noNonce.status() === 403, String(noNonce.status()));
+  const wrongStep = await page.request.post(POST, { form: { action: 'blixis_setup_layout_preview', _wpnonce: stepNonce }, maxRedirects: 0 });
+  check('a nonce of another action is refused by the preview endpoint', wrongStep.status() === 403, String(wrongStep.status()));
+  const data = JSON.parse(await page.locator('#blixis-setup-data').evaluate((el) => el.textContent));
+  const nonce = data.layoutPreview.nonce;
+  const bad = await page.request.post(POST, { form: { action: 'blixis_setup_layout_preview', _wpnonce: nonce, 'layout[header][logo]': 'left', 'layout[header][mobileMenu]': 'mobile', 'layout[footer][columns]': '9' }, maxRedirects: 0 });
+  const badBody = await bad.json();
+  check('the preview endpoint validates on the server and stores nothing', bad.status() === 422 && badBody.ok === false && badBody.errors.some((e) => e.code === 'header.logo.invalid') && badBody.errors.some((e) => e.code === 'footer.columns.invalid'), JSON.stringify(badBody));
+  const anon = await (await import('playwright')).request.newContext();
+  const anonPost = await anon.post(POST, { form: { action: 'blixis_setup_layout_preview', _wpnonce: nonce }, maxRedirects: 0 });
+  check('a visitor who is not signed in gets nothing from the preview endpoint', anonPost.status() >= 400, String(anonPost.status()));
+  await anon.dispose();
+  await context.close();
+}
+
+async function headerShots(browser) {
+  const narrow = await login(browser, USERS.en, { viewport: { width: 320, height: 900 } });
+  await chooseTheme(narrow.page);
+  await go(narrow.page, 'header');
+  await sw(narrow.page, 'cta').setChecked(true);
+  await shot(narrow.page, 'shots/f-header-step-320.png');
+  await narrow.context.close();
+  const ar = await login(browser, USERS.ar, { viewport: { width: 1280, height: 1000 } });
+  await chooseTheme(ar.page);
+  await go(ar.page, 'header');
+  await frameLoaded(ar.page);
+  await shot(ar.page, 'shots/f-header-step-arabic.png');
+  const direction = await ar.page.evaluate(() => ({ dir: document.documentElement.dir, align: getComputedStyle(document.querySelector('.blixis-row__label')).textAlign }));
+  check('the Header and footer step is right to left in Arabic', direction.dir === 'rtl', JSON.stringify(direction));
+  await ar.context.close();
+}
+
 const names = (process.env.T0306_BROWSERS || 'chromium').split(',').filter(Boolean);
 for (const name of names) {
   current = name;
@@ -641,6 +893,10 @@ for (const name of names) {
     await noJavaScriptFlow(browser);
     await permissionChecks(browser);
     await darkReview(browser);
+    await headerPermissions(browser);
+    await headerFlow(browser);
+    await headerNoJavaScript(browser);
+    if (name === 'chromium') await headerShots(browser);
     if (name === 'chromium') await mergedShots(browser);
     await a11yMatrix(browser, name);
   } catch (error) {

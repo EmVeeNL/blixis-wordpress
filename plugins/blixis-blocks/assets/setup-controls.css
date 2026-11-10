@@ -228,3 +228,27 @@
 .blixis-setup .blixis-setup-progress li > span > span.blixis-setup-progress-dot { box-sizing: border-box; border: 2px solid #8c8f94; border-radius: 50%; background: #fff; color: #50575e; }
 .blixis-setup .blixis-setup-progress li.is-done a > span.blixis-setup-progress-dot { border-color: #008a20; background: #008a20; color: #fff; }
 .blixis-setup .blixis-setup-progress li.is-current a > span.blixis-setup-progress-dot { border-color: var(--blixis-accent); background: var(--blixis-accent); color: #fff; }
+
+/* ---------- Header and footer step (task 03-07) ---------- */
+.blixis-text,
+.blixis-textarea { inline-size: 100%; max-inline-size: 28rem; min-block-size: 2.4rem; margin: 0; border-color: var(--blixis-field); border-radius: 6px; }
+.blixis-textarea { min-block-size: 5rem; resize: vertical; }
+.blixis-text[aria-invalid="true"],
+.blixis-textarea[aria-invalid="true"],
+.blixis-select[aria-invalid="true"] { border-color: #b32d2e; box-shadow: 0 0 0 1px #b32d2e; }
+.blixis-row__control > .blixis-seg { justify-self: start; max-inline-size: 100%; }
+.blixis-row__control > .blixis-switch { justify-self: start; }
+.blixis-row .blixis-seg__opt { min-block-size: 2.4rem; padding-inline: 1rem; font-size: 0.8125rem; }
+.blixis-usp-fields,
+.blixis-social__list { display: grid; gap: 0.5rem; margin: 0; padding: 0; list-style: none; }
+.blixis-usp-field { display: grid; gap: 0.25rem; }
+.blixis-social__item { display: grid; grid-template-columns: minmax(7rem, 10rem) minmax(0, 1fr) auto; align-items: start; gap: 0.5rem; margin: 0; }
+.blixis-social__item .blixis-setup-error { grid-column: 1 / -1; }
+.blixis-social__item .blixis-select { max-inline-size: none; }
+.blixis-social__item .blixis-text { max-inline-size: none; }
+.blixis-social__actions { margin-block-start: 0.5rem; }
+@media (max-width: 559px) {
+	.blixis-social__item { grid-template-columns: minmax(0, 1fr) auto; }
+	.blixis-social__item .blixis-social__service { grid-column: 1 / -1; }
+}
+.blixis-setup-review--layout ul { margin: 0; padding-inline-start: 1.1rem; list-style: disc; }
