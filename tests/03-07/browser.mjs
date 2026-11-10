@@ -22,7 +22,10 @@ for (const name of browsers) {
     check((await page.locator('nav').evaluateAll((els) => els.every((el) => el.hasAttribute('aria-label') || el.hasAttribute('aria-labelledby')))), `${name} ${layout} labelled navigation`);
     if (layout === 'business') {
       check(await page.locator('main .wp-block-button a').count() >= 2, `${name} business hero buttons`);
-      check(await page.locator('main > .alignfull h2').filter({ hasText: 'Ready to start?' }).count() === 1, `${name} business CTA heading`);
+      const ctaHeading = page.locator('main > .alignfull h2').filter({ hasText: 'Ready to start?' });
+      check(await ctaHeading.count() === 1 && await ctaHeading.isVisible(), `${name} business CTA heading visible`);
+      const ctaPadding = await ctaHeading.locator('..').evaluate((el) => { const style = getComputedStyle(el); return [style.paddingTop, style.paddingBottom]; });
+      check(ctaPadding[0] === ctaPadding[1], `${name} business CTA even vertical padding`, ctaPadding.join('/'));
       const cards = page.locator('#features .business-feature-card');
       const heights = await cards.evaluateAll((els) => els.map((el) => Math.round(el.getBoundingClientRect().height)));
       check(new Set(heights).size === 1, `${name} business feature cards equal height`, heights.join(','));
