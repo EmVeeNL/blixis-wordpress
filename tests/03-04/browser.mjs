@@ -87,7 +87,7 @@ async function fullFlow(browser) {
   await p.click('.blixis-setup-actions button[value="next"]');
   await p.waitForLoadState('load');
   await p.goto(`${WIZARD}&step=typography`);
-  const options = await p.locator('#blixis-fonts-body option').allTextContents();
+  const options = await p.locator('select[name="config[fonts][body]"] option').allTextContents();
   check('the body font offers usable installed families', options.includes('Liberation Sans') && options.includes('Upload Sans'), options.join(','));
   check('unusable families are not offered', !options.includes('Broken Font') && !options.includes('Remote Font') && !options.includes('Bad;Name'), options.join(','));
   check('generic families are offered', options.includes('system-ui') && options.includes('serif'), options.join(','));
@@ -99,16 +99,16 @@ async function fullFlow(browser) {
 
   // A font name that is valid for the contract but not installed is refused.
   await p.evaluate(() => {
-    const select = document.querySelector('#blixis-fonts-body');
+    const select = document.querySelector('select[name="config[fonts][body]"]');
     select.add(new Option('Comic Neue', 'Comic Neue', true, true));
   });
   await p.click('.blixis-setup-actions button[value="next"]');
   await p.waitForLoadState('load');
   check('a font that is not installed is refused with a field error', (await p.getAttribute('#blixis-fonts-body', 'aria-invalid')) === 'true', await p.locator('#blixis-setup-errors').innerText().catch(() => ''));
-  await p.selectOption('#blixis-fonts-body', 'Liberation Sans');
+  await p.selectOption('select[name="config[fonts][body]"]', 'Liberation Sans', { force: true });
   await p.click('.blixis-setup-actions button[value="next"]');
   await p.waitForLoadState('load');
-  check('an installed font is accepted', (await p.locator('[aria-current="step"]').innerText()).startsWith('Step 4 of 5'));
+  check('an installed font is accepted', p.url().includes('step=layout') && (await p.locator('[aria-current="step"]').getAttribute('href')).includes('step=layout'), p.url());
   await p.goto(`${WIZARD}&step=typography`);
   check('the chosen font is kept in the draft', (await p.inputValue('#blixis-fonts-body')) === 'Liberation Sans');
   await admin.context.close();

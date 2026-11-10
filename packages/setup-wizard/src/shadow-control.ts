@@ -50,14 +50,14 @@ export function enhanceShadow(ctx: Context, input: HTMLInputElement, parts: Part
     cards.append(
       el(
         "label",
-        { class: "blixis-card" },
+        { class: "blixis-pcard" },
         radio,
         el("span", {
-          class: "blixis-card-sample",
+          class: "blixis-pcard__sample",
           "aria-hidden": "true",
           style: `box-shadow:${preset.value}`,
         }),
-        el("span", { class: "blixis-card-name" }, t(ctx, `shadowPreset_${preset.id}`)),
+        el("span", { class: "blixis-pcard__name" }, t(ctx, `shadowPreset_${preset.id}`)),
       ),
     );
   }
@@ -104,7 +104,7 @@ export function enhanceShadow(ctx: Context, input: HTMLInputElement, parts: Part
       numberId,
       labelledBy: labelId,
       valueText: (value) => `${value}${unit}`,
-      extra: el("span", { class: "blixis-ctl-unit-text", "aria-hidden": "true" }, unit),
+      extra: el("span", { class: "blixis-group__suffix", "aria-hidden": "true" }, unit),
       onInput(value) {
         if (value === null) return;
         if (key === "opacity") {

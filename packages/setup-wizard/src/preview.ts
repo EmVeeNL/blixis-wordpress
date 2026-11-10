@@ -19,19 +19,17 @@ export function setupPreview(ctx: Context, onScheme: () => void): Preview | null
     return null;
 
   const group = uid("blixis-preview-scheme");
-  const mk = (value: PreviewScheme, checked: boolean): HTMLElement => {
-    const id = uid("blixis-preview-scheme-option");
-    return el(
-      "span",
-      { class: "blixis-ctl-choice" },
-      el("input", { type: "radio", name: group, id, value, checked }),
-      el("label", { for: id }, t(ctx, value === "light" ? "light" : "dark")),
+  const mk = (value: PreviewScheme, checked: boolean): HTMLElement =>
+    el(
+      "label",
+      { class: "blixis-seg__opt" },
+      el("input", { type: "radio", name: group, value, checked }),
+      el("span", {}, t(ctx, value === "light" ? "light" : "dark")),
     );
-  };
   const choice = el(
     "fieldset",
-    { class: "blixis-setup-widths blixis-preview-scheme" },
-    el("legend", {}, t(ctx, "previewColours")),
+    { class: "blixis-seg blixis-preview-scheme" },
+    el("legend", { class: "screen-reader-text" }, t(ctx, "previewColours")),
     mk("light", true),
     mk("dark", false),
   );
@@ -41,10 +39,44 @@ export function setupPreview(ctx: Context, onScheme: () => void): Preview | null
     "aria-live": "polite",
     "aria-atomic": "true",
   });
-  const describe = el("button", { type: "button", class: "button" }, t(ctx, "describe"));
-  const widths = section.querySelector(".blixis-setup-widths");
-  (widths ?? section.querySelector("h3"))?.after(choice);
-  frame.closest(".blixis-setup-frame")?.after(el("p", {}, describe), live);
+  const describe = el(
+    "button",
+    { type: "button", class: "blixis-btn blixis-btn--secondary blixis-btn--small" },
+    t(ctx, "describe"),
+  );
+  const schemeSlot = section.querySelector('[data-blixis-slot="preview-scheme"]');
+  const describeSlot = section.querySelector('[data-blixis-slot="preview-describe"]');
+  if (schemeSlot !== null) schemeSlot.replaceWith(choice);
+  else section.querySelector(".blixis-setup-widths")?.after(choice);
+  if (describeSlot !== null) describeSlot.replaceWith(describe, live);
+  else frame.closest(".blixis-setup-frame")?.after(el("p", {}, describe), live);
+
+  // Fit the page in the column: the frame keeps its device width (390, 820 or 1280 px) and is
+  // scaled down to the width of its box, so the whole page width shows. Without this script the
+  // box scrolls sideways instead.
+  const box = frame.closest<HTMLElement>(".blixis-setup-frame");
+  if (box !== null) {
+    const fit = (): void => {
+      const style = getComputedStyle(box);
+      const padX = Number.parseFloat(style.paddingLeft) + Number.parseFloat(style.paddingRight);
+      const padY = Number.parseFloat(style.paddingTop) + Number.parseFloat(style.paddingBottom);
+      const width = frame.offsetWidth;
+      const available = box.clientWidth - padX;
+      if (width === 0 || available <= 0) return;
+      const scale = Math.min(1, available / width);
+      box.classList.add("is-scaled");
+      frame.style.transformOrigin = style.direction === "rtl" ? "top right" : "top left";
+      frame.style.transform = scale < 1 ? `scale(${scale})` : "";
+      box.style.blockSize = `${frame.offsetHeight * scale + padY + 2}px`;
+    };
+    new ResizeObserver(fit).observe(box);
+    for (const radio of section.querySelectorAll<HTMLInputElement>(
+      'input[name="blixis_preview_width"]',
+    )) {
+      radio.addEventListener("change", () => requestAnimationFrame(fit));
+    }
+    fit();
+  }
 
   let last: Config = ctx.base;
   const currentScheme = (): PreviewScheme =>

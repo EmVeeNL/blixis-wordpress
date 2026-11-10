@@ -22,7 +22,7 @@ export function enhanceLength(ctx: Context, input: HTMLInputElement, parts: Part
   input.removeAttribute("aria-invalid");
 
   const unit = el("select", {
-    class: "blixis-ctl-unit",
+    class: "blixis-group__unit blixis-ctl-unit",
     "aria-label": t(ctx, "unitFor", label),
   });
   for (const name of field.units) unit.append(el("option", { value: name }, name));

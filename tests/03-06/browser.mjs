@@ -28,15 +28,25 @@ async function login(browser, user, { viewport = { width: 1280, height: 900 }, s
   const context = await browser.newContext({ viewport, reducedMotion, javaScriptEnabled: !jsDisabled });
   if (scriptOff) await context.route('**/assets/setup.js*', (route) => route.abort());
   const page = await context.newPage();
-  await page.goto(`${BASE}/wp-login.php?redirect_to=${encodeURIComponent(WIZARD)}`);
-  await page.fill('#user_login', user);
-  await page.fill('#user_pass', PASSWORD);
-  await Promise.all([page.waitForURL((url) => url.pathname.startsWith('/wp-admin/'), { timeout: 60000, waitUntil: 'commit' }), page.click('#wp-submit')]);
+  // Wait for the full load before submitting, and retry once (a slow Firefox once submitted
+  // before wp-login.php had finished loading, so the login silently failed).
+  for (let attempt = 1; ; attempt++) {
+    await page.goto(`${BASE}/wp-login.php?redirect_to=${encodeURIComponent(WIZARD)}`, { waitUntil: 'load' });
+    await page.fill('#user_login', user);
+    await page.fill('#user_pass', PASSWORD);
+    try {
+      await Promise.all([page.waitForURL((url) => url.pathname.startsWith('/wp-admin/'), { timeout: 30000, waitUntil: 'commit' }), page.click('#wp-submit')]);
+      break;
+    } catch (error) {
+      note(`login attempt ${attempt} for ${user} did not reach wp-admin`, await page.locator('#login_error').innerText().catch(() => '(no login error shown)'));
+      if (attempt === 2) throw error;
+    }
+  }
   return { context, page };
 }
 
 const go = async (page, step) => {
-  await page.goto(`${WIZARD}&step=${step}`, { waitUntil: 'load' });
+  await page.goto(`${WIZARD}&step=${step}`, { waitUntil: 'load', timeout: 60000 });
 };
 const next = async (page) => {
   await Promise.all([page.waitForLoadState('load'), page.click('.blixis-setup-actions button[name="intent"][value="next"]')]);
@@ -83,36 +93,58 @@ async function colorsFlow(browser) {
   await chooseTheme(page);
   await go(page, 'colors');
 
-  check('every colour has a picker, a format menu, and a contrast list', (await page.locator('.blixis-ctl-picker').count()) === 10 && (await page.locator('.blixis-ctl-format select').count()) === 10 && (await page.locator('.blixis-ctl-contrast').count()) === 10);
-  check('the format switch is a native select with hex, RGB, HSL, OKLCH', JSON.stringify(await page.locator('.blixis-ctl-format select').first().locator('option').allTextContents()) === JSON.stringify(['Hex', 'RGB', 'HSL', 'OKLCH']));
-  check('light and dark palettes sit side by side', await page.evaluate(() => {
-    const a = document.querySelector('.blixis-setup-palette:nth-child(1)').getBoundingClientRect();
-    const b = document.querySelector('.blixis-setup-palette:nth-child(2)').getBoundingClientRect();
-    return Math.abs(a.top - b.top) < 5 && Math.abs(a.right - b.left) < a.width;
+  check('every colour has a picker, a format menu, and a contrast list', (await page.locator('.blixis-ctl-picker').count()) === 10 && (await page.locator('select.blixis-ctl-format-select').count()) === 10 && (await page.locator('.blixis-ctl-contrast').count()) === 10);
+  check('the format switch is a native select with hex, RGB, HSL, OKLCH', JSON.stringify(await page.locator('select.blixis-ctl-format-select').first().locator('option').allTextContents()) === JSON.stringify(['Hex', 'RGB', 'HSL', 'OKLCH']));
+  check('the colours are cards with a tinted header, an icon, and the wave', (await page.locator('#blixis-section-colors .blixis-card__head svg.blixis-card__icon[aria-hidden="true"]').count()) === 1 && (await page.locator('#blixis-section-colors .blixis-card__wave').count()) === 1 && (await page.locator('#blixis-section-colors .blixis-row').count()) === 5);
+  const darkSwitch = page.getByRole('switch', { name: 'Use dark colours' });
+  check('the dark colours have a switch, off when there is no dark palette, and their rows are hidden', (await darkSwitch.count()) === 1 && !(await darkSwitch.isChecked()) && !(await page.locator('#blixis-section-colorsdark .blixis-dark-rows').isVisible()));
+
+  check('the generic help shows once per card, not under every colour row', (await page.locator('#blixis-section-colors .blixis-row__help').count()) === 0 && (await page.locator('#blixis-section-colors .blixis-card__intro').count()) === 1);
+  check('row labels align with the top of their control', await page.evaluate(() => {
+    const row = document.querySelector('#blixis-section-colors .blixis-row');
+    const label = row.querySelector('.blixis-row__label').getBoundingClientRect();
+    const control = row.querySelector('.blixis-row__control').getBoundingClientRect();
+    return Math.abs(label.top - control.top) < 14;
   }));
+  check('the preview width is a three-way segmented control', JSON.stringify(await page.locator('.blixis-seg--widths .blixis-seg__opt').evaluateAll((els) => els.map((el) => el.textContent.trim().split(',')[0]))) === JSON.stringify(['Mobile', 'Tablet', 'Desktop']));
+  await frameLoaded(page);
+  await page.check('label[for="blixis-preview-desktop"] input');
+  await settle(page);
+  check('the preview frame is scaled to fit its column at the desktop width', await page.evaluate(() => {
+    const box = document.querySelector('.blixis-setup-frame').getBoundingClientRect();
+    const frame = document.querySelector('.blixis-setup-frame iframe').getBoundingClientRect();
+    return frame.right <= box.right + 1 && frame.width > 100;
+  }));
+  check('the completed-step check mark is centred in its circle', await page.evaluate(() => {
+    const dot = document.querySelector('.blixis-setup-progress li.is-done .blixis-setup-progress-dot');
+    const text = dot.querySelector('svg').getBoundingClientRect();
+    const box = dot.getBoundingClientRect();
+    return Math.abs((text.left + text.right) / 2 - (box.left + box.right) / 2) < 3 && Math.abs((text.top + text.bottom) / 2 - (box.top + box.bottom) / 2) < 4;
+  }));
+  await page.check('label[for="blixis-preview-mobile"] input');
 
   const primary = page.locator('#blixis-colors-primary');
   const primaryField = field(page, 'colors', 'primary');
   await primary.fill('oklch(0.55 0.22 262)');
   check('the swatch works for OKLCH', await primaryField.locator('.blixis-setup-swatch').evaluate((el) => getComputedStyle(el).backgroundColor !== 'rgba(0, 0, 0, 0)' && !el.classList.contains('is-empty')));
   check('the picker follows an OKLCH value', /^#[0-9a-f]{6}$/.test(await primaryField.locator('.blixis-ctl-picker').inputValue()));
-  check('the format menu detects OKLCH', (await primaryField.locator('.blixis-ctl-format select').inputValue()) === 'oklch');
+  check('the format menu detects OKLCH', (await primaryField.locator('select.blixis-ctl-format-select').inputValue()) === 'oklch');
   const formats = [['hex', /^#[0-9a-f]{6}$/], ['rgb', /^rgb\(\d+ \d+ \d+\)$/], ['hsl', /^hsl\([\d.]+ [\d.]+% [\d.]+%\)$/], ['oklch', /^oklch\([\d.]+ [\d.]+ [\d.]+\)$/]];
   for (const [format, pattern] of formats) {
-    await primaryField.locator('.blixis-ctl-format select').selectOption(format);
+    await primaryField.locator('select.blixis-ctl-format-select').selectOption(format);
     const text = await primary.inputValue();
     check(`switching to ${format} rewrites the value in that format`, pattern.test(text), text);
   }
   await primary.fill('#155dfc');
   await primaryField.locator('.blixis-ctl-picker').evaluate((el) => { el.value = '#aa0000'; el.dispatchEvent(new Event('input', { bubbles: true })); });
   check('the picker writes the colour in the current format', (await primary.inputValue()) === '#aa0000');
-  await primaryField.locator('.blixis-ctl-format select').selectOption('rgb');
+  await primaryField.locator('select.blixis-ctl-format-select').selectOption('rgb');
   await primaryField.locator('.blixis-ctl-picker').evaluate((el) => { el.value = '#155dfc'; el.dispatchEvent(new Event('input', { bubbles: true })); });
   check('the picker keeps the chosen format (RGB)', (await primary.inputValue()) === 'rgb(21 93 252)', await primary.inputValue());
   await primary.fill('#155dfc');
 
   const fg = field(page, 'colors', 'foreground');
-  const lightWarnings = page.locator('.blixis-setup-palette:nth-child(1) .blixis-ctl-contrast .is-warn');
+  const lightWarnings = page.locator('#blixis-section-colors .blixis-ctl-contrast .is-warn');
   check('the default light palette warns only for the cyan accent (interface parts, 3:1)', (await lightWarnings.count()) === 1 && /3:1/.test(await field(page, 'colors', 'accent').locator('.blixis-ctl-contrast .is-warn').innerText()));
   await page.fill('#blixis-colors-foreground', '#cccccc');
   await settle(page);
@@ -121,15 +153,24 @@ async function colorsFlow(browser) {
   check('the warning has an icon and text, not colour alone', /⚠/.test(await warn.innerText()));
 
   check('the dark specimen says no dark palette is set', /No dark palette/.test(await page.locator('.blixis-spec[data-scheme="dark"]').innerText()));
-  await page.click('button[data-blixis-copy-light]');
-  check('Start from the light colours fills the dark palette', (await page.inputValue('#blixis-colorsdark-primary')) === '#155dfc');
+  await darkSwitch.check();
+  const switchMark = await darkSwitch.evaluate((el) => getComputedStyle(el, '::before').content);
+  check('the checked switch draws no WordPress check mark over its track', switchMark === 'none' || switchMark === 'normal', switchMark);
+  check('the switch shows the dark rows, starting from the light colours', (await page.locator('#blixis-section-colorsdark .blixis-dark-rows').isVisible()) && (await page.inputValue('#blixis-colorsdark-primary')) === '#155dfc');
+  check('the colour scheme is a row inside the dark card', (await page.locator('#blixis-section-colorsdark .blixis-dark-rows input[name="scheme"]').count()) === 3);
+  await darkSwitch.uncheck();
+  await settle(page);
+  check('turning the switch off hides the rows and clears the dark palette', !(await page.locator('#blixis-section-colorsdark .blixis-dark-rows').isVisible()) && (await page.inputValue('#blixis-colorsdark-primary')) === '' && (await page.locator('#blixis-section-colorsdark .blixis-ctl-contrast li').count()) === 0);
+  await darkSwitch.check();
+  await page.locator('#blixis-section-colorsdark .blixis-card__foot button').click();
+  check('Start from the light colours in the card footer copies the light palette', (await page.inputValue('#blixis-colorsdark-surface')) === '#ffffff');
   const dark = { primary: '#7aa2ff', surface: '#0b1220', foreground: '#e6edf7', muted: '#9aa7bd', accent: '#22d3ee' };
   for (const [key, value] of Object.entries(dark)) await page.fill(`#blixis-colorsdark-${key}`, value);
   await settle(page);
-  check('a good dark palette has no warnings', (await page.locator('.blixis-setup-palette:nth-child(2) .blixis-ctl-contrast .is-warn').count()) === 0);
+  check('a good dark palette has no warnings', (await page.locator('#blixis-section-colorsdark .blixis-ctl-contrast .is-warn').count()) === 0);
   await page.fill('#blixis-colorsdark-foreground', '#222222');
   await settle(page);
-  const darkWarn = page.locator('.blixis-setup-palette:nth-child(2) .blixis-ctl-contrast .is-warn');
+  const darkWarn = page.locator('#blixis-section-colorsdark .blixis-ctl-contrast .is-warn');
   check('contrast warnings also appear for the dark palette', (await darkWarn.count()) >= 1 && /Warning/.test(await darkWarn.first().innerText()));
   await settle(page);
   check('the light specimen shows the light palette', (await page.locator('.blixis-spec[data-scheme="light"]').evaluate((el) => el.style.getPropertyValue('--blixis-color-foreground').trim())) === '#cccccc');
@@ -263,7 +304,7 @@ async function layoutFlow(browser) {
   await page.keyboard.press('Home');
   check('spacing keyboard: Home reaches the minimum from the token map', (await hidden(page, 'spacing', 'md')) === '0.5rem');
   await page.fill('#blixis-spacing-md', '1');
-  check('radius and layout widths have sliders and unit menus', (await page.locator('.blixis-setup-section--radius input[type=range]').count()) === 3 && (await page.locator('.blixis-setup-section--layout select').count()) === 3);
+  check('radius and layout widths have sliders and unit menus', (await page.locator('.blixis-section-radius input[type=range]').count()) === 3 && (await page.locator('.blixis-section-layout select').count()) === 3);
   const widthUnits = await field(page, 'layout', 'contentWidth').locator('select option').allTextContents();
   check('layout widths offer px, rem, %, ch, and vw', JSON.stringify(widthUnits) === JSON.stringify(['px', 'rem', '%', 'ch', 'vw']), widthUnits.join());
   const spacingUnits = await md.locator('select option').allTextContents();
@@ -271,10 +312,10 @@ async function layoutFlow(browser) {
   check('spacing ruler, radius samples, width bars, and shadow cards are shown', (await page.locator('.blixis-spec-ruler').count()) === 1 && (await page.locator('.blixis-spec-box').count()) === 6 && (await page.locator('.blixis-spec-widths').count()) === 1);
 
   const sm = field(page, 'shadows', 'sm');
-  const presetNames = await sm.locator('.blixis-card-name').allTextContents();
+  const presetNames = await sm.locator('.blixis-pcard__name').allTextContents();
   check('shadow presets are None, Subtle, Soft, Medium, Strong', JSON.stringify(presetNames) === JSON.stringify(['None', 'Subtle', 'Soft', 'Medium', 'Strong']), presetNames.join());
   check('the presets are a radio group', (await sm.locator('[role=radiogroup] input[type=radio]').count()) === 5);
-  await sm.locator('label.blixis-card', { hasText: 'Strong' }).click();
+  await sm.locator('label.blixis-pcard', { hasText: 'Strong' }).click();
   check('choosing a preset card sets the shadow', (await hidden(page, 'shadows', 'sm')) === '0 20px 25px -5px #00000026, 0 8px 10px -6px #00000026');
   await sm.locator('summary', { hasText: 'Adjust' }).click();
   await sm.locator('.blixis-ctl-row', { hasText: 'Blur' }).locator('input[type=number]').fill('30');
@@ -284,9 +325,9 @@ async function layoutFlow(browser) {
   check('opacity writes the alpha into the colour', /#00000080/.test(await hidden(page, 'shadows', 'sm')), await hidden(page, 'shadows', 'sm'));
   await sm.locator('input[type=color]').evaluate((el) => { el.value = '#112233'; el.dispatchEvent(new Event('input', { bubbles: true })); });
   check('the colour choice changes the shadow colour', /#11223380/.test(await hidden(page, 'shadows', 'sm')), await hidden(page, 'shadows', 'sm'));
-  await sm.locator('label.blixis-card', { hasText: 'None' }).click();
+  await sm.locator('label.blixis-pcard', { hasText: 'None' }).click();
   check('None sets the shadow to none', (await hidden(page, 'shadows', 'sm')) === 'none');
-  await sm.locator('label.blixis-card', { hasText: 'Subtle' }).click();
+  await sm.locator('label.blixis-pcard', { hasText: 'Subtle' }).click();
   await sm.locator('summary', { hasText: 'Edit as CSS' }).click();
   const css = sm.locator('input[name="config[shadows][sm]"]');
   check('the raw CSS stays available behind Edit as CSS', (await css.isVisible()) && (await css.inputValue()) === '0 1px 2px 0 #0000001a');
@@ -301,18 +342,18 @@ async function layoutFlow(browser) {
   const fast = page.locator('#blixis-motion-durationfast');
   await fast.fill('200');
   check('motion speeds are millisecond sliders from the token map', (await hidden(page, 'motion', 'durationFast')) === '200ms' && (await field(page, 'motion', 'durationFast').locator('input[type=range]').getAttribute('max')) === '500');
-  const speedLabels = await page.locator('.blixis-setup-section--motion > .blixis-setup-field > label').allTextContents();
+  const speedLabels = await page.locator('.blixis-section-motion .blixis-row__label').allTextContents();
   check('the speeds are named Fast, Normal, Slow', JSON.stringify(speedLabels) === JSON.stringify(['Fast', 'Normal', 'Slow', 'Easing']), speedLabels.join());
   const easing = field(page, 'motion', 'easing');
-  const easingNames = await easing.locator('.blixis-card-name').allTextContents();
+  const easingNames = await easing.locator('.blixis-pcard__name').allTextContents();
   check('easing presets have plain names', JSON.stringify(easingNames) === JSON.stringify(['Smooth', 'Gentle start', 'Gentle stop', 'Linear', 'Springy']), easingNames.join());
-  await easing.locator('label.blixis-card', { hasText: 'Springy' }).click();
+  await easing.locator('label.blixis-pcard', { hasText: 'Springy' }).click();
   check('choosing an easing card sets the easing', (await hidden(page, 'motion', 'easing')) === 'cubic-bezier(0.34, 1.56, 0.64, 1)');
   check('the motion sample does not play by itself', (await page.evaluate(() => [...document.querySelectorAll('.blixis-motion-dot')].reduce((n, el) => n + el.getAnimations().length, 0))) === 0);
   await page.click('.blixis-spec-motion button:has-text("Play")');
   check('Play animates the sample', (await page.evaluate(() => [...document.querySelectorAll('.blixis-motion-dot')].reduce((n, el) => n + el.getAnimations().length, 0))) === 3);
   await page.screenshot({ path: 'shots/c2-motion.png', fullPage: true });
-  await easing.locator('label.blixis-card', { hasText: 'Smooth' }).click();
+  await easing.locator('label.blixis-pcard', { hasText: 'Smooth' }).click();
   await fast.fill('120');
 
   const button = page.locator('.blixis-setup-actions button[name="intent"][value="next"]');
@@ -325,7 +366,7 @@ async function layoutFlow(browser) {
   }
 
   await sm.locator('summary', { hasText: 'Adjust' }).click();
-  await sm.locator('label.blixis-card', { hasText: 'Medium' }).click();
+  await sm.locator('label.blixis-pcard', { hasText: 'Medium' }).click();
   await frameLoaded(page);
   await sm.scrollIntoViewIfNeeded();
   await page.screenshot({ path: 'shots/c2-shadows-adjust.png', fullPage: true });
@@ -379,7 +420,7 @@ async function noJavaScriptFlow(browser) {
   await next(page);
   check('without JavaScript an invalid colour is refused with an error', (await page.locator('#blixis-setup-errors').count()) === 1 && (await page.locator('.blixis-setup-error').count()) >= 1);
   await go(page, 'layout');
-  check('without JavaScript shadows are plain text fields', (await page.locator('input[name="config[shadows][sm]"][type="text"]').isVisible()) && (await page.locator('.blixis-card').count()) === 0);
+  check('without JavaScript shadows are plain text fields', (await page.locator('input[name="config[shadows][sm]"][type="text"]').isVisible()) && (await page.locator('.blixis-pcard').count()) === 0);
   check('the front-page preview is on the layout step without JavaScript', (await page.locator('.blixis-setup-preview iframe').count()) === 1);
   await go(page, 'colors');
   await page.fill('#blixis-colors-primary', '#155dfc');
@@ -408,7 +449,7 @@ async function permissionChecks(browser) {
 async function darkReview(browser) {
   const { context, page } = await login(browser, USERS.en);
   await go(page, 'colors');
-  await page.click('button[data-blixis-copy-light]');
+  await page.getByRole('switch', { name: 'Use dark colours' }).check();
   const dark = { primary: '#7aa2ff', surface: '#0b1220', foreground: '#e6edf7', muted: '#9aa7bd', accent: '#22d3ee' };
   for (const [key, value] of Object.entries(dark)) await page.fill(`#blixis-colorsdark-${key}`, value);
   await next(page);
@@ -435,32 +476,113 @@ async function shot(page, path) {
 }
 async function mergedShots(browser) {
   let s = await login(browser, USERS.en, { viewport: { width: 1280, height: 900 } });
-  await go(s.page, 'colors');
-  await s.page.fill('#blixis-colors-foreground', '#cccccc');
-  await settle(s.page);
-  await frameLoaded(s.page);
-  await shot(s.page, 'shots/c3-colors-1280.png');
-  await s.page.fill('#blixis-colors-foreground', '#101828');
   await go(s.page, 'theme');
   await s.page.check('input[name="choice"][value="__new"]');
   await settle(s.page);
-  await shot(s.page, 'shots/c3-theme-new-1280.png');
+  await shot(s.page, 'shots/e-theme-new-1280.png');
+  await go(s.page, 'colors');
+  await s.page.getByRole('switch', { name: 'Use dark colours' }).check();
+  await s.page.fill('#blixis-colors-foreground', '#cccccc');
+  await settle(s.page);
+  await frameLoaded(s.page);
+  await shot(s.page, 'shots/e-colors-1280.png');
+  await s.page.fill('#blixis-colors-foreground', '#101828');
+  await s.page.getByRole('switch', { name: 'Use dark colours' }).uncheck();
+  await go(s.page, 'typography');
+  await s.page.fill('#blixis-fonts-body', 'serif');
+  await settle(s.page);
+  await frameLoaded(s.page);
+  await shot(s.page, 'shots/e-typography-combobox-1280.png');
+  await s.page.keyboard.press('Escape');
+  await go(s.page, 'layout');
+  await frameLoaded(s.page);
+  await shot(s.page, 'shots/e-spacing-1280.png');
+  await s.context.close();
+  s = await login(browser, USERS.en, { viewport: { width: 900, height: 900 } });
+  await go(s.page, 'colors');
+  await frameLoaded(s.page);
+  await shot(s.page, 'shots/e-colors-900.png');
   await s.context.close();
   s = await login(browser, USERS.en, { viewport: { width: 320, height: 800 } });
   await go(s.page, 'colors');
   await frameLoaded(s.page);
-  await shot(s.page, 'shots/c3-colors-320.png');
+  await shot(s.page, 'shots/e-colors-320.png');
   await s.context.close();
   s = await login(browser, USERS.ar, { viewport: { width: 1280, height: 900 } });
   await chooseTheme(s.page);
   await go(s.page, 'colors');
   await frameLoaded(s.page);
-  await shot(s.page, 'shots/c3-colors-arabic.png');
-  await go(s.page, 'theme');
-  await s.page.check('input[name="choice"][value="__new"]');
-  await settle(s.page);
-  await shot(s.page, 'shots/c3-theme-new-arabic.png');
+  await shot(s.page, 'shots/e-arabic-1280.png');
   await s.context.close();
+  // The Modern admin colour scheme: the accent follows the user's choice.
+  s = await login(browser, USERS.en, { viewport: { width: 1280, height: 900 } });
+  for (const scheme of ['modern', 'fresh']) {
+    await s.page.goto(`${BASE}/wp-admin/profile.php`);
+    const radio = s.page.locator(`input[name="admin_color"][value="${scheme}"]`);
+    if ((await radio.count()) === 0) {
+      check(`the ${scheme} admin colour scheme is available`, false, 'profile colour option missing');
+      continue;
+    }
+    await radio.check();
+    await s.page.click('#submit');
+    await s.page.waitForLoadState('load');
+    if (scheme === 'modern') {
+      await go(s.page, 'colors');
+      await frameLoaded(s.page);
+      const accent = await s.page.evaluate(() => getComputedStyle(document.querySelector('.blixis-setup')).getPropertyValue('--blixis-accent').trim());
+      check('the wizard accent follows the Modern admin colour scheme', accent !== '', accent);
+      await shot(s.page, 'shots/e-modern-1280.png');
+    }
+  }
+  await s.context.close();
+}
+
+// The font picker follows the WAI-ARIA combobox pattern: keys, focus, and the value it writes.
+async function comboFlow(browser) {
+  const { context, page } = await login(browser, USERS.en);
+  await go(page, 'typography');
+  const input = page.locator('#blixis-fonts-body');
+  const listbox = page.locator('#' + (await input.getAttribute('aria-controls')));
+  const native = page.locator('select[name="config[fonts][body]"]');
+  check('the font picker is a combobox with a listbox, closed at first', (await input.getAttribute('role')) === 'combobox' && (await input.getAttribute('aria-expanded')) === 'false' && (await input.getAttribute('aria-controls')) !== null && (await page.locator('#' + (await input.getAttribute('aria-controls'))).getAttribute('role')) === 'listbox');
+  check('the native select stays in the form, hidden', (await native.count()) === 1 && !(await native.isVisible()));
+  check('the combobox is named by the visible label', (await page.locator('label[for="blixis-fonts-body"]').count()) === 1);
+  await input.focus();
+  await page.keyboard.press('ArrowDown');
+  check('Arrow Down opens the list and points at the selected option', (await input.getAttribute('aria-expanded')) === 'true' && (await listbox.locator('[role=option][aria-selected="true"]').count()) === 1 && (await input.getAttribute('aria-activedescendant')) !== null);
+  const active = () => page.evaluate(() => document.getElementById(document.activeElement.getAttribute('aria-activedescendant'))?.textContent ?? '');
+  const first = await active();
+  await page.keyboard.press('ArrowDown');
+  const second = await active();
+  check('Arrow Down moves the active option', second !== first, `${first} / ${second}`);
+  await page.keyboard.press('ArrowUp');
+  check('Arrow Up moves it back', (await active()) === first);
+  const activeId = () => input.getAttribute('aria-activedescendant');
+  await page.keyboard.press('End');
+  const lastId = await listbox.locator('[role=option]').last().getAttribute('id');
+  check('End jumps to the last option', (await activeId()) === lastId);
+  await page.keyboard.press('Home');
+  check('Home jumps to the first option', (await activeId()) === (await listbox.locator('[role=option]').first().getAttribute('id')));
+  await page.keyboard.press('Escape');
+  check('Escape closes the list and keeps focus on the combobox', (await input.getAttribute('aria-expanded')) === 'false' && (await page.evaluate(() => document.activeElement.id)) === 'blixis-fonts-body');
+  await page.keyboard.type('mono');
+  const matches = await listbox.locator('[role=option]').allTextContents();
+  check('typing filters the options', matches.length >= 1 && matches.every((text) => /mono/i.test(text)), matches.join());
+  await page.keyboard.press('Enter');
+  const chosen = await native.inputValue();
+  check('Enter chooses the active option and writes it to the form', /mono/i.test(chosen) && (await input.inputValue()) === chosen && (await input.getAttribute('aria-expanded')) === 'false', chosen);
+  await input.focus();
+  await page.keyboard.press('ArrowDown');
+  check('the selected option is marked selected', (await listbox.locator('[role=option][aria-selected="true"] .blixis-combo__name').textContent()) === chosen);
+  await page.keyboard.press('Escape');
+  await page.keyboard.type('zzzz');
+  check('no match shows a message and no options', (await listbox.locator('[role=option]').count()) === 0 && (await listbox.locator('.blixis-combo__empty').isVisible()));
+  await page.keyboard.press('Escape');
+  check('Escape restores the chosen name', (await input.inputValue()) === chosen);
+  await input.click();
+  await listbox.locator('[role=option]', { hasText: 'serif' }).first().click();
+  check('the mouse chooses an option too', /serif/.test(await native.inputValue()));
+  await context.close();
 }
 
 async function a11yMatrix(browser, engine) {
@@ -485,6 +607,8 @@ async function a11yMatrix(browser, engine) {
               return r.right <= document.documentElement.clientWidth + 1 && r.left >= -1;
             });
             check(`the ${step} step fits at 320px (${locale}, ${mode})`, fits);
+            const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
+            check(`no horizontal page overflow on the ${step} step at 320px (${locale}, ${mode})`, overflow <= 1, String(overflow));
           }
           if (engine === 'chromium' && !scriptOff) {
             if (width === 320 && locale === 'en' && step === 'colors') await page.screenshot({ path: 'shots/c2-colors-320.png', fullPage: true });
@@ -511,6 +635,7 @@ for (const name of names) {
     await colorsFlow(browser);
     await typeScaleFlow(browser);
     await layoutFlow(browser);
+    await comboFlow(browser);
     await labelFlow(browser);
     await reducedMotionFlow(browser);
     await noJavaScriptFlow(browser);

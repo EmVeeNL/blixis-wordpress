@@ -4,9 +4,10 @@
 import type { Config, TokenMap } from "@blixis/tokens";
 import { type ColorField, enhanceColor, refreshContrast } from "./color-control.ts";
 import { previewConfig, isValidValue } from "./config.ts";
-import { type Context, el, t, uid } from "./dom.ts";
+import { type Context, el, makeSwitch, t } from "./dom.ts";
 import { controls, partsOf } from "./field.ts";
 import { type LabelKey, hasChanged, labelFor } from "./label.ts";
+import { enhanceFontSelect } from "./font-combo.ts";
 import { enhanceLength } from "./length-control.ts";
 import { scaleScale } from "./length.ts";
 import { buildMotionSample, enhanceDuration, enhanceEasing } from "./motion-control.ts";
@@ -126,30 +127,33 @@ function start(): void {
     }
   }
 
+  for (const select of form.querySelectorAll<HTMLSelectElement>(
+    'select[data-blixis-kind="font"]',
+  )) {
+    const parts = partsOf(select);
+    if (parts !== null) enhanceFontSelect(ctx, select, parts);
+  }
+
   // Keep proportions: moving the base size scales the others by the same ratio. Registered
   // before the preview listener so the previews see the scaled values.
   if (base !== null) {
     const baseInput = base;
-    const legend = baseInput.closest("fieldset")?.querySelector("legend");
-    const box = el("input", { type: "checkbox", id: uid("blixis-keep") });
+    const keep = makeSwitch(t(ctx, "keepProportions"), false);
+    const box = keep.input;
     // The base size when the page loaded or the last edit ended: the "before" of an edit.
     let lastBase = baseInput.value;
     form.addEventListener("change", () => {
       lastBase = baseInput.value;
     });
-    legend?.after(
-      el(
-        "div",
-        { class: "blixis-setup-field blixis-ctl-keep" },
-        el(
-          "p",
-          { class: "blixis-setup-choice" },
-          box,
-          el("label", { for: box.id }, t(ctx, "keepProportions")),
-        ),
-        el("p", { class: "blixis-setup-hint" }, t(ctx, "keepHint")),
-      ),
-    );
+    const slot = form.querySelector('[data-blixis-slot="keep"]');
+    if (slot !== null) {
+      keep.root.classList.add("blixis-ctl-keep");
+      slot.replaceWith(keep.root);
+      slot
+        .closest(".blixis-card")
+        ?.querySelector(".blixis-card__body")
+        ?.prepend(el("p", { class: "blixis-card__intro blixis-setup-hint" }, t(ctx, "keepHint")));
+    }
     // Scaling always starts from the sizes as they were when this edit began, so typing
     // 1.25 digit by digit, or dragging, does not pile up rounding steps. An edit ends on
     // "change", or when another size is edited directly.
@@ -167,7 +171,7 @@ function start(): void {
       }
       const next = baseInput.value;
       const sizes = ctx.map.fields["typeScale"] ?? {};
-      if (!(box as HTMLInputElement).checked) {
+      if (!box.checked) {
         anchor = null;
         return;
       }
@@ -238,10 +242,14 @@ function start(): void {
   form.addEventListener("input", schedule);
   form.addEventListener("change", schedule);
 
-  // Dark palette helper.
+  // Dark palette: a switch shows or hides the dark rows. Off means no dark palette, so the
+  // values are cleared (and kept aside in case the switch is turned on again).
+  const darkRows = form.querySelector<HTMLElement>(".blixis-dark-rows");
+  const darkInputs = [
+    ...form.querySelectorAll<HTMLInputElement>('input[name^="config[colorsDark]["]'),
+  ];
   const copy = form.querySelector<HTMLButtonElement>("button[data-blixis-copy-light]");
-  if (copy !== null) copy.hidden = false;
-  copy?.addEventListener("click", () => {
+  const copyLight = (): void => {
     for (const input of form.querySelectorAll<HTMLInputElement>('input[name^="config[colors]["]')) {
       const key = /\]\[([^\]]+)\]$/.exec(input.name)?.[1] ?? "";
       const target = form.querySelector<HTMLInputElement>(
@@ -250,7 +258,40 @@ function start(): void {
       if (target !== null) controls.get(target)?.set(input.value);
     }
     schedule();
-  });
+  };
+  copy?.addEventListener("click", copyLight);
+  const darkSlot = form.querySelector('[data-blixis-slot="dark-switch"]');
+  if (darkRows !== null && darkSlot !== null && darkInputs.length > 0) {
+    const hasErrors = darkRows.querySelector(".has-error") !== null;
+    const dark = makeSwitch(
+      t(ctx, "useDark"),
+      hasErrors || darkInputs.some((input) => input.value.trim() !== ""),
+    );
+    darkSlot.replaceWith(dark.root);
+    let stash: string[] = [];
+    const apply = (): void => {
+      darkRows.hidden = !dark.input.checked;
+      if (copy !== null) copy.hidden = !dark.input.checked;
+    };
+    dark.input.addEventListener("change", () => {
+      if (dark.input.checked) {
+        if (stash.some((value) => value.trim() !== "")) {
+          darkInputs.forEach((input, index) => controls.get(input)?.set(stash[index] ?? ""));
+          schedule();
+        } else {
+          copyLight();
+        }
+      } else {
+        stash = darkInputs.map((input) => input.value);
+        for (const input of darkInputs) controls.get(input)?.set("");
+        schedule();
+      }
+      apply();
+    });
+    apply();
+  } else if (copy !== null) {
+    copy.hidden = false;
+  }
   refresh();
 }
 

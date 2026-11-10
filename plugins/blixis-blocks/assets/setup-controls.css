@@ -1,71 +1,175 @@
-/* Blixis setup wizard controls and previews (task 03-06). Logical properties throughout so
-   right-to-left admin works. The controls are added by assets/setup.js; every rule here also
-   leaves the plain fields usable when the script does not run. */
+/* Blixis setup wizard cards, rows, controls and previews (task 03-06). Logical properties
+   throughout so right-to-left admin works. Controls are added by assets/setup.js; every rule
+   here also leaves the plain fields usable when the script does not run.
+   The accent follows the signed-in user's admin colour scheme. */
+.blixis-setup {
+	--blixis-accent: var(--blixis-admin-accent, var(--wp-admin-theme-color, #2271b1));
+	--blixis-accent-dark: var(--blixis-admin-accent-dark, var(--wp-admin-theme-color-darker-10, #135e96));
+	--blixis-tint: color-mix(in srgb, var(--blixis-accent) 9%, #fff);
+	--blixis-tint-2: color-mix(in srgb, var(--blixis-accent) 18%, #fff);
+	--blixis-line: #dcdcde;
+	--blixis-field: #8c8f94;
+	--blixis-sub: #50575e;
+	--blixis-ink: #1d2327;
+}
 .blixis-setup [hidden] { display: none !important; }
+.blixis-setup :where(a, button, input, select, summary, [tabindex]):focus-visible { outline: 2px solid var(--blixis-accent); outline-offset: 1px; }
 
-/* Light and dark palettes side by side. */
-.blixis-setup-palettes { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr)); gap: 0 1.5rem; max-inline-size: 84rem; align-items: start; }
-.blixis-setup-palettes .blixis-setup-section { max-inline-size: none; }
-.blixis-setup-palette { min-inline-size: 0; }
-.blixis-ctl-tools { margin-block: 0.5rem; }
+/* ---------- Cards ---------- */
+.blixis-card { container-type: inline-size; margin-block: 0 1.1rem; background: #fff; border: 1px solid var(--blixis-line); border-radius: 10px; max-inline-size: none; }
+.blixis-card__head { border-start-start-radius: 9px; border-start-end-radius: 9px; }
+.blixis-card__foot { border-end-start-radius: 9px; border-end-end-radius: 9px; }
+.blixis-card__head { position: relative; display: flex; align-items: center; gap: 0.65rem; padding: 0.85rem 1.1rem; background: linear-gradient(100deg, var(--blixis-tint-2), var(--blixis-tint) 60%, #fff); border-block-end: 1px solid color-mix(in srgb, var(--blixis-accent) 14%, #fff); overflow: hidden; }
+.blixis-card__head:dir(rtl) { background: linear-gradient(260deg, var(--blixis-tint-2), var(--blixis-tint) 60%, #fff); }
+.blixis-card__icon { position: relative; flex: none; color: var(--blixis-accent); }
+.blixis-card__title { position: relative; margin: 0; padding: 0; font-size: 1.125rem; font-weight: 700; line-height: 1.3; color: var(--blixis-accent-dark); }
+.blixis-card__wave { position: absolute; inset-block: 0; inset-inline-end: 0; inline-size: 60%; block-size: 100%; color: var(--blixis-accent); opacity: 0.1; pointer-events: none; }
+.blixis-card__wave:dir(rtl) { transform: scaleX(-1); }
+.blixis-card__side { position: relative; margin-inline-start: auto; }
+.blixis-card__side:empty { display: none; }
+.blixis-card__body { padding-block: 0.25rem; }
+.blixis-card__intro { margin: 0; padding: 0.7rem 1.1rem 0.2rem; }
+.blixis-card__foot { display: flex; flex-wrap: wrap; align-items: center; gap: 0.6rem; padding: 0.7rem 1.1rem; background: #f6f7f7; border-block-start: 1px solid #f0f0f1; }
+.blixis-card__foot:empty,
+.blixis-card__foot:has(> [hidden]:only-child),
+.blixis-card__foot:has(> [data-blixis-slot]:only-child:empty) { display: none; }
+.blixis-setup-fonts .blixis-card__body { overflow-x: auto; }
+.blixis-setup-fonts table { min-inline-size: 32rem; margin: 0.5rem 1.1rem; inline-size: calc(100% - 2.2rem); }
 
-/* Sliders: label, range, number field, and unit. */
-.blixis-ctl-slider { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 0.75rem; }
-.blixis-ctl-range { flex: 1 1 10rem; min-inline-size: 8rem; max-inline-size: 22rem; margin: 0; min-block-size: 2.5rem; accent-color: #2271b1; }
-.blixis-setup .blixis-ctl-number { inline-size: 7rem; min-inline-size: 5rem; min-block-size: 2.5rem; }
-.blixis-setup .blixis-ctl-unit { inline-size: auto; min-inline-size: 5rem; min-block-size: 2.5rem; }
-.blixis-ctl-unit-text { min-inline-size: 2rem; color: #50575e; }
-.blixis-ctl-row { margin-block: 0.75rem; }
-.blixis-ctl-row > label { display: block; font-weight: 600; margin-block-end: 0.25rem; }
-[data-invalid] { border-color: #b32d2e !important; box-shadow: 0 0 0 1px #b32d2e !important; }
+/* ---------- Rows: label on the left, control on the right ---------- */
+.blixis-setup-field { display: contents; }
+.blixis-row { display: grid; grid-template-columns: minmax(0, 1fr); gap: 0.35rem 1.25rem; align-items: start; padding: 0.75rem 1.1rem; border-block-start: 1px solid #f0f0f1; }
+.blixis-card__body > :first-child.blixis-row,
+.blixis-card__body > :first-child > .blixis-row:first-child { border-block-start: 0; }
+@container (min-width: 560px) {
+	.blixis-row { grid-template-columns: 150px minmax(0, 1fr); }
+	.blixis-row__label { padding-block-start: 0.55rem; }
+	.blixis-row__help { grid-column: 2; }
+}
+.blixis-row__label { margin: 0; font-size: 0.875rem; font-weight: 700; color: var(--blixis-ink); }
+.blixis-row__control { display: grid; gap: 0.4rem; min-inline-size: 0; }
+.blixis-row__help { grid-column: 1 / -1; margin: 0; font-size: 0.75rem; color: var(--blixis-sub); }
+@container (min-width: 560px) { .blixis-row__help { grid-column: 2; } }
+.blixis-setup .blixis-row .blixis-setup-error { margin: 0; }
+.blixis-row .blixis-setup-control { display: flex; flex-wrap: wrap; align-items: center; gap: 0.6rem; min-inline-size: 0; }
+.blixis-setup-field.has-error .blixis-group { border-color: #b32d2e; box-shadow: 0 0 0 1px #b32d2e; }
+.blixis-choices { display: flex; flex-wrap: wrap; gap: 0.35rem 1.25rem; margin: 0; padding: 0; border: 0; }
+.blixis-choice { display: inline-flex; align-items: center; gap: 0.4rem; min-block-size: 2rem; }
 
-/* Colour fields. */
-.blixis-setup .blixis-setup-control .blixis-ctl-picker { inline-size: 3rem; min-inline-size: 3rem; max-inline-size: 3rem; min-block-size: 2.5rem; padding: 2px; cursor: pointer; flex: none; }
-.blixis-setup-swatch.is-empty { border-style: dashed; background: transparent; }
-.blixis-ctl-format { display: flex; align-items: center; gap: 0.5rem; margin-block-start: 0.35rem; color: #50575e; }
-.blixis-setup .blixis-ctl-format select { inline-size: auto; min-inline-size: 7rem; }
-.blixis-ctl-contrast { margin: 0.35rem 0 0; padding: 0; list-style: none; }
+/* ---------- Joined groups: [ value | UNIT ] ---------- */
+.blixis-group { display: flex; flex: 1 1 14rem; min-inline-size: 0; max-inline-size: 28rem; background: #fff; border: 1px solid var(--blixis-field); border-radius: 6px; overflow: hidden; }
+.blixis-group:focus-within { border-color: var(--blixis-accent); box-shadow: 0 0 0 1px var(--blixis-accent); }
+.blixis-group--narrow { flex: 0 0 auto; }
+.blixis-card .blixis-group .blixis-group__value { flex: 1 1 auto; min-inline-size: 0; min-block-size: 2.4rem; margin: 0; padding: 0.4rem 0.65rem; border: 0; border-radius: 0; box-shadow: none; background: transparent; font-size: 0.875rem; color: var(--blixis-ink); max-inline-size: none; inline-size: auto; }
+.blixis-card .blixis-group--narrow .blixis-group__value { flex: 0 0 5.75rem; inline-size: 5.75rem; text-align: center; font-variant-numeric: tabular-nums; }
+.blixis-card .blixis-group .blixis-group__value:focus { background: var(--blixis-tint); outline: none; box-shadow: none; }
+.blixis-card .blixis-group .blixis-group__unit { flex: none; inline-size: auto; max-inline-size: none; min-block-size: 2.4rem; margin: 0; padding: 0.4rem 1.9rem 0.4rem 0.7rem; border: 0; border-inline-start: 1px solid var(--blixis-field); border-radius: 0; box-shadow: none; appearance: none; background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%231d2327' stroke-width='3' stroke-linecap='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") no-repeat right 0.6rem center; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.03em; text-transform: uppercase; color: var(--blixis-ink); cursor: pointer; }
+.blixis-card .blixis-group .blixis-group__unit:dir(rtl) { background-position: left 0.6rem center; padding: 0.4rem 0.7rem 0.4rem 1.9rem; }
+.blixis-card .blixis-group .blixis-group__unit:focus { background-color: var(--blixis-tint); outline: none; }
+.blixis-group__suffix { display: grid; place-items: center; padding-inline: 0.7rem; border-inline-start: 1px solid var(--blixis-field); font-size: 0.75rem; font-weight: 700; letter-spacing: 0.03em; color: var(--blixis-sub); text-transform: uppercase; }
+.blixis-select { inline-size: 100%; max-inline-size: 28rem; min-block-size: 2.4rem; border-color: var(--blixis-field); border-radius: 6px; }
+
+/* Colour swatch with the native picker on top of it. */
+.blixis-swatch { position: relative; flex: none; display: block; inline-size: 2.4rem; block-size: 2.4rem; }
+.blixis-swatch .blixis-setup-swatch { position: absolute; inset: 0; inline-size: auto; block-size: auto; border: 1px solid var(--blixis-field); border-radius: 6px; }
+.blixis-swatch .blixis-setup-swatch.is-empty { border-style: dashed; background: transparent; }
+.blixis-swatch:focus-within { outline: 2px solid var(--blixis-accent); outline-offset: 2px; border-radius: 6px; }
+.blixis-card .blixis-swatch .blixis-ctl-picker { position: absolute; inset: 0; inline-size: 100%; max-inline-size: none; block-size: 100%; min-block-size: 0; margin: 0; padding: 0; opacity: 0; cursor: pointer; }
+.blixis-row .blixis-setup-swatch { flex: none; inline-size: 2.4rem; block-size: 2.4rem; border: 1px solid var(--blixis-field); border-radius: 6px; }
+
+/* ---------- Slider: filled track up to the thumb ---------- */
+.blixis-ctl-slider { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 0.9rem; inline-size: 100%; }
+.blixis-range { --blixis-range-pct: 50%; flex: 1 1 9rem; min-inline-size: 7rem; max-inline-size: 22rem; block-size: 1.4rem; margin: 0; padding: 0; appearance: none; background: transparent; cursor: pointer; }
+.blixis-range::-webkit-slider-runnable-track { block-size: 6px; border-radius: 3px; background: linear-gradient(to right, var(--blixis-accent) var(--blixis-range-pct), #dcdcde var(--blixis-range-pct)); }
+.blixis-range:dir(rtl)::-webkit-slider-runnable-track { background: linear-gradient(to left, var(--blixis-accent) var(--blixis-range-pct), #dcdcde var(--blixis-range-pct)); }
+.blixis-range::-moz-range-track { block-size: 6px; border-radius: 3px; background: #dcdcde; }
+.blixis-range::-moz-range-progress { block-size: 6px; border-radius: 3px; background: var(--blixis-accent); }
+.blixis-range::-webkit-slider-thumb { appearance: none; inline-size: 20px; block-size: 20px; margin-block-start: -7px; border-radius: 50%; background: #fff; border: 2px solid var(--blixis-accent); box-shadow: 0 1px 3px rgb(0 0 0 / 0.2); }
+.blixis-range::-moz-range-thumb { inline-size: 16px; block-size: 16px; border-radius: 50%; background: #fff; border: 2px solid var(--blixis-accent); }
+
+/* ---------- Switch ---------- */
+.blixis-switch { display: inline-flex; align-items: center; gap: 0.6rem; font-size: 0.875rem; font-weight: 600; cursor: pointer; color: var(--blixis-ink); }
+.blixis-switch input { position: relative; flex: none; inline-size: 38px; block-size: 22px; margin: 0; border: 0; border-radius: 999px; background: #8c8f94; appearance: none; cursor: pointer; box-shadow: none; }
+/* Hide the check mark WordPress draws on checked checkboxes (input[type=checkbox]:checked::before). */
+.blixis-switch input[type="checkbox"]::before,
+.blixis-switch input[type="checkbox"]:checked::before { display: none; content: none; }
+.blixis-switch input::after { content: ""; position: absolute; inset-block-start: 3px; inset-inline-start: 3px; inline-size: 16px; block-size: 16px; border-radius: 50%; background: #fff; transition: translate 0.15s; }
+.blixis-switch input:checked { background: var(--blixis-accent); }
+.blixis-switch input:checked::after { translate: 16px 0; }
+.blixis-switch input:checked:dir(rtl)::after { translate: -16px 0; }
+
+/* ---------- Contrast chips ---------- */
+.blixis-ctl-contrast { display: flex; flex-wrap: wrap; gap: 0.35rem; margin: 0; padding: 0; list-style: none; }
 .blixis-ctl-contrast:empty { display: none; }
-.blixis-ctl-contrast li { display: flex; gap: 0.4rem; margin-block: 0.15rem; padding: 0.15rem 0.4rem; border-inline-start: 4px solid transparent; }
-.blixis-ctl-contrast .is-pass { color: #0a5c2f; border-color: #0a5c2f; }
-.blixis-ctl-contrast .is-warn { color: #8a2424; border-color: #8a2424; background: #fcf0f1; font-weight: 600; }
-.blixis-ctl-contrast .is-note { color: #50575e; }
-.blixis-ctl-icon { flex: none; }
+.blixis-chip { display: inline-flex; align-items: center; gap: 0.3rem; padding: 0.2rem 0.65rem; border-radius: 999px; font-size: 0.75rem; font-weight: 600; line-height: 1.4; white-space: normal; }
+.blixis-chip--ok { background: #edfaef; color: #007017; }
+.blixis-chip--warn { background: #fcf0f1; color: #b32d2e; }
+.blixis-chip--note { background: #f0f0f1; color: var(--blixis-sub); }
 
-/* Preset cards: shadows and easing. A native radio sits in each card. */
-.blixis-ctl-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(6.5rem, 1fr)); gap: 0.75rem; margin-block: 0.5rem; }
-.blixis-card { position: relative; display: flex; flex-direction: column; align-items: center; gap: 0.5rem; padding: 0.75rem 0.5rem; border: 2px solid #c3c4c7; border-radius: 6px; background: #fff; cursor: pointer; text-align: center; }
-.blixis-card input { position: absolute; inset-block-start: 0.4rem; inset-inline-start: 0.4rem; margin: 0; }
-.blixis-card:has(input:checked) { border-color: #2271b1; background: #f0f6fc; box-shadow: inset 0 0 0 1px #2271b1; }
-.blixis-card:has(input:focus-visible) { outline: 2px solid #2271b1; outline-offset: 2px; }
-.blixis-card-sample { display: block; inline-size: 3.5rem; block-size: 2.25rem; margin-block-start: 0.5rem; border-radius: 6px; background: #fff; border: 1px solid #dcdcde; }
-.blixis-card-curve { inline-size: 2.5rem; block-size: 2.5rem; margin-block-start: 0.5rem; color: #1d2327; }
-.blixis-card-name { font-weight: 600; }
-.blixis-ctl-status { margin: 0.25rem 0; color: #50575e; }
+/* ---------- Buttons (fallback; the shell stylesheet defines the real ones) ---------- */
+:where(.blixis-btn) { font: inherit; font-size: 0.875rem; font-weight: 600; padding: 0.55rem 1.1rem; border: 1px solid var(--blixis-accent); border-radius: 6px; cursor: pointer; background: var(--blixis-accent); color: #fff; }
+:where(.blixis-btn--secondary) { background: #fff; color: var(--blixis-accent-dark); }
+:where(.blixis-btn--small) { font-size: 0.75rem; padding: 0.3rem 0.7rem; }
+
+/* ---------- Font combobox ---------- */
+.blixis-combo { position: relative; flex: 1 1 16rem; max-inline-size: 28rem; min-inline-size: 0; }
+.blixis-combo__icon { position: absolute; inset-block-start: 50%; inset-inline-start: 0.7rem; translate: 0 -50%; color: var(--blixis-sub); pointer-events: none; display: grid; }
+.blixis-combo__chevron { position: absolute; inset-block-start: 50%; inset-inline-end: 0.7rem; translate: 0 -50%; display: grid; cursor: pointer; color: var(--blixis-ink); }
+.blixis-combo__input[aria-expanded="true"] ~ .blixis-combo__chevron { rotate: 180deg; }
+.blixis-card .blixis-combo .blixis-combo__input { inline-size: 100%; max-inline-size: none; min-block-size: 2.4rem; padding: 0.4rem 2.2rem; border: 1px solid var(--blixis-field); border-radius: 6px; background: #fff; box-shadow: none; font-size: 0.875rem; color: var(--blixis-ink); }
+.blixis-card .blixis-combo .blixis-combo__input:focus,
+.blixis-card .blixis-combo .blixis-combo__input[aria-expanded="true"] { border-color: var(--blixis-accent); box-shadow: 0 0 0 1px var(--blixis-accent); outline: none; }
+.blixis-combo__list { position: absolute; z-index: 20; inset-inline: 0; inset-block-start: calc(100% + 4px); max-block-size: 15rem; margin: 0; padding: 0.3rem 0; overflow: auto; list-style: none; background: #fff; border: 1px solid var(--blixis-line); border-radius: 8px; box-shadow: 0 8px 24px rgb(0 0 0 / 0.14); }
+.blixis-combo__list li[role="option"] { position: relative; display: flex; justify-content: space-between; gap: 0.5rem; margin: 0; padding: 0.5rem 0.75rem 0.5rem 2.1rem; font-size: 0.875rem; cursor: pointer; color: var(--blixis-ink); }
+.blixis-combo__list li[role="option"]:dir(rtl) { padding: 0.5rem 2.1rem 0.5rem 0.75rem; }
+.blixis-combo__list li small { color: var(--blixis-sub); font-size: 0.6875rem; }
+.blixis-combo__list li.is-active { background: var(--blixis-tint-2); }
+.blixis-combo__list li[aria-selected="true"] { background: var(--blixis-accent-dark); color: #fff; }
+.blixis-combo__list li[aria-selected="true"] small { color: #fff; }
+.blixis-combo__list li[aria-selected="true"]::before { content: "✓"; position: absolute; inset-inline-start: 0.75rem; font-weight: 700; }
+.blixis-combo__empty { padding: 0.6rem 0.9rem; color: var(--blixis-sub); font-size: 0.875rem; }
+
+/* ---------- Dark rows, shadow and easing cards, panels ---------- */
+.blixis-dark-rows[hidden] { display: none !important; }
+[data-invalid] { border-color: #b32d2e !important; box-shadow: 0 0 0 1px #b32d2e !important; }
+.blixis-ctl-row { margin-block: 0.6rem; }
+.blixis-ctl-row > label { display: block; margin-block-end: 0.25rem; font-weight: 600; }
+.blixis-ctl-host { display: grid; gap: 0.4rem; inline-size: 100%; min-inline-size: 0; }
+.blixis-ctl-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(6rem, 1fr)); gap: 0.6rem; }
+.blixis-pcard { position: relative; display: flex; flex-direction: column; align-items: center; gap: 0.4rem; padding: 0.7rem 0.4rem; border: 2px solid var(--blixis-line); border-radius: 8px; background: #fff; text-align: center; cursor: pointer; }
+.blixis-pcard input { position: absolute; inset-block-start: 0.35rem; inset-inline-start: 0.35rem; margin: 0; }
+.blixis-pcard:has(input:checked) { border-color: var(--blixis-accent); background: var(--blixis-tint); box-shadow: inset 0 0 0 1px var(--blixis-accent); }
+.blixis-pcard:has(input:focus-visible) { outline: 2px solid var(--blixis-accent); outline-offset: 2px; }
+.blixis-pcard__sample { display: block; inline-size: 3.2rem; block-size: 2rem; margin-block-start: 0.4rem; border: 1px solid #dcdcde; border-radius: 6px; background: #fff; }
+.blixis-pcard__curve { inline-size: 2.3rem; block-size: 2.3rem; margin-block-start: 0.4rem; color: var(--blixis-ink); }
+.blixis-pcard__name { font-size: 0.8125rem; font-weight: 600; }
+.blixis-ctl-status { margin: 0; color: var(--blixis-sub); font-size: 0.8125rem; }
 .blixis-ctl-status:empty { display: none; }
-.blixis-ctl-details { margin-block: 0.5rem; }
-.blixis-ctl-details > summary { cursor: pointer; font-weight: 600; min-block-size: 2.25rem; display: list-item; padding-block: 0.4rem; }
-.blixis-ctl-details > summary:focus-visible { outline: 2px solid #2271b1; outline-offset: 2px; }
-.blixis-ctl-keep .blixis-setup-choice { margin-block-end: 0; }
+.blixis-ctl-details { margin: 0; }
+.blixis-ctl-details > summary { display: list-item; min-block-size: 2rem; padding-block: 0.3rem; font-weight: 600; font-size: 0.875rem; color: var(--blixis-accent-dark); cursor: pointer; }
+.blixis-ctl-details[open] > summary { margin-block-end: 0.4rem; }
+.blixis-ctl-keep { margin: 0; }
+.blixis-ctl-choice { display: inline-flex; align-items: center; gap: 0.35rem; min-block-size: 2rem; margin-inline-end: 0.75rem; }
 
-/* Specimens. They show the draft values through the --blixis-* properties. */
-.blixis-spec { margin-block: 1rem 1.5rem; padding: 0.75rem 1rem; border: 1px solid #c3c4c7; background: #fff; max-inline-size: 48rem; }
-.blixis-setup-palettes .blixis-spec { max-inline-size: none; }
-.blixis-spec h3 { margin: 0 0 0.5rem; font-size: 1em; }
-.blixis-spec-canvas { padding: 1rem; border: 1px solid #c3c4c7; background: var(--blixis-color-surface, #fff); color: var(--blixis-color-foreground, #101828); font-family: var(--blixis-font-body, system-ui); }
-.blixis-spec-sample p { margin: 0 0 0.75rem; }
+/* ---------- Specimens ---------- */
+.blixis-spec-slot { padding: 0.25rem 1.1rem 1rem; }
+.blixis-spec-slot:empty { display: none; }
+.blixis-spec { margin: 0.5rem 0 0; padding: 0.7rem 0.8rem; background: #f6f7f7; border: 1px solid #f0f0f1; border-radius: 8px; }
+.blixis-spec h3 { margin: 0 0 0.5rem; font-size: 0.8125rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; color: var(--blixis-sub); }
+.blixis-spec-canvas { padding: 0.9rem; border: 1px solid #dcdcde; border-radius: 6px; background: var(--blixis-color-surface, #fff); color: var(--blixis-color-foreground, #101828); font-family: var(--blixis-font-body, system-ui); }
+.blixis-spec-sample p { margin: 0 0 0.6rem; }
 .blixis-spec-link { color: var(--blixis-color-primary, #155dfc); text-decoration: underline; }
 .blixis-spec-muted { color: var(--blixis-color-muted, #64748b); }
 .blixis-spec-button { display: inline-block; padding: 0.4rem 0.9rem; border-radius: var(--blixis-radius-md, 0.75rem); background: var(--blixis-color-primary, #155dfc); color: var(--blixis-color-surface, #fff); font-weight: 600; }
 .blixis-spec-chip { display: inline-block; padding: 0.2rem 0.7rem; border-radius: 999px; border: 2px solid var(--blixis-color-accent, #06b6d4); }
-.blixis-spec-swatches { display: grid; gap: 0.35rem; margin: 0.75rem 0 0; padding: 0; list-style: none; }
-.blixis-spec-swatches li { display: grid; grid-template-columns: 1.5rem minmax(4.5rem, max-content) minmax(0, 1fr); gap: 0.25rem 0.6rem; align-items: center; }
-.blixis-spec-dot { inline-size: 1.5rem; block-size: 1.5rem; border: 1px solid #8c8f94; border-radius: 4px; }
+.blixis-spec-swatches { display: grid; gap: 0.35rem; margin: 0.7rem 0 0; padding: 0; list-style: none; }
+.blixis-spec-swatches li { display: grid; grid-template-columns: 1.4rem minmax(4.5rem, max-content) minmax(0, 1fr); gap: 0.2rem 0.6rem; align-items: center; margin: 0; }
+.blixis-spec-dot { inline-size: 1.4rem; block-size: 1.4rem; border: 1px solid var(--blixis-field); border-radius: 4px; }
 .blixis-spec-name { font-weight: 600; }
-.blixis-spec-value { overflow-wrap: anywhere; color: #50575e; direction: ltr; unicode-bidi: plaintext; }
+.blixis-spec-value { overflow-wrap: anywhere; color: var(--blixis-sub); direction: ltr; unicode-bidi: plaintext; }
 .blixis-spec-ratio { grid-column: 2 / -1; }
-.blixis-spec-ratio .is-pass { color: #0a5c2f; }
-.blixis-spec-ratio .is-warn { color: #8a2424; font-weight: 600; }
+.blixis-spec-ratio .is-pass { color: #007017; }
+.blixis-spec-ratio .is-warn { color: #b32d2e; font-weight: 600; }
 .blixis-spec-note { margin-block: 0.5rem 0; }
 .blixis-spec-note:empty { display: none; }
 .blixis-spec-type { margin: 0 0 0.5rem; line-height: 1.25; overflow-wrap: anywhere; }
@@ -76,26 +180,51 @@
 .blixis-spec-ruler li { display: grid; grid-template-columns: 2.5rem minmax(0, 8.5rem) minmax(0, 1fr); gap: 0.5rem; align-items: center; margin-block: 0.35rem; }
 .blixis-spec-ruler .blixis-spec-value { direction: ltr; }
 .blixis-spec-bar { display: block; block-size: 1rem; max-inline-size: 100%; background: var(--blixis-color-primary, #155dfc); }
-.blixis-spec-row { display: flex; flex-wrap: wrap; gap: 1rem; padding: 1rem; background: var(--blixis-color-surface, #fff); color: var(--blixis-color-foreground, #101828); border: 1px solid #c3c4c7; }
-.blixis-spec-box { display: grid; place-items: center; inline-size: 5.5rem; block-size: 4rem; border: 1px solid #dcdcde; background: var(--blixis-color-surface, #fff); color: var(--blixis-color-foreground, #101828); font-weight: 600; }
-.blixis-spec-widths { box-sizing: border-box; display: grid; gap: 0.5rem; padding-block: 0.75rem; border: 1px dashed #8c8f94; }
-.blixis-spec-width { box-sizing: border-box; padding: 0.5rem 0.75rem; background: #f0f6fc; border: 1px solid #2271b1; overflow-wrap: anywhere; }
+.blixis-spec-row { display: flex; flex-wrap: wrap; gap: 1rem; padding: 1rem; background: var(--blixis-color-surface, #fff); color: var(--blixis-color-foreground, #101828); border: 1px solid #dcdcde; border-radius: 6px; }
+.blixis-spec-box { display: grid; place-items: center; inline-size: 5rem; block-size: 3.6rem; border: 1px solid #dcdcde; background: var(--blixis-color-surface, #fff); color: var(--blixis-color-foreground, #101828); font-weight: 600; }
+.blixis-spec-widths { box-sizing: border-box; display: grid; gap: 0.5rem; padding-block: 0.75rem; border: 1px dashed var(--blixis-field); border-radius: 6px; }
+.blixis-spec-width { box-sizing: border-box; padding: 0.5rem 0.75rem; background: var(--blixis-tint); border: 1px solid var(--blixis-accent); overflow-wrap: anywhere; }
 
-/* Motion sample. */
+/* Motion sample */
 .blixis-motion-lane { display: grid; grid-template-columns: 5rem minmax(0, 1fr); align-items: center; gap: 0.75rem; margin-block: 0.5rem; }
 .blixis-motion-track { position: relative; display: block; block-size: 1.5rem; border-block-end: 2px solid #c3c4c7; }
-.blixis-motion-dot { position: absolute; inset-block-start: 0; inset-inline-start: 0; inline-size: 1.5rem; block-size: 1.5rem; border-radius: 50%; background: #2271b1; }
-.blixis-motion-still { margin: 0.5rem 0 0; padding: 0.5rem 0.75rem; border-inline-start: 4px solid #50575e; background: #f6f7f7; }
+.blixis-motion-dot { position: absolute; inset-block-start: 0; inset-inline-start: 0; inline-size: 1.5rem; block-size: 1.5rem; border-radius: 50%; background: var(--blixis-accent); }
+.blixis-motion-still { margin: 0.5rem 0 0; padding: 0.5rem 0.75rem; border-inline-start: 4px solid var(--blixis-sub); background: #fff; }
+.blixis-spec-motion .blixis-btn { margin-block-start: 0.4rem; }
 
-/* Preview colour choice. */
-.blixis-preview-scheme { margin-block: 0.5rem; }
-.blixis-ctl-choice { display: inline-flex; align-items: center; gap: 0.35rem; margin-inline-end: 0.75rem; min-block-size: 2.25rem; }
+/* ---------- Preview card ---------- */
+.blixis-setup-preview { margin-block: 0 1.1rem; }
+.blixis-setup-preview .blixis-card__title { font-size: 1rem; }
+.blixis-setup-preview .blixis-card__body { padding: 0.6rem 1.1rem 0.9rem; }
+.blixis-setup-preview .blixis-card__intro { padding: 0 0 0.5rem; }
+.blixis-setup-widths { display: flex; flex-wrap: wrap; gap: 0.1rem 0.5rem; margin: 0 0 0.6rem; padding: 0; border: 0; }
+.blixis-setup-widths legend { margin-block-end: 0.2rem; padding: 0; font-weight: 600; font-size: 0.8125rem; }
+.blixis-seg { display: inline-flex; margin: 0; padding: 0; border: 1px solid var(--blixis-field); border-radius: 6px; overflow: hidden; background: #fff; }
+.blixis-seg__opt { position: relative; display: inline-grid; place-items: center; margin: 0; padding: 0.3rem 0.8rem; font-size: 0.75rem; font-weight: 700; color: var(--blixis-ink); cursor: pointer; }
+.blixis-seg__opt input { position: absolute; inset: 0; inline-size: 100%; block-size: 100%; margin: 0; opacity: 0; cursor: pointer; }
+.blixis-seg__opt:has(input:checked) { background: var(--blixis-accent-dark); color: #fff; }
+.blixis-seg__opt:has(input:focus-visible) { outline: 2px solid var(--blixis-accent); outline-offset: -3px; }
 
 @media (max-width: 600px) {
-	.blixis-ctl-range { flex-basis: 100%; max-inline-size: none; }
+	.blixis-range { flex-basis: 100%; max-inline-size: none; }
 	.blixis-spec-ruler li { grid-template-columns: 2.5rem minmax(0, 1fr); }
 	.blixis-spec-ruler .blixis-spec-value { grid-column: 2; }
 }
 @media (prefers-reduced-motion: reduce) {
 	.blixis-setup * { transition: none !important; animation: none !important; }
 }
+
+/* Preview width as a compact segmented control, and the frame scaled to its box. */
+.blixis-seg--widths { display: flex; inline-size: 100%; margin-block-end: 0.6rem; }
+.blixis-seg--widths .blixis-seg__opt { flex: 1 1 0; }
+.blixis-setup-frame.is-scaled { overflow: hidden; }
+.blixis-setup-frame.is-scaled iframe { max-inline-size: none; }
+
+/* Completed-step check mark, centred in its circle. */
+.blixis-setup .blixis-setup-progress li a > span.blixis-setup-progress-dot,
+.blixis-setup .blixis-setup-progress li > span > span.blixis-setup-progress-dot { display: grid; place-items: center; line-height: 1; text-align: center; }
+.blixis-setup-progress-dot svg { display: block; }
+.blixis-setup .blixis-setup-progress li a > span.blixis-setup-progress-dot,
+.blixis-setup .blixis-setup-progress li > span > span.blixis-setup-progress-dot { box-sizing: border-box; border: 2px solid #8c8f94; border-radius: 50%; background: #fff; color: #50575e; }
+.blixis-setup .blixis-setup-progress li.is-done a > span.blixis-setup-progress-dot { border-color: #008a20; background: #008a20; color: #fff; }
+.blixis-setup .blixis-setup-progress li.is-current a > span.blixis-setup-progress-dot { border-color: var(--blixis-accent); background: var(--blixis-accent); color: #fff; }

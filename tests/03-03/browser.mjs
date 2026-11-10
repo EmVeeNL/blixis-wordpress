@@ -62,6 +62,7 @@ async function noOverflow(page, label) {
 }
 
 const currentStep = (page) => page.locator('[aria-current="step"]').innerText();
+const currentStepLabel = (page) => page.locator('[aria-current="step"] .screen-reader-text').innerText();
 const value = (page, id) => page.inputValue(`#${id}`);
 
 async function submit(page) {
@@ -104,7 +105,7 @@ async function keyboardThemeStep(page) {
 async function fullFlow(browser) {
   const { context, page } = await login(browser, 'fixture_admin');
   await page.goto(WIZARD);
-  check('wizard opens on step 1, the child theme', (await currentStep(page)).startsWith('Step 1 of 5'));
+  check('wizard opens on step 1, the child theme', (await currentStepLabel(page)).startsWith('Step 1 of 5'));
   check('only the current step is linked before a theme is chosen', (await page.locator('.blixis-setup-progress a').count()) === 1 && (await page.locator('.blixis-setup-progress a[aria-current="step"]').count()) === 1);
   await axe(page, 'theme step');
   await page.screenshot({ path: 'shots/c1-theme-existing-1280.png', fullPage: true });
@@ -139,7 +140,7 @@ async function fullFlow(browser) {
   await page.keyboard.press('ArrowDown');
   await page.keyboard.press('Tab');
   await Promise.all([page.waitForURL(/step=colors/), page.keyboard.press('Enter')]);
-  check('a valid theme moves on to the colours step', (await currentStep(page)).startsWith('Step 2 of 5'));
+  check('a valid theme moves on to the colours step', (await currentStepLabel(page)).startsWith('Step 2 of 5'));
   check('the theme step is marked completed', (await page.locator('.blixis-setup-progress li.is-done').count()) === 1);
   await page.waitForLoadState('networkidle');
   await page.screenshot({ path: 'shots/colors-1280.png', fullPage: true });
@@ -153,7 +154,7 @@ async function fullFlow(browser) {
   await axe(page, 'colours step with errors');
   await page.fill('#blixis-colors-primary', '#123456');
   await submit(page);
-  check('a valid colour moves on to typography', (await currentStep(page)).startsWith('Step 3 of 5'));
+  check('a valid colour moves on to typography', (await currentStepLabel(page)).startsWith('Step 3 of 5'));
   await page.click('.blixis-setup-progress a:has-text("Step 2 of 5")');
   check('changed step action says Save and continue', (await page.locator('button[value="next"]').innerText()) === 'Save and continue');
   await page.waitForLoadState('load');
@@ -163,7 +164,7 @@ async function fullFlow(browser) {
 
   // Recovery: reload, go back, and a new session.
   await page.reload();
-  check('a reload stays on the same step', (await currentStep(page)).startsWith('Step 3 of 5'));
+  check('a reload stays on the same step', (await currentStepLabel(page)).startsWith('Step 3 of 5'));
   await page.click('.blixis-setup-progress a:has-text("Step 2 of 5")');
   check('going back shows the saved draft value', (await value(page, 'blixis-colors-primary')) === '#123456');
   await context.close();
@@ -174,7 +175,7 @@ async function fullFlow(browser) {
   await submit(page2);
   await submit(page2);
   await submit(page2);
-  check('the review step is reached', (await currentStep(page2)).startsWith('Step 5 of 5'));
+  check('the review step is reached', (await currentStepLabel(page2)).startsWith('Step 5 of 5'));
   check('review says nothing is saved yet', (await page2.locator('.blixis-setup-form').innerText()).includes('Nothing is saved yet'));
   check('review action names the unsaved draft', (await page2.locator('button[value="save"]').innerText()) === 'Save and continue');
   await axe(page2, 'review step');
@@ -218,6 +219,20 @@ async function readOnlyChecks(browser, label) {
   check(`the wizard opens (${label})`, (await page.locator('.blixis-setup h1').innerText()) === 'Blixis setup');
   await keyboardThemeStep(page);
   await axe(page, `theme step (${label})`);
+  await page.goto(`${WIZARD}&step=colors`);
+  await noOverflow(page, `tabs and two-column shell at 1280px (${label})`);
+  const desktopShell = await page.evaluate(() => {
+    const links = [...document.querySelectorAll('.blixis-setup-progress li a')];
+    const oneLine = links.every((link) => ['.blixis-setup-progress-number', '.blixis-setup-progress-name'].every((selector) => {
+      const el = link.querySelector(selector);
+      return getComputedStyle(el).whiteSpace === 'nowrap';
+    }));
+    const aside = document.querySelector('.blixis-setup-layout__preview');
+    const form = document.querySelector('.blixis-setup-layout__form');
+    return { linkCount: links.length, oneLine, sticky: getComputedStyle(aside).position === 'sticky', beside: aside.getBoundingClientRect().left >= form.getBoundingClientRect().right - 1 };
+  });
+  check(`five progress links keep each line to one line at 1280px (${label})`, desktopShell.linkCount === 5 && desktopShell.oneLine, JSON.stringify(desktopShell));
+  check(`preview is sticky beside the form at 1280px (${label})`, desktopShell.sticky && desktopShell.beside, JSON.stringify(desktopShell));
   for (const step of ['colors', 'typography', 'layout', 'review']) {
     await page.goto(`${WIZARD}&step=${step}`);
     await axe(page, `${step} step at 1280px (${label})`);
@@ -225,6 +240,13 @@ async function readOnlyChecks(browser, label) {
   await context.close();
 
   const narrow = await login(browser, 'fixture_admin', { width: 320, height: 800 });
+  await narrow.page.goto(`${WIZARD}&step=colors`);
+  const narrowTabs = await narrow.page.evaluate(() => ({
+    visible: [...document.querySelectorAll('.blixis-setup-progress li')].filter((li) => getComputedStyle(li).display !== 'none').length,
+    current: document.querySelector('.blixis-setup-progress li.is-current .blixis-setup-mobile-count')?.innerText.trim().toLowerCase(),
+  }));
+  check(`only the current progress tab shows as Step N of 5 at 320px (${label})`, narrowTabs.visible === 1 && narrowTabs.current === 'of 5', JSON.stringify(narrowTabs));
+  await noOverflow(narrow.page, `progress tabs at 320px (${label})`);
   for (const step of ['theme', 'colors', 'layout', 'review']) {
     await narrow.page.goto(`${WIZARD}&step=${step}`);
     await noOverflow(narrow.page, `${step} at 320px`);
@@ -234,6 +256,34 @@ async function readOnlyChecks(browser, label) {
   await narrow.page.screenshot({ path: 'shots/c1-progress-320.png', fullPage: true });
   await narrow.page.screenshot({ path: `shots/review-320-${label}.png`, fullPage: true });
   await narrow.context.close();
+
+  const medium = await login(browser, 'fixture_admin', { width: 800, height: 900 });
+  await medium.page.goto(`${WIZARD}&step=colors`);
+  const mediumShell = await medium.page.evaluate(() => {
+    const aside = document.querySelector('.blixis-setup-layout__preview');
+    const form = document.querySelector('.blixis-setup-layout__form');
+    return { columns: getComputedStyle(document.querySelector('.blixis-setup-layout')).gridTemplateColumns, previewPosition: getComputedStyle(aside).position, under: aside.getBoundingClientRect().top >= form.getBoundingClientRect().bottom - 1 };
+  });
+  check(`preview moves below the form at 800px (${label})`, mediumShell.previewPosition !== 'sticky' && mediumShell.under && !mediumShell.columns.includes(' 23.75rem'), JSON.stringify(mediumShell));
+  await noOverflow(medium.page, `two-column shell collapse at 800px (${label})`);
+  await medium.context.close();
+
+  if (label === 'chromium') {
+    const scheme = await login(browser, 'fixture_admin');
+    await scheme.page.goto(`${BASE}/wp-admin/profile.php`);
+    const modern = scheme.page.locator('input[name="admin_color"][value="modern"]');
+    if (await modern.count()) {
+      await modern.check();
+      await scheme.page.click('#submit');
+      await scheme.page.waitForLoadState('load');
+      await scheme.page.goto(`${WIZARD}&step=colors`);
+      const accent = await scheme.page.locator('.blixis-setup').evaluate((el) => getComputedStyle(el).getPropertyValue('--blixis-admin-accent').trim());
+      check('admin accent follows the Modern colour scheme', accent === '#3858e9', accent);
+    } else {
+      check('Modern admin colour scheme is available in WordPress 7.x', false, 'profile colour option missing');
+    }
+    await scheme.context.close();
+  }
 
   const dutch = await login(browser, 'fixture_nl');
   await dutch.page.goto(`${WIZARD}&step=colors`);

@@ -18,7 +18,7 @@ export type Control = {
 // Controls by their form input, for scripts that change another control's value.
 export const controls = new WeakMap<HTMLInputElement, Control>();
 
-export function partsOf(input: HTMLInputElement): Parts | null {
+export function partsOf(input: HTMLElement): Parts | null {
   const wrap = input.closest<HTMLElement>(".blixis-setup-field");
   const id = input.id;
   const label = wrap?.querySelector<HTMLLabelElement>(`label[for="${CSS.escape(id)}"]`) ?? null;
