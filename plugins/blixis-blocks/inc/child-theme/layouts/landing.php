@@ -61,7 +61,7 @@
 <h2 class="wp-block-heading"><?php esc_html_e( 'Frequently asked questions', '{{domain}}' ); ?></h2>
 <!-- /wp:heading -->
 
-<!-- wp:group {"style":{"border":{"width":"1px","style":"solid","color":"var:preset|color|muted","radius":"var:preset|border-radius|md"},"spacing":{"padding":{"top":"var:preset|spacing|md","bottom":"var:preset|spacing|md","left":"var:preset|spacing|md","right":"var:preset|spacing|md"}}},"layout":{"type":"constrained"}} -->
+<!-- wp:group {"style":{"border":{"width":"1px","style":"solid","color":"var:preset|color|muted","radius":"var:preset|border-radius|md"},"spacing":{"padding":{"top":"var:preset|spacing|md","bottom":"var:preset|spacing|md","left":"var:preset|spacing|md","right":"var:preset|spacing|md"},"blockGap":"var:preset|spacing|sm"}},"layout":{"type":"constrained"}} -->
 <div class="wp-block-group has-border-color" style="border-color:var(--wp--preset--color--muted);border-style:solid;border-width:1px;border-radius:var(--wp--preset--border-radius--md);padding-top:var(--wp--preset--spacing--md);padding-right:var(--wp--preset--spacing--md);padding-bottom:var(--wp--preset--spacing--md);padding-left:var(--wp--preset--spacing--md)"><!-- wp:details -->
 <details class="wp-block-details"><summary><?php esc_html_e( 'Who is this for?', '{{domain}}' ); ?></summary><!-- wp:paragraph -->
 <p><?php esc_html_e( 'For people and teams ready to make useful progress.', '{{domain}}' ); ?></p>
@@ -69,7 +69,7 @@
 <!-- /wp:details --></div>
 <!-- /wp:group -->
 
-<!-- wp:group {"style":{"border":{"width":"1px","style":"solid","color":"var:preset|color|muted","radius":"var:preset|border-radius|md"},"spacing":{"padding":{"top":"var:preset|spacing|md","bottom":"var:preset|spacing|md","left":"var:preset|spacing|md","right":"var:preset|spacing|md"}}},"layout":{"type":"constrained"}} -->
+<!-- wp:group {"style":{"border":{"width":"1px","style":"solid","color":"var:preset|color|muted","radius":"var:preset|border-radius|md"},"spacing":{"padding":{"top":"var:preset|spacing|md","bottom":"var:preset|spacing|md","left":"var:preset|spacing|md","right":"var:preset|spacing|md"},"blockGap":"var:preset|spacing|sm"}},"layout":{"type":"constrained"}} -->
 <div class="wp-block-group has-border-color" style="border-color:var(--wp--preset--color--muted);border-style:solid;border-width:1px;border-radius:var(--wp--preset--border-radius--md);padding-top:var(--wp--preset--spacing--md);padding-right:var(--wp--preset--spacing--md);padding-bottom:var(--wp--preset--spacing--md);padding-left:var(--wp--preset--spacing--md)"><!-- wp:details -->
 <details class="wp-block-details"><summary><?php esc_html_e( 'How do we begin?', '{{domain}}' ); ?></summary><!-- wp:paragraph -->
 <p><?php esc_html_e( 'We start with a short conversation about your goals.', '{{domain}}' ); ?></p>
@@ -77,7 +77,7 @@
 <!-- /wp:details --></div>
 <!-- /wp:group -->
 
-<!-- wp:group {"style":{"border":{"width":"1px","style":"solid","color":"var:preset|color|muted","radius":"var:preset|border-radius|md"},"spacing":{"padding":{"top":"var:preset|spacing|md","bottom":"var:preset|spacing|md","left":"var:preset|spacing|md","right":"var:preset|spacing|md"}}},"layout":{"type":"constrained"}} -->
+<!-- wp:group {"style":{"border":{"width":"1px","style":"solid","color":"var:preset|color|muted","radius":"var:preset|border-radius|md"},"spacing":{"padding":{"top":"var:preset|spacing|md","bottom":"var:preset|spacing|md","left":"var:preset|spacing|md","right":"var:preset|spacing|md"},"blockGap":"var:preset|spacing|sm"}},"layout":{"type":"constrained"}} -->
 <div class="wp-block-group has-border-color" style="border-color:var(--wp--preset--color--muted);border-style:solid;border-width:1px;border-radius:var(--wp--preset--border-radius--md);padding-top:var(--wp--preset--spacing--md);padding-right:var(--wp--preset--spacing--md);padding-bottom:var(--wp--preset--spacing--md);padding-left:var(--wp--preset--spacing--md)"><!-- wp:details -->
 <details class="wp-block-details"><summary><?php esc_html_e( 'What happens next?', '{{domain}}' ); ?></summary><!-- wp:paragraph -->
 <p><?php esc_html_e( 'You get a clear proposal with practical next steps.', '{{domain}}' ); ?></p>
