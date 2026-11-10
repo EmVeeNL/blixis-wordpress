@@ -649,7 +649,7 @@ async function headerFlow(browser) {
   await chooseTheme(page);
   const startRevision = await layoutRevision(page);
   await go(page, 'header');
-  check('the step is the fifth of six, named Header and footer', (await page.locator('[aria-current="step"] .screen-reader-text').innerText()).startsWith('Step 5 of 6') && (await page.locator('.blixis-setup-form h2').innerText()) === 'Header and footer');
+  check('the step is the fifth of six, named Header and footer', (await page.locator('[aria-current="step"] > .screen-reader-text').innerText()).startsWith('Step 5 of 6') && (await page.locator('.blixis-setup-form h2').innerText()) === 'Header and footer');
   check('the step has a Header card and a Footer card', (await page.locator('#blixis-section-header .blixis-card__title').innerText()) === 'Header' && (await page.locator('#blixis-section-footer .blixis-card__title').innerText()) === 'Footer');
   check('every switch is a native checkbox with role switch and a name', (await page.locator('input[type="checkbox"][role="switch"]').count()) === 7 && (await sw(page, 'sticky').count()) === 1);
   check('the logo position and the columns are native radio groups', (await page.locator('fieldset.blixis-seg input[name="layout[header][logo]"][type="radio"]').count()) === 2 && (await page.locator('fieldset.blixis-seg input[name="layout[footer][columns]"][type="radio"]').count()) === 4);
@@ -863,6 +863,18 @@ async function headerShots(browser) {
   await sw(narrow.page, 'cta').setChecked(true);
   await shot(narrow.page, 'shots/f-header-step-320.png');
   await narrow.context.close();
+  // Focus look of the fields: no extra ring, an accent border and a light tint instead.
+  const focus = await login(browser, USERS.en, { viewport: { width: 900, height: 900 } });
+  await chooseTheme(focus.page);
+  await go(focus.page, 'header');
+  await focus.page.getByLabel('Contact').focus();
+  const look = await focus.page.evaluate(() => { const s = getComputedStyle(document.activeElement); return { shadow: s.boxShadow, border: s.borderColor }; });
+  check('a focused field has no box-shadow ring and keeps a visible border colour', look.shadow === 'none' && look.border !== 'rgb(140, 143, 148)', JSON.stringify(look));
+  const resting = await focus.page.evaluate(() => [...document.querySelectorAll('.blixis-setup-form input[type="text"], .blixis-setup-form select, .blixis-setup-form textarea')].filter((el) => getComputedStyle(el).boxShadow !== 'none').length);
+  check('no form field has a resting shadow', resting === 0, String(resting));
+  await focus.page.locator('#blixis-section-footer').scrollIntoViewIfNeeded();
+  await shot(focus.page, process.env.T0306_FOCUS_SHOT || 'shots/f-focus.png');
+  await focus.context.close();
   const ar = await login(browser, USERS.ar, { viewport: { width: 1280, height: 1000 } });
   await chooseTheme(ar.page);
   await go(ar.page, 'header');
