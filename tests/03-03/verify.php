@@ -15,7 +15,7 @@ $check('the second administrator\'s save won the conflict (revision 2)', ($store
 $check('the winning save kept its colour', ($stored['config']['colors']['primary'] ?? '') === '#0a7a3f', (string) ($stored['config']['colors']['primary'] ?? ''));
 $theme = wp_get_theme('acme-site');
 $check('the wizard created the child theme with Blixis Base as parent', $theme->exists() && $theme->get_template() === 'blixis-base');
-$check('the wizard starter choice generated its front page and patterns', is_file(get_theme_root() . '/acme-site/templates/front-page.html') && is_file(get_theme_root() . '/acme-site/patterns/intro.php') && is_file(get_theme_root() . '/acme-site/patterns/features.php'));
+$check('the wizard starter choice generated the Business front page and pattern', is_file(get_theme_root() . '/acme-site/templates/front-page.html') && is_file(get_theme_root() . '/acme-site/patterns/business.php'));
 $check('the wizard did not activate any theme', get_stylesheet() === 'blixis-base', get_stylesheet());
 $check('no theme was created by refused requests', !wp_get_theme('evil-site')->exists());
 
