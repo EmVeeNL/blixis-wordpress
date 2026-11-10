@@ -45,13 +45,14 @@ Blixis Blocks filters Base's rendered header and footer template parts and loads
 | Setting | Rendering |
 |---|---|
 | `header.sticky` | `blixis-header is-sticky` sets `position: sticky` below the admin bar; root `scroll-padding-top` keeps focused elements and anchor targets visible |
-| `header.usp` | A `ul` above the header landmark with decorative checks and plain-text items; it adds no landmark |
-| `header.logo` | A class that centres the logo row |
-| `header.cta` | A core button rendered with the validated URL and `blixis-header__cta` class |
-| `header.search` | The core search block |
-| `header.mobileMenu` | The core navigation block's `overlayMenu` attribute: `mobile` for small screens only, `always` for every width |
+| `header.usp` | A thin full-width bar above the header landmark: a `ul` in one centred row (foreground background, surface text, small size) with an `aria-hidden` check icon per item, wrapping on small screens; it adds no landmark and scrolls away |
+| `header.logo` | `start`: site title, navigation, search and button on one row. `center`: a three-column grid, navigation at the start, site title in the middle, search and button at the end. Below 600 px both are one flex row: title, button, menu button, with the search under them |
+| `header.cta` | A core button rendered with the validated URL and `blixis-header__cta` class, at the end of the row (smaller on small screens) |
+| `header.search` | The core search block, compact (13rem, icon button inside, label for screen readers only) |
+| `header.mobileMenu` | The header navigation is a core navigation block over the site's pages; the `overlayMenu` attribute is `mobile` for small screens only, `always` for every width |
 | `footer.stickToBottom` | The page wrapper is a column flexbox with `min-height: 100dvh` and the content area growing; no fixed positioning and no overflow at 320 px |
-| `footer.columns`, `contact`, `social`, `copyright`, `backToTop` | Footer part with up to four columns in the fixed order, a list of labelled social links, the copyright paragraph, and an in-page link to the top |
+| `footer.columns`, `contact`, `social`, `copyright`, `backToTop` | A tinted band with a top border, a grid of up to four columns in the fixed order (Site with title and tagline, Menu with a labelled page list, Contact with line breaks kept, Follow us with core social links: inline icons and the correct service names, no requests; stacked below 600 px), each with a small `h2`, and a bottom row with a top border: copyright at the start, Back to top at the end |
+| Header row | Opaque surface background, a muted bottom border, content at the wide width. Sticky: `position: sticky` below the admin bar, a subtle shadow, `z-index` above content; only the header row sticks, the USP bar scrolls away; `--blixis-header-height` follows the header for `scroll-padding-top` (a few lines of inline script, no motion) |
 
 Config text is escaped in its output context and URLs pass through `esc_url()`. The wizard's **Header and footer** step edits a draft, previews it with the live preview, saves with the revision the page was loaded at, and offers rollback.
 
