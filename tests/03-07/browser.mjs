@@ -12,7 +12,27 @@ const blurForScreenshot = async (page) => page.evaluate(() => { if (document.act
 for (const name of browsers) {
   const type = name === 'firefox' ? firefox : chromium;
   const browser = await type.launch({ headless: true });
+  const editor = await browser.newPage({ viewport: { width: 1280, height: 900 } });
+  await editor.goto('http://127.0.0.1:8080/wp-login.php', { waitUntil: 'networkidle' });
+  await editor.locator('#user_login').fill('fixture_admin');
+  await editor.locator('#user_pass').fill(process.env.T0307_ADMIN_PASSWORD);
+  await editor.locator('#wp-submit').click();
+  await editor.goto('http://127.0.0.1:8080/wp-admin/post-new.php', { waitUntil: 'domcontentloaded', timeout: 60000 });
+  await editor.waitForFunction(() => window.wp?.blocks?.parse);
   for (const layout of layouts) {
+    if (layout !== 'blank') {
+      const validity = await editor.evaluate(async (layout) => {
+        const response = await fetch(`/?rest_route=%2Ft0307%2Fv1%2Fpattern%2F${layout}`);
+        if (!response.ok) throw new Error(`rendered pattern endpoint returned ${response.status}`);
+        const responseText = await response.text();
+        let rendered;
+        try { rendered = JSON.parse(responseText); } catch { throw new Error(`rendered pattern endpoint returned non-JSON: ${response.status} ${responseText.slice(0, 120)}`); }
+        const content = `${rendered.template}\n${rendered.content}`;
+        const blocks = wp.blocks.parse(content);
+        return blocks.flatMap(function flatten(block) { return [block, ...(block.innerBlocks || []).flatMap(flatten)]; }).filter((block) => !block.isValid || block.validationIssues?.length).map((block) => block.name);
+      }, layout);
+      check(validity.length === 0, `${name} ${layout} block validity`, JSON.stringify(validity));
+    }
     const page = await browser.newPage({ viewport: { width: 1280, height: 900 }, locale: 'en-US' });
     const external = [];
     page.on('request', (request) => { if (!request.url().startsWith('http://127.0.0.1:8080') && !request.url().startsWith('data:') && !request.url().startsWith('blob:http://127.0.0.1:8080/')) external.push(request.url()); });
@@ -72,6 +92,16 @@ for (const name of browsers) {
     if (layout !== 'blog') { await blurForScreenshot(page); await page.screenshot({ path: `${out}/layout-${layout}-1280.png`, fullPage: true }); }
     await page.setViewportSize({ width: 320, height: 760 });
     await page.waitForTimeout(100);
+    if (layout === 'landing') {
+      const sectionInsets = await page.locator('main section').evaluateAll((sections) => sections.map((section) => {
+        const heading = section.querySelector('h1,h2,h3');
+        return { id: section.id, left: heading ? heading.getBoundingClientRect().left : null, top: parseFloat(getComputedStyle(section).paddingTop), bottom: parseFloat(getComputedStyle(section).paddingBottom) };
+      }));
+      const navigationInset = await page.locator('nav[aria-label="On this page"] a').first().evaluate((link) => link.getBoundingClientRect().left);
+      const insetValues = [...sectionInsets.map((section) => section.left), navigationInset];
+      check(insetValues.every((left) => left !== null && Math.abs(left - insetValues[0]) <= 2), `${name} landing section and navigation left inset equal at 320`, JSON.stringify(insetValues));
+      check(sectionInsets.every((section) => section.top === sectionInsets[0].top && section.bottom === sectionInsets[0].bottom), `${name} landing sections equal vertical padding`, JSON.stringify(sectionInsets));
+    }
     check(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), `${name} ${layout} no overflow 320`);
     const edgeViolations = await page.locator('main').evaluate((main) => Array.from(main.querySelectorAll('h1,h2,h3,h4,h5,h6,p,a,button,summary,li,blockquote,figcaption,label')).filter((el) => el.textContent?.trim() && el.checkVisibility()).map((el) => ({ tag: el.tagName.toLowerCase(), text: el.textContent.trim().slice(0, 40), left: Math.round(el.getBoundingClientRect().left), right: Math.round(el.getBoundingClientRect().right) })).filter((r) => r.left < 8 || r.right > innerWidth - 8));
     check(edgeViolations.length === 0, `${name} ${layout} text blocks inset 8px at 320`, JSON.stringify(edgeViolations));

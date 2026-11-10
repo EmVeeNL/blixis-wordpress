@@ -53,7 +53,7 @@ stage="$(mktemp -d)"
 trap 'rm -rf "$stage"; cleanup' EXIT
 
 # Stage the bundle in a temp dir (bsdtar on macOS has no --transform).
-cp -R run-wp.sh browser.mjs "$stage/"
+cp -R run-wp.sh browser.mjs serialize-layouts.mjs "$stage/"
 mkdir -p "$stage/blixis-base" "$stage/blixis-blocks" "$stage/vendor" "$stage/node_modules"
 COPYFILE_DISABLE=1 tar --exclude=node_modules -cf - -C "$repo/themes/blixis-base" . | tar -xf - -C "$stage/blixis-base"
 COPYFILE_DISABLE=1 tar -cf - -C "$repo/plugins/blixis-blocks" . | tar -xf - -C "$stage/blixis-blocks"
@@ -86,7 +86,13 @@ for combo in "${COMBOS[@]}"; do
   if ! printf '%s\n' "$result" | grep -q '^DONE '; then echo "HARNESS FAULT: no DONE marker"; printf '%s\n' "$result" | tail -15; harness_fault=1; continue; fi
 
   if ! docker compose --profile browser up -d browser >/dev/null 2>&1; then echo "HARNESS FAULT: browser container did not start"; harness_fault=1; continue; fi
-  docker compose exec -T browser sh -c 'rm -rf /work && mkdir -p /work/shots && cd /work && tar -xf -' < <(COPYFILE_DISABLE=1 tar -cf - -C "$stage" browser.mjs node_modules vendor)
+  docker compose exec -T browser sh -c 'rm -rf /work && mkdir -p /work/shots && cd /work && tar -xf -' < <(COPYFILE_DISABLE=1 tar -cf - -C "$stage" browser.mjs serialize-layouts.mjs node_modules vendor)
+  if [[ -n "${T0307_SERIALIZE:-}" ]]; then
+    # Regeneration mode: build the layout files in the editor and copy them out; no checks run.
+    docker compose exec -T -e T0307_ADMIN_PASSWORD="$T0307_ADMIN_PASSWORD" -e T0307_OUT=/work/shots browser sh -c 'cd /work && node serialize-layouts.mjs' 2>&1 | grep -E '^(NOTE|HARNESS|[A-Za-z]*Error)' || true
+    docker compose cp browser:/work/shots/layouts/. "$out/layouts/" >/dev/null 2>&1 && echo "NOTE layouts copied to $out/layouts"
+    break
+  fi
   bres="$(docker compose exec -T -e T0307_BROWSERS="$browsers" -e T0307_ADMIN_PASSWORD="$T0307_ADMIN_PASSWORD" -e T0307_LAYOUTS="${T0307_LAYOUTS:-blank,business,portfolio,blog,landing}" -e T0307_OUT="/work/shots" browser sh -c 'cd /work && node browser.mjs' 2>&1)"
   brc=$?
   mkdir -p "$out/wp-$wp-php-$php" && printf '%s\n' "$bres" > "$out/wp-$wp-php-$php/browser.log"

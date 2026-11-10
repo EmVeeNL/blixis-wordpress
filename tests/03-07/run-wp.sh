@@ -79,6 +79,21 @@ if (isset($_GET['t0307_locale']) && in_array($_GET['t0307_locale'], array('nl_NL
     add_filter('pre_option_WPLANG', static fn() => $t0307_locale);
     add_action('plugins_loaded', static function () use ($t0307_locale): void { switch_to_locale($t0307_locale); }, 1);
 }
+add_action('rest_api_init', static function (): void {
+    register_rest_route('t0307/v1', '/pattern/(?P<layout>blank|business|portfolio|blog|landing)', array(
+        'methods' => 'GET',
+        'permission_callback' => '__return_true',
+        'callback' => static function (WP_REST_Request $request) {
+            $layout = $request['layout'];
+            $file = get_theme_root() . '/layout-' . $layout . '/patterns/' . $layout . '.php';
+            if (!is_file($file)) return new WP_Error('missing_pattern', 'Pattern not found', array('status' => 404));
+            ob_start();
+            include $file;
+            $template = (string) file_get_contents(get_theme_root() . '/layout-' . $layout . '/templates/front-page.html');
+            return rest_ensure_response(array('content' => (string) ob_get_clean(), 'template' => $template));
+        },
+    ));
+});
 PHP
 # Create one theme for every layout through the real authenticated REST route.
 # shellcheck disable=SC2016 # PHP is literal source passed to wp eval.
@@ -122,13 +137,15 @@ if (in_array("conflicts_with_starter", array_column($conflict["errors"], "code")
 $business = Blixis\Blocks\ChildTheme\build_files(array("name"=>"Alias", "slug"=>"same-alias", "version"=>"0.1.0", "layout"=>"business"));
 $neutral = Blixis\Blocks\ChildTheme\build_files(array("name"=>"Alias", "slug"=>"same-alias", "version"=>"0.1.0", "layout"=>"business", "starter"=>"neutral"));
 if ($business === $neutral) echo "PASS starter neutral exact business files\n"; else echo "FAIL starter neutral exact business files\n";
-add_filter("gettext", static function ($translation, $text, $domain) { return $text === "A focused partner for turning meaningful plans into real progress." ? "Quoted \"value\" \\\\ path <tag> 'apostrophe'" : $translation; }, 10, 3);
+add_filter("gettext", static function ($translation, $text, $domain) { return in_array($text, array("A focused partner for turning meaningful plans into real progress.", "Overview", "Approach", "FAQ", "Contact", "On this page"), true) ? "Quoted \"value\" \\\\ path <tag> 'apostrophe'" : $translation; }, 10, 3);
 ob_start();
 include get_theme_root() . "/layout-landing/patterns/landing.php";
 $translated_pattern = (string) ob_get_clean();
 $parsed = array_values(array_filter(parse_blocks($translated_pattern), static fn($block) => !empty($block["blockName"])));
-$expected_blocks = array("core/group", "core/group", "core/group", "core/group", "core/group");
-if (array_column($parsed, "blockName") === $expected_blocks && str_contains($translated_pattern, "id=\"contact\"")) echo "PASS translated special characters parse generated blocks\n"; else echo "FAIL translated special characters parse generated blocks: " . wp_json_encode(array_column($parsed, "blockName")) . "\n";
+$expected_blocks = array("core/group", "core/group", "core/group", "core/group", "core/group", "core/group");
+$navigation = $parsed[1]["innerBlocks"][0] ?? array();
+$navigation_labels = array_map(static fn($block) => $block["attrs"]["label"] ?? null, $navigation["innerBlocks"] ?? array());
+if (array_column($parsed, "blockName") === $expected_blocks && str_contains($translated_pattern, "id=\"contact\"") && count(array_filter($navigation_labels, static fn($label) => $label === "Quoted \"value\" \\\\ path <tag> 'apostrophe'")) === 4 && ($navigation["attrs"]["ariaLabel"] ?? null) === "Quoted \"value\" \\\\ path <tag> 'apostrophe'") echo "PASS translated special characters parse generated blocks and navigation attributes\n"; else echo "FAIL translated special characters parse generated blocks: " . wp_json_encode(array_column($parsed, "blockName")) . " " . wp_json_encode($navigation_labels) . "\n";
 if (count(Blixis\Blocks\Setup\presets()) === 6) echo "PASS six presets\n"; else echo "FAIL preset count\n";
 ' 2>&1 | grep -E '^(PASS|FAIL|NOTE|HARNESS) ' || fault "layout REST checks failed"
 
