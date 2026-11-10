@@ -154,6 +154,8 @@ async function colorsFlow(browser) {
 
   check('the dark specimen says no dark palette is set', /No dark palette/.test(await page.locator('.blixis-spec[data-scheme="dark"]').innerText()));
   await darkSwitch.check();
+  const switchMark = await darkSwitch.evaluate((el) => getComputedStyle(el, '::before').content);
+  check('the checked switch draws no WordPress check mark over its track', switchMark === 'none' || switchMark === 'normal', switchMark);
   check('the switch shows the dark rows, starting from the light colours', (await page.locator('#blixis-section-colorsdark .blixis-dark-rows').isVisible()) && (await page.inputValue('#blixis-colorsdark-primary')) === '#155dfc');
   check('the colour scheme is a row inside the dark card', (await page.locator('#blixis-section-colorsdark .blixis-dark-rows input[name="scheme"]').count()) === 3);
   await darkSwitch.uncheck();
