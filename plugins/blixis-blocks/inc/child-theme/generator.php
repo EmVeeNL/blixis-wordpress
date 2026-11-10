@@ -58,6 +58,10 @@ function fields(): array {
 			'required' => false,
 			'max'      => 16,
 		),
+        'layout'      => array(
+			'required' => false,
+			'max'      => 16,
+		),
     );
 }
 
@@ -156,14 +160,33 @@ function validate( array $input ): array {
         unset($values['version']);
     }
     $values['version'] ??= '0.1.0';
-    $values['starter'] ??= 'none';
-    if (!in_array($values['starter'], array( 'none', 'neutral' ), true)) {
+    $legacy              = $values['starter'] ?? null;
+    $legacy_map          = array(
+		'none'    => 'blank',
+		'neutral' => 'business',
+	);
+    if (null !== $legacy && !isset($legacy_map[ $legacy ])) {
         $errors[] = array(
 			'field' => 'starter',
 			'code'  => 'invalid_starter',
 		);
-		unset($values['starter']);
-	}
+    }
+    $layout = $values['layout'] ?? ( null !== $legacy ? ( $legacy_map[ $legacy ] ?? null ) : 'blank' );
+    if (null !== $layout && !in_array($layout, array( 'blank', 'business', 'portfolio', 'blog', 'landing' ), true)) {
+        $errors[] = array(
+			'field' => 'layout',
+			'code'  => 'invalid_layout',
+		);
+    }
+    if (null !== $legacy && isset($legacy_map[ $legacy ]) && array_key_exists('layout', $input) && $layout !== $legacy_map[ $legacy ]) {
+        $errors[] = array(
+			'field' => 'layout',
+			'code'  => 'conflicts_with_starter',
+		);
+    }
+    if (null !== $legacy) {
+		$values['starter'] = $legacy; }
+    $values['layout'] = $layout ?? 'blank';
 
     return array(
 		'values' => $values,
@@ -246,7 +269,8 @@ PHP;
         'functions.php' => $functions,
     );
 
-    if ('neutral' === ( $values['starter'] ?? 'none' )) {
+    $layout = $values['layout'] ?? 'blank';
+    if ('neutral' === ( $values['starter'] ?? null )) {
 		$text_domain                        = $values['slug'];
         $files['templates/front-page.html'] = <<<HTML
 <!-- wp:template-part {"slug":"header","tagName":"header"} /-->
@@ -269,7 +293,7 @@ HTML;
 ?>
 <!-- wp:group {"tagName":"section","layout":{"type":"constrained"}} -->
 <section class="wp-block-group">
-<!-- wp:heading {"level":1} -->
+<!-- wp:heading {"level":1,"style":{"color":{"text":"var:preset|color|primary"}}} -->
 <h1 class="wp-block-heading"><?php esc_html_e( 'Welcome', '{$text_domain}' ); ?></h1>
 <!-- /wp:heading -->
 <!-- wp:paragraph -->
@@ -303,7 +327,40 @@ PHP;
 PHP;
     }
 
+    if ('neutral' !== ( $values['starter'] ?? null ) && 'blank' !== $layout) {
+        $files['templates/front-page.html']              = <<<HTML
+<!-- wp:template-part {"slug":"header","tagName":"header"} /-->
+<!-- wp:group {"tagName":"main","layout":{"type":"default"}} -->
+<main class="wp-block-group">
+<!-- wp:pattern {"slug":"{$values['slug']}/{$layout}-content"} /-->
+</main>
+<!-- /wp:group -->
+<!-- wp:template-part {"slug":"footer","tagName":"footer"} /-->
+HTML;
+        $files[ 'patterns/' . $layout . '-content.php' ] = layout_pattern($layout, $values['slug']);
+    }
+
     return $files;
+}
+
+/** Generate an editable, unbranded core-block pattern for a layout. */
+function layout_pattern( string $layout, string $domain ): string {
+    $header    = "<?php\n/**\n * Title: " . ucfirst($layout) . " page\n * Slug: {$domain}/{$layout}-content\n * Categories: featured\n * Description: Editable {$layout} page sections.\n */\n?>\n";
+    $heading   = "<!-- wp:heading {\"level\":1,\"style\":{\"color\":{\"text\":\"var:preset|color|primary\"}}} --><h1 class=\"wp-block-heading\"><?php esc_html_e( 'Welcome', '{$domain}' ); ?></h1><!-- /wp:heading -->\n";
+    $paragraph = "<!-- wp:paragraph {\"style\":{\"color\":{\"text\":\"var:preset|color|foreground\"}}} --><p><?php esc_html_e( 'A clear introduction to this site and its work.', '{$domain}' ); ?></p><!-- /wp:paragraph -->\n";
+    $feature   = "<!-- wp:columns --><div class=\"wp-block-columns\"><!-- wp:column --><div class=\"wp-block-column\"><!-- wp:heading {\"level\":2} --><h2 class=\"wp-block-heading\"><?php esc_html_e( 'First highlight', '{$domain}' ); ?></h2><!-- /wp:heading -->{$paragraph}</div><!-- /wp:column --><!-- wp:column --><div class=\"wp-block-column\"><!-- wp:heading {\"level\":2} --><h2 class=\"wp-block-heading\"><?php esc_html_e( 'Second highlight', '{$domain}' ); ?></h2><!-- /wp:heading -->{$paragraph}</div><!-- /wp:column --><!-- wp:column --><div class=\"wp-block-column\"><!-- wp:heading {\"level\":2} --><h2 class=\"wp-block-heading\"><?php esc_html_e( 'Third highlight', '{$domain}' ); ?></h2><!-- /wp:heading -->{$paragraph}</div><!-- /wp:column --></div><!-- /wp:columns -->\n";
+    if ('blog' === $layout) {
+        return $header . $heading . $paragraph . "<!-- wp:heading {\"level\":2} --><h2><?php esc_html_e( 'Featured post', '{$domain}' ); ?></h2><!-- /wp:heading --><!-- wp:query {\"queryId\":1,\"query\":{\"perPage\":1,\"pages\":0,\"offset\":0,\"postType\":\"post\",\"order\":\"desc\",\"orderBy\":\"date\",\"inherit\":false}} --><div class=\"wp-block-query\"><!-- wp:post-template --><!-- wp:post-title {\"isLink\":true} /--><!-- wp:post-excerpt /--><!-- /wp:post-template --></div><!-- /wp:query --><!-- wp:heading {\"level\":2} --><h2><?php esc_html_e( 'Latest posts', '{$domain}' ); ?></h2><!-- /wp:heading --><!-- wp:query {\"queryId\":2,\"query\":{\"perPage\":5,\"pages\":0,\"offset\":1,\"postType\":\"post\",\"order\":\"desc\",\"orderBy\":\"date\",\"inherit\":false}} --><div class=\"wp-block-query\"><!-- wp:post-template --><!-- wp:post-title {\"isLink\":true} /--><!-- wp:post-excerpt /--><!-- /wp:post-template --></div><!-- /wp:query -->";
+    }
+    if ('landing' === $layout) {
+        $navigation = "<!-- wp:navigation {\"overlayMenu\":\"never\",\"ariaLabel\":\"<?php esc_attr_e( 'On this page', '{$domain}' ); ?>\"} --><!-- wp:navigation-link {\"label\":\"<?php esc_attr_e( 'Introduction', '{$domain}' ); ?>\",\"url\":\"#introduction\"} /--><!-- wp:navigation-link {\"label\":\"<?php esc_attr_e( 'Details', '{$domain}' ); ?>\",\"url\":\"#details\"} /--><!-- /wp:navigation -->";
+        return $header . $navigation . "<!-- wp:group {\"tagName\":\"section\",\"anchor\":\"introduction\"} --><section id=\"introduction\">{$heading}{$paragraph}</section><!-- /wp:group --><!-- wp:group {\"tagName\":\"section\",\"anchor\":\"details\"} --><section id=\"details\"><!-- wp:heading {\"level\":2} --><h2 class=\"wp-block-heading\"><?php esc_html_e( 'Details', '{$domain}' ); ?></h2><!-- /wp:heading -->{$feature}</section><!-- /wp:group -->";
+    }
+    if ('portfolio' === $layout) {
+        return $header . $heading . $paragraph . "<!-- wp:group {\"tagName\":\"section\",\"anchor\":\"projects\"} --><section id=\"projects\"><!-- wp:heading {\"level\":2} --><h2 class=\"wp-block-heading\"><?php esc_html_e( 'Selected projects', '{$domain}' ); ?></h2><!-- /wp:heading -->{$feature}</section><!-- /wp:group -->";
+    }
+    $contact = "<!-- wp:group {\"tagName\":\"section\",\"anchor\":\"contact\"} --><section id=\"contact\"><!-- wp:heading {\"level\":2} --><h2 class=\"wp-block-heading\"><?php esc_html_e( 'Contact', '{$domain}' ); ?></h2><!-- /wp:heading -->{$paragraph}</section><!-- /wp:group -->";
+    return $header . $heading . $paragraph . $feature . "<!-- wp:buttons --><div class=\"wp-block-buttons\"><!-- wp:button --><div class=\"wp-block-button\"><a class=\"wp-block-button__link wp-element-button\" href=\"#contact\"><?php esc_html_e( 'Get in touch', '{$domain}' ); ?></a></div><!-- /wp:button --></div><!-- /wp:buttons -->" . $contact;
 }
 
 /**
