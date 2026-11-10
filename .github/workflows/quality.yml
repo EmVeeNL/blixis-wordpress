@@ -164,8 +164,8 @@ jobs:
           retention-days: 7
 
   # 03-03 setup wizard and 03-04 local fonts in real WordPress with Chromium and Firefox: steps,
-  # errors, recovery, save, conflicts, keyboard, axe, locales, permissions, font loading, and 03-05
-  # token apply, preview, and rollback.
+  # errors, recovery, save, conflicts, keyboard, axe, locales, permissions, font loading; 03-05 token
+  # apply, preview, and rollback; 03-06 wizard controls, live previews, dark mode, and accessibility.
   setup-wizard:
     runs-on: ubuntu-24.04
     timeout-minutes: 60
@@ -180,6 +180,8 @@ jobs:
         run: bash tests/03-04/run.sh --browsers chromium,firefox --out "$RUNNER_TEMP/t0304"
       - name: Run the token preview, apply, and rollback tests in a throwaway stack (03-05)
         run: bash tests/03-05/run.sh --browsers chromium,firefox --out "$RUNNER_TEMP/t0305"
+      - name: Run the wizard controls, previews, and accessibility tests in a throwaway stack (03-06)
+        run: bash tests/03-06/run.sh --browsers chromium,firefox --out "$RUNNER_TEMP/t0306"
       - name: Keep screenshots
         if: ${{ failure() }}
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
@@ -189,6 +191,7 @@ jobs:
             ${{ runner.temp }}/t0303
             ${{ runner.temp }}/t0304
             ${{ runner.temp }}/t0305
+            ${{ runner.temp }}/t0306
           retention-days: 7
 
   # Optional showcase child theme with Base as parent, in real WordPress plus Chromium and Firefox.

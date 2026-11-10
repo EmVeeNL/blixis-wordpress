@@ -24,11 +24,21 @@ async function login(browser, user, viewport = { width: 1280, height: 900 }) {
   const context = await browser.newContext({ viewport });
   const page = await context.newPage();
   // Match the path: the login URL itself contains wp-admin in its redirect_to parameter.
-  await page.goto(`${BASE}/wp-login.php?redirect_to=${encodeURIComponent(WIZARD)}`);
-  await page.fill('#user_login', user);
-  await page.fill('#user_pass', PASSWORD);
-  await Promise.all([page.waitForURL((url) => url.pathname.startsWith('/wp-admin/'), { timeout: 60000, waitUntil: 'commit' }), page.click('#wp-submit')]);
-  return { context, page };
+  // Firefox in CI occasionally stalls on the login submit (seen on main at 696263b). Wait for the
+  // full load, and retry once, reporting what the login page said; same helper as 03-03.
+  for (let attempt = 1; ; attempt++) {
+    await page.goto(`${BASE}/wp-login.php?redirect_to=${encodeURIComponent(WIZARD)}`, { waitUntil: 'load' });
+    await page.fill('#user_login', user);
+    await page.fill('#user_pass', PASSWORD);
+    try {
+      await Promise.all([page.waitForURL((url) => url.pathname.startsWith('/wp-admin/'), { timeout: 30000, waitUntil: 'commit' }), page.click('#wp-submit')]);
+      return { context, page };
+    } catch (error) {
+      const said = await page.locator('#login_error').innerText().catch(() => '(no login error shown)');
+      note(`login attempt ${attempt} for ${user} did not reach wp-admin`, said);
+      if (attempt === 2) throw error;
+    }
+  }
 }
 
 async function axe(page, label) {
