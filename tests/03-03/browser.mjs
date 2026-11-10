@@ -96,7 +96,7 @@ async function keyboardThemeStep(page) {
       if (!info.visible) unfocusedVisible += `${info.id} `;
     }
   }
-  check('keyboard reaches the theme choice, name, slug, starter, and submit in order', /blixis-theme-choice-[a-z0-9-]+ blixis-theme-name blixis-theme-slug blixis-new-starter submit/.test(order.join(' ')), order.join(' '));
+  check('keyboard reaches the theme choice, name, slug, layout cards, style cards, and submit in order', /blixis-theme-choice-[a-z0-9-]+ blixis-theme-name blixis-theme-slug blixis-new-layout-[a-z]+ blixis-new-preset-[a-z]+ submit/.test(order.join(' ')), order.join(' '));
   check('every focused wizard control shows a focus indicator', unfocusedVisible === '', unfocusedVisible);
   const existingRadio = page.locator('input[name="choice"]:not(#blixis-theme-choice-new)').first();
   if (await existingRadio.count()) await existingRadio.check();
@@ -137,7 +137,9 @@ async function fullFlow(browser) {
   await page.keyboard.press(process.platform === 'darwin' ? 'Meta+A' : 'Control+A');
   await page.keyboard.type('acme-site');
   await page.keyboard.press('Tab');
-  await page.keyboard.press('ArrowDown');
+  await page.keyboard.press('ArrowRight');
+  check('the arrow keys choose the Business layout card', await page.locator('#blixis-new-layout-business').isChecked());
+  await page.keyboard.press('Tab');
   await page.keyboard.press('Tab');
   await Promise.all([page.waitForURL(/step=colors/), page.keyboard.press('Enter')]);
   check('a valid theme moves on to the colours step', (await currentStepLabel(page)).startsWith('Step 2 of 6'));
@@ -242,6 +244,14 @@ async function readOnlyChecks(browser, label) {
     await page.goto(`${WIZARD}&step=${step}`);
     await axe(page, `${step} step at 1280px (${label})`);
   }
+  await page.goto(WIZARD);
+  const stepOne = await page.evaluate(() => {
+    const items = [...document.querySelectorAll('.blixis-setup-progress li')];
+    const tops = new Set(items.map((li) => Math.round(li.firstElementChild.getBoundingClientRect().top)));
+    const bordered = [...document.querySelectorAll('.blixis-setup-progress .blixis-setup-progress-label, .blixis-setup-progress .blixis-setup-progress-label span')].some((el) => parseFloat(getComputedStyle(el).borderTopWidth) > 0);
+    return { count: items.length, rows: tops.size, bordered };
+  });
+  check(`step 1 shows six tabs on one row, unavailable steps without boxes (${label})`, stepOne.count === 6 && stepOne.rows === 1 && !stepOne.bordered, JSON.stringify(stepOne));
   await page.setViewportSize({ width: 960, height: 900 });
   await page.goto(`${WIZARD}&step=colors`);
   const at960 = await page.evaluate(() => {
