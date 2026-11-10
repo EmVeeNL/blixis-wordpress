@@ -10,6 +10,6 @@
 | [03-04](04-font-management.md) | Manage local fonts | Done | P0 |
 | [03-05](05-token-preview-persistence.md) | Preview and persist design tokens | Done | P0 |
 | [03-06](06-token-driven-themes.md) | Make Base and child themes use the tokens, and make the wizard friendly | Done | P0 |
-| [03-07](07-theme-layouts-and-style-presets.md) | Create a theme from layouts, header and footer settings, and style presets | Ready | P0 |
+| [03-07](07-theme-layouts-and-style-presets.md) | Create a theme from layouts, header and footer settings, and style presets | Busy | P0 |
 
 Complete the tasks in dependency order. Update this index only when task evidence warrants a phase status change. Phase exit requires all required work, security and accessibility checks, release evidence, and owner acceptance.
